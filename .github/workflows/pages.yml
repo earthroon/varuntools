@@ -42,11 +42,6 @@ jobs:
       - name: Generate search index
         run: npm run search:generate
 
-      - name: Verify Vite install
-        run: |
-          ./node_modules/.bin/vite --version
-          npx vite --version
-
       - name: Build
         run: npm run build
 

@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "varuntools",
   "version": "0.1.0",
   "private": true,
@@ -190,18 +190,17 @@
     "smoke:route-seo-manifest": "node scripts/smoke-route-seo-manifest.mjs"
   },
   "dependencies": {
-    "@vitejs/plugin-vue": "latest",
     "gray-matter": "^4.0.3",
     "markdown-it": "^14.1.1",
-    "vue": "latest",
-    "vue-router": "latest"
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
   },
   "devDependencies": {
-    "@types/markdown-it": "latest",
-    "playwright": "latest",
-    "typescript": "5.9.3",
-    "vite": "latest",
-    "vue-tsc": "latest"
+    "@types/markdown-it": "^14.1.2",
+    "playwright": "^1.56.1",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21",
+    "vue-tsc": "^2.2.0",
+    "@vitejs/plugin-vue": "^5.2.4"
   }
 }
-
