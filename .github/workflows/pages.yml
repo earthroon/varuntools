@@ -44,8 +44,7 @@ jobs:
 
       - name: Verify Vite install
         run: |
-          npm ls vite
-          test -x ./node_modules/.bin/vite
+          ./node_modules/.bin/vite --version
           npx vite --version
 
       - name: Build
@@ -68,6 +67,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
 
 
 
