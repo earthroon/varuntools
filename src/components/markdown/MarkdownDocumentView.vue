@@ -1,0 +1,132 @@
+<script setup lang="ts">
+import { computed, ref, onBeforeUnmount } from 'vue'
+import MarkdownLightbox from '@/components/markdown/MarkdownLightbox.vue'
+import MarkdownToc from '@/components/markdown/MarkdownToc.vue'
+import WorkDetailFooter from '@/components/works/WorkDetailFooter.vue'
+import { useActiveHeading } from '@/composables/useActiveHeading'
+import { useSectionLightbox } from '@/composables/useSectionLightbox'
+import { mountImageMagnifier } from '@/composables/useImageMagnifier'
+import { usePageMeta } from '@/composables/usePageMeta'
+import { useMarkdownComponentMount } from '@/markdown/useMarkdownComponentMount'
+import { createPageMeta } from '@/metadata/pageMeta'
+import { getWorkDetailContext } from '@/markdown/pageRegistry'
+import type { LoadedMarkdownPage } from '@/markdown/types'
+
+const props = withDefaults(
+  defineProps<{
+    page: LoadedMarkdownPage | null
+    pages: LoadedMarkdownPage[]
+    showToc?: boolean
+    showRelatedFooter?: boolean
+    notFoundTitle?: string
+    notFoundMessage?: string
+  }>(),
+  {
+    showToc: true,
+    showRelatedFooter: true,
+    notFoundTitle: '페이지를 찾을 수 없습니다',
+    notFoundMessage: '요청한 문서가 아직 등록되지 않았습니다.',
+  },
+)
+
+const markdownRoot = ref<HTMLElement | null>(null)
+let cleanupImageMagnifier: (() => void) | null = null
+
+const pageRef = computed(() => props.page)
+const pagesRef = computed(() => props.pages)
+const headings = computed(() => props.page?.headings || [])
+
+const { activeHeadingId, refreshActiveHeading } = useActiveHeading(
+  markdownRoot,
+  headings,
+)
+
+const {
+  items: lightboxItems,
+  activeIndex: lightboxActiveIndex,
+  activeItem: lightboxActiveItem,
+  isOpen: lightboxOpen,
+  close: closeLightbox,
+  previous: previousLightbox,
+  next: nextLightbox,
+  setIndex: setLightboxIndex,
+  mount: mountLightbox,
+  unmount: unmountLightbox,
+} = useSectionLightbox(markdownRoot)
+
+useMarkdownComponentMount({
+  root: markdownRoot,
+  page: pageRef,
+  pages: pagesRef,
+  onMounted: async () => {
+    unmountLightbox()
+    await refreshActiveHeading()
+    const autoMiniGallery = (props.page?.frontmatter as any)?.gallery?.autoMini !== false
+    mountLightbox({ miniGallery: autoMiniGallery })
+    cleanupImageMagnifier?.()
+    if (markdownRoot.value) {
+      cleanupImageMagnifier = mountImageMagnifier({ root: markdownRoot.value })
+    }
+  },
+})
+
+const pageMeta = computed(() => {
+  if (!props.page) return null
+  return createPageMeta(props.page)
+})
+
+usePageMeta(pageMeta)
+
+const workDetailContext = computed(() => {
+  if (!props.showRelatedFooter || !props.page) return null
+
+  return getWorkDetailContext(props.pages, props.page.slug)
+})
+
+
+onBeforeUnmount(() => {
+  cleanupImageMagnifier?.()
+  cleanupImageMagnifier = null
+})
+
+const shouldShowToc = computed(() => props.showToc && headings.value.length > 0)
+</script>
+
+<template>
+  <article class="vt-markdown-page theme-showroom">
+    <MarkdownToc
+      v-if="page && shouldShowToc"
+      :headings="headings"
+      :active-heading-id="activeHeadingId"
+    />
+
+    <div
+      v-if="page"
+      ref="markdownRoot"
+      class="vt-markdown"
+      v-html="page.html"
+    />
+
+    <div v-else class="vt-markdown vt-markdown-not-found">
+      <h1>{{ notFoundTitle }}</h1>
+      <p>{{ notFoundMessage }}</p>
+    </div>
+
+    <WorkDetailFooter
+      v-if="page && workDetailContext"
+      :context="workDetailContext"
+    />
+
+    <MarkdownLightbox
+      :open="lightboxOpen"
+      :item="lightboxActiveItem"
+      :count="lightboxItems.length"
+      :index="lightboxActiveIndex"
+      @close="closeLightbox"
+      @previous="previousLightbox"
+      :items="lightboxItems"
+      @next="nextLightbox"
+      @set-index="setLightboxIndex"
+    />
+  </article>
+</template>

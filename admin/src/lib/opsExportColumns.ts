@@ -1,0 +1,3 @@
+export const SALES_LEDGER_EXPORT_COLUMNS = ['orderId','productSlug','paymentProvider','paymentStatus','opsStatus','amount','currency','paymentKeyMasked','buyerEmailMasked','grantStatus','grantIdMasked','webhookResultCode','createdAt','updatedAt','supportFlag'] as const
+export const GRANT_LEDGER_EXPORT_COLUMNS = ['grantId','orderId','productSlug','status','opsStatus','deliverableCount','downloadCount','maxDownloads','expiresAt','buyerEmailMasked','createdAt','reissueCandidate'] as const
+export const FORBIDDEN_OPS_EXPORT_FIELDS = ['raw payment key','raw buyer email','rawJson','r2Key','privatePath','downloadUrl','publicUrl','Toss raw payload','Cloudflare secret','Access JWT'] as const

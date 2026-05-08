@@ -1,0 +1,245 @@
+.vt-markdown-page {
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+.vt-markdown {
+  max-width: var(--vt-content-max);
+  margin: 0 auto;
+  padding: var(--vt-page-padding-y) var(--vt-page-padding-x) var(--vt-page-padding-bottom);
+  color: var(--vt-ink);
+  background: var(--vt-surface);
+  border: 1px solid var(--vt-hair);
+  border-radius: var(--vt-radius-lg);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    var(--vt-shadow-1);
+  backdrop-filter: blur(8px) saturate(120%);
+  line-height: 1.72;
+}
+
+.vt-markdown > :first-child {
+  margin-top: 0;
+}
+
+.vt-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.vt-markdown h1,
+.vt-markdown h2,
+.vt-markdown h3 {
+  color: var(--vt-ink);
+  letter-spacing: -0.035em;
+}
+
+.vt-markdown h1 {
+  margin: 58px 0 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(15, 17, 21, 0.10);
+  font-size: clamp(2.15rem, 3.2vw, 3.05rem);
+  font-weight: 780;
+  line-height: 1.10;
+}
+
+.vt-markdown h2 {
+  margin: 54px 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(15, 17, 21, 0.08);
+  font-size: clamp(1.52rem, 2.2vw, 2.05rem);
+  font-weight: 720;
+  line-height: 1.16;
+}
+
+.vt-markdown h3 {
+  margin: 42px 0 12px;
+  padding-left: 14px;
+  border-left: 2px solid rgba(15, 17, 21, 0.14);
+  font-size: clamp(1.18rem, 1.6vw, 1.55rem);
+  font-weight: 680;
+  line-height: 1.20;
+}
+
+.vt-markdown p,
+.vt-markdown li,
+.vt-markdown blockquote {
+  color: var(--vt-ink-soft);
+}
+
+.vt-markdown p {
+  margin: 0.9rem 0;
+}
+
+.vt-markdown a {
+  color: rgba(15, 17, 21, 0.86);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(15, 17, 21, 0.16);
+  transition:
+    color 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease;
+}
+
+.vt-markdown a:hover {
+  color: var(--vt-ink);
+  border-color: rgba(10, 132, 255, 0.42);
+  background: rgba(10, 132, 255, 0.04);
+}
+
+.vt-markdown img,
+.vt-markdown video {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--vt-radius-md);
+}
+
+.vt-markdown blockquote {
+  margin: 1.4rem 0;
+  padding: 1rem 1.1rem;
+  border-left: 3px solid rgba(15, 17, 21, 0.18);
+  border-radius: var(--vt-radius-sm);
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.vt-markdown code {
+  padding: 0.12em 0.34em;
+  border-radius: 7px;
+  background: rgba(15, 17, 21, 0.06);
+  color: rgba(15, 17, 21, 0.82);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.92em;
+}
+
+.vt-markdown pre {
+  overflow-x: auto;
+  margin: 1.4rem 0;
+  padding: 1rem;
+  border: 1px solid var(--vt-hair);
+  border-radius: var(--vt-radius-md);
+  background: rgba(15, 17, 21, 0.06);
+}
+
+.vt-markdown pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.vt-markdown ul,
+.vt-markdown ol {
+  margin: 0.9rem 0 1.1rem;
+  padding-left: 1.25em;
+}
+
+.vt-markdown li {
+  margin: 0.42rem 0;
+  line-height: 1.72;
+}
+
+.vt-markdown ul > li::marker {
+  color: rgba(15, 17, 21, 0.35);
+  font-size: 0.78em;
+}
+
+.vt-markdown ol {
+  list-style: none;
+  counter-reset: vt-ol;
+}
+
+.vt-markdown ol > li {
+  counter-increment: vt-ol;
+  position: relative;
+  padding-left: 2.2em;
+}
+
+.vt-markdown ol > li::before {
+  content: counter(vt-ol);
+  position: absolute;
+  left: 0;
+  top: 0.12em;
+  width: 1.55em;
+  height: 1.55em;
+  border-radius: var(--vt-radius-pill);
+  display: grid;
+  place-items: center;
+  font-size: 0.78em;
+  font-weight: 720;
+  color: rgba(15, 17, 21, 0.70);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(15, 17, 21, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.80);
+}
+
+.vt-markdown li ul,
+.vt-markdown li ol {
+  margin-top: 0.55rem;
+  margin-bottom: 0.2rem;
+  padding-left: 1.15em;
+}
+
+.vt-markdown li li {
+  color: var(--vt-ink-muted);
+}
+
+.vt-markdown strong {
+  font-weight: 720;
+  color: rgba(15, 17, 21, 0.88);
+  border: 1px solid rgba(15, 17, 21, 0.14);
+  border-radius: var(--vt-radius-pill);
+  padding: 0.08em 0.52em;
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+.vt-markdown mark {
+  color: rgba(15, 17, 21, 0.90);
+  background: rgba(10, 132, 255, 0.10);
+  border: 1px solid rgba(10, 132, 255, 0.16);
+  border-radius: 10px;
+  padding: 0.08em 0.4em;
+}
+
+.vt-component-placeholder {
+  border: 1px dashed var(--vt-hair-strong);
+  border-radius: var(--vt-radius-md);
+  padding: 14px 16px;
+  margin: 18px 0;
+  background: rgba(255, 255, 255, 0.62);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .vt-markdown li {
+    border-radius: 10px;
+    transition:
+      background 0.16s ease,
+      box-shadow 0.16s ease,
+      color 0.16s ease;
+  }
+
+  .vt-markdown li:hover {
+    background: rgba(10, 132, 255, 0.04);
+    box-shadow: inset 0 0 0 1px rgba(10, 132, 255, 0.08);
+  }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --vt-page-padding-x: 22px;
+    --vt-page-padding-y: 72px;
+    --vt-page-padding-bottom: 110px;
+  }
+
+  .vt-markdown-page {
+    padding: 22px 12px;
+  }
+
+  .vt-markdown {
+    border-radius: 18px;
+  }
+}
+
+/* Commit 06: TOC hash/scroll target offset */
+.vt-markdown h1,
+.vt-markdown h2,
+.vt-markdown h3 {
+  scroll-margin-top: 96px;
+}

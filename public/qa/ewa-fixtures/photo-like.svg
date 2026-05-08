@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 1200" role="img" aria-label="Synthetic photo-like EWA fixture">
+  <defs>
+    <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1"><stop stop-color="#bad6f4"/><stop offset=".56" stop-color="#f6e1bf"/><stop offset="1" stop-color="#b98f69"/></linearGradient>
+    <radialGradient id="sun" cx=".74" cy=".24" r=".28"><stop stop-color="#fff8d9"/><stop offset="1" stop-color="#f4b36f" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1800" height="1200" fill="url(#sky)"/>
+  <rect width="1800" height="1200" fill="url(#sun)" opacity=".85"/>
+  <path d="M0 710 C220 590 430 650 620 560 C850 452 1120 612 1340 492 C1520 394 1668 442 1800 390 V1200 H0Z" fill="#395b5f" opacity=".88"/>
+  <path d="M0 828 C250 760 480 808 730 724 C1010 630 1260 758 1800 668 V1200 H0Z" fill="#203c44" opacity=".92"/>
+  <g opacity=".35" stroke="#ffffff" stroke-width="5"><path d="M94 150 h220"/><path d="M1210 112 h310"/><path d="M878 250 h190"/></g>
+</svg>

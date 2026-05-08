@@ -1,0 +1,21 @@
+name = "varuntools-delivery-worker"
+main = "src/index.ts"
+compatibility_date = "2026-05-06"
+
+# Commit 68 contract only. Replace this bucket_name with the real R2 bucket
+# before deploying the worker.
+[[r2_buckets]]
+binding = "VARUNTOOLS_PRODUCT_BUCKET"
+bucket_name = "varuntools-product-delivery"
+
+[vars]
+DELIVERY_ENV = "contract"
+GRANT_VALIDATION_MODE = "not_configured"
+TOSS_RETRIEVE_MODE = "not_configured"
+GRANT_TTL_HOURS = "72"
+DEFAULT_MAX_DOWNLOADS = "5"
+
+[[d1_databases]]
+binding = "PURCHASE_DB"
+database_name = "varuntools-purchase-grants"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"

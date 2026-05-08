@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" shape-rendering="crispEdges" role="img" aria-label="Synthetic pixel safe EWA fixture">
+  <rect width="640" height="640" fill="#171923"/>
+  <g>
+    <rect x="96" y="96" width="64" height="64" fill="#ff6b6b"/><rect x="160" y="96" width="64" height="64" fill="#ffd166"/><rect x="224" y="96" width="64" height="64" fill="#06d6a0"/><rect x="288" y="96" width="64" height="64" fill="#118ab2"/>
+    <rect x="96" y="160" width="64" height="64" fill="#ffd166"/><rect x="160" y="160" width="64" height="64" fill="#171923"/><rect x="224" y="160" width="64" height="64" fill="#171923"/><rect x="288" y="160" width="64" height="64" fill="#06d6a0"/>
+    <rect x="96" y="224" width="64" height="64" fill="#06d6a0"/><rect x="160" y="224" width="64" height="64" fill="#171923"/><rect x="224" y="224" width="64" height="64" fill="#ffd166"/><rect x="288" y="224" width="64" height="64" fill="#ff6b6b"/>
+  </g>
+  <text x="96" y="456" font-family="monospace" font-size="48" fill="#f8fafc">PIXEL SAFE</text>
+</svg>

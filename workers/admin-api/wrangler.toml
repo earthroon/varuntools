@@ -1,0 +1,17 @@
+name = "varuntools-admin-api"
+main = "src/index.ts"
+compatibility_date = "2026-05-06"
+
+[vars]
+ADMIN_API_MODE = "not_configured"
+ADMIN_API_READ_ONLY = "true"
+
+[[d1_databases]]
+binding = "ADMIN_DB"
+database_name = "varuntools-purchases"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"
+
+[[d1_databases]]
+binding = "INQUIRY_DB"
+database_name = "varuntools-inquiries"
+database_id = "REPLACE_WITH_INQUIRY_D1_DATABASE_ID"

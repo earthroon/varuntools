@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-label="Synthetic EWA disabled fixture">
+  <rect width="1200" height="760" fill="#fef2f2"/>
+  <rect x="80" y="80" width="1040" height="600" rx="36" fill="#fff" stroke="#ef4444" stroke-width="5"/>
+  <text x="140" y="190" font-family="Arial,sans-serif" font-size="54" font-weight="800" fill="#991b1b">EWA DISABLED</text>
+  <rect x="140" y="270" width="920" height="72" fill="#fee2e2" stroke="#fecaca" stroke-width="4"/>
+  <rect x="140" y="380" width="620" height="38" fill="#fecaca"/>
+  <rect x="140" y="452" width="780" height="38" fill="#fecaca"/>
+  <rect x="140" y="524" width="430" height="38" fill="#fecaca"/>
+</svg>

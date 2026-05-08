@@ -1,0 +1,83 @@
+varun-video,
+before-after-wiper,
+image-card,
+callout-box {
+  display: block;
+}
+
+varun-video,
+before-after-wiper,
+image-card {
+  margin: 1.2rem 0;
+  min-height: 96px;
+  border: 1px dashed var(--hair2);
+  border-radius: var(--r-md);
+  background: rgba(255, 255, 255, 0.42);
+}
+
+callout-box {
+  margin: 1rem 0;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--hair);
+  border-radius: var(--r-sm);
+  background: rgba(255, 255, 255, 0.62);
+  color: var(--ink-soft);
+}
+
+callout-box[data-type='warning'] {
+  border-color: rgba(216, 76, 76, 0.28);
+  background: rgba(216, 76, 76, 0.08);
+  color: rgba(120, 20, 20, 0.92);
+}
+
+callout-box[data-type='tip'] {
+  border-color: rgba(10, 132, 255, 0.22);
+  background: rgba(10, 132, 255, 0.08);
+}
+
+.vt-directive-error {
+  margin: 1.4rem 0;
+  padding: 0.9rem 1rem;
+  border: 1px dashed rgba(216, 76, 76, 0.42);
+  border-radius: var(--vt-radius-md, var(--r-md));
+  background: rgba(216, 76, 76, 0.075);
+  color: var(--vt-ink, rgba(120, 20, 20, 0.92));
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.vt-directive-error::before {
+  content: 'Directive warning';
+  display: block;
+  margin-bottom: 0.35rem;
+  color: rgba(216, 76, 76, 0.92);
+  font-size: 0.74rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.vt-directive-raw {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: var(--r-sm);
+  overflow-x: auto;
+  background: rgba(15, 17, 21, 0.06);
+  border: 1px solid var(--hair);
+}
+
+.vt-directive-raw code {
+  color: var(--ink-soft);
+}
+
+captioned-image {
+  display: block;
+}
+
+pagecard-grid {
+  display: block;
+}
+
+markdown-box {
+  display: block;
+}

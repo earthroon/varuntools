@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000" role="img" aria-label="Synthetic UI screenshot EWA fixture">
+  <rect width="1600" height="1000" fill="#f7f8fb"/>
+  <rect x="70" y="70" width="1460" height="860" rx="36" fill="#ffffff" stroke="#101522" stroke-width="4"/>
+  <rect x="70" y="70" width="1460" height="90" rx="36" fill="#111827"/>
+  <circle cx="128" cy="116" r="15" fill="#ff6b6b"/><circle cx="174" cy="116" r="15" fill="#ffd166"/><circle cx="220" cy="116" r="15" fill="#3ddc97"/>
+  <rect x="110" y="216" width="300" height="650" rx="22" fill="#f1f3f7" stroke="#c7ccd6" stroke-width="3"/>
+  <rect x="458" y="216" width="960" height="92" rx="18" fill="#f8fafc" stroke="#c7ccd6" stroke-width="3"/>
+  <g font-family="Arial,sans-serif" fill="#111827">
+    <text x="500" y="276" font-size="36" font-weight="800">Inventory Dashboard</text>
+    <text x="128" y="274" font-size="24" font-weight="700">Navigation</text>
+  </g>
+  <g stroke="#9aa3b2" stroke-width="2">
+    <path d="M128 338 H352"/><path d="M128 390 H352"/><path d="M128 442 H352"/><path d="M128 494 H352"/>
+  </g>
+  <g>
+    <rect x="458" y="352" width="960" height="82" fill="#ffffff" stroke="#d3d8e2" stroke-width="2"/>
+    <rect x="458" y="434" width="960" height="82" fill="#f8fafc" stroke="#d3d8e2" stroke-width="2"/>
+    <rect x="458" y="516" width="960" height="82" fill="#ffffff" stroke="#d3d8e2" stroke-width="2"/>
+    <rect x="458" y="598" width="960" height="82" fill="#f8fafc" stroke="#d3d8e2" stroke-width="2"/>
+    <rect x="458" y="680" width="960" height="82" fill="#ffffff" stroke="#d3d8e2" stroke-width="2"/>
+  </g>
+  <g font-family="Arial,sans-serif" font-size="22" fill="#202938">
+    <text x="500" y="405">SKU-1024</text><text x="710" y="405">DreamColor LUT</text><text x="1120" y="405">ready</text>
+    <text x="500" y="487">SKU-2048</text><text x="710" y="487">Portfolio CSV</text><text x="1120" y="487">review</text>
+    <text x="500" y="569">SKU-4096</text><text x="710" y="569">EWA active image</text><text x="1120" y="569">debug</text>
+  </g>
+</svg>

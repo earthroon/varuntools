@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" role="img" aria-label="Synthetic line art EWA fixture">
+  <rect width="1200" height="1200" fill="#fbfbf9"/>
+  <g fill="none" stroke="#111111" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M180 940 C240 520 460 240 830 160" stroke-width="5"/>
+    <path d="M210 968 C314 748 430 610 600 510 C720 438 812 336 900 212" stroke-width="3"/>
+    <path d="M330 880 C410 660 548 472 748 310" stroke-width="2"/>
+    <circle cx="690" cy="590" r="260" stroke-width="4"/>
+    <circle cx="690" cy="590" r="180" stroke-width="2"/>
+    <path d="M430 590 H950 M690 330 V850" stroke-width="2"/>
+  </g>
+  <g stroke="#0a84ff" stroke-width="2" opacity=".7"><path d="M120 120 H1080"/><path d="M120 1080 H1080"/><path d="M120 120 V1080"/><path d="M1080 120 V1080"/></g>
+</svg>

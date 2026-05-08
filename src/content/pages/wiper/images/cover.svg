@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-label="Before After Wiper cover">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f8fbff"/>
+      <stop offset="1" stop-color="#dfeeff"/>
+    </linearGradient>
+    <linearGradient id="a" x1="0" x2="1">
+      <stop offset="0" stop-color="#0a84ff" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#0f1115" stop-opacity=".08"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="600" rx="48" fill="url(#bg)"/>
+  <rect x="90" y="90" width="780" height="420" rx="34" fill="#fff" stroke="rgba(15,17,21,.14)" stroke-width="4"/>
+  <rect x="90" y="90" width="390" height="420" rx="34" fill="url(#a)"/>
+  <line x1="480" y1="108" x2="480" y2="492" stroke="#fff" stroke-width="8"/>
+  <circle cx="480" cy="300" r="46" fill="#fff" stroke="rgba(15,17,21,.14)" stroke-width="4"/>
+  <text x="480" y="311" text-anchor="middle" font-size="30" font-family="system-ui" font-weight="800" fill="#0f1115">↔</text>
+  <text x="480" y="552" text-anchor="middle" font-size="28" font-family="system-ui" font-weight="800" fill="#0f1115">Before / After Wiper</text>
+</svg>

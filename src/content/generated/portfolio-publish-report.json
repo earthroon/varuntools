@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-07T12:00:39.013Z",
+  "summary": {
+    "checked": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "warnings": 2,
+    "infos": 3
+  },
+  "works": [
+    {
+      "slug": "works/varuntools-showroom",
+      "href": "/works/varuntools-showroom",
+      "title": "VARUNTOOLS Showroom System",
+      "status": "active",
+      "passed": true,
+      "errors": [],
+      "warnings": [
+        {
+          "level": "warning",
+          "code": "PUBLISH_MISSING_ALT",
+          "message": "Published work is missing cover alt text.",
+          "field": "alt"
+        },
+        {
+          "level": "warning",
+          "code": "PUBLISH_MISSING_RELATED_WORKS",
+          "message": "Published work has no related works.",
+          "field": "related"
+        }
+      ],
+      "infos": [
+        {
+          "level": "info",
+          "code": "PUBLISH_FEATURED_WORK",
+          "message": "Work is featured.",
+          "field": "work.featured"
+        },
+        {
+          "level": "info",
+          "code": "PUBLISH_TAG_COUNT",
+          "message": "Work has 4 tags.",
+          "field": "tags",
+          "count": 4
+        },
+        {
+          "level": "info",
+          "code": "PUBLISH_RELATED_COUNT",
+          "message": "Work has 0 related works.",
+          "field": "related",
+          "count": 0
+        }
+      ]
+    }
+  ]
+}

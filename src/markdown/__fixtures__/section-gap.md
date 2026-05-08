@@ -1,0 +1,3 @@
+::section-gap
+size: lg
+::

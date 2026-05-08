@@ -1,0 +1,273 @@
+/* Commit 56 — Command Palette UI */
+.vt-command-trigger {
+  position: fixed;
+  right: max(1rem, env(safe-area-inset-right));
+  bottom: max(1rem, env(safe-area-inset-bottom));
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: var(--vt-touch-target, 44px);
+  padding: 0.45rem 0.58rem 0.45rem 0.85rem;
+  border: 1px solid rgba(15, 17, 21, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--vt-ink);
+  box-shadow: var(--vt-shadow-2, 0 18px 50px rgba(15, 17, 21, 0.16));
+  cursor: pointer;
+  backdrop-filter: blur(18px);
+}
+
+.vt-command-trigger:hover {
+  transform: translateY(-1px);
+}
+
+.vt-command-trigger:focus-visible,
+.vt-command-palette__close:focus-visible,
+.vt-command-palette__input:focus-visible,
+.vt-command-palette__result-button:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.16);
+}
+
+.vt-command-trigger__text {
+  font-size: 0.82rem;
+  font-weight: 850;
+}
+
+.vt-command-trigger__key,
+.vt-command-palette__shortcut {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.7rem;
+  padding: 0 0.55rem;
+  border: 1px solid rgba(15, 17, 21, 0.1);
+  border-radius: 999px;
+  background: rgba(15, 17, 21, 0.06);
+  color: var(--vt-ink-muted);
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 850;
+}
+
+.vt-command-palette {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: start center;
+  padding: clamp(4rem, 12vh, 7rem) var(--vt-page-pad, 1rem) 2rem;
+}
+
+.vt-command-palette__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(15, 17, 21, 0.36);
+  cursor: default;
+  backdrop-filter: blur(8px);
+}
+
+.vt-command-palette__panel {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.9rem;
+  width: min(720px, 100%);
+  max-height: min(720px, calc(100vh - 6rem));
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.54);
+  border-radius: 28px;
+  background: rgba(255, 252, 246, 0.94);
+  box-shadow: 0 24px 90px rgba(15, 17, 21, 0.24);
+}
+
+.vt-command-palette__header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.2rem 1.2rem 0;
+}
+
+.vt-command-palette__eyebrow {
+  margin: 0 0 0.2rem;
+  color: var(--vt-ink-muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vt-command-palette__title {
+  margin: 0;
+  color: var(--vt-ink);
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  line-height: 1.18;
+}
+
+.vt-command-palette__close {
+  min-height: var(--vt-touch-target, 44px);
+  padding: 0 0.8rem;
+  border: 1px solid rgba(15, 17, 21, 0.1);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--vt-ink-muted);
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.vt-command-palette__search-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 0 1.2rem;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid rgba(15, 17, 21, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.vt-command-palette__icon {
+  color: var(--vt-ink-muted);
+  font-size: 1.1rem;
+}
+
+.vt-command-palette__input {
+  width: 100%;
+  min-height: 2.35rem;
+  border: 0;
+  background: transparent;
+  color: var(--vt-ink);
+  font: inherit;
+  font-size: 1rem;
+}
+
+.vt-command-palette__input:focus {
+  outline: none;
+}
+
+.vt-command-palette__status {
+  margin: 0;
+  padding: 0.2rem 1.2rem 1.2rem;
+  color: var(--vt-ink-soft);
+  line-height: 1.55;
+}
+
+.vt-command-palette__status--error {
+  color: #9f1239;
+}
+
+.vt-command-palette__results {
+  display: grid;
+  gap: 0.4rem;
+  max-height: min(440px, 52vh);
+  margin: 0;
+  padding: 0.2rem 0.8rem 0.9rem;
+  overflow: auto;
+  list-style: none;
+}
+
+.vt-command-palette__result-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  min-height: 4.15rem;
+  padding: 0.75rem 0.82rem;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.vt-command-palette__result--active .vt-command-palette__result-button,
+.vt-command-palette__result-button:hover {
+  border-color: rgba(15, 17, 21, 0.1);
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.vt-command-palette__result-main {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.vt-command-palette__result-main strong {
+  overflow: hidden;
+  color: var(--vt-ink);
+  font-size: 0.96rem;
+  font-weight: 900;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vt-command-palette__result-main span {
+  overflow: hidden;
+  color: var(--vt-ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vt-command-palette__result-meta {
+  flex: 0 0 auto;
+  max-width: 12rem;
+  overflow: hidden;
+  padding: 0.24rem 0.54rem;
+  border-radius: 999px;
+  background: rgba(15, 17, 21, 0.06);
+  color: var(--vt-ink-muted);
+  font-size: 0.72rem;
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 719px) {
+  .vt-command-trigger {
+    right: max(0.7rem, env(safe-area-inset-right));
+    bottom: max(0.7rem, env(safe-area-inset-bottom));
+  }
+
+  .vt-command-trigger__text,
+  .vt-command-palette__shortcut {
+    display: none;
+  }
+
+  .vt-command-palette {
+    place-items: end center;
+    padding: 1rem var(--vt-page-pad, 1rem) max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .vt-command-palette__panel {
+    max-height: min(720px, calc(100vh - 2rem));
+    border-radius: 24px;
+  }
+
+  .vt-command-palette__header {
+    padding: 1rem 1rem 0;
+  }
+
+  .vt-command-palette__search-row {
+    margin-inline: 1rem;
+  }
+
+  .vt-command-palette__result-button {
+    align-items: start;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vt-command-trigger:hover {
+    transform: none;
+  }
+}

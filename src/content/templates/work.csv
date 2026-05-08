@@ -1,0 +1,13 @@
+block,title,body,src,alt,caption,thumb,layout,kind,options,meta
+page,Project Title,프로젝트 설명을 여기에 작성합니다.,./images/cover.webp,,,./images/cover.webp,,,tags=work|design; order=10; gallery.autoMini=true; slug=__SLUG__; kind=work; status=active; visibility=public,
+heading,Project Title,,,,,,,h1,,
+box,프로젝트 요약,이 작업의 목적과 역할과 결과를 짧게 정리합니다.,,,,,,ssot,,
+image,,,./images/cover.webp,Cover,[필수] 대표 이미지 설명,,,,,
+section-gap,,,,,,,,,,
+heading,Process,,,,,,,h2,,
+image,,,./images/step-01.webp,Step 01,[선택] 과정 이미지 1,,,,,
+image,,,./images/step-02.webp,Step 02,[선택] 과정 이미지 2,,,,,
+gallery-start,작업 이미지,작업 과정과 결과물을 묶은 수동 갤러리입니다.,,,,,strip,,lightbox=true,
+gallery-item,,,./images/step-01.webp,,초기 시안,./images/step-01.webp,,,,title=초기 시안; tag=draft
+gallery-item,,,./images/step-02.webp,,보정안,./images/step-02.webp,,,,title=보정안; tag=final
+gallery-end,,,,,,,,,,

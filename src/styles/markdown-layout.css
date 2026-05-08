@@ -1,0 +1,119 @@
+/* Commit 50 — Media Breakout Rail / Wide Image Layout */
+.vt-media-breakout {
+  box-sizing: border-box;
+  width: min(var(--vt-media-max), calc(100vw - (var(--vt-page-pad) * 2)));
+  max-width: min(var(--vt-media-max), calc(100vw - (var(--vt-page-pad) * 2)));
+  margin-inline-start: 50%;
+  margin-inline-end: 0;
+  transform: translateX(-50%);
+}
+
+section-gap,
+section-break {
+  display: block;
+}
+
+.vt-section-gap {
+  height: var(--vt-section-gap-height, 60px);
+}
+
+.vt-section-gap.is-sm {
+  --vt-section-gap-height: 32px;
+}
+
+.vt-section-gap.is-md {
+  --vt-section-gap-height: 60px;
+}
+
+.vt-section-gap.is-lg {
+  --vt-section-gap-height: 96px;
+}
+
+.vt-section-gap.is-xl {
+  --vt-section-gap-height: 140px;
+}
+
+.vt-section-break {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 14px;
+  align-items: center;
+  margin: 3rem 0 2.2rem;
+  color: var(--vt-ink-muted);
+}
+
+.vt-section-break::before,
+.vt-section-break::after {
+  content: "";
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(15, 17, 21, 0.14),
+    transparent
+  );
+}
+
+.vt-section-break__label {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0.24rem 0.7rem;
+  border: 1px solid var(--vt-hair);
+  border-radius: var(--vt-radius-pill);
+  background: rgba(255, 255, 255, 0.62);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.vt-section-break.is-accent::before,
+.vt-section-break.is-accent::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(10, 132, 255, 0.28),
+    transparent
+  );
+}
+
+.vt-section-break.is-accent .vt-section-break__label {
+  border-color: rgba(10, 132, 255, 0.22);
+  background: rgba(10, 132, 255, 0.08);
+  color: var(--vt-ink);
+}
+
+.vt-section-break.is-ink::before,
+.vt-section-break.is-ink::after {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(15, 17, 21, 0.24),
+    transparent
+  );
+}
+
+@media (max-width: 900px) {
+  .vt-section-gap.is-sm {
+    --vt-section-gap-height: 24px;
+  }
+
+  .vt-section-gap.is-md {
+    --vt-section-gap-height: 44px;
+  }
+
+  .vt-section-gap.is-lg {
+    --vt-section-gap-height: 72px;
+  }
+
+  .vt-section-gap.is-xl {
+    --vt-section-gap-height: 100px;
+  }
+
+  .vt-section-break {
+    gap: 10px;
+    margin: 2.4rem 0 1.8rem;
+  }
+}

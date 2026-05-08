@@ -1,0 +1,35 @@
+/* Commit 27 — shared accessibility/focus/reduced-motion seal */
+:where(
+  a,
+  button,
+  input,
+  summary,
+  [tabindex]:not([tabindex='-1'])
+):focus-visible {
+  outline: 2px solid rgba(10, 132, 255, 0.58);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+
+  .vt-pagecard,
+  .vt-work-card,
+  .vt-image-card,
+  .vt-captioned-image__tooltip,
+  .vt-markdown-box__chevron,
+  .vt-before-after__handle,
+  .vt-before-after__line,
+  .vt-toc__link,
+  .vt-toc__control,
+  .vt-toc__toggle,
+  .vt-lightbox,
+  .vt-lightbox * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

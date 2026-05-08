@@ -1,0 +1,3 @@
+# Legacy Box Invalid
+
+> [!note]

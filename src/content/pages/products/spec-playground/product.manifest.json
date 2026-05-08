@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "slug": "spec-playground",
+  "sku": "DEMO-SPEC-PLAYGROUND",
+  "title": "Product Spec Playground",
+  "isDemo": true,
+  "status": "coming-soon",
+  "visibility": "public",
+  "product": {
+    "type": "digital",
+    "category": "templates",
+    "subcategory": "workflow",
+    "collection": "varun-tools",
+    "series": "store-starter",
+    "price": 0,
+    "currency": "KRW",
+    "priceVisible": false,
+    "shippingRequired": false
+  },
+  "assets": {
+    "cover": "./images/cover.svg",
+    "thumbnail": "./images/cover.svg",
+    "ogImage": "./images/cover.svg",
+    "gallery": [
+      "./images/cover.svg"
+    ]
+  },
+  "checkout": {
+    "provider": "none",
+    "checkoutUrl": "",
+    "mode": "disabled",
+    "successUrl": "",
+    "failUrl": "",
+    "claimRedirect": "",
+    "trustBoundary": "frontend-handoff-only"
+  },
+  "delivery": {
+    "mode": "post-purchase",
+    "provider": "cloudflare-r2",
+    "access": "private",
+    "workerIntegration": "future",
+    "r2": {
+      "bucketBinding": "VARUNTOOLS_PRODUCT_BUCKET",
+      "keyPrefix": "products/spec-playground/"
+    },
+    "deliverables": [],
+    "note": "Demo product. No public download URL is exposed. Future Worker should deliver R2 objects after purchase."
+  },
+  "inquiry": {
+    "inquiryUrl": "/inquiry"
+  },
+  "launch": {
+    "readyForCatalog": false,
+    "readyForCheckout": false,
+    "reviewedPolicy": false,
+    "reviewedAssets": false
+  },
+  "variants": [
+    {
+      "id": "personal",
+      "label": "Personal Demo License",
+      "status": "draft",
+      "licenseScope": "personal",
+      "price": 0,
+      "currency": "KRW",
+      "checkoutMode": "disabled",
+      "checkoutUrl": "",
+      "deliverableSetId": "demo-pack",
+      "default": true
+    },
+    {
+      "id": "commercial",
+      "label": "Commercial Demo License",
+      "status": "draft",
+      "licenseScope": "commercial",
+      "price": 0,
+      "currency": "KRW",
+      "checkoutMode": "disabled",
+      "checkoutUrl": "",
+      "deliverableSetId": "demo-pack"
+    }
+  ],
+  "deliverableSets": [
+    {
+      "id": "demo-pack",
+      "label": "Demo Pack",
+      "deliverableIds": []
+    }
+  ],
+  "bundles": [
+    {
+      "id": "starter-bundle",
+      "label": "Starter Bundle",
+      "status": "draft",
+      "productSlugs": [
+        "spec-playground",
+        "dummy-catalog"
+      ],
+      "variantRefs": [
+        {
+          "productSlug": "spec-playground",
+          "variantId": "personal"
+        }
+      ],
+      "price": 0,
+      "currency": "KRW",
+      "checkoutMode": "disabled",
+      "checkoutUrl": ""
+    }
+  ]
+}

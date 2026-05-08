@@ -1,0 +1,14 @@
+block,title,body,src,alt,caption,thumb,layout,kind,options,meta
+page,Product Title,상품 설명을 작성합니다.,./images/cover.webp,,,./images/cover.webp,,,tags=product; order=10; featured=true; gallery.autoMini=true; slug=__SLUG__; kind=product; status=active; visibility=public; series=; collection=; releaseDate=,
+product,Product Title,상품 판매 정보입니다.,./images/cover.webp,,,./images/cover.webp,,,slug=__SLUG__; type=physical; sku=VT-PRODUCT-001; price=0; currency=KRW; priceVisible=true; status=coming-soon; category=; subcategory=; stock=unknown; checkoutProvider=none; checkoutMode=disabled; checkoutUrl=; successUrl=; failUrl=; claimRedirect=/claim; externalStoreUrl=; downloadProvider=cloudflare; downloadUrl=; shippingRequired=true; showWhenUnavailable=true; isDemo=false; readyForCatalog=false; license=; series=; collection=; material=; size=; releaseDate=; shippingNote=; refundNote=; digitalDeliveryNote=; policyNote=; inquiryUrl=; externalUrl=,
+heading,Product Title,,,,,,,h1,,
+box,상품 요약,이 상품이 무엇인지 핵심 특징을 정리합니다.,,,,,,ssot,,
+product-cta,,,,,,,,,,
+product-trust,,,,,,,,,,
+image,,,./images/cover.webp,Product Cover,[필수] 상품 대표 이미지,,,,,
+section-gap,,,,,,,,,,
+heading,Details,,,,,,,h2,,
+paragraph,,상품 상세 설명을 작성합니다.,,,,,,,,
+gallery-start,상품 이미지,상품 상세 이미지를 묶은 갤러리입니다.,,,,,grid,,lightbox=true,
+gallery-item,,,./images/cover.webp,,상품 대표 이미지,./images/cover.webp,,,,title=대표컷; tag=cover
+gallery-end,,,,,,,,,,

@@ -1,0 +1,3 @@
+block,title,body,src,alt,caption,thumb,layout,kind,options,meta
+page,Invalid Unsafe Url,This fixture should fail.,,,,,,,,
+image,,Unsafe asset,javascript:alert(1),Unsafe asset,Caption,,,,,

@@ -1,0 +1,14 @@
+block,title,body,src,alt,caption,thumb,layout,kind,options,meta
+page,더미 카탈로그 상품,나중에 실제 상품으로 첨삭하기 위한 작성용 더미 카탈로그 페이지입니다.,./images/cover.svg,,,./images/cover.svg,,,slug=products/dummy-catalog; kind=product; status=active; visibility=public; tags=product|dummy|catalog|template; order=30; featured=false; series=store-starter; collection=varun-tools; releaseDate=,
+product,더미 카탈로그 상품,판매 전 작성용 상품 메타데이터 샘플입니다.,./images/cover.svg,,,./images/cover.svg,,,type=digital; sku=VT-DUMMY-EDIT-ME; price=; currency=KRW; priceVisible=false; status=coming-soon; category=templates; subcategory=workflow; stock=unknown; checkoutProvider=toss-payments; checkoutUrl=; externalStoreUrl=; downloadProvider=cloudflare; downloadUrl=; shippingRequired=false; showWhenUnavailable=true; license=personal; series=store-starter; collection=varun-tools; material=디지털 템플릿 샘플; size=편집 전 입력; releaseDate=; shippingNote=디지털 상품 샘플이므로 배송이 필요하지 않습니다.; refundNote=실제 상품 등록 시 교환 환불 조건을 선배가 첨삭합니다.; digitalDeliveryNote=디지털 상품으로 바꾸는 경우 제공 방식을 적습니다.; policyNote=이 페이지는 작성용 더미이며 결제 링크가 없습니다.; inquiryUrl=/inquiry; externalUrl=,
+heading,더미 카탈로그 상품,,,,,,,h1,,
+box,첨삭용 더미 페이지,이 페이지는 상품 상세 구조와 taxonomy 필터를 눈으로 확인하기 위한 더미입니다. 실제 판매 상품으로 바꿀 때 제목 설명 이미지 가격 상태 링크 정책 메모를 순서대로 교체합니다.,,,,,,ssot,,
+product-cta,,,,,,,,,,
+product-trust,,,,,,,,,,
+image,,,./images/cover.svg,더미 카탈로그 상품 커버,[필수] 작성용 대표 이미지,,,,,
+section-gap,,,,,,,,,,
+heading,Taxonomy 첨삭 체크리스트,,,,,,,h2,,
+paragraph,,1. category는 상품이 놓일 매대를 고릅니다. 2. type은 제공 방식을 고릅니다. 3. collection은 브랜드나 기획 묶음을 고릅니다. 4. series는 연작이나 세트명을 kebab-case로 입력합니다. 5. tags에는 검색 보조어만 남깁니다.,,,,,,,,
+gallery-start,더미 상품 이미지,대표 이미지와 상세 이미지를 나중에 교체하기 위한 자리입니다.,,,,,grid,,lightbox=true,
+gallery-item,,,./images/cover.svg,,더미 대표 이미지,./images/cover.svg,,,,title=대표컷; tag=dummy
+gallery-end,,,,,,,,,,

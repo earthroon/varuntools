@@ -1,0 +1,17 @@
+{
+  "name": "varuntools-delivery-worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "check": "tsc --noEmit",
+    "smoke:redemption": "node ../../scripts/smoke-delivery-redemption.mjs",
+    "smoke:payment-grant-flow": "node ../../scripts/smoke-payment-grant-flow.mjs"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "wrangler": "latest"
+  }
+}

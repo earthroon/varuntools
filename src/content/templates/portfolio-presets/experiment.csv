@@ -1,0 +1,12 @@
+block,title,body,src,alt,caption,thumb,layout,kind,options,meta
+page,__TITLE__,실험형 작업 요약을 작성합니다.,./cover.svg,__TITLE__ cover,대표 이미지 설명,./thumb.svg,,,"work.type=experiment; work.status=__STATUS__; work.featured=__FEATURED__; work.weight=50; work.year=2026; work.role=[Design Engineer]; work.stack=[Vue, TypeScript]; work.tags=[portfolio, experiment]; slug=__SLUG__; kind=work; status=__STATUS__; visibility=public",
+portfolio-hero,__TITLE__,실험의 질문과 조건을 작성합니다.,./cover.svg,__TITLE__ hero,히어로 이미지 설명,./thumb.svg,split,experiment,"role=[Researcher, Prototype Engineer]; stack=[TypeScript, Prototype]; year=2026; featured=__FEATURED__",
+work-summary,실험 개요,"실험 목적, 조건, 범위를 작성합니다.",,,,,,,"role=[Researcher, Prototype Engineer]; stack=[TypeScript, Prototype]; period=2026",
+problem,질문,검증하려는 질문을 작성합니다.,,,,,,,axis=hypothesis,
+process,과정,실험 조건과 절차를 작성합니다.,,,,,,,phase=experiment,
+decision,판단,실험 중 내린 판단과 근거를 작성합니다.,,,,,,ssot,ssot=experiment-log,
+result,결과,실험 결과와 한계를 작성합니다.,,,,,,,impact=learning,
+metric,프로토타입,검증된 실험 단위를 작성합니다.,,,,,,quality,value=1; unit=prototype; label=검증된 실험 단위,
+tool-stack,Tool Stack,,,,,,,,"stack=[TypeScript, Prototype]; tools=[Vite]; runtime=[Browser]",
+quote,실험 메모,실험에서 남은 핵심 문장을 작성합니다.,,,,,,,by=__TITLE__; tone=quiet,
+related-works,관련 작업,,,,,,,,items=[todo-related-work]; layout=grid,

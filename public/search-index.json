@@ -1,0 +1,220 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-06T03:57:22.244Z",
+  "entries": [
+    {
+      "slug": "home",
+      "href": "/",
+      "title": "VARUN Tools",
+      "description": "작업물, 상품, 도구, 실험을 정리하는 VARUNTOOLS 쇼룸",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "tags": [
+        "home",
+        "portfolio",
+        "tools"
+      ],
+      "thumbnail": "./images/cover.svg",
+      "order": 0,
+      "featured": false,
+      "updated": ""
+    },
+    {
+      "slug": "works/varuntools-showroom",
+      "href": "/works/varuntools-showroom",
+      "title": "VARUNTOOLS Showroom System",
+      "description": "홈, 작업, 도구, 실험, 상품 카탈로그를 하나의 콘텐츠 구조로 묶은 VARUNTOOLS 쇼룸 시스템.",
+      "kind": "work",
+      "status": "active",
+      "visibility": "public",
+      "tags": [
+        "work",
+        "homepage",
+        "store",
+        "system"
+      ],
+      "thumbnail": "./images/cover.svg",
+      "order": 1,
+      "featured": true,
+      "updated": ""
+    },
+    {
+      "slug": "docs/works",
+      "href": "/docs/works",
+      "title": "Works",
+      "description": "VARUNTOOLS 작업과 도구를 카드로 모아보는 인덱스",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "tags": [],
+      "thumbnail": "",
+      "order": 2,
+      "featured": false,
+      "updated": ""
+    },
+    {
+      "slug": "tools/wiper",
+      "href": "/tools/wiper",
+      "title": "Before / After Wiper",
+      "description": "이미지 전후를 비교하는 쇼룸형 와이퍼 컴포넌트",
+      "kind": "tool",
+      "status": "active",
+      "visibility": "public",
+      "tags": [
+        "tool",
+        "image",
+        "markdown"
+      ],
+      "thumbnail": "./images/cover.svg",
+      "order": 3,
+      "featured": true,
+      "updated": "2026-04-26"
+    },
+    {
+      "slug": "lab/markdown-gallery",
+      "href": "/lab/markdown-gallery",
+      "title": "Markdown Gallery Lab",
+      "description": "A validation-clean component gallery for native Markdown surfaces.",
+      "kind": "lab",
+      "status": "active",
+      "visibility": "public",
+      "tags": [
+        "lab",
+        "qa",
+        "markdown",
+        "media"
+      ],
+      "thumbnail": "./images/cover.svg",
+      "order": 4,
+      "featured": true,
+      "updated": "2026-05-04"
+    },
+    {
+      "slug": "products",
+      "href": "/products",
+      "title": "Products",
+      "description": "판매 가능 상품과 준비 중인 상품을 모아두는 카탈로그입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "tags": [
+        "products",
+        "store"
+      ],
+      "thumbnail": "",
+      "order": 20,
+      "featured": false,
+      "updated": ""
+    },
+    {
+      "slug": "products/categories",
+      "href": "/products/categories",
+      "title": "Product Categories",
+      "description": "상품을 카테고리별 매대로 둘러봅니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "tags": [
+        "products",
+        "store",
+        "categories"
+      ],
+      "thumbnail": "",
+      "order": 21,
+      "featured": false,
+      "updated": ""
+    },
+    {
+      "slug": "products/categories/templates",
+      "href": "/products/categories/templates",
+      "title": "Templates",
+      "description": "Notion, 문서, 워크플로우 템플릿 계열 상품을 모아봅니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "tags": [
+        "products",
+        "store",
+        "category",
+        "templates"
+      ],
+      "thumbnail": "",
+      "order": 22,
+      "featured": false,
+      "updated": ""
+    },
+    {
+      "slug": "products/dummy-catalog",
+      "href": "/products/dummy-catalog",
+      "title": "더미 카탈로그 상품",
+      "description": "나중에 실제 상품으로 첨삭하기 위한 작성용 더미 카탈로그 페이지입니다.",
+      "kind": "product",
+      "status": "active",
+      "visibility": "public",
+      "tags": [
+        "product",
+        "dummy",
+        "catalog",
+        "template"
+      ],
+      "thumbnail": "./images/cover.svg",
+      "order": 30,
+      "featured": false,
+      "updated": "",
+      "product": {
+        "type": "digital",
+        "status": "coming-soon",
+        "priceVisible": false,
+        "currency": "KRW",
+        "category": "templates",
+        "subcategory": "workflow",
+        "series": "store-starter",
+        "collection": "varun-tools"
+      }
+    },
+    {
+      "slug": "inquiry",
+      "href": "/inquiry",
+      "title": "Inquiry",
+      "description": "VARUN Tools 문의 창구입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "tags": [
+        "inquiry",
+        "contact"
+      ],
+      "thumbnail": "",
+      "order": 90,
+      "featured": false,
+      "updated": ""
+    },
+    {
+      "slug": "products/spec-playground",
+      "href": "/products/spec-playground",
+      "title": "Product Spec Playground",
+      "description": "상품 스펙 블록, 옵션, 제공 조건 표시를 확인하기 위한 더미 상품 페이지입니다.",
+      "kind": "product",
+      "status": "active",
+      "visibility": "public",
+      "tags": [
+        "demo",
+        "scaffold",
+        "spec-test",
+        "product"
+      ],
+      "thumbnail": "./images/cover.svg",
+      "order": 999,
+      "featured": false,
+      "updated": "",
+      "product": {
+        "type": "digital",
+        "status": "coming-soon",
+        "category": "templates",
+        "subcategory": "workflow",
+        "collection": "varun-tools"
+      }
+    }
+  ]
+}

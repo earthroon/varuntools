@@ -1,0 +1,5 @@
+import type { InquiryStatus } from './inquiryTypes'
+const TRANSITIONS: Record<InquiryStatus, InquiryStatus[]> = { new:['triaged','spam'], triaged:['in-progress','waiting-reply','closed','spam'], 'in-progress':['waiting-reply','closed','spam'], 'waiting-reply':['in-progress','closed','spam'], spam:['closed','triaged'], closed:['in-progress'] }
+export function canTransitionInquiryStatus(from:InquiryStatus,to:InquiryStatus):boolean{ if(from===to) return true; return TRANSITIONS[from]?.includes(to) ?? false }
+export function transitionRequiresNote(from:InquiryStatus,to:InquiryStatus):boolean{ return (from==='closed'&&to==='in-progress') || (from==='spam'&&to==='triaged') }
+export function describeInvalidInquiryTransition(from:InquiryStatus,to:InquiryStatus):string{ if(from==='closed'&&to==='new') return 'Closed inquiries cannot be reset to new.'; if(from==='spam'&&to==='new') return 'Spam inquiries cannot be reset to new.'; return `Inquiry status cannot transition from ${from} to ${to}.` }

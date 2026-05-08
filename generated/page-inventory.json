@@ -1,0 +1,444 @@
+{
+  "generatedAt": "2026-05-08T03:01:03.832Z",
+  "pages": [
+    {
+      "source": "src/content/pages/checkout/fail/index.md",
+      "routePath": "/checkout/fail",
+      "slug": "checkout/fail",
+      "title": "Checkout failed or canceled",
+      "description": "Buyer landing page after checkout failure or cancellation.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "featured": false,
+      "robots": "noindex,follow",
+      "noindex": true,
+      "section": "checkout",
+      "tags": []
+    },
+    {
+      "source": "src/content/pages/checkout/success/index.md",
+      "routePath": "/checkout/success",
+      "slug": "checkout/success",
+      "title": "Checkout confirmation",
+      "description": "Buyer landing page after checkout provider success redirect.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "featured": false,
+      "robots": "noindex,follow",
+      "noindex": true,
+      "section": "checkout",
+      "tags": []
+    },
+    {
+      "source": "src/content/pages/claim/index.md",
+      "routePath": "/claim",
+      "slug": "claim",
+      "title": "구매 파일 수령",
+      "description": "결제 후 발급된 수령 정보를 입력해 구매 파일 수령 절차를 확인합니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "featured": false,
+      "order": 92,
+      "robots": "noindex,follow",
+      "noindex": true,
+      "section": "claim",
+      "tags": [
+        "claim",
+        "delivery",
+        "store"
+      ]
+    },
+    {
+      "source": "src/content/pages/home/index.md",
+      "routePath": "/",
+      "slug": "home",
+      "title": "VARUN Tools",
+      "description": "디자인, 도구, 실험, 상품을 모아둔 바룬툴즈 작업실입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "featured": false,
+      "order": 0,
+      "robots": null,
+      "noindex": false,
+      "section": "home",
+      "tags": [
+        "home",
+        "portfolio",
+        "tools"
+      ]
+    },
+    {
+      "source": "src/content/pages/inquiry/index.md",
+      "routePath": "/inquiry",
+      "slug": "inquiry",
+      "title": "Inquiry",
+      "description": "VARUN Tools 문의 창구입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "featured": false,
+      "order": 90,
+      "robots": null,
+      "noindex": false,
+      "section": "inquiry",
+      "tags": [
+        "inquiry",
+        "contact"
+      ]
+    },
+    {
+      "source": "src/content/pages/lab-markdown-gallery/index.md",
+      "routePath": "/lab-markdown-gallery",
+      "slug": "lab-markdown-gallery",
+      "title": "Markdown Gallery Lab",
+      "description": "Visual QA board for VARUNTOOLS Markdown components.",
+      "kind": "lab",
+      "status": "active",
+      "visibility": "public",
+      "featured": true,
+      "order": 4,
+      "robots": null,
+      "noindex": false,
+      "section": "lab",
+      "tags": [
+        "lab",
+        "qa",
+        "markdown",
+        "media"
+      ]
+    },
+    {
+      "source": "src/content/pages/policies/digital-download/index.md",
+      "routePath": "/policies/digital-download",
+      "slug": "policies/digital-download",
+      "title": "디지털 다운로드 안내",
+      "description": "디지털 상품 파일 제공 방식과 사용 범위 안내입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "hidden",
+      "featured": false,
+      "order": 905,
+      "robots": "noindex,follow",
+      "noindex": true,
+      "section": "policies",
+      "tags": [
+        "policy",
+        "digital-download"
+      ]
+    },
+    {
+      "source": "src/content/pages/policies/index.md",
+      "routePath": "/policies",
+      "slug": "policies",
+      "title": "Store Policies",
+      "description": "바룬툴즈 스토어 정책 안내 허브입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "hidden",
+      "featured": false,
+      "order": 900,
+      "robots": "noindex,follow",
+      "noindex": true,
+      "section": "policies",
+      "tags": [
+        "policy",
+        "store"
+      ]
+    },
+    {
+      "source": "src/content/pages/policies/privacy/index.md",
+      "routePath": "/policies/privacy",
+      "slug": "policies/privacy",
+      "title": "개인정보 안내",
+      "description": "외부 결제, 외부 스토어, 문의 과정에서 적용될 수 있는 개인정보 처리 흐름 안내입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "hidden",
+      "featured": false,
+      "order": 904,
+      "robots": "noindex,follow",
+      "noindex": true,
+      "section": "policies",
+      "tags": [
+        "policy",
+        "privacy"
+      ]
+    },
+    {
+      "source": "src/content/pages/policies/refund/index.md",
+      "routePath": "/policies/refund",
+      "slug": "policies/refund",
+      "title": "환불/교환 안내",
+      "description": "구매 전 확인할 환불과 교환 안내 골격입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "hidden",
+      "featured": false,
+      "order": 903,
+      "robots": "noindex,follow",
+      "noindex": true,
+      "section": "policies",
+      "tags": [
+        "policy",
+        "refund"
+      ]
+    },
+    {
+      "source": "src/content/pages/policies/shipping/index.md",
+      "routePath": "/policies/shipping",
+      "slug": "policies/shipping",
+      "title": "배송 안내",
+      "description": "실물 상품의 배송 방식, 배송비, 발송 준비 상태를 구매 전 확인하기 위한 안내입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "hidden",
+      "featured": false,
+      "order": 902,
+      "robots": "noindex,follow",
+      "noindex": true,
+      "section": "policies",
+      "tags": [
+        "policy",
+        "shipping"
+      ]
+    },
+    {
+      "source": "src/content/pages/policies/store/index.md",
+      "routePath": "/policies/store",
+      "slug": "policies/store",
+      "title": "스토어 안내",
+      "description": "바룬툴즈 스토어의 상품 상태와 판매 방식 안내입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "hidden",
+      "featured": false,
+      "order": 901,
+      "robots": "noindex,follow",
+      "noindex": true,
+      "section": "policies",
+      "tags": [
+        "policy",
+        "store"
+      ]
+    },
+    {
+      "source": "src/content/pages/products/categories/index.md",
+      "routePath": "/products/categories",
+      "slug": "products/categories",
+      "title": "Product Categories",
+      "description": "바룬툴즈 상품 카테고리 안내입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "featured": false,
+      "order": 21,
+      "robots": null,
+      "noindex": false,
+      "section": "products",
+      "tags": [
+        "products",
+        "store",
+        "categories"
+      ]
+    },
+    {
+      "source": "src/content/pages/products/categories/templates/index.md",
+      "routePath": "/products/categories/templates",
+      "slug": "products/categories/templates",
+      "title": "Templates",
+      "description": "바룬툴즈 템플릿 상품 카테고리입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "featured": false,
+      "order": 22,
+      "robots": null,
+      "noindex": false,
+      "section": "products",
+      "tags": [
+        "products",
+        "store",
+        "category",
+        "templates"
+      ]
+    },
+    {
+      "source": "src/content/pages/products/dummy-catalog/index.md",
+      "routePath": "/products/dummy-catalog",
+      "slug": "products/dummy-catalog",
+      "title": "더미 카탈로그 상품",
+      "description": "나중에 실제 상품으로 첨삭하기 위한 작성용 더미 카탈로그 페이지입니다.",
+      "kind": "product",
+      "status": "active",
+      "visibility": "hidden",
+      "featured": false,
+      "order": 30,
+      "robots": [
+        "noindex"
+      ],
+      "noindex": true,
+      "section": "products",
+      "tags": [
+        "product",
+        "dummy",
+        "catalog",
+        "template"
+      ]
+    },
+    {
+      "source": "src/content/pages/products/index.md",
+      "routePath": "/products",
+      "slug": "products",
+      "title": "Products",
+      "description": "바룬툴즈 상품 카탈로그입니다.",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "featured": false,
+      "order": 20,
+      "robots": null,
+      "noindex": false,
+      "section": "products",
+      "tags": [
+        "products",
+        "store"
+      ]
+    },
+    {
+      "source": "src/content/pages/products/spec-playground/index.md",
+      "routePath": "/products/spec-playground",
+      "title": "Product Spec Playground",
+      "description": "상품 스펙 블록, 옵션, 제공 조건 표시를 확인하기 위한 더미 상품 페이지입니다.",
+      "status": "active",
+      "visibility": "hidden",
+      "featured": false,
+      "order": 999,
+      "robots": [
+        "noindex"
+      ],
+      "noindex": true,
+      "section": "products",
+      "tags": [
+        "demo",
+        "scaffold",
+        "spec-test",
+        "product"
+      ]
+    },
+    {
+      "source": "src/content/pages/qa/ewa-gallery/index.md",
+      "routePath": "/qa/ewa-gallery",
+      "slug": "qa/ewa-gallery",
+      "title": "EWA Fixture Gallery",
+      "description": "EWA gallery processor QA page. This page is hidden and noindex.",
+      "kind": "qa",
+      "status": "active",
+      "visibility": "hidden",
+      "featured": false,
+      "order": 999,
+      "robots": "noindex,follow",
+      "noindex": true,
+      "section": "qa",
+      "tags": [
+        "qa",
+        "ewa",
+        "fixture",
+        "media"
+      ]
+    },
+    {
+      "source": "src/content/pages/wiper/index.md",
+      "routePath": "/wiper",
+      "slug": "wiper",
+      "title": "Before / After Wiper",
+      "description": "전후 비교 와이퍼 도구",
+      "kind": "tool",
+      "status": "active",
+      "visibility": "public",
+      "featured": true,
+      "order": 3,
+      "robots": null,
+      "noindex": false,
+      "section": "tools",
+      "tags": [
+        "tool",
+        "image",
+        "markdown"
+      ]
+    },
+    {
+      "source": "src/content/pages/works/editorial-showcase/index.md",
+      "routePath": "/works/editorial-showcase",
+      "slug": "works/editorial-showcase",
+      "title": "Editorial Block Showcase",
+      "description": "Portfolio editorial block preview surface for heading hierarchy and responsive column layouts.",
+      "kind": "work",
+      "status": "active",
+      "visibility": "hidden",
+      "featured": false,
+      "order": 125,
+      "robots": null,
+      "noindex": false,
+      "section": "works",
+      "tags": [
+        "portfolio",
+        "editorial",
+        "qa"
+      ]
+    },
+    {
+      "source": "src/content/pages/works/index.md",
+      "routePath": "/works",
+      "slug": "works",
+      "title": "Works",
+      "description": "작업 목록 설명 문서",
+      "kind": "page",
+      "status": "active",
+      "visibility": "public",
+      "featured": false,
+      "order": 2,
+      "robots": null,
+      "noindex": false,
+      "section": "works",
+      "tags": []
+    },
+    {
+      "source": "src/content/pages/works/varuntools-showroom/index.md",
+      "routePath": "/works/varuntools-showroom",
+      "slug": "works/varuntools-showroom",
+      "title": "VARUNTOOLS Showroom System",
+      "description": "바룬툴즈 홈페이지와 스토어 카탈로그 구조를 정리한 쇼룸 시스템 작업입니다.",
+      "kind": "work",
+      "status": "active",
+      "visibility": "public",
+      "featured": true,
+      "order": 1,
+      "robots": null,
+      "noindex": false,
+      "section": "works",
+      "tags": [
+        "work",
+        "homepage",
+        "store",
+        "system"
+      ]
+    }
+  ],
+  "summary": {
+    "total": 22,
+    "public": 12,
+    "hidden": 10,
+    "private": 0,
+    "draft": 0,
+    "noindex": 12,
+    "featured": 3,
+    "warnings": 0,
+    "errors": 0
+  },
+  "warnings": [],
+  "errors": []
+}

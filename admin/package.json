@@ -1,0 +1,1 @@
+{"name":"varuntools-admin","version":"0.1.0","private":true,"type":"module","scripts":{"dev":"vite --host 0.0.0.0","build":"vue-tsc --noEmit -p tsconfig.json && vite build","preview":"vite preview"},"dependencies":{"@vitejs/plugin-vue":"latest","vue":"latest","vue-router":"latest"},"devDependencies":{"typescript":"5.9.3","vite":"latest","vue-tsc":"latest"}}

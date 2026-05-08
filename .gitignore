@@ -1,0 +1,37 @@
+node_modules/
+dist/
+tmp/
+*.log
+.DS_Store
+.env
+.env.*
+!.env.example
+
+# QA screenshot artifacts
+artifacts/qa/screenshots/current/
+artifacts/qa/screenshots/diff/
+artifacts/qa/screenshots/tmp/
+
+artifacts/qa/screenshots/report.json
+artifacts/qa/screenshots/report.md
+# Commit 68 delivery worker local outputs
+workers/delivery/.wrangler/
+workers/delivery/dist/
+_private/product-files/*
+!_private/product-files/.gitkeep
+!_private/product-files/README.md
+artifacts/r2/*
+!artifacts/r2/.gitkeep
+
+# Clean upload exclusions
+BAKE_REPORT_COMMIT_*.md
+BROWSER_HOTFIX_BUFFER_REPORT.md
+REBAKE_MANIFEST*.md
+*.zip
+*.tar.gz
+*.sha256
+.dev.vars
+.wrangler/
+workers/**/.wrangler/
+workers/**/dist/
+src/content/generated/internal-docs-search-index.json

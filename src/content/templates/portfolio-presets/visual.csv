@@ -1,0 +1,13 @@
+block,title,body,src,alt,caption,thumb,layout,kind,options,meta
+page,__TITLE__,시각 작업 요약을 작성합니다.,./cover.svg,__TITLE__ cover,대표 이미지 설명,./thumb.svg,,,"work.type=visual; work.status=__STATUS__; work.featured=__FEATURED__; work.weight=50; work.year=2026; work.role=[Design Engineer]; work.stack=[Vue, TypeScript]; work.tags=[portfolio, visual]; slug=__SLUG__; kind=work; status=__STATUS__; visibility=public",
+portfolio-hero,__TITLE__,시각 작업의 감각적 중심을 작성합니다.,./cover.svg,__TITLE__ hero,히어로 이미지 설명,./thumb.svg,wide,visual,"role=[Visual Designer]; stack=[Brand, Layout]; year=2026; featured=__FEATURED__",
+work-summary,작업 개요,시각 방향과 결과물을 정리합니다.,,,,,,,"role=[Visual Designer]; stack=[Brand, Layout]; period=2026",
+problem,문제,시각적으로 해결해야 했던 긴장을 작성합니다.,,,,,,,axis=visual-tension,
+decision,판단,조형/톤/밀도에 대한 판단을 작성합니다.,,,,,,tone,ssot=visual-direction,
+result,결과,최종 시각 결과를 작성합니다.,,,,,,,impact=visual-ready,
+case-gallery-start,Visual Gallery,대표 시각 결과물을 묶습니다.,,,,,,,columns=2; variant=framed,
+case-gallery-item,,첫 번째 결과물,./gallery-01.svg,첫 번째 결과물,캡션을 작성합니다.,,,,label=01,
+case-gallery-item,,두 번째 결과물,./gallery-02.svg,두 번째 결과물,캡션을 작성합니다.,,,,label=02,
+case-gallery-end,,,,,,,,,,
+quote,시각 원칙,여기에 작업의 핵심 문장을 둡니다.,,,,,,,by=__TITLE__; tone=quiet,
+related-works,관련 작업,,,,,,,,items=[todo-related-work]; layout=grid,

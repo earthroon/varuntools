@@ -1,0 +1,11 @@
+column,required,default,allowed_values,notes
+opsStatus,yes,new,"new|triaged|needs-reply|replied|waiting-user|closed|spam|archived","Manual workflow state for each inquiry row."
+opsPriority,yes,normal,"low|normal|high|urgent","Operational urgency. Use urgent for payment/privacy/rights/support issues."
+replyNeed,yes,optional,"not-needed|optional|required","Whether an operator should reply."
+replyChannel,yes,none,"email|external|unavailable|none","How the reply can be sent. Email is optional on the public form."
+assignedTo,no,,free-text,"Operator name or initials."
+repliedAt,no,,date,"Date when a reply was sent."
+closedAt,no,,date,"Date when the inquiry was closed."
+internalMemo,no,,free-text,"Private operator note. Avoid unnecessary sensitive data."
+publicReplySummary,no,,free-text,"Short summary of what was sent to the user."
+nextAction,no,,free-text,"Next manual action to take."
