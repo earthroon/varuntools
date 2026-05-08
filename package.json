@@ -1,11 +1,11 @@
-{
+﻿{
   "name": "varuntools",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run validate:content && vite build",
+    "build": "npm run validate:content && vite build && node scripts/copy-spa-fallback.mjs",
     "build:pages": "npm run build && node scripts/create-spa-fallback.mjs",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
@@ -204,3 +204,4 @@
     "@vitejs/plugin-vue": "^5.2.4"
   }
 }
+

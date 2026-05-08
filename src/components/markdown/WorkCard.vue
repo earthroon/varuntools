@@ -1,5 +1,6 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed } from 'vue'
+import { RouterLink } from 'vue-router'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 import { toWorkCardEntry } from '@/markdown/pageRegistry'
 import { resolveContentAssetMeta } from '@/markdown/resolveContentAssets'
@@ -84,9 +85,11 @@ const metaLine = computed(() => card.value.period || (card.value.year ? String(c
 </script>
 
 <template>
-  <a
+  <component
+    :is="external ? 'a' : RouterLink"
     class="vt-work-card"
-    :href="safeHref"
+    :href="external ? safeHref : undefined"
+    :to="external ? undefined : safeHref"
     :target="external ? '_blank' : undefined"
     :rel="external ? 'noopener noreferrer' : undefined"
   >
@@ -117,23 +120,24 @@ const metaLine = computed(() => card.value.period || (card.value.year ? String(c
         {{ card.description }}
       </p>
 
-      <div v-if="roleChips.length" class="vt-work-card__chips" aria-label="역할">
+      <div v-if="roleChips.length" class="vt-work-card__chips" aria-label="??븷">
         <span v-for="item in roleChips" :key="`role-${item}`" class="vt-work-card__chip vt-work-card__chip--role">
           {{ item }}
         </span>
       </div>
 
-      <div v-if="stackChips.length" class="vt-work-card__chips" aria-label="기술 스택">
+      <div v-if="stackChips.length" class="vt-work-card__chips" aria-label="湲곗닠 ?ㅽ깮">
         <span v-for="item in stackChips" :key="`stack-${item}`" class="vt-work-card__chip">
           {{ item }}
         </span>
       </div>
 
-      <div v-if="tagChips.length" class="vt-work-card__chips vt-work-card__chips--muted" aria-label="태그">
+      <div v-if="tagChips.length" class="vt-work-card__chips vt-work-card__chips--muted" aria-label="?쒓렇">
         <span v-for="item in tagChips" :key="`tag-${item}`" class="vt-work-card__chip vt-work-card__chip--muted">
           #{{ item }}
         </span>
       </div>
     </div>
-  </a>
+  </component>
 </template>
+
