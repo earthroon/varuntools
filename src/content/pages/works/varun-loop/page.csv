@@ -1,5 +1,5 @@
 block,title,body,src,alt,caption,thumb,layout,kind,options,meta
-page,VARUN LOOP,"바룬 루프 소개문.",./videos/out.webm,VARUN LOOP cover,대표 이미지,./videos/out.webm,,,"work.type=case-study; work.status=draft; work.featured=false; work.year=2026; slug=works/varun-loop; kind=work; status=draft; visibility=public",
+page,VARUN LOOP,"바룬 루프 소개문.",./videos/out.webm,VARUN LOOP cover,대표 이미지,./videos/out.webm,,,"work.type=case-study; work.status=draft; work.featured=false; work.year=2026; slug=works/varun-loop; kind=work; status=published; visibility=public",
 portfolio-hero,VARUN LOOP,동영상을 짧은 루프클립으로 변환하는 툴입니다.,./cover.svg,VARUN LOOP hero,VARUN-LOOP로 제작한 GIF입니다.,./images/12.gif,split,case-study,"role=[Design Engineer]; stack=[Vue, TypeScript]; year=2026; featured=false",
 work-summary,작업 개요,"동영상 루프 제작툴, 데스크탑앱, 프리미어를 사용하지 않고도 루프클립 생성가능.",,,,,,,"role=[video_Loop_tool]; stack=[electron, javaScript, webgpu, Wgsl, css, Html]; period=2026; client=internal",
 role-stack,역할과 스택,,,,,,,,"role=[Design Engineer]; responsibility=[UX Structure, Frontend]; stack=[Vue, TypeScript]; tools=[Vite]",

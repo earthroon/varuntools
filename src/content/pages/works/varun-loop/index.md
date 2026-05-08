@@ -16,7 +16,7 @@ work:
   status: draft
 slug: works/varun-loop
 kind: work
-status: draft
+status: published
 visibility: public
 ---
 
