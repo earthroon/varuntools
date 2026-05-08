@@ -454,3 +454,84 @@
 .vt-work-empty-state strong {
   color: var(--vt-ink);
 }
+
+/* Commit hotfix - Works index containment and responsive grid repair
+   Keeps the search/filter panel and card grid inside the page column. */
+.vt-works-page,
+.vt-works-search,
+.vt-works-collection,
+.vt-works-collection__grid {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.vt-works-search {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 132px), 1fr));
+  overflow: hidden;
+}
+
+.vt-works-search__summary,
+.vt-works-search__active,
+.vt-works-taxonomy-preview {
+  grid-column: 1 / -1;
+}
+
+.vt-works-search__field,
+.vt-works-search__toggle,
+.vt-works-search__reset {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.vt-works-search__field--query {
+  min-width: 0;
+  grid-column: span 2;
+}
+
+.vt-works-search input[type='search'],
+.vt-works-search select,
+.vt-works-search__reset {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.vt-works-search__toggle {
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.vt-works-collection__grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  align-items: stretch;
+}
+
+.vt-works-collection__grid > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 720px) {
+  .vt-works-search {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vt-works-search__field--query,
+  .vt-works-search__reset {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 520px) {
+  .vt-works-search {
+    grid-template-columns: 1fr;
+  }
+
+  .vt-works-search__field--query,
+  .vt-works-search__reset {
+    grid-column: auto;
+  }
+}
