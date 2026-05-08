@@ -30,7 +30,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install --no-audit --fund=false --progress=false
+        run: npm install --include=dev --no-audit --fund=false --progress=false
 
       - name: Generate content inventory
         run: npm run content:page-inventory
@@ -61,4 +61,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
 
