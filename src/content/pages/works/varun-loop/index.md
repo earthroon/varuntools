@@ -1,11 +1,11 @@
 ---
 title: "VARUN LOOP"
-description: "케이스스터디 요약을 작성합니다."
-thumbnail: ./thumb.svg
-cover: ./cover.svg
+description: "바룬 루프 소개문."
+thumbnail: ./videos/out.webm
+cover: ./videos/out.webm
 work:
   type: case-study
-  summary: "작업의 핵심 문장을 작성합니다."
+  summary: "동영상을 짧은 루프클립으로 변환하는 툴입니다."
   featured: false
   year: 2026
   role:
@@ -14,10 +14,6 @@ work:
     - Vue
     - TypeScript
   status: draft
-  weight: 50
-  tags:
-    - portfolio
-    - case-study
 slug: works/varun-loop
 kind: work
 status: draft
@@ -34,24 +30,24 @@ Run: npm run csv:page -- src/content/pages/works/varun-loop/page.csv
 title: VARUN LOOP
 src: ./cover.svg
 alt: VARUN LOOP hero
-thumb: ./thumb.svg
+thumb: ./images/12.gif
 layout: split
 role-json: ["Design Engineer"]
 stack-json: ["Vue","TypeScript"]
 year: 2026
 featured: false
 ::
-작업의 핵심 문장을 작성합니다.
+동영상을 짧은 루프클립으로 변환하는 툴입니다.
 ::
 
 ::work-summary
 title: 작업 개요
-role-json: ["Design Engineer"]
-stack-json: ["Vue","TypeScript"]
+role-json: ["video_Loop_tool"]
+stack-json: ["electron","javaScript","webgpu","Wgsl","css","Html"]
 period: 2026
 client: internal
 ::
-역할, 범위, 결과를 짧게 정리합니다.
+동영상 루프 제작툴, 데스크탑앱, 프리미어를 사용하지 않고도 루프클립 생성가능.
 ::
 
 ::role-stack
@@ -65,10 +61,10 @@ responsibility-json: ["UX Structure","Frontend"]
 
 ::case-section
 type: problem
-title: 문제
+title: mov 등의 원본 영상을 짧은 루프 클립으로 변환하기 위하여
 axis: structure
 ::
-해결해야 할 문제와 압력을 작성합니다.
+'어도비'의 프리미어를 구동하여 일련의 인코딩 과정을 거치는 것이 병목으로 판단되어(간단한 일임에도 복잡한 범용프로그램을 켜는게 비효율적이라 생각되어) 해당 툴을 만들게 되었습니다.
 ::
 
 ::case-section
@@ -78,45 +74,40 @@ kind: ssot
 ssot: page.csv
 tradeoff: scope-control
 ::
-왜 이 구조를 선택했는지 작성합니다.
+웹을 거처로 삼으면 원본소스가 누출될 위험이 커지므로, 불안감이 싹트는 것을 막고자, 외부와 통신하지 않는 폐쇄적인 로컬앱으로 제작하게 되었습니다.
 ::
 
 ::case-section
 type: solution
-title: 해결
+title: 동영상 디코딩과 인코딩을 할때
 ::
-구현한 해결 구조를 작성합니다.
+기성라이브러리 CDN에 의존하면 라이브러리가 갱신되거나 만료될 시
 ::
 
 ::case-section
 type: process
-title: 과정
+title: 단순한 동영상>gif 툴을 제작하고자 C로 wasm을 작성했으나
 ::
-작업 흐름과 분기점을 작성합니다.
+추상화가 심한 C 언어의 특성상 플리커가 빈번하게 발생하여
 ::
 
 ::case-section
 type: result
-title: 결과
-impact: portfolio-ready
+title: 웹지피유 가속 방식
 ::
-정착된 결과와 배운 점을 작성합니다.
+동영상 스트리밍 방식
 ::
 
 ::metric-card
-title: 대표 지표
-value: 1
-unit: case
-label: 검증 기준
+title: 해당부분은 갱신예정.
 ::
-과장 없는 수치나 기준을 작성합니다.
 ::
 
 ::tool-stack
 title: Tool Stack
-stack-json: ["Vue","TypeScript"]
-tools-json: ["Vite"]
-runtime-json: ["Browser"]
+stack-json: ["electron","javaScript","webhpu","Wgsl","css","Html"]
+tools-json: ["electron"]
+runtime-json: ["Desktop app"]
 ::
 ::
 
