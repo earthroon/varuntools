@@ -1,9 +1,9 @@
-import { fileURLToPath, URL } from 'node:url'
+﻿import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
-  base: '/',
+  base: '/varuntools/',
   plugins: [vue()],
   resolve: {
     alias: {
@@ -11,3 +11,4 @@ export default defineConfig({
     },
   },
 })
+
