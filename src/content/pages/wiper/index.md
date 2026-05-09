@@ -14,7 +14,7 @@ date: "2026-04-26"
 updated: "2026-04-26"
 series: "markdown-tools"
 related:
-  - lab/markdown-gallery
+  - lab-markdown-gallery
 cover: "./images/cover.svg"
 cardTitle: "Before / After Wiper"
 cardDescription: "이미지 비교를 위한 전후 슬라이더 도구"

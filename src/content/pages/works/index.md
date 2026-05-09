@@ -1,6 +1,6 @@
 ---
 title: "Works"
-slug: "works"
+slug: "docs/works"
 layout: "default"
 theme: "showroom"
 description: "작업 목록 설명 문서"
@@ -88,8 +88,8 @@ subtitle: 도구, 실험, 쇼룸 페이지는 같은 흐름 안에서 서로의 
 
 ::pagecard-grid
 items:
-  - /tools/wiper
-  - /lab/markdown-gallery
+  - /wiper
+  - /lab-markdown-gallery
 columns: auto
 ::
 
@@ -107,7 +107,7 @@ title: Manual Card Example
 ::
 
 ::work-card
-slug: tools/wiper
+slug: wiper
 ::
 
 ### Preview Loop

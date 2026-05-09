@@ -249,7 +249,7 @@ export class EwaGalleryProcessor {
 
       const baseTierDecision = resolveEwaDeviceTier({
         diagnostics: makeRuntimeDiagnostics(runtime),
-        previousTotalMs: healthSnapshot.recentTotalMs.at(-1),
+        previousTotalMs: healthSnapshot.recentTotalMs[healthSnapshot.recentTotalMs.length - 1],
         previousTimeoutCount: healthSnapshot.timeouts,
       })
       const healthAdjustedTier = applyRuntimeHealthToTier(baseTierDecision.tier, healthSnapshot)
@@ -389,7 +389,7 @@ export class EwaGalleryProcessor {
       const computeStart = nowForEwaDiagnostics()
       if (computeMode === 'adaptive-tile' && preset.adaptive?.enabled && budget.allowAdaptiveTile) {
         try {
-          output = await runAdaptiveEwaTileDownscale({
+          const adaptiveOutput = await runAdaptiveEwaTileDownscale({
             device: runtime.device,
             source,
             targetWidth: target.width,
@@ -398,7 +398,8 @@ export class EwaGalleryProcessor {
             adaptive: preset.adaptive,
             label: 'vt_ewa_gallery_adaptive_dst',
           })
-          tileDiagnostics = output.tileDiagnostics
+          output = adaptiveOutput
+          tileDiagnostics = adaptiveOutput.tileDiagnostics
         } catch {
           adaptiveFallback = 'basic'
           computeMode = 'basic'

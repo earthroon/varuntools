@@ -145,7 +145,7 @@ size: md
 명시 items와 registry query 기반 pagecard grid를 확인합니다.
 
 ::pagecard-grid
-items: /tools/wiper,/lab/markdown-gallery
+items: /wiper,/lab-markdown-gallery
 columns: auto
 ::
 
@@ -157,7 +157,7 @@ columns: compact
 ::
 
 ::pagecard-grid
-items: /lab/markdown-gallery
+items: /lab-markdown-gallery
 columns: wide
 ::
 
@@ -235,7 +235,7 @@ src: ./images/qa-card-c.svg
 alt: 이미지 카드 QA
 caption: 이미지 카드 설명
 tag: QA
-href: /lab/markdown-gallery
+href: /lab-markdown-gallery
 ::
 
 ::section-gap

@@ -1,29 +1,33 @@
 import { pageIndex } from './pageIndex'
-import type { NavigationItem, NavigationSectionId, SectionNavigationGroup } from './navigationTypes'
+import type { NavigationItem, NavigationSectionId, NavigationSurface, SectionNavigationGroup } from './navigationTypes'
 
 function byOrder(a: NavigationItem, b: NavigationItem): number {
   return a.order - b.order || a.label.localeCompare(b.label)
 }
 
+function hasSurface(item: NavigationItem, surface: NavigationSurface): boolean {
+  return item.surface.includes(surface)
+}
+
 export const headerNavigation = pageIndex
-  .filter((item) => item.surface.includes('header'))
+  .filter((item) => hasSurface(item, 'header'))
   .slice()
   .sort(byOrder)
 
 export const footerNavigation = pageIndex
-  .filter((item) => item.surface.includes('footer'))
+  .filter((item) => hasSurface(item, 'footer'))
   .slice()
   .sort(byOrder)
 
 export const utilityNavigation = pageIndex
-  .filter((item) => item.surface.includes('utility'))
+  .filter((item) => hasSurface(item, 'utility'))
   .slice()
   .sort(byOrder)
 
 export const sectionNavigation = pageIndex.reduce<Record<NavigationSectionId, SectionNavigationGroup>>(
   (groups, item) => {
     const group = groups[item.section]
-    if (item.surface.includes('section')) {
+    if (hasSurface(item, 'section')) {
       group.items.push(item)
       group.items.sort(byOrder)
     }

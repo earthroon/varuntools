@@ -11,6 +11,7 @@ import { renderVideoPlayerDirective } from './videoPlayerDirective'
 import { renderWorkCardDirective } from './workCardDirective'
 import { renderPagecardGridDirective } from './pagecardGridDirective'
 import { renderMarkdownBoxDirective } from './markdownBoxDirective'
+import { renderFieldSpecDirective } from './fieldSpecDirective'
 import { renderGalleryStripDirective } from './galleryStripDirective'
 import { renderHomeSectionDirective } from './homeSectionDirective'
 import { renderProductCtaDirective } from './productCtaDirective'
@@ -141,6 +142,9 @@ export function renderDirective(directive: ParsedDirective): string {
 
     case 'editorial-columns':
       return renderEditorialColumnsDirective(directive)
+
+    case 'field-spec':
+      return renderFieldSpecDirective(directive)
 
     default:
       return directive.raw

@@ -2,6 +2,7 @@ import { EWA_CANVAS_PRESENT_WGSL } from './ewaWgslSources'
 import type { EwaComputeOutput } from './ewaWebGpuCompute'
 import {
   createEwaPresentationPolicy,
+  type EwaGpuTextureFormat,
   type EwaPresentationFormat,
   type EwaPresentationPolicy,
 } from './ewaTypes'
@@ -14,7 +15,7 @@ export type EwaCanvasPresentation = {
   height: number
   computeFormat: 'rgba16float'
   presentationFamily: 'rgba8unorm-srgb'
-  canvasFormat: GPUTextureFormat | string
+  canvasFormat: EwaGpuTextureFormat
   colorSpace: 'srgb'
   bitDepth: 8
   dynamicRange: 'sdr'

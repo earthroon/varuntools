@@ -1,5 +1,5 @@
 block,title,body,src,alt,caption,thumb,layout,kind,options,meta
-page,EWA Fixture Gallery,EWA gallery processor QA page. This page is hidden and noindex.,/qa/ewa-fixtures/qa-cover.svg,EWA fixture gallery cover,EWA fixture gallery QA cover,/qa/ewa-fixtures/qa-cover.svg,,qa,"slug=qa/ewa-gallery; kind=qa; status=active; visibility=hidden; robots=noindex,follow; noindex=true; featured=false; tags=qa|ewa|fixture|media; order=999", 
+page,EWA Fixture Gallery,EWA gallery processor QA page. This page is hidden and noindex.,/qa/ewa-fixtures/qa-cover.svg,EWA fixture gallery cover,EWA fixture gallery QA cover,/qa/ewa-fixtures/qa-cover.svg,,lab,"slug=qa/ewa-gallery; kind=lab; status=active; visibility=hidden; robots=noindex,follow; noindex=true; featured=false; tags=qa|ewa|fixture|media; order=999", 
 heading,EWA Fixture Gallery,,,,,,,h1,,
 box,QA SSOT,"This page is a hidden noindex fixture for EWA gallery QA. It is not a portfolio work. It must stay excluded from sitemap page search tag index and publish gate.",,,,,,ssot,,
 paragraph,,Enable QA with localStorage.setItem('vt:ewa-debug' 'true') and localStorage.setItem('vt:ewa-compare' 'split').,,,,,,,,

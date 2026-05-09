@@ -7,8 +7,7 @@ slug: products/dummy-catalog
 kind: product
 status: active
 visibility: hidden
-robots:
-  - noindex
+robots: "noindex,follow"
 tags:
   - product
   - dummy

@@ -4,7 +4,7 @@ description: "EWA gallery processor QA page. This page is hidden and noindex."
 thumbnail: /qa/ewa-fixtures/qa-cover.svg
 cover: /qa/ewa-fixtures/qa-cover.svg
 slug: qa/ewa-gallery
-kind: qa
+kind: lab
 status: active
 visibility: hidden
 robots: "noindex,follow"

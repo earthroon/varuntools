@@ -35,17 +35,17 @@ export type WorkTaxonomyOption<TValue extends string = string> = {
 }
 
 export type WorkFilterState = {
-  category?: WorkCategory | 'all'
-  role?: WorkRole | 'all'
-  stack?: WorkStack | 'all'
+  category?: WorkTaxonomyToken | 'all'
+  role?: WorkTaxonomyToken | 'all'
+  stack?: WorkTaxonomyToken | 'all'
   tag?: string | 'all'
   featuredOnly?: boolean
 }
 
 export type WorkTaxonomyRecord = {
-  categories: WorkCategory[]
-  roles: WorkRole[]
-  stack: WorkStack[]
+  categories: string[]
+  roles: string[]
+  stack: string[]
   tags: string[]
   featured: boolean
 }

@@ -129,11 +129,12 @@ export type EwaPresentationDynamicRange = 'sdr'
 export type EwaPresentationFormat = 'webp' | 'png'
 export type EwaPresentationFamily = 'rgba8unorm-srgb'
 export type EwaComputeTextureFormat = 'rgba16float'
+export type EwaGpuTextureFormat = string
 
 export type EwaPresentationPolicy = {
   computeFormat: EwaComputeTextureFormat
   presentationFamily: EwaPresentationFamily
-  canvasFormat: GPUTextureFormat | string
+  canvasFormat: EwaGpuTextureFormat
   colorSpace: EwaPresentationColorSpace
   bitDepth: EwaPresentationBitDepth
   dynamicRange: EwaPresentationDynamicRange
@@ -154,7 +155,7 @@ export const DEFAULT_EWA_PRESENTATION_POLICY: EwaPresentationPolicy = {
   outputQuality: 0.92,
 }
 
-export function createEwaPresentationPolicy(canvasFormat?: GPUTextureFormat | string): EwaPresentationPolicy {
+export function createEwaPresentationPolicy(canvasFormat?: EwaGpuTextureFormat): EwaPresentationPolicy {
   return {
     ...DEFAULT_EWA_PRESENTATION_POLICY,
     // Policy family is fixed to rgba8unorm-sRGB, while the concrete WebGPU canvas format may be
