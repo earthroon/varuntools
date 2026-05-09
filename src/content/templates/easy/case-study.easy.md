@@ -65,6 +65,15 @@
 이 케이스스터디는 Easy Markdown 문법으로 작성한 뒤 정식 index.md로 컴파일됩니다.
 @end
 
+
+@danger "실패 가능성"
+실제 손실이나 실패 가능성이 있는 상태를 강조할 때 사용합니다.
+@end
+
+@decision-box "선택 기준"
+이 작업에서 구조적으로 선택한 기준을 짧게 정리합니다.
+@end
+
 @columns 2 gap=md collapse=mobile
 @col 문제
 핵심 문제를 짧게 정리합니다.

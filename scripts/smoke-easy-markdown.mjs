@@ -346,6 +346,70 @@ function runInvalidEditorialTitleSmoke() {
   assert.ok(compiled.diagnostics.some((diagnostic) => diagnostic.code === 'EASY042'));
 }
 
+
+function runCalloutBoxShortcutSmoke() {
+  const target = createTarget('callout-box-shortcuts');
+  const compiled = compileEasyMarkdownSource(`# Test Work
+
+@description 테스트 설명
+@public
+@work type=system status=published year=2026
+
+@ssot "SSOT 기준" tone=calm collapsible=true defaultOpen=true
+상태 귀속 위치를 명시합니다.
+@end
+
+@danger "Danger"
+실제 실패나 손실 가능성이 있는 상태를 강조합니다.
+@end
+
+@quote-box "기록"
+문장의 리듬을 보존하는 박스입니다.
+@end
+
+@decision-box "선택 기준"
+이 구조를 선택한 이유를 짧게 정리합니다.
+@end
+
+@warning "조용한 보정 금지" collapsible=true open=false
+불명확한 값은 예쁘게 메우지 않고 warning으로 남깁니다.
+@end
+
+@box ssot "기준" tone=blue icon=◆
+명시형 박스입니다.
+@end
+
+@decision
+판단 서사입니다.
+@end
+`, target);
+
+  assertNoErrorDiagnostics(compiled);
+  assert.match(compiled.output, /::markdown-box\ntype: ssot\ntitle: SSOT 기준\ntone: calm\ncollapsible: true\ndefaultOpen: true\n::\n상태 귀속 위치를 명시합니다\.\n::/);
+  assert.match(compiled.output, /::markdown-box\ntype: danger\ntitle: Danger\n::\n실제 실패나 손실 가능성이 있는 상태를 강조합니다\.\n::/);
+  assert.match(compiled.output, /::markdown-box\ntype: quote\ntitle: 기록\n::\n문장의 리듬을 보존하는 박스입니다\.\n::/);
+  assert.match(compiled.output, /::markdown-box\ntype: decision\ntitle: 선택 기준\n::\n이 구조를 선택한 이유를 짧게 정리합니다\.\n::/);
+  assert.match(compiled.output, /::markdown-box\ntype: warning\ntitle: 조용한 보정 금지\ncollapsible: true\ndefaultOpen: false\n::\n불명확한 값은 예쁘게 메우지 않고 warning으로 남깁니다\.\n::/);
+  assert.match(compiled.output, /::markdown-box\ntype: ssot\ntitle: 기준\ntone: blue\nicon: ◆\n::\n명시형 박스입니다\.\n::/);
+  assert.match(compiled.output, /::case-section\ntype: decision\ntitle: 판단\n::\n판단 서사입니다\.\n::/);
+}
+
+function runInvalidCalloutBooleanSmoke() {
+  const target = createTarget('invalid-callout-boolean');
+  const compiled = compileEasyMarkdownSource(`# Test Work
+
+@description 테스트 설명
+@public
+@work type=system status=published year=2026
+
+@warning "주의" collapsible=maybe
+본문입니다.
+@end
+`, target);
+
+  assert.ok(compiled.diagnostics.some((diagnostic) => diagnostic.code === 'EASY047'));
+}
+
 function runMissingTitleSmoke() {
   const target = createTarget('missing-title');
   const compiled = compileEasyMarkdownSource('@description Missing title page.\n', target);
@@ -654,6 +718,8 @@ try {
   runColumnsWithoutColSmoke();
   runColOutsideColumnsSmoke();
   runInvalidEditorialTitleSmoke();
+  runCalloutBoxShortcutSmoke();
+  runInvalidCalloutBooleanSmoke();
   runMissingTitleSmoke();
   runInvalidYearSmoke();
   runCollisionSmoke(root);

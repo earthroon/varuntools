@@ -267,6 +267,7 @@ Scaffolded pages create the Easy source, generated `index.md`, local README, pla
 06 feat: compile Easy Markdown media blocks
 07 feat: compile Easy Markdown gallery and related works
 08 feat: compile Easy Markdown editorial layout blocks
+08.1 feat: extend Easy Markdown callout box syntax
 09 test: add Easy Markdown diagnostics and stale checks
 10 feat: scaffold Easy Markdown pages
 11 chore: run Easy Markdown compiler before build
@@ -283,6 +284,7 @@ Scaffolded pages create the Easy source, generated `index.md`, local README, pla
 [x] Phase 4. Case-study blocks
 [x] Phase 5. Media and gallery blocks
 [x] Phase 6. Editorial layout blocks
+[x] Phase 6.1 Callout box shorthand extension
 [x] Phase 7. Diagnostics and stale checks
 [x] Phase 8. Scaffolding integration
 [ ] Phase 9. Build integration

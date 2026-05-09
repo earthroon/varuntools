@@ -321,24 +321,112 @@ runtime-json: ["GitHub Pages"]
 ::
 ```
 
-## 8. Callout shortcuts
+## 8. Callout box commands
 
-| Easy syntax | Canonical directive |
+Easy Markdown can wrap the canonical `::markdown-box` directive with short callout commands.
+
+| Easy command | Output |
 |---|---|
 | `@note` | `::markdown-box type: note` |
 | `@tip` | `::markdown-box type: tip` |
 | `@warning` | `::markdown-box type: warning` |
+| `@danger` | `::markdown-box type: danger` |
 | `@ssot` | `::markdown-box type: ssot` |
-| `@quote` | `::quote-block` or `::markdown-box type: quote` |
+| `@quote-box` | `::markdown-box type: quote` |
+| `@decision-box` | `::markdown-box type: decision` |
+| `@box` | `::markdown-box` with explicit type |
 
-Example:
+### Basic examples
 
 ```md
-@ssot "Works visibility"
-Works collection visibility is controlled by `frontmatter.work.status`.
+@ssot "SSOT 기준"
+상태 귀속 위치를 명시합니다.
+@end
+
+@danger "Danger"
+실제 실패나 손실 가능성이 있는 상태를 강조합니다.
 @end
 ```
 
+Compiles to:
+
+```md
+::markdown-box
+type: ssot
+title: SSOT 기준
+::
+상태 귀속 위치를 명시합니다.
+::
+
+::markdown-box
+type: danger
+title: Danger
+::
+실제 실패나 손실 가능성이 있는 상태를 강조합니다.
+::
+```
+
+### Collapsible example
+
+```md
+@warning "조용한 보정 금지" collapsible=true defaultOpen=false
+불명확한 값은 예쁘게 메우지 않고 warning으로 남깁니다.
+@end
+```
+
+Compiles to:
+
+```md
+::markdown-box
+type: warning
+title: 조용한 보정 금지
+collapsible: true
+defaultOpen: false
+::
+불명확한 값은 예쁘게 메우지 않고 warning으로 남깁니다.
+::
+```
+
+`open=false` is accepted as a short alias and compiles to `defaultOpen: false`.
+
+### Explicit `@box`
+
+```md
+@box ssot "기준" tone=blue icon=◆
+명시형 박스입니다.
+@end
+```
+
+Compiles to:
+
+```md
+::markdown-box
+type: ssot
+title: 기준
+tone: blue
+icon: ◆
+::
+명시형 박스입니다.
+::
+```
+
+### `@decision` conflict rule
+
+`@decision` is reserved for case sections.
+
+```md
+@decision
+판단 서사를 작성합니다.
+@end
+```
+
+Use `@decision-box` for markdown-box decision callouts.
+
+```md
+@decision-box "선택 기준"
+박스형 판단 메모를 작성합니다.
+@end
+```
 
 ## 9. Editorial layout commands
 
@@ -398,33 +486,27 @@ collapse: mobile
 
 The current canonical `editorial-columns` renderer supports two or three columns.
 
-### `@box`, `@note`, `@tip`, and `@warning`
+### Callout boxes
+
+Callout box shortcuts are supported by the callout command family above:
 
 ```md
-@box ssot "기준"
+@ssot "SSOT 기준"
 Easy Markdown의 원본은 `work.easy.md`이며, `index.md`는 생성물입니다.
+@end
+
+@warning "덮어쓰기 주의" collapsible=true open=false
+GENERATED marker가 없는 `index.md`는 자동으로 덮어쓰지 않습니다.
 @end
 ```
 
-Compiles to:
+Use `@box` when you need an explicit markdown-box type:
 
 ```md
-::markdown-box
-type: ssot
-title: 기준
-::
-Easy Markdown의 원본은 `work.easy.md`이며, `index.md`는 생성물입니다.
-::
+@box ssot "기준" tone=blue icon=◆
+명시형 박스입니다.
+@end
 ```
-
-Shortcut mapping:
-
-| Easy command | Output directive |
-|---|---|
-| `@box ssot "기준"` | `::markdown-box type: ssot` |
-| `@note 참고` | `::markdown-box type: note` |
-| `@tip 작성 순서` | `::markdown-box type: tip` |
-| `@warning 주의` | `::markdown-box type: warning` |
 
 ### `@section-gap` and `@section-break`
 
@@ -458,6 +540,10 @@ tone: quiet
 | `@note` | `::markdown-box type: note` |
 | `@tip` | `::markdown-box type: tip` |
 | `@warning` | `::markdown-box type: warning` |
+| `@danger` | `::markdown-box type: danger` |
+| `@ssot` | `::markdown-box type: ssot` |
+| `@quote-box` | `::markdown-box type: quote` |
+| `@decision-box` | `::markdown-box type: decision` |
 | `@section-gap` | `::section-gap` |
 | `@section-break` | `::section-break` |
 
@@ -500,6 +586,8 @@ tone: quiet
 | `EASY044` | Invalid columns count |
 | `EASY045` | Empty markdown box |
 | `EASY046` | `@col` outside `@columns` |
+| `EASY047` | Invalid callout boolean |
+| `EASY048` | Empty callout box |
 
 
 ## 10.1 Generated output and stale checks

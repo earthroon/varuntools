@@ -17,6 +17,15 @@
 이 페이지를 읽을 때 알아두면 좋은 내용을 작성합니다.
 @end
 
+
+@ssot "SSOT 기준"
+이 문서의 원본은 `page.easy.md`이고, `index.md`는 생성물입니다.
+@end
+
+@warning "덮어쓰기 주의" collapsible=true defaultOpen=false
+GENERATED marker가 없는 `index.md`는 자동으로 덮어쓰지 않습니다.
+@end
+
 @section-gap size=md
 
 @columns 2 gap=md collapse=mobile

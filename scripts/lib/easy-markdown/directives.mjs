@@ -26,7 +26,16 @@ const CASE_SECTION_MAP = {
 
 const MEDIA_BLOCKS = new Set(['image', 'compare', 'video']);
 const PORTFOLIO_BLOCKS = new Set(['gallery', 'related', 'metric', 'tools']);
-const EDITORIAL_BLOCKS = new Set(['title', 'columns', 'box', 'note', 'tip', 'warning', 'section-gap', 'section-break']);
+const MARKDOWN_BOX_SHORTCUTS = {
+  note: 'note',
+  tip: 'tip',
+  warning: 'warning',
+  danger: 'danger',
+  ssot: 'ssot',
+  'quote-box': 'quote',
+  'decision-box': 'decision',
+};
+const EDITORIAL_BLOCKS = new Set(['title', 'columns', 'box', ...Object.keys(MARKDOWN_BOX_SHORTCUTS), 'section-gap', 'section-break']);
 const SUPPORTED_BLOCKS = new Set([
   'summary',
   ...Object.keys(CASE_SECTION_MAP),
@@ -612,20 +621,46 @@ export function compileEditorialColumnsBlock(block, target) {
   };
 }
 
+function validateCalloutBooleanAttributes(values, block, target) {
+  const diagnostics = [];
+
+  for (const key of ['collapsible', 'defaultOpen', 'open']) {
+    if (values[key] === undefined) continue;
+    if (!isBoolean(values[key])) {
+      diagnostics.push(createDiagnostic('EASY047', `Invalid @${block.name} ${key} value: ${values[key]}`, {
+        file: target.sourcePath,
+        line: block.line,
+        hint: `Use ${key}=true or ${key}=false.`,
+      }));
+    }
+  }
+
+  return diagnostics;
+}
+
 export function compileMarkdownBoxBlock(block, target) {
   const parsed = parseMediaArgs(block, target);
   const diagnostics = [...parsed.diagnostics];
   const body = normalizeBody(block.body);
+  const shortcutType = MARKDOWN_BOX_SHORTCUTS[block.name];
   const type = block.name === 'box'
-    ? parsed.positionals[0] || parsed.values.type || 'note'
-    : block.name;
+    ? parsed.values.type || parsed.positionals[0] || 'note'
+    : shortcutType;
   const title = block.name === 'box'
-    ? parsed.positionals[1] || parsed.values.title
-    : parsed.positionals[0] || parsed.values.title;
-  const { type: ignoredType, title: ignoredTitle, ...rest } = parsed.values;
+    ? parsed.values.title || parsed.positionals[1]
+    : parsed.values.title || parsed.positionals[0];
+  const {
+    type: ignoredType,
+    title: ignoredTitle,
+    open,
+    defaultOpen,
+    ...rest
+  } = parsed.values;
+
+  diagnostics.push(...validateCalloutBooleanAttributes(parsed.values, block, target));
 
   if (!body) {
-    diagnostics.push(createDiagnostic('EASY045', `Empty @${block.name} block.`, {
+    diagnostics.push(createDiagnostic('EASY048', `Empty @${block.name} callout box.`, {
       severity: 'warning',
       file: target.sourcePath,
       line: block.line,
@@ -639,8 +674,18 @@ export function compileMarkdownBoxBlock(block, target) {
     ...rest,
   };
 
+  if (defaultOpen !== undefined) {
+    attributes.defaultOpen = defaultOpen;
+  } else if (open !== undefined) {
+    attributes.defaultOpen = open;
+  }
+
   return {
-    output: `::markdown-box\n${formatDirectiveAttributes(attributes)}\n::\n${body}\n::`,
+    output: `::markdown-box
+${formatDirectiveAttributes(attributes)}
+::
+${body}
+::`,
     diagnostics,
   };
 }
@@ -677,7 +722,7 @@ export function compileSectionBreakBlock(block, target) {
 export function compileEditorialBlock(block, target) {
   if (block.name === 'title') return compileEditorialTitleBlock(block, target);
   if (block.name === 'columns') return compileEditorialColumnsBlock(block, target);
-  if (['box', 'note', 'tip', 'warning'].includes(block.name)) return compileMarkdownBoxBlock(block, target);
+  if (block.name === 'box' || MARKDOWN_BOX_SHORTCUTS[block.name]) return compileMarkdownBoxBlock(block, target);
   if (block.name === 'section-gap') return compileSectionGapBlock(block, target);
   if (block.name === 'section-break') return compileSectionBreakBlock(block, target);
 
