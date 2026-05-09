@@ -1,4 +1,4 @@
-﻿name: Deploy Vite site to GitHub Pages
+name: Deploy Vite site to GitHub Pages
 
 on:
   push:
@@ -31,7 +31,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install --include=dev --no-audit --fund=false --progress=false
-          npm install vite@^5.4.11 @vitejs/plugin-vue@^5.2.1 typescript@^5.6.3 --save-dev --no-audit --fund=false --progress=false
+
+      - name: Verify runtime dependencies
+        run: |
+          npm ls gray-matter
+          test -f node_modules/gray-matter/index.js
 
       - name: Generate content inventory
         run: npm run content:page-inventory
@@ -62,8 +66,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-
-
-
-
