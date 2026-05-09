@@ -35,3 +35,7 @@ REBAKE_MANIFEST*.md
 workers/**/.wrangler/
 workers/**/dist/
 src/content/generated/internal-docs-search-index.json
+
+node_modules/
+dist/
+.vite/
