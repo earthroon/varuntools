@@ -194,8 +194,17 @@
     "easy:check": "node scripts/compile-easy-markdown.mjs --check",
     "easy:list": "node scripts/compile-easy-markdown.mjs --list",
     "smoke:easy": "node scripts/smoke-easy-markdown.mjs",
+    "micro:compile": "node scripts/compile-micro-markdown.mjs --write",
+    "micro:check": "node scripts/compile-micro-markdown.mjs --check",
+    "micro:list": "node scripts/compile-micro-markdown.mjs --list",
+    "smoke:micro": "node scripts/smoke-micro-markdown.mjs",
     "new:work:easy": "node scripts/new-page.mjs works --easy",
-    "new:page:easy": "node scripts/new-page.mjs --easy"
+    "new:page:easy": "node scripts/new-page.mjs --easy",
+    "new:work:micro": "node scripts/new-page.mjs works --micro",
+    "new:page:micro": "node scripts/new-page.mjs --micro",
+    "prebuild": "npm run content:compile && npm run content:check",
+    "content:compile": "npm run micro:compile && npm run easy:compile",
+    "content:check": "npm run micro:check && npm run easy:check"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

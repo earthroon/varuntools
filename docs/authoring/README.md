@@ -553,3 +553,129 @@ index.md
 
 `index.md`는 `work.easy.md` 또는 `page.easy.md`에서 생성되는 파일입니다. 생성물에는 `GENERATED FROM ...` marker와 `SOURCE HASH`가 들어가며, `npm run easy:check`가 stale 여부를 검사합니다.
 
+
+## Micro Markdown
+
+Micro Markdown is the shortest authoring layer. Use it when you want to write fast shorthand and let VarunTools expand it into Easy Markdown and then `index.md`.
+
+```txt
+work.micro.md
+→ work.easy.md
+→ index.md
+```
+
+Typical commands:
+
+```powershell
+npm run micro:compile
+npm run micro:check
+npm run smoke:micro
+```
+
+Example:
+
+```md
+@H1_바룬의 이야기
+@DESC_작업이 계속 쌓여도 무너지지 않도록 만든 개인 출판 엔진.
+@PUBLIC
+@V=./videos/out.webm|출력 데모 영상
+@BA=./images/before.webp|./images/after.webp|50|전후 비교
+@SSOT_작성 기준|collapse=true
+이 문서의 원본은 work.micro.md입니다.
+
+@GAL_작업 화면|columns=2,variant=framed
+@ITEM=./images/list.webp|Works 목록|label=01
+@ITEM=./images/detail.webp|상세 페이지|label=02
+
+@COLS_2|gap=md,collapse=mobile
+@COL_문제
+문제 설명입니다.
+
+@COL_해결
+해결 설명입니다.
+```
+
+Additional shorthand groups now include gallery, metric, tool stack, related works, editorial title, columns, section gap, and section break commands.
+
+Edit this:
+
+```txt
+work.micro.md
+```
+
+Generated files:
+
+```txt
+work.easy.md
+index.md
+```
+
+Do not edit generated files directly.
+
+## Micro Markdown Scaffolding
+
+새 Micro Markdown 페이지는 명령으로 생성합니다.
+
+```powershell
+npm run new:work:micro -- barun-story --title "바룬의 이야기"
+npm run new:work:micro -- barun-case --title "Barun Case" --template case-study
+npm run new:page:micro -- guide markdown-guide --title "Markdown Guide"
+```
+
+생성 후 직접 작성할 파일:
+
+```txt
+src/content/pages/works/<slug>/work.micro.md
+src/content/pages/<section>/<slug>/page.micro.md
+```
+
+생성물:
+
+```txt
+work.easy.md / page.easy.md
+index.md
+```
+
+`work.easy.md`, `page.easy.md`, `index.md`는 생성물입니다. Micro 원본을 수정한 뒤 아래 루틴으로 확인합니다.
+
+```powershell
+npm run micro:compile
+npm run micro:check
+npm run easy:check
+npm run build
+```
+
+## Build Pipeline for Authoring Sources
+
+`npm run build` now compiles authoring sources before Vite builds the site.
+
+```txt
+work.micro.md / page.micro.md
+→ work.easy.md / page.easy.md
+→ index.md
+→ dist
+```
+
+Use these commands when you want to inspect the authoring pipeline directly:
+
+```powershell
+npm run content:compile
+npm run content:check
+npm run build
+```
+
+Responsibility split:
+
+```txt
+micro:check     = Micro Markdown → Easy Markdown stale check
+easy:check      = Easy Markdown → index.md stale check
+validate:content = frontmatter / content registry validation
+```
+
+SSOT rule:
+
+```txt
+Micro source pages: work.micro.md / page.micro.md
+Easy source pages:  work.easy.md / page.easy.md
+Generated pages:    index.md
+```
