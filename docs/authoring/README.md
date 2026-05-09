@@ -472,3 +472,84 @@ VarunTools 문서는 단순히 페이지를 채우는 글이 아닙니다.
 
 문장은 멋있기만 하면 부족하고, 구조는 정확하기만 하면 건조합니다.  
 VarunTools의 작성 규칙은 둘을 같이 묶기 위한 최소한의 레일입니다.
+
+## 15. Easy Markdown Wrapper
+
+Easy Markdown은 기존 `::directive` 문법을 없애는 기능이 아니라, 작성자가 `@summary`, `@problem`, `@image`, `@gallery` 같은 더 짧은 문법으로 Works/page 초안을 작성하고 빌드 전에 정식 `index.md`로 컴파일하기 위한 작성자용 래퍼입니다.
+
+```txt
+work.easy.md / page.easy.md
+→ npm run easy:compile
+→ index.md
+→ npm run build
+```
+
+문서 위치:
+
+```txt
+로드맵 SSOT = docs/authoring/easy-markdown-roadmap.md
+문법 매핑 SSOT = docs/authoring/easy-markdown-syntax.md
+```
+
+읽는 순서:
+
+```txt
+1. easy-markdown-roadmap.md
+2. easy-markdown-syntax.md
+3. src/content/templates/easy/*.easy.md
+```
+
+지원 명령:
+
+```powershell
+npm run easy:list
+npm run easy:compile
+npm run easy:check
+npm run smoke:easy
+```
+
+## 16. Easy Markdown Templates
+
+Easy Markdown 템플릿은 아래 위치에 있습니다.
+
+```txt
+src/content/templates/easy/work.easy.md
+src/content/templates/easy/page.easy.md
+src/content/templates/easy/case-study.easy.md
+```
+
+권장 사용:
+
+```powershell
+npm run new:work:easy -- my-work --title "My Work"
+npm run easy:check
+npm run build
+```
+
+수동으로 템플릿을 복사해도 되지만, 기본 루틴은 `new:work:easy` / `new:page:easy` 명령을 사용합니다.
+
+## 17. Easy Markdown Scaffolding
+
+새 Easy Markdown 페이지는 명령으로 생성합니다.
+
+```powershell
+npm run new:work:easy -- varuntools --title "VARUNTOOLS"
+npm run new:work:easy -- varuntools-case --title "VARUNTOOLS Case" --template case-study
+npm run new:page:easy -- guide markdown-guide --title "Markdown Guide"
+```
+
+생성 후 작성할 파일:
+
+```txt
+src/content/pages/works/<slug>/work.easy.md
+src/content/pages/<section>/<slug>/page.easy.md
+```
+
+직접 수정하지 말 것:
+
+```txt
+index.md
+```
+
+`index.md`는 `work.easy.md` 또는 `page.easy.md`에서 생성되는 파일입니다. 생성물에는 `GENERATED FROM ...` marker와 `SOURCE HASH`가 들어가며, `npm run easy:check`가 stale 여부를 검사합니다.
+

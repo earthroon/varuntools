@@ -189,7 +189,13 @@
     "smoke:page-search-index-boundary": "node scripts/smoke-page-search-index-boundary.mjs",
     "smoke:route-seo-manifest": "node scripts/smoke-route-seo-manifest.mjs",
     "smoke:field-spec-directive": "node scripts/smoke-field-spec-directive.mjs",
-    "smoke:link-contract": "node scripts/smoke-link-contract.mjs"
+    "smoke:link-contract": "node scripts/smoke-link-contract.mjs",
+    "easy:compile": "node scripts/compile-easy-markdown.mjs --write",
+    "easy:check": "node scripts/compile-easy-markdown.mjs --check",
+    "easy:list": "node scripts/compile-easy-markdown.mjs --list",
+    "smoke:easy": "node scripts/smoke-easy-markdown.mjs",
+    "new:work:easy": "node scripts/new-page.mjs works --easy",
+    "new:page:easy": "node scripts/new-page.mjs --easy"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

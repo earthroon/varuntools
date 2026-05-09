@@ -4,6 +4,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { parseCsv, csvRowsToObjects } from './lib/csv.mjs'
 import { csvRowsToMarkdown } from './lib/csv-markdown.mjs'
+import { scaffoldEasyPage } from './lib/easy-markdown/scaffold.mjs'
 
 const categories = new Set(['works', 'lab', 'tools', 'products'])
 const portfolioPresetTypes = new Set(['case-study', 'tool', 'visual', 'service', 'experiment'])
@@ -14,6 +15,8 @@ function usage() {
   return [
     'Usage:',
     '  npm run new:page -- <works|lab|tools|products> <slug> [--csv] [--root <path>]',
+    '  npm run new:page -- <section> <slug> --easy [--template <work|page|case-study>]',
+    '  npm run new:work:easy -- <slug> --title "Work Title" [--template <work|case-study>]',
     '  npm run new:page -- works <slug> --csv --type <case-study|tool|visual|service|experiment>',
     '  npm run new:page -- works/<slug> --csv --type <case-study|tool|visual|service|experiment>',
     '',
@@ -32,10 +35,13 @@ function parseArgs(argv) {
   const positional = []
   let root = path.join('src', 'content', 'pages')
   let csv = false
+  let easy = false
   let type = ''
   let title = ''
   let status = 'draft'
   let featured = 'false'
+  let template = ''
+  let year = String(new Date().getFullYear())
   let force = false
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -46,6 +52,8 @@ function parseArgs(argv) {
       i += 1
     } else if (arg === '--csv') {
       csv = true
+    } else if (arg === '--easy') {
+      easy = true
     } else if (arg === '--type') {
       if (!argv[i + 1]) throw new Error('new-page ERROR: --type requires a portfolio preset type')
       type = argv[i + 1]
@@ -58,10 +66,21 @@ function parseArgs(argv) {
       if (!argv[i + 1]) throw new Error('new-page ERROR: --status requires draft or published')
       status = argv[i + 1]
       i += 1
-    } else if (arg === '--featured') {
-      if (!argv[i + 1]) throw new Error('new-page ERROR: --featured requires true or false')
-      featured = argv[i + 1]
+    } else if (arg === '--template') {
+      if (!argv[i + 1]) throw new Error('new-page ERROR: --template requires work, page, or case-study')
+      template = argv[i + 1]
       i += 1
+    } else if (arg === '--year') {
+      if (!argv[i + 1]) throw new Error('new-page ERROR: --year requires a year')
+      year = argv[i + 1]
+      i += 1
+    } else if (arg === '--featured') {
+      if (argv[i + 1] && !argv[i + 1].startsWith('--')) {
+        featured = argv[i + 1]
+        i += 1
+      } else {
+        featured = 'true'
+      }
     } else if (arg === '--force') {
       force = true
     } else {
@@ -77,7 +96,7 @@ function parseArgs(argv) {
     slug = parts.slice(1).join('-')
   }
 
-  return { category, slug, root, csv, type, title, status, featured, force }
+  return { category, slug, root, csv, easy, type, title, status, featured, template, year, force }
 }
 
 function assertCategory(category) {
@@ -172,18 +191,43 @@ function placeholderAssetContent(filePath) {
 
 
 try {
-  const { category, slug, root, csv, type, title: explicitTitle, status, featured, force } = parseArgs(process.argv.slice(2))
+  const { category, slug, root, csv, easy, type, title: explicitTitle, status, featured, template: easyTemplate, year, force } = parseArgs(process.argv.slice(2))
   if (!category || !slug) {
     console.error(usage())
     process.exit(2)
   }
+
+  const repoRoot = process.cwd()
+
+  if (easy) {
+    const title = explicitTitle || titleFromSlug(slug)
+    const result = scaffoldEasyPage({
+      rootDir: repoRoot,
+      contentRoot: root,
+      section: category,
+      slug,
+      title,
+      template: easyTemplate || (category === 'works' ? 'work' : 'page'),
+      status,
+      year,
+      type: type || 'system',
+      featured: String(featured) === 'true',
+      force,
+    })
+
+    console.log(`[new-page] created ${result.pageDir}`)
+    console.log(`[new-page] source ${result.sourcePath}`)
+    console.log(`[new-page] generated ${result.outputPath}`)
+    console.log('[new-page] next: npm run easy:check && npm run build')
+    process.exit(0)
+  }
+
   assertCategory(category)
   assertSlug(slug)
   assertPresetType(type)
   assertStatus(status)
   assertFeatured(featured)
 
-  const repoRoot = process.cwd()
   const templatePath = path.join(repoRoot, 'src', 'content', 'templates', templateByCategory[category])
   const csvTemplatePath = type
     ? path.join(repoRoot, 'src', 'content', 'templates', 'portfolio-presets', `${type}.csv`)
