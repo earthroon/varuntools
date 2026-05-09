@@ -11,10 +11,6 @@ const props = defineProps<{
 
 const routerBase = import.meta.env.BASE_URL || '/'
 
-function isExternalHref(href: string): boolean {
-  return /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(href)
-}
-
 function stripRouterBase(path: string): string {
   const base = routerBase.replace(/\/+$/, '')
 
@@ -26,12 +22,12 @@ function stripRouterBase(path: string): string {
 }
 
 function normalizeWorkRoute(entry?: WorkCardEntry | null): string {
-  const rawHref = (entry?.href || entry?.slug || '').trim()
+  const rawHref = String(entry?.href || '').trim()
 
   if (!rawHref || rawHref === '#') return '/'
-  if (isExternalHref(rawHref)) return rawHref
 
-  const withoutDot = rawHref.replace(/^\.\//, '')
+  const withoutOrigin = rawHref.replace(/^https?:\/\/[^/]+/i, '')
+  const withoutDot = withoutOrigin.replace(/^\.\//, '')
   const rooted = withoutDot.startsWith('/')
     ? withoutDot
     : `/${withoutDot.replace(/^\/+/, '')}`
