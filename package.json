@@ -1,12 +1,12 @@
-﻿{
+{
   "name": "varuntools",
   "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run validate:content && vite build && node scripts/copy-spa-fallback.mjs",
-    "build:pages": "npm run build && node scripts/create-spa-fallback.mjs",
+    "build": "npm run validate:content && vue-tsc --noEmit && vite build && node scripts/create-spa-fallback.mjs",
+    "build:pages": "npm run build",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
     "validate:content": "node scripts/validate-content.mjs",
@@ -187,21 +187,22 @@
     "search:generate": "npm run search:generate-public-index && npm run search:generate-internal-docs-index",
     "smoke:page-search-public-visibility": "node scripts/smoke-page-search-public-visibility.mjs",
     "smoke:page-search-index-boundary": "node scripts/smoke-page-search-index-boundary.mjs",
-    "smoke:route-seo-manifest": "node scripts/smoke-route-seo-manifest.mjs"
+    "smoke:route-seo-manifest": "node scripts/smoke-route-seo-manifest.mjs",
+    "smoke:field-spec-directive": "node scripts/smoke-field-spec-directive.mjs",
+    "smoke:link-contract": "node scripts/smoke-link-contract.mjs"
   },
   "dependencies": {
+    "@vitejs/plugin-vue": "latest",
     "gray-matter": "^4.0.3",
     "markdown-it": "^14.1.1",
-    "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue": "latest",
+    "vue-router": "latest"
   },
   "devDependencies": {
-    "@types/markdown-it": "^14.1.2",
-    "playwright": "^1.56.1",
-    "typescript": "^5.9.3",
-    "vite": "^5.4.21",
-    "vue-tsc": "^2.2.0",
-    "@vitejs/plugin-vue": "^5.2.4"
+    "@types/markdown-it": "latest",
+    "playwright": "latest",
+    "typescript": "5.9.3",
+    "vite": "latest",
+    "vue-tsc": "latest"
   }
 }
-

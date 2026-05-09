@@ -1,0 +1,103 @@
+VARUNTOOLS Manual Works Syntax Examples
+
+이 파일은 수동 Works Markdown 페이지를 작성할 때 참고하는 복붙 예제입니다.
+
+[필드 설명 카드 / field-spec]
+
+::field-spec
+name: work.status
+type: draft | published | archived | private
+required: true
+tag: 필수
+default: published
+ssot: frontmatter.work.status
+usedBy: Works collection visibility
+::
+Works 목록 표시 여부를 결정합니다. 목록에 보이려면 `published`여야 합니다.
+::
+
+::field-spec
+name: thumbnail
+type: ./images/*.webp | ./images/*.gif | ./images/*.png
+required: false
+tag: 선택
+default: ./images/thumb.webp
+ssot: frontmatter.thumbnail
+usedBy: Works card image
+::
+Works 카드에서 대표 이미지로 사용됩니다. 영상 파일보다 이미지 썸네일이 안정적입니다.
+::
+
+주의: tooltip과 badge는 새 directive가 아닙니다. 이미지 설명은 captioned-image의 caption, 필수/선택/기타 표시는 captioned-image의 tag를 사용하세요.
+
+[편집형 제목 / editorial-title]
+
+::editorial-title
+title: 구조와 판단
+kicker: VARUN LOOP
+subtitle: 문제와 해결을 나란히 비교합니다.
+level: middle
+as: h2
+align: left
+::
+
+[2단 칼럼 / editorial-columns]
+
+::editorial-columns
+cols: 2
+gap: md
+collapse: mobile
+balance: true
+::
+### 문제
+
+반복 인코딩 과정이 무겁고 느렸습니다.
+
+---
+
+### 해결
+
+로컬 앱 내부에서 루프 변환 흐름을 닫았습니다.
+::
+
+[3단 칼럼 / editorial-columns]
+
+::editorial-columns
+cols: 3
+gap: lg
+collapse: tablet
+::
+### 문제
+
+반복 인코딩 과정이 무겁고 느렸습니다.
+
+---
+
+### 판단
+
+외부 통신 없는 로컬 앱으로 가는 것이 맞다고 판단했습니다.
+
+---
+
+### 해결
+
+Electron, FFmpeg, Rust WASM 기반으로 루프 변환 흐름을 구성했습니다.
+::
+
+주의: 칼럼은 반드시 --- 한 줄로 나눕니다. cols: 2는 최대 2조각, cols: 3은 최대 3조각까지만 허용됩니다.
+
+
+[내부 링크 / GitHub Pages base 안전]
+
+[VARUN LOOP](/works/varun-loop)
+[Works 목록](/works)
+
+외부 링크는 그대로 씁니다.
+
+[GitHub](https://github.com/earthroon/varuntools)
+
+파일 링크는 확장자를 유지합니다.
+
+[원본 영상](./videos/demo.webm)
+
+주의: 내부 페이지는 /works/... 같은 앱 라우트로 쓰고, 빌드 결과에는 dist/404.html fallback이 있어야 직접 접속/새로고침 404가 줄어듭니다.

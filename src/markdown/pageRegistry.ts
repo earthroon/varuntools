@@ -538,12 +538,26 @@ export function normalizeRelatedWorkSlug(value: string): string {
   if (!raw) return ''
   if (/^[a-z][a-z0-9+.-]*:/i.test(raw)) return raw
   let slug = raw.replace(/\\/g, '/').replace(/^\/+/, '').replace(/\/+$/, '')
-  if (slug.startsWith('works/')) slug = slug.slice('works/'.length)
   return slug.replace(/\/+$/, '')
 }
 
 export function getWorkEntryBySlug(entries: WorkCardEntry[]): Map<string, WorkCardEntry> {
-  return new Map(entries.map((entry) => [entry.slug, entry]))
+  const map = new Map<string, WorkCardEntry>()
+
+  for (const entry of entries) {
+    const slug = normalizeRelatedWorkSlug(entry.slug)
+    if (!slug) continue
+
+    map.set(slug, entry)
+
+    if (slug.startsWith('works/')) {
+      map.set(slug.slice('works/'.length), entry)
+    } else {
+      map.set(`works/${slug}`, entry)
+    }
+  }
+
+  return map
 }
 
 export function resolveRelatedWorkEntries(
@@ -555,17 +569,30 @@ export function resolveRelatedWorkEntries(
   const currentSlug = normalizeRelatedWorkSlug(options.currentSlug || '')
   const limit = Number.isFinite(Number(options.limit)) ? Math.max(0, Number(options.limit)) : Infinity
   const resolved: WorkCardEntry[] = []
-  const seen = new Set<string>(currentSlug ? [currentSlug] : [])
+  const seen = new Set<string>()
+
+  function markSeen(slug: string): void {
+    const normalized = normalizeRelatedWorkSlug(slug)
+    if (!normalized) return
+    seen.add(normalized)
+    if (normalized.startsWith('works/')) {
+      seen.add(normalized.slice('works/'.length))
+    } else {
+      seen.add(`works/${normalized}`)
+    }
+  }
+
+  markSeen(currentSlug)
 
   for (const item of items) {
     const slug = normalizeRelatedWorkSlug(item)
     if (!slug || seen.has(slug) || /^[a-z][a-z0-9+.-]*:/i.test(slug)) continue
     const entry = bySlug.get(slug)
-    if (!entry) continue
+    if (!entry || seen.has(entry.slug)) continue
     if (entry.workStatus === 'private' || entry.workStatus === 'draft') continue
     if (entry.status === 'draft' || entry.visibility === 'hidden') continue
     resolved.push(entry)
-    seen.add(slug)
+    markSeen(entry.slug)
     if (resolved.length >= limit) break
   }
 

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { LoadedMarkdownPage } from '@/markdown/types'
@@ -77,7 +77,15 @@ const coverAsset = computed(() => {
 })
 
 const safeHref = computed(() => card.value.href || '#')
-const external = computed(() => /^https?:\/\//.test(safeHref.value))
+const external = computed(() => /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(safeHref.value))
+const opensNewTab = computed(() => /^(?:https?:)?\/\//i.test(safeHref.value))
+const browserHandled = computed(() => external.value || safeHref.value.startsWith('#'))
+const routeTo = computed(() => {
+  const href = safeHref.value.trim()
+  if (!href || href === '#') return '/'
+  if (href.startsWith('/')) return href
+  return `/${href.replace(/^\.\//, '').replace(/^\/+/, '')}`
+})
 const roleChips = computed(() => firstItems(card.value.role, 3))
 const stackChips = computed(() => firstItems(card.value.stack, 4))
 const tagChips = computed(() => firstItems(card.value.tags, 4))
@@ -86,12 +94,12 @@ const metaLine = computed(() => card.value.period || (card.value.year ? String(c
 
 <template>
   <component
-    :is="external ? 'a' : RouterLink"
+    :is="browserHandled ? 'a' : RouterLink"
     class="vt-work-card"
-    :href="external ? safeHref : undefined"
-    :to="external ? undefined : safeHref"
-    :target="external ? '_blank' : undefined"
-    :rel="external ? 'noopener noreferrer' : undefined"
+    :href="browserHandled ? safeHref : undefined"
+    :to="browserHandled ? undefined : routeTo"
+    :target="opensNewTab ? '_blank' : undefined"
+    :rel="opensNewTab ? 'noopener noreferrer' : undefined"
   >
     <div class="vt-work-card__media">
       <img
@@ -120,19 +128,19 @@ const metaLine = computed(() => card.value.period || (card.value.year ? String(c
         {{ card.description }}
       </p>
 
-      <div v-if="roleChips.length" class="vt-work-card__chips" aria-label="??븷">
+      <div v-if="roleChips.length" class="vt-work-card__chips" aria-label="역할">
         <span v-for="item in roleChips" :key="`role-${item}`" class="vt-work-card__chip vt-work-card__chip--role">
           {{ item }}
         </span>
       </div>
 
-      <div v-if="stackChips.length" class="vt-work-card__chips" aria-label="湲곗닠 ?ㅽ깮">
+      <div v-if="stackChips.length" class="vt-work-card__chips" aria-label="기술 스택">
         <span v-for="item in stackChips" :key="`stack-${item}`" class="vt-work-card__chip">
           {{ item }}
         </span>
       </div>
 
-      <div v-if="tagChips.length" class="vt-work-card__chips vt-work-card__chips--muted" aria-label="?쒓렇">
+      <div v-if="tagChips.length" class="vt-work-card__chips vt-work-card__chips--muted" aria-label="태그">
         <span v-for="item in tagChips" :key="`tag-${item}`" class="vt-work-card__chip vt-work-card__chip--muted">
           #{{ item }}
         </span>
@@ -140,4 +148,3 @@ const metaLine = computed(() => card.value.period || (card.value.year ? String(c
     </div>
   </component>
 </template>
-

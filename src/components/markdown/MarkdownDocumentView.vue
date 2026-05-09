@@ -7,6 +7,7 @@ import { useActiveHeading } from '@/composables/useActiveHeading'
 import { useSectionLightbox } from '@/composables/useSectionLightbox'
 import { mountImageMagnifier } from '@/composables/useImageMagnifier'
 import { usePageMeta } from '@/composables/usePageMeta'
+import { useMarkdownInternalLinks } from '@/composables/useMarkdownInternalLinks'
 import { useMarkdownComponentMount } from '@/markdown/useMarkdownComponentMount'
 import { createPageMeta } from '@/metadata/pageMeta'
 import { getWorkDetailContext } from '@/markdown/pageRegistry'
@@ -30,6 +31,7 @@ const props = withDefaults(
 )
 
 const markdownRoot = ref<HTMLElement | null>(null)
+useMarkdownInternalLinks(markdownRoot)
 let cleanupImageMagnifier: (() => void) | null = null
 
 const pageRef = computed(() => props.page)
