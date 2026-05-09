@@ -454,3 +454,92 @@
 .vt-work-empty-state strong {
   color: var(--vt-ink);
 }
+
+/* Commit 131 - Works containment hotfix
+   SSOT: Works filter/card surfaces must stay inside their own content box.
+   Fixes project-page overflow where filter controls escaped the Works column.
+*/
+.vt-works-page,
+.vt-works-hero,
+.vt-works-search,
+.vt-work-filters,
+.vt-works-collection,
+.vt-works-collection__grid {
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.vt-works-search,
+.vt-work-filters {
+  width: 100%;
+  overflow: clip;
+}
+
+.vt-works-search {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+}
+
+.vt-work-filters {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+}
+
+.vt-works-search__summary,
+.vt-works-search__active,
+.vt-works-taxonomy-preview,
+.vt-work-filters__summary {
+  grid-column: 1 / -1;
+}
+
+.vt-works-search__field,
+.vt-works-search__toggle,
+.vt-works-search__reset,
+.vt-work-filters__field,
+.vt-work-filters__toggle,
+.vt-work-filters__reset {
+  min-width: 0;
+}
+
+.vt-works-search__field--query,
+.vt-work-filters__field--search {
+  min-width: 0;
+}
+
+.vt-works-search input,
+.vt-works-search select,
+.vt-work-filters input,
+.vt-work-filters select {
+  min-width: 0;
+}
+
+.vt-works-search__toggle,
+.vt-works-search__reset,
+.vt-work-filters__toggle,
+.vt-work-filters__reset {
+  width: 100%;
+  justify-content: center;
+}
+
+.vt-works-collection__grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+}
+
+@media (min-width: 860px) {
+  .vt-works-search__field--query,
+  .vt-work-filters__field--search {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 720px) {
+  .vt-works-search,
+  .vt-work-filters {
+    grid-template-columns: 1fr;
+    overflow: visible;
+  }
+
+  .vt-works-search__field--query,
+  .vt-work-filters__field--search {
+    grid-column: 1 / -1;
+  }
+}
