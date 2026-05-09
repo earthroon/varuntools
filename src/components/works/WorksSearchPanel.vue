@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed } from 'vue'
 import type { WorkCollectionSort } from '@/markdown/pageRegistry'
 import type { PortfolioFacetItem } from '@/utils/portfolioSearch'
@@ -31,24 +31,73 @@ const emit = defineEmits<{
 
 const activeFilterChips = computed(() => {
   const chips: { key: string; label: string; value: string; clear: () => void }[] = []
+
   if (selectedType.value) {
-    chips.push({ key: 'category', label: 'Category', value: getWorkCategoryLabel(selectedType.value), clear: () => { selectedType.value = '' } })
+    chips.push({
+      key: 'category',
+      label: 'Category',
+      value: getWorkCategoryLabel(selectedType.value),
+      clear: () => {
+        selectedType.value = ''
+      },
+    })
   }
+
   if (selectedRole.value) {
-    chips.push({ key: 'role', label: 'Role', value: getWorkRoleLabel(selectedRole.value), clear: () => { selectedRole.value = '' } })
+    chips.push({
+      key: 'role',
+      label: 'Role',
+      value: getWorkRoleLabel(selectedRole.value),
+      clear: () => {
+        selectedRole.value = ''
+      },
+    })
   }
+
   if (selectedStack.value) {
-    chips.push({ key: 'stack', label: 'Stack', value: getWorkStackLabel(selectedStack.value), clear: () => { selectedStack.value = '' } })
+    chips.push({
+      key: 'stack',
+      label: 'Stack',
+      value: getWorkStackLabel(selectedStack.value),
+      clear: () => {
+        selectedStack.value = ''
+      },
+    })
   }
+
   if (selectedTag.value) {
-    chips.push({ key: 'tag', label: 'Tag', value: selectedTag.value, clear: () => { selectedTag.value = '' } })
+    chips.push({
+      key: 'tag',
+      label: 'Tag',
+      value: selectedTag.value,
+      clear: () => {
+        selectedTag.value = ''
+      },
+    })
   }
+
   if (selectedYear.value) {
-    chips.push({ key: 'year', label: 'Year', value: selectedYear.value, clear: () => { selectedYear.value = '' } })
+    chips.push({
+      key: 'year',
+      label: 'Year',
+      value: selectedYear.value,
+      clear: () => {
+        selectedYear.value = ''
+      },
+    })
   }
+
   if (featuredOnly.value) {
-    chips.push({ key: 'featured', label: 'Featured', value: 'Only', clear: () => { featuredOnly.value = false } })
+    chips.push({
+      key: 'featured',
+      label: 'Featured',
+      value: 'Only',
+      clear: () => {
+        featuredOnly.value = false
+      },
+    })
   }
+
   return chips
 })
 
@@ -58,91 +107,95 @@ function resetAllFilters() {
 </script>
 
 <template>
-  <section class="vt-works-search" aria-labelledby="works-search-title">
-    <div class="vt-works-search__summary" aria-live="polite" id="works-search-summary">
-      <strong id="works-search-title">{{ resultCount }}</strong>
-      <span>/ {{ totalCount }} works found</span>
+  <section class="vt-works-search vt-works-search--contained" aria-labelledby="works-search-title">
+    <header class="vt-works-search__header">
+      <div class="vt-works-search__summary" aria-live="polite" id="works-search-summary">
+        <strong id="works-search-title">{{ resultCount }}</strong>
+        <span>/ {{ totalCount }} works found</span>
+      </div>
+
+      <button class="vt-works-search__reset" type="button" @click="resetAllFilters">
+        Reset
+      </button>
+    </header>
+
+    <div class="vt-works-search__controls">
+      <label class="vt-works-search__field vt-works-search__field--query">
+        <span>Search</span>
+        <input
+          v-model="query"
+          type="search"
+          placeholder="작업, 역할, 스택, 태그 검색"
+          aria-describedby="works-search-summary"
+        />
+      </label>
+
+      <label class="vt-works-search__field">
+        <span>Category</span>
+        <select v-model="selectedType">
+          <option value="">All</option>
+          <option v-for="item in typeOptions" :key="item.value" :value="item.value">
+            {{ getWorkCategoryLabel(item.value) }} ({{ item.count }})
+          </option>
+        </select>
+      </label>
+
+      <label class="vt-works-search__field">
+        <span>Tag</span>
+        <select v-model="selectedTag">
+          <option value="">All</option>
+          <option v-for="item in tagOptions" :key="item.value" :value="item.value">
+            {{ item.value }} ({{ item.count }})
+          </option>
+        </select>
+      </label>
+
+      <label class="vt-works-search__field">
+        <span>Stack</span>
+        <select v-model="selectedStack">
+          <option value="">All</option>
+          <option v-for="item in stackOptions" :key="item.value" :value="item.value">
+            {{ getWorkStackLabel(item.value) }} ({{ item.count }})
+          </option>
+        </select>
+      </label>
+
+      <label class="vt-works-search__field">
+        <span>Role</span>
+        <select v-model="selectedRole">
+          <option value="">All</option>
+          <option v-for="item in roleOptions" :key="item.value" :value="item.value">
+            {{ getWorkRoleLabel(item.value) }} ({{ item.count }})
+          </option>
+        </select>
+      </label>
+
+      <label class="vt-works-search__field">
+        <span>Year</span>
+        <select v-model="selectedYear">
+          <option value="">All</option>
+          <option v-for="item in yearOptions" :key="item.value" :value="item.value">
+            {{ item.value }} ({{ item.count }})
+          </option>
+        </select>
+      </label>
+
+      <label class="vt-works-search__toggle">
+        <input v-model="featuredOnly" type="checkbox" />
+        <span>Featured only</span>
+      </label>
+
+      <label class="vt-works-search__field">
+        <span>Sort</span>
+        <select v-model="sort">
+          <option value="featured">Featured</option>
+          <option value="year">Year</option>
+          <option value="title">Title</option>
+          <option value="type">Type</option>
+          <option value="order">Legacy order</option>
+        </select>
+      </label>
     </div>
-
-    <label class="vt-works-search__field vt-works-search__field--query">
-      <span>Search</span>
-      <input
-        v-model="query"
-        type="search"
-        placeholder="작업, 역할, 스택, 태그 검색"
-        aria-describedby="works-search-summary"
-      />
-    </label>
-
-    <label class="vt-works-search__field">
-      <span>Category</span>
-      <select v-model="selectedType">
-        <option value="">All</option>
-        <option v-for="item in typeOptions" :key="item.value" :value="item.value">
-          {{ getWorkCategoryLabel(item.value) }} ({{ item.count }})
-        </option>
-      </select>
-    </label>
-
-    <label class="vt-works-search__field">
-      <span>Tag</span>
-      <select v-model="selectedTag">
-        <option value="">All</option>
-        <option v-for="item in tagOptions" :key="item.value" :value="item.value">
-          {{ item.value }} ({{ item.count }})
-        </option>
-      </select>
-    </label>
-
-    <label class="vt-works-search__field">
-      <span>Stack</span>
-      <select v-model="selectedStack">
-        <option value="">All</option>
-        <option v-for="item in stackOptions" :key="item.value" :value="item.value">
-          {{ getWorkStackLabel(item.value) }} ({{ item.count }})
-        </option>
-      </select>
-    </label>
-
-    <label class="vt-works-search__field">
-      <span>Role</span>
-      <select v-model="selectedRole">
-        <option value="">All</option>
-        <option v-for="item in roleOptions" :key="item.value" :value="item.value">
-          {{ getWorkRoleLabel(item.value) }} ({{ item.count }})
-        </option>
-      </select>
-    </label>
-
-    <label class="vt-works-search__field">
-      <span>Year</span>
-      <select v-model="selectedYear">
-        <option value="">All</option>
-        <option v-for="item in yearOptions" :key="item.value" :value="item.value">
-          {{ item.value }} ({{ item.count }})
-        </option>
-      </select>
-    </label>
-
-    <label class="vt-works-search__toggle">
-      <input v-model="featuredOnly" type="checkbox" />
-      <span>Featured only</span>
-    </label>
-
-    <label class="vt-works-search__field">
-      <span>Sort</span>
-      <select v-model="sort">
-        <option value="featured">Featured</option>
-        <option value="year">Year</option>
-        <option value="title">Title</option>
-        <option value="type">Type</option>
-        <option value="order">Legacy order</option>
-      </select>
-    </label>
-
-    <button class="vt-works-search__reset" type="button" @click="resetAllFilters">
-      Reset
-    </button>
 
     <div v-if="activeFilterChips.length" class="vt-works-search__active" aria-label="Active work filters">
       <WorkFilterChip
@@ -161,3 +214,86 @@ function resetAllFilters() {
     </div>
   </section>
 </template>
+
+<style scoped>
+.vt-works-search--contained {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  container-type: inline-size;
+}
+
+.vt-works-search__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-width: 0;
+  margin-bottom: 0.85rem;
+}
+
+.vt-works-search__summary {
+  grid-column: auto;
+  min-width: 0;
+}
+
+.vt-works-search__controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 142px), 1fr));
+  gap: 0.7rem;
+  align-items: end;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.vt-works-search__field,
+.vt-works-search__toggle {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.vt-works-search__field--query {
+  min-width: 0;
+  grid-column: span 2;
+}
+
+.vt-works-search__reset {
+  flex: 0 0 auto;
+}
+
+.vt-works-search input,
+.vt-works-search select,
+.vt-works-search__reset,
+.vt-works-search__toggle {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.vt-works-search__active,
+.vt-works-taxonomy-preview {
+  grid-column: auto;
+  margin-top: 0.75rem;
+  min-width: 0;
+}
+
+@container (max-width: 520px) {
+  .vt-works-search__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .vt-works-search__reset {
+    width: 100%;
+  }
+
+  .vt-works-search__controls,
+  .vt-works-search__field--query {
+    grid-template-columns: 1fr;
+    grid-column: 1 / -1;
+  }
+}
+</style>
