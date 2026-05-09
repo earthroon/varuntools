@@ -25,6 +25,7 @@ const CASE_SECTION_MAP = {
 };
 
 const MEDIA_BLOCKS = new Set(['image', 'compare', 'video']);
+const DEMO_BLOCKS = new Set(['demo']);
 const PORTFOLIO_BLOCKS = new Set(['gallery', 'related', 'metric', 'tools']);
 const MARKDOWN_BOX_SHORTCUTS = {
   note: 'note',
@@ -40,6 +41,7 @@ const SUPPORTED_BLOCKS = new Set([
   'summary',
   ...Object.keys(CASE_SECTION_MAP),
   ...MEDIA_BLOCKS,
+  ...DEMO_BLOCKS,
   ...PORTFOLIO_BLOCKS,
   ...EDITORIAL_BLOCKS,
 ]);
@@ -737,6 +739,98 @@ export function compileEditorialBlock(block, target) {
   };
 }
 
+
+export function compileDemoBlock(block, target) {
+  const parsed = parseMediaArgs(block, target);
+  const diagnostics = [...parsed.diagnostics];
+  const [positionalId] = parsed.positionals;
+  const {
+    id: namedId,
+    src,
+    fullscreen,
+    allowFullscreen,
+    autoResize,
+    minHeight,
+    maxHeight,
+    ...rest
+  } = parsed.values;
+  const body = normalizeBody(block.body);
+
+  diagnostics.push(...validateBooleanAttributes({ fullscreen, allowFullscreen, autoResize }, ['fullscreen', 'allowFullscreen', 'autoResize'], block, target));
+
+  const attributes = {
+    id: namedId || positionalId,
+    src,
+    ...rest,
+  };
+
+  if (allowFullscreen !== undefined) {
+    attributes.allowFullscreen = allowFullscreen;
+  } else if (fullscreen !== undefined) {
+    attributes.allowFullscreen = fullscreen;
+  }
+
+  if (autoResize !== undefined) {
+    attributes.autoResize = autoResize;
+  }
+
+  if (minHeight !== undefined) {
+    const value = Number(minHeight);
+    if (!Number.isFinite(value)) {
+      diagnostics.push(createDiagnostic('EASY065', `Invalid @demo minHeight: ${minHeight}`, {
+        file: target.sourcePath,
+        line: block.line,
+        hint: 'Use a numeric minHeight value, for example minHeight=360.',
+      }));
+    } else {
+      attributes.minHeight = value;
+    }
+  }
+
+  if (maxHeight !== undefined) {
+    const value = Number(maxHeight);
+    if (!Number.isFinite(value)) {
+      diagnostics.push(createDiagnostic('EASY066', `Invalid @demo maxHeight: ${maxHeight}`, {
+        file: target.sourcePath,
+        line: block.line,
+        hint: 'Use a numeric maxHeight value, for example maxHeight=960.',
+      }));
+    } else {
+      attributes.maxHeight = value;
+    }
+  }
+
+  if (Number.isFinite(Number(attributes.minHeight)) && Number.isFinite(Number(attributes.maxHeight)) && Number(attributes.maxHeight) < Number(attributes.minHeight)) {
+    diagnostics.push(createDiagnostic('EASY066', `Invalid @demo maxHeight: ${attributes.maxHeight}`, {
+      file: target.sourcePath,
+      line: block.line,
+      hint: 'maxHeight must be greater than or equal to minHeight.',
+    }));
+  }
+
+  if (!attributes.id && !attributes.src) {
+    diagnostics.push(createDiagnostic('EASY060', 'Missing @demo id or src.', {
+      file: target.sourcePath,
+      line: block.line,
+      hint: 'Use @demo sample-canvas or @demo src="demos/sample-canvas/index.html".',
+    }));
+  }
+
+  if (attributes.ratio !== undefined && !/^\d+(?:\.\d+)?\s*\/\s*\d+(?:\.\d+)?$/.test(String(attributes.ratio))) {
+    diagnostics.push(createDiagnostic('EASY062', `Invalid @demo ratio: ${attributes.ratio}`, {
+      severity: 'warning',
+      file: target.sourcePath,
+      line: block.line,
+      hint: 'Use a CSS aspect-ratio style value such as ratio="16 / 10".',
+    }));
+  }
+
+  return {
+    output: `::demo-frame\n${formatDirectiveAttributes(attributes)}\n::${body ? `\n${body}\n::` : ''}`,
+    diagnostics,
+  };
+}
+
 export function compilePortfolioBlock(block, target) {
   if (block.name === 'gallery') return compileGalleryBlock(block, target);
   if (block.name === 'related') return compileRelatedBlock(block, target);
@@ -799,6 +893,7 @@ export function compileEasyBlock(block, target) {
 
   if (block.name === 'summary') return compileWorkSummary(block, target);
   if (MEDIA_BLOCKS.has(block.name)) return compileMediaBlock(block, target);
+  if (DEMO_BLOCKS.has(block.name)) return compileDemoBlock(block, target);
   if (PORTFOLIO_BLOCKS.has(block.name)) return compilePortfolioBlock(block, target);
   if (EDITORIAL_BLOCKS.has(block.name)) return compileEditorialBlock(block, target);
 

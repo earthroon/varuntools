@@ -12,6 +12,7 @@ import { renderWorkCardDirective } from './workCardDirective'
 import { renderPagecardGridDirective } from './pagecardGridDirective'
 import { renderMarkdownBoxDirective } from './markdownBoxDirective'
 import { renderFieldSpecDirective } from './fieldSpecDirective'
+import { renderDemoFrameDirective } from './demoFrameDirective'
 import { renderGalleryStripDirective } from './galleryStripDirective'
 import { renderHomeSectionDirective } from './homeSectionDirective'
 import { renderProductCtaDirective } from './productCtaDirective'
@@ -145,6 +146,9 @@ export function renderDirective(directive: ParsedDirective): string {
 
     case 'field-spec':
       return renderFieldSpecDirective(directive)
+
+    case 'demo-frame':
+      return renderDemoFrameDirective(directive)
 
     default:
       return directive.raw

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko" data-demo-id="sample-canvas">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sample Canvas Demo</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 24% 18%, rgba(255, 218, 170, 0.18), transparent 28%),
+          radial-gradient(circle at 76% 68%, rgba(130, 170, 255, 0.16), transparent 30%),
+          #11100f;
+        color: #f7efe2;
+      }
+
+      main {
+        width: min(78vw, 720px);
+        border: 1px solid rgba(247, 239, 226, 0.18);
+        border-radius: 28px;
+        padding: clamp(1.25rem, 4vw, 3rem);
+        background: rgba(247, 239, 226, 0.06);
+        box-shadow: 0 32px 80px rgba(0, 0, 0, 0.28);
+      }
+
+      p {
+        line-height: 1.7;
+        opacity: 0.72;
+      }
+
+      .orb {
+        width: 120px;
+        aspect-ratio: 1;
+        border-radius: 999px;
+        margin-bottom: 1.5rem;
+        background: conic-gradient(from 120deg, #f5c98b, #7ea3ff, #f7efe2, #f5c98b);
+        filter: blur(0.2px);
+        animation: pulse 5s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+        50% { transform: translate3d(8px, -6px, 0) scale(1.08); }
+      }
+    </style>
+      <script src="../demo-runtime.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <div class="orb" aria-hidden="true"></div>
+      <h1>VARUN Demo Canvas</h1>
+      <p>This iframe is isolated from the parent Vue app. It proves that project demos can be embedded as independent canvases.</p>
+          <button data-demo-grow type="button">Add demo line</button>
+    </main>
+    <script>
+      document.addEventListener('click', function (event) {
+        if (!event.target.matches('[data-demo-grow]')) return
+        var p = document.createElement('p')
+        p.textContent = 'Runtime resize message sent from inside the iframe.'
+        document.querySelector('main').appendChild(p)
+        if (window.VarunDemoRuntime) window.VarunDemoRuntime.resize()
+      })
+    </script>
+  </body>
+</html>

@@ -26,6 +26,7 @@ const RESERVED_BLOCK_COMMANDS = new Set([
   'process',
   'result',
   'hero',
+  'demo',
   'metric',
   'gallery',
   'item',

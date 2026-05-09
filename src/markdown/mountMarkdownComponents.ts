@@ -32,6 +32,7 @@ import EditorialColumns from '@/components/portfolio/EditorialColumns.vue'
 import CaseGallery from '@/components/portfolio/CaseGallery.vue'
 import CaseGalleryItem from '@/components/portfolio/CaseGalleryItem.vue'
 import PortfolioRelatedWorks from '@/components/portfolio/PortfolioRelatedWorks.vue'
+import DemoFrame from '@/components/demo/DemoFrame.vue'
 import { resolveContentAssetMeta } from './resolveContentAssets'
 import { resolveMediaAsset } from '@/content/assetRegistry'
 import { parseGalleryStripItems } from './galleryStripItems'
@@ -729,6 +730,29 @@ export function mountMarkdownComponents(
     }
 
     const mountedApp = mountOne(element, MarkdownBox, props)
+    if (mountedApp) mounted.push(mountedApp)
+  })
+
+
+  root.querySelectorAll('demo-frame').forEach((element) => {
+    const el = element as HTMLElement
+    const props = {
+      id: stringAttr(el.dataset.id, ''),
+      src: stringAttr(el.dataset.src, ''),
+      title: stringAttr(el.dataset.title, ''),
+      ratio: stringAttr(el.dataset.ratio, ''),
+      status: stringAttr(el.dataset.status, ''),
+      description: stringAttr(el.dataset.description, ''),
+      stack: parseListAttr(el.dataset.stackJson || el.dataset.stack),
+      sandbox: stringAttr(el.dataset.sandbox, ''),
+      allowFullscreen: boolAttr(el.dataset.allowFullscreen || el.dataset.allowfullscreen, true),
+      autoResize: boolAttr(el.dataset.autoResize || el.dataset.autoresize, true),
+      minHeight: numberAttr(el.dataset.minHeight, 360),
+      maxHeight: numberAttr(el.dataset.maxHeight, 1200),
+      html: templateHtml(el, 'template[data-demo-frame-html]'),
+    }
+
+    const mountedApp = mountOne(element, DemoFrame, props)
     if (mountedApp) mounted.push(mountedApp)
   })
 

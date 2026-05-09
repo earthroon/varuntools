@@ -578,6 +578,115 @@ function easyTemplateRoot() {
   return path.resolve('src/content/templates/easy');
 }
 
+
+function runDemoBlockSmoke() {
+  const target = createTarget('demo-blocks');
+  const compiled = compileEasyMarkdownSource(`# Demo Test
+
+@description 데모 테스트입니다.
+@public
+@work type=system status=published year=2026
+
+@demo sample-canvas title="Sample Canvas" ratio="16 / 10" fullscreen=false autoResize=true minHeight=360 maxHeight=960
+iframe 기반 샘플 데모입니다.
+@end
+
+@demo src="demos/sample-canvas/index.html" title="Direct Sample"
+직접 경로 데모입니다.
+@end
+`, target);
+
+  assertNoErrorDiagnostics(compiled);
+  assert.match(compiled.output, /::demo-frame\nid: sample-canvas\ntitle: Sample Canvas\nratio: 16 \/ 10\nallowFullscreen: false\nautoResize: true\nminHeight: 360\nmaxHeight: 960\n::\niframe 기반 샘플 데모입니다\.\n::/);
+  assert.match(compiled.output, /::demo-frame\nsrc: demos\/sample-canvas\/index\.html\ntitle: Direct Sample\n::\n직접 경로 데모입니다\.\n::/);
+}
+
+function runMissingDemoIdentitySmoke() {
+  const target = createTarget('demo-missing-id');
+  const compiled = compileEasyMarkdownSource(`# Demo Test
+
+@description 데모 테스트입니다.
+@public
+@work type=system status=published year=2026
+
+@demo title="Missing Demo"
+본문입니다.
+@end
+`, target);
+
+  assert.ok(compiled.diagnostics.some((diagnostic) => diagnostic.code === 'EASY060'));
+}
+
+function runInvalidDemoBooleanSmoke() {
+  const target = createTarget('demo-invalid-boolean');
+  const compiled = compileEasyMarkdownSource(`# Demo Test
+
+@description 데모 테스트입니다.
+@public
+@work type=system status=published year=2026
+
+@demo sample-canvas fullscreen=maybe
+본문입니다.
+@end
+`, target);
+
+  assert.ok(compiled.diagnostics.some((diagnostic) => diagnostic.code === 'EASY014'));
+}
+
+function runInvalidDemoHeightSmoke() {
+  const target = createTarget('demo-invalid-height');
+  const compiled = compileEasyMarkdownSource(`# Demo Test
+
+@description 데모 테스트입니다.
+@public
+@work type=system status=published year=2026
+
+@demo sample-canvas minHeight=abc maxHeight=960
+본문입니다.
+@end
+`, target);
+
+  assert.ok(compiled.diagnostics.some((diagnostic) => diagnostic.code === 'EASY065'));
+}
+
+function runInvalidDemoHeightRangeSmoke() {
+  const target = createTarget('demo-invalid-height-range');
+  const compiled = compileEasyMarkdownSource(`# Demo Test
+
+@description 데모 테스트입니다.
+@public
+@work type=system status=published year=2026
+
+@demo sample-canvas minHeight=960 maxHeight=360
+본문입니다.
+@end
+`, target);
+
+  assert.ok(compiled.diagnostics.some((diagnostic) => diagnostic.code === 'EASY066'));
+}
+
+function runMissingDemoEntrySmoke() {
+  const root = createTempRoot();
+
+  try {
+    const sourcePath = path.join(root, 'src/content/pages/works/demo-missing/work.easy.md');
+    write(sourcePath, `# Demo Missing
+
+@description 데모 엔트리 누락 테스트입니다.
+@public
+@work type=system status=published year=2026
+
+@demo src="demos/missing/index.html" title="Missing Demo"
+본문입니다.
+@end
+`);
+
+    assert.throws(() => runCompiler(root, ['--write']), /EASY064/);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+}
+
 function runScaffoldWorkSmoke() {
   const root = createTempRoot();
 
@@ -720,6 +829,12 @@ try {
   runInvalidEditorialTitleSmoke();
   runCalloutBoxShortcutSmoke();
   runInvalidCalloutBooleanSmoke();
+  runDemoBlockSmoke();
+  runMissingDemoIdentitySmoke();
+  runInvalidDemoBooleanSmoke();
+  runInvalidDemoHeightSmoke();
+  runInvalidDemoHeightRangeSmoke();
+  runMissingDemoEntrySmoke();
   runMissingTitleSmoke();
   runInvalidYearSmoke();
   runCollisionSmoke(root);

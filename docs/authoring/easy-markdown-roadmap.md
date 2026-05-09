@@ -223,6 +223,10 @@ Status: implemented in commit 09.
 | `EASY044` | Invalid columns count |
 | `EASY045` | Empty markdown box |
 | `EASY046` | `@col` outside `@columns` |
+| `EASY060` | Missing demo id or src |
+| `EASY062` | Invalid demo ratio |
+| `EASY063` | Invalid demo boolean |
+| `EASY064` | Missing demo entry file |
 
 ## 8. Deferred store/product wrapper
 
@@ -270,6 +274,7 @@ Scaffolded pages create the Easy source, generated `index.md`, local README, pla
 08.1 feat: extend Easy Markdown callout box syntax
 09 test: add Easy Markdown diagnostics and stale checks
 10 feat: scaffold Easy Markdown pages
+10.1 feat: add iframe demo embeds with manifest support
 11 chore: run Easy Markdown compiler before build
 12 docs: document Easy Markdown authoring workflow
 ```
@@ -287,6 +292,7 @@ Scaffolded pages create the Easy source, generated `index.md`, local README, pla
 [x] Phase 6.1 Callout box shorthand extension
 [x] Phase 7. Diagnostics and stale checks
 [x] Phase 8. Scaffolding integration
+[x] Phase 8.1 Iframe demo embed integration
 [ ] Phase 9. Build integration
 ```
 

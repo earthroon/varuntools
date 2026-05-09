@@ -66,6 +66,26 @@ function inspectBlockReferences(block, target, diagnostics, options) {
     return;
   }
 
+
+  if (block.name === 'demo') {
+    const parsed = parseMixedArgs(block.args, { file: target.sourcePath, line: block.line });
+    const demoSrc = String(parsed.values.src || '').trim();
+
+    if (demoSrc && !/^(?:[a-z][a-z0-9+.-]*:|\/\/|#)/i.test(demoSrc)) {
+      const normalized = demoSrc.replace(/^\/+/, '');
+      const publicPath = normalized.startsWith('public/') ? normalized : `public/${normalized}`;
+
+      if (!options.exists(publicPath)) {
+        diagnostics.push(createDiagnostic('EASY064', `Missing demo entry file: ${demoSrc}`, {
+          file: target.sourcePath,
+          line: block.line,
+          hint: `Expected file at ${publicPath}.`,
+        }));
+      }
+    }
+    return;
+  }
+
   if (block.name === 'gallery') {
     for (const itemArgs of splitGalleryItems(block.body)) {
       const parsed = parseMixedArgs(itemArgs, { file: target.sourcePath, line: block.line });

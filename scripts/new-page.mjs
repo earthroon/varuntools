@@ -5,6 +5,7 @@ import process from 'node:process'
 import { parseCsv, csvRowsToObjects } from './lib/csv.mjs'
 import { csvRowsToMarkdown } from './lib/csv-markdown.mjs'
 import { scaffoldEasyPage } from './lib/easy-markdown/scaffold.mjs'
+import { scaffoldMicroPage } from './lib/micro-markdown/scaffold.mjs'
 
 const categories = new Set(['works', 'lab', 'tools', 'products'])
 const portfolioPresetTypes = new Set(['case-study', 'tool', 'visual', 'service', 'experiment'])
@@ -16,7 +17,9 @@ function usage() {
     'Usage:',
     '  npm run new:page -- <works|lab|tools|products> <slug> [--csv] [--root <path>]',
     '  npm run new:page -- <section> <slug> --easy [--template <work|page|case-study>]',
+    '  npm run new:page -- <section> <slug> --micro [--template <work|page|case-study>]',
     '  npm run new:work:easy -- <slug> --title "Work Title" [--template <work|case-study>]',
+    '  npm run new:work:micro -- <slug> --title "Work Title" [--template <work|case-study>]',
     '  npm run new:page -- works <slug> --csv --type <case-study|tool|visual|service|experiment>',
     '  npm run new:page -- works/<slug> --csv --type <case-study|tool|visual|service|experiment>',
     '',
@@ -36,6 +39,7 @@ function parseArgs(argv) {
   let root = path.join('src', 'content', 'pages')
   let csv = false
   let easy = false
+  let micro = false
   let type = ''
   let title = ''
   let status = 'draft'
@@ -54,6 +58,8 @@ function parseArgs(argv) {
       csv = true
     } else if (arg === '--easy') {
       easy = true
+    } else if (arg === '--micro') {
+      micro = true
     } else if (arg === '--type') {
       if (!argv[i + 1]) throw new Error('new-page ERROR: --type requires a portfolio preset type')
       type = argv[i + 1]
@@ -96,7 +102,7 @@ function parseArgs(argv) {
     slug = parts.slice(1).join('-')
   }
 
-  return { category, slug, root, csv, easy, type, title, status, featured, template, year, force }
+  return { category, slug, root, csv, easy, micro, type, title, status, featured, template, year, force }
 }
 
 function assertCategory(category) {
@@ -191,13 +197,38 @@ function placeholderAssetContent(filePath) {
 
 
 try {
-  const { category, slug, root, csv, easy, type, title: explicitTitle, status, featured, template: easyTemplate, year, force } = parseArgs(process.argv.slice(2))
+  const { category, slug, root, csv, easy, micro, type, title: explicitTitle, status, featured, template: authoringTemplate, year, force } = parseArgs(process.argv.slice(2))
   if (!category || !slug) {
     console.error(usage())
     process.exit(2)
   }
 
   const repoRoot = process.cwd()
+
+
+  if (micro) {
+    const title = explicitTitle || titleFromSlug(slug)
+    const result = scaffoldMicroPage({
+      rootDir: repoRoot,
+      contentRoot: root,
+      section: category,
+      slug,
+      title,
+      template: authoringTemplate || (category === 'works' ? 'work' : 'page'),
+      status,
+      year,
+      type: type || 'system',
+      featured: String(featured) === 'true',
+      force,
+    })
+
+    console.log(`[new-page] created ${result.pageDir}`)
+    console.log(`[new-page] source ${result.sourcePath}`)
+    console.log(`[new-page] generated easy ${result.easyPath}`)
+    console.log(`[new-page] generated ${result.outputPath}`)
+    console.log('[new-page] next: npm run micro:check && npm run build')
+    process.exit(0)
+  }
 
   if (easy) {
     const title = explicitTitle || titleFromSlug(slug)
@@ -207,7 +238,7 @@ try {
       section: category,
       slug,
       title,
-      template: easyTemplate || (category === 'works' ? 'work' : 'page'),
+      template: authoringTemplate || (category === 'works' ? 'work' : 'page'),
       status,
       year,
       type: type || 'system',

@@ -1,0 +1,7 @@
+{
+  "id": "sample-canvas",
+  "title": "Sample Canvas Demo",
+  "entry": "./index.html",
+  "ratio": "16 / 10",
+  "status": "stable"
+}

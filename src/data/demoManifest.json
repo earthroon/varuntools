@@ -1,0 +1,19 @@
+[
+  {
+    "id": "sample-canvas",
+    "title": "Sample Canvas Demo",
+    "src": "demos/sample-canvas/index.html",
+    "ratio": "16 / 10",
+    "status": "stable",
+    "stack": [
+      "HTML",
+      "CSS",
+      "iframe"
+    ],
+    "description": "A small isolated iframe demo used to verify the VarunTools demo embed surface.",
+    "allowFullscreen": true,
+    "autoResize": true,
+    "minHeight": 360,
+    "maxHeight": 960
+  }
+]

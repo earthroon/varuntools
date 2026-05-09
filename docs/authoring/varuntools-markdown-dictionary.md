@@ -986,3 +986,59 @@ That is expected. These directives are not supported production syntax. Use `cap
 ### `field-spec` renders as plain text
 
 Check that the current build includes Commit C. `field-spec` is supported after the field-spec directive is registered in `src/markdown/directiveTypes.ts` and routed through `src/markdown/directives/index.ts`.
+
+## `::demo-frame`
+
+`demo-frame` embeds an isolated project demo in an iframe. Use this for interactive demos, canvas/WebGL experiments, or mini apps that should not leak CSS or global events into the main Vue app.
+
+```md
+::demo-frame
+id: sample-canvas
+title: Sample Canvas Demo
+ratio: 16 / 10
+status: stable
+::
+This demo runs inside an isolated iframe.
+::
+```
+
+### Fields
+
+| Field | Required | Description |
+|---|---:|---|
+| `id` | optional | Looks up `src/data/demoManifest.json` |
+| `src` | optional | Direct iframe source. Required when `id` is omitted |
+| `title` | optional | Overrides manifest title |
+| `ratio` | optional | CSS aspect-ratio value |
+| `status` | optional | `stable`, `experimental`, or `archived` |
+| `stack-json` | optional | JSON array of stack labels |
+| `sandbox` | optional | iframe sandbox override |
+| `allowFullscreen` | optional | iframe fullscreen permission |
+| `autoResize` | optional | listen for runtime resize messages |
+| `minHeight` | optional | minimum iframe height in pixels |
+| `maxHeight` | optional | maximum iframe height in pixels |
+
+At least one of `id` or `src` must be provided. Runtime src resolution uses `import.meta.env.BASE_URL`, so project-path deployments such as GitHub Pages load demos from the correct `/varuntools/demos/...` path.
+
+
+### Demo runtime messages
+
+Iframe demos may include the shared runtime helper:
+
+```html
+<script src="../demo-runtime.js" defer></script>
+```
+
+The helper posts messages to the parent page with `targetOrigin='*'` during the MVP stage so GitHub Pages, custom domains, and future CDN-hosted demos all work without origin drift.
+
+| Message | Payload | Effect |
+|---|---|---|
+| `VARUN_DEMO_READY` | `{ source, type, id }` | marks the frame ready |
+| `VARUN_DEMO_RESIZE` | `{ source, type, id, height }` | updates iframe height when `autoResize` is enabled |
+| `VARUN_DEMO_ERROR` | `{ source, type, id, message }` | shows an error state without breaking the page |
+
+The iframe demo should set the same id used by the manifest:
+
+```html
+<html lang="ko" data-demo-id="sample-canvas">
+```
