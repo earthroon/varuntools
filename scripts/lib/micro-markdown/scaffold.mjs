@@ -98,7 +98,26 @@ function renderMicroWorkTemplate(variables) {
   const type = variables.type || 'system';
   const description = renderDescription(variables.description, variables.template);
 
-  return `@H1_${variables.title}
+  return `<!--
+VARUNTOOLS MICRO MODE
+
+직접 수정할 파일은 이 파일뿐입니다.
+work.easy.md / index.md는 생성물입니다.
+
+기본 작성 순서:
+1. @H1_
+2. @DESC_
+3. @SUM_
+4. @PROB_
+5. @DEC_
+6. @SOL_
+7. @RES_
+
+작성 후:
+npm run publish:content
+-->
+
+@H1_${variables.title}
 @DESC_${description}
 @SLUG_works/${variables.slug}
 ${visibility}
@@ -156,7 +175,23 @@ function renderMicroPageTemplate(variables) {
   const description = renderDescription(variables.description, variables.template);
   const fullSlug = `${variables.section}/${variables.slug}`;
 
-  return `@H1_${variables.title}
+  return `<!--
+VARUNTOOLS MICRO MODE
+
+직접 수정할 파일은 이 파일뿐입니다.
+page.easy.md / index.md는 생성물입니다.
+
+기본 작성 순서:
+1. @H1_
+2. @DESC_
+3. @SUM_
+4. 필요한 본문 카드
+
+작성 후:
+npm run publish:content
+-->
+
+@H1_${variables.title}
 @DESC_${description}
 @SLUG_${fullSlug}
 ${visibility}

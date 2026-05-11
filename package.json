@@ -204,7 +204,8 @@
     "new:page:micro": "node scripts/new-page.mjs --micro",
     "prebuild": "npm run content:compile && npm run content:check",
     "content:compile": "npm run micro:compile && npm run easy:compile",
-    "content:check": "npm run micro:check && npm run easy:check"
+    "content:check": "npm run micro:check && npm run easy:check",
+    "publish:content": "npm run build"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
