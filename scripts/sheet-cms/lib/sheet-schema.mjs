@@ -14,6 +14,11 @@ export const OPTIONAL_TABS = [
   'enums_asset_roles',
 ]
 
+export const ALL_TABS = [
+  ...REQUIRED_TABS,
+  ...OPTIONAL_TABS,
+]
+
 export const REQUIRED_HEADERS = {
   pages: ['pageId', 'visible', 'status', 'type', 'slug', 'title'],
   blocks: ['pageId', 'visible', 'kind'],
@@ -25,4 +30,16 @@ export const REQUIRED_HEADERS = {
   publish_log: ['requestedAt', 'requestedBy', 'requestId', 'eventType', 'responseCode', 'responseBody', 'actionRunUrl', 'commitSha', 'status', 'message'],
   enums_asset_modes: ['value', 'label', 'public'],
   enums_asset_roles: ['value', 'label', 'public'],
+}
+
+export function getRequiredHeaders(sheetName) {
+  return REQUIRED_HEADERS[sheetName] || []
+}
+
+export function isRequiredTab(sheetName) {
+  return REQUIRED_TABS.includes(sheetName)
+}
+
+export function isOptionalTab(sheetName) {
+  return OPTIONAL_TABS.includes(sheetName)
 }
