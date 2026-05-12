@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'
@@ -14,37 +14,37 @@ const manifestPath = path.join(tmpRoot, 'generated', 'sheet-sync.generated.json'
 const fixtures = {
   pages: [
     ['pageId', 'visible', 'status', 'type', 'slug', 'title', 'desc', 'template', 'coverAssetId', 'tags', 'featured', 'order', 'createdAt', 'updatedAt', 'memo'],
-    ['commission-design', 'Y', 'published', 'commission', 'commission/design', '디자인 커미션', '작업 의뢰 안내', 'commission', 'cover_commission', 'design,commission', 'Y', '10', '', '', 'internal note'],
+    ['commission-design', 'Y', 'published', 'commission', 'commission/design', '?붿옄??而ㅻ???, '?묒뾽 ?섎ː ?덈궡', 'commission', 'cover_commission', 'design,commission', 'Y', '10', '', '', 'internal note'],
     ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
   ],
   blocks: [
     ['pageId', 'blockId', 'visible', 'order', 'kind', 'title', 'body', 'assetId', 'beforeAssetId', 'afterAssetId', 'caption', 'calloutType', 'buttonLabel', 'buttonUrl', 'optionsJson', 'memo'],
-    ['commission-design', 'intro-01', 'Y', '10', 'text', '작업 개요', '본문입니다.', '', '', '', '', '', '', '', '', ''],
-    ['commission-design', 'warn-01', 'Y', '20', 'callout', '주의 사항', '자료를 먼저 확인해주세요.', '', '', '', '', 'warning', '', '', '{"collapsible":true}', ''],
+    ['commission-design', 'intro-01', 'Y', '10', 'text', '?묒뾽 媛쒖슂', '蹂몃Ц?낅땲??', '', '', '', '', '', '', '', '', ''],
+    ['commission-design', 'warn-01', 'Y', '20', 'callout', '二쇱쓽 ?ы빆', '?먮즺瑜?癒쇱? ?뺤씤?댁＜?몄슂.', '', '', '', '', 'warning', '', '', '{"collapsible":true}', ''],
   ],
   assets: [
     ['assetId', 'visible', 'driveFileId', 'type', 'role', 'alt', 'caption', 'localPath', 'mimeType', 'memo'],
-    ['cover_commission', 'Y', 'drive_file_id_redacted', 'image', 'cover', '대표 이미지', '커버', '', '', ''],
+    ['cover_commission', 'Y', 'drive_file_id_redacted', 'image', 'cover', '????대?吏', '而ㅻ쾭', '', '', ''],
   ],
   settings: [
     ['key', 'value', 'description'],
-    ['siteName', 'VARUNTOOLS', '사이트 이름'],
-    ['commissionOpen', 'Y', '커미션 활성 여부'],
+    ['siteName', 'VARUNTOOLS', '?ъ씠???대쫫'],
+    ['commissionOpen', 'Y', '而ㅻ????쒖꽦 ?щ?'],
   ],
   enums_block_types: [
     ['value', 'label', 'renderer', 'public', 'description'],
-    ['text', '텍스트', 'TextBlock', 'Y', '일반 텍스트'],
-    ['callout', '콜아웃', 'CalloutBlock', 'Y', '콜아웃'],
-    ['compare', '비포애프터', 'CompareBlock', 'Y', '전후 비교'],
+    ['text', '?띿뒪??, 'TextBlock', 'Y', '?쇰컲 ?띿뒪??],
+    ['callout', '肄쒖븘??, 'CalloutBlock', 'Y', '肄쒖븘??],
+    ['compare', '鍮꾪룷?좏봽??, 'CompareBlock', 'Y', '?꾪썑 鍮꾧탳'],
   ],
   enums_callout_types: [
     ['value', 'label', 'componentTone', 'defaultCollapsible', 'defaultOpen', 'public', 'description'],
-    ['note', '노트', 'note', 'N', 'Y', 'Y', '일반 메모'],
-    ['warning', '주의', 'warning', 'Y', 'Y', 'Y', '주의사항'],
+    ['note', '?명듃', 'note', 'N', 'Y', 'Y', '?쇰컲 硫붾え'],
+    ['warning', '二쇱쓽', 'warning', 'Y', 'Y', 'Y', '二쇱쓽?ы빆'],
   ],
   guide: [
-    ['구분', '규칙', '예시', '비고'],
-    ['노출', 'visible은 Y/N만 쓴다.', 'Y', 'Y만 public 후보'],
+    ['援щ텇', '洹쒖튃', '?덉떆', '鍮꾧퀬'],
+    ['?몄텧', 'visible? Y/N留??대떎.', 'Y', 'Y留?public ?꾨낫'],
   ],
   publish_log: [
     ['requestedAt', 'requestedBy', 'requestId', 'eventType', 'responseCode', 'responseBody', 'actionRunUrl', 'commitSha', 'status', 'message'],
@@ -104,3 +104,4 @@ main().catch((error) => {
   console.error(`[smoke:sync-sheets] failed: ${error.message}`)
   process.exit(1)
 })
+
