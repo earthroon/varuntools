@@ -205,7 +205,21 @@
     "prebuild": "npm run content:compile && npm run content:check",
     "content:compile": "npm run micro:compile && npm run easy:compile",
     "content:check": "npm run micro:check && npm run easy:check",
-    "publish:content": "npm run build"
+    "publish:content": "npm run build",
+    "check:sheet-cms-auth": "node scripts/sheet-cms/check-auth-env.mjs",
+    "sync:sheets": "node scripts/sheet-cms/sync-sheets.mjs",
+    "smoke:sync-sheets": "node scripts/sheet-cms/smoke-sync-sheets.mjs",
+    "sync:drive-assets": "node scripts/sheet-cms/sync-appscript-assets.mjs",
+    "smoke:appscript-assets": "node scripts/sheet-cms/smoke-appscript-assets.mjs",
+    "publish:sheet-cms": "npm run check:sheet-cms-auth && npm run sync:sheets && npm run sync:drive-assets && npm run generate:content-json && npm run validate:generated-content && npm run build",
+    "generate:content-json": "node scripts/sheet-cms/generate-content-json.mjs",
+    "smoke:generate-content-json": "node scripts/sheet-cms/smoke-generate-content-json.mjs",
+    "validate:generated-content": "node scripts/sheet-cms/validate-generated-content.mjs",
+    "smoke:validate-generated-content": "node scripts/sheet-cms/smoke-validate-generated-content.mjs",
+    "smoke:publish-workflow": "node scripts/sheet-cms/smoke-publish-workflow.mjs",
+    "smoke:generated-renderer": "node scripts/sheet-cms/smoke-generated-renderer.mjs",
+    "finalize:sheet-cms": "node scripts/sheet-cms/finalize-publish.mjs",
+    "smoke:finalize-publish": "node scripts/sheet-cms/smoke-finalize-publish.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
