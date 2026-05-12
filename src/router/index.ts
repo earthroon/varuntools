@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { generatedRoutes } from '@/lib/generated-content/generatedRoutes'
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,7 @@ export const router = createRouter({
       name: 'not-found',
       component: () => import('@/pages/NotFoundPage.vue'),
     },
+    ...generatedRoutes,
     {
       path: '/:slug+',
       name: 'markdown-page',

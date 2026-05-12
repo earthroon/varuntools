@@ -25,5 +25,6 @@ import './styles/ewa-debug.css'
 import './styles/notion-legacy.css'
 import './styles/themes/varuntools-showroom.css'
 import './styles/typography.css'
+import './styles/generated-content.css'
 
 createApp(App).use(router).mount('#app')
