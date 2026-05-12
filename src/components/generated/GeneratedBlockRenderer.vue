@@ -14,6 +14,8 @@ const props = defineProps<{
   block: GeneratedBlock
 }>()
 
+const isDev = import.meta.env.DEV
+
 const unknownKind = computed(() => {
   return String((props.block as { kind?: string }).kind ?? 'unknown')
 })
@@ -63,7 +65,7 @@ const unknownKind = computed(() => {
   />
 
   <pre
-    v-else-if="import.meta.env.DEV"
+    v-else-if="isDev"
     class="generated-block generated-block--unknown"
   >Unknown generated block: {{ unknownKind }}</pre>
 </template>
