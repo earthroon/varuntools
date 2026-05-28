@@ -16,6 +16,7 @@ concurrency:
 env:
   NODE_VERSION: 20
   GENERATED_COMMIT_MESSAGE: "Publish sheet CMS content"
+  SHEET_CMS_ASSET_SYNC_MODE: vacms
 
 jobs:
   publish:
@@ -55,7 +56,7 @@ jobs:
           SHEET_CMS_SHARED_SECRET: ${{ secrets.SHEET_CMS_SHARED_SECRET }}
           SHEET_CMS_REQUEST_ID: ${{ github.event.client_payload.requestId || github.run_id }}
 
-      - name: Sync Drive assets through Apps Script
+      - name: Sync content assets
         run: npm run sync:drive-assets
         env:
           APPS_SCRIPT_WEBAPP_URL: ${{ secrets.APPS_SCRIPT_WEBAPP_URL }}

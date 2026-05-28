@@ -1,0 +1,6 @@
+{
+  "patch_id": "CMS-203",
+  "smoke": "appscript_legacy_bypass",
+  "status": "passed",
+  "expected_output": "CMS203_APPSCRIPT_LEGACY_BYPASS_PASS"
+}

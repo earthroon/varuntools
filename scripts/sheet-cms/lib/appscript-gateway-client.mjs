@@ -35,6 +35,24 @@ export function getGatewayConfig(env = process.env) {
   }
 }
 
+
+function redactGatewayText(text, env = process.env) {
+  let value = String(text || '')
+  const secret = String(env.SHEET_CMS_SHARED_SECRET || '')
+  if (secret) value = value.split(secret).join('[REDACTED_SECRET]')
+  value = value.replace(/[A-Za-z0-9+/=]{256,}/g, '[REDACTED_LONG_PAYLOAD]')
+  return value.slice(0, 1200)
+}
+
+function gatewayDataKeys(data) {
+  return data && typeof data === 'object' ? Object.keys(data) : []
+}
+
+function gatewayFailureMessage(data, status) {
+  if (data?.error && typeof data.error === 'object') return data.error.message || data.error.code || JSON.stringify(data.error)
+  return data?.error || data?.message || data?.details?.message || `HTTP ${status}`
+}
+
 export async function callAppsScriptGateway({ action, payload = {}, config = getGatewayConfig() }) {
   const body = {
     action,
@@ -61,7 +79,16 @@ export async function callAppsScriptGateway({ action, payload = {}, config = get
   }
 
   if (!response.ok || data?.ok === false) {
-    const message = data?.error || data?.message || `HTTP ${response.status}`
+    const bodyPreview = redactGatewayText(text)
+    console.error('[appscript-gateway] failed response', {
+      action,
+      status: response.status,
+      statusText: response.statusText,
+      contentType: response.headers.get('content-type'),
+      dataKeys: gatewayDataKeys(data),
+      bodyPreview,
+    })
+    const message = gatewayFailureMessage(data, response.status)
     throw new Error(`Apps Script gateway ${action} failed: ${message}`)
   }
 
