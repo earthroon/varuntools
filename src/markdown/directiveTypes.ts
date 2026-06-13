@@ -12,6 +12,7 @@ export type DirectiveName =
   | 'featured-works'
   | 'work-card'
   | 'pagecard-grid'
+  | 'pagecard'
   | 'markdown-box'
   | 'gallery-strip'
   | 'home-section'
@@ -73,6 +74,7 @@ export const KNOWN_DIRECTIVES: readonly DirectiveName[] = [
   'featured-works',
   'work-card',
   'pagecard-grid',
+  'pagecard',
   'markdown-box',
   'gallery-strip',
   'home-section',
