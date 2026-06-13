@@ -148,7 +148,7 @@ function onMessage(event: MessageEvent) {
     ready.value = true
     loaded.value = true
     failed.value = true
-    errorMessage.value = message.message || 'Demo failed to initialize.'
+    errorMessage.value = message.message || '데모 초기화에 실패했습니다.'
   }
 }
 
@@ -161,7 +161,7 @@ function onLoad() {
 function onError() {
   loaded.value = true
   failed.value = true
-  errorMessage.value = 'Demo could not be loaded.'
+  errorMessage.value = '데모를 불러올 수 없습니다.'
 }
 
 onMounted(() => {
@@ -182,14 +182,14 @@ onBeforeUnmount(() => {
   >
     <header class="vt-demo-frame__header">
       <div class="vt-demo-frame__heading">
-        <p class="vt-demo-frame__eyebrow">Interactive Demo</p>
+        <p class="vt-demo-frame__eyebrow">인터랙티브 데모</p>
         <h3>{{ demoTitle }}</h3>
       </div>
 
       <div class="vt-demo-frame__actions">
         <span class="vt-demo-frame__status">{{ demoStatus }}</span>
         <a v-if="openHref" class="vt-demo-frame__open" :href="openHref" target="_blank" rel="noreferrer">
-          Open
+          열기
         </a>
       </div>
     </header>
@@ -199,7 +199,7 @@ onBeforeUnmount(() => {
         Loading demo canvas...
       </div>
       <div v-if="failed || !demoSrc" class="vt-demo-frame__fallback" role="status">
-        {{ errorMessage || 'Demo could not be loaded.' }}
+        {{ errorMessage || '데모를 불러올 수 없습니다.' }}
       </div>
       <iframe
         v-if="demoSrc"
@@ -217,7 +217,7 @@ onBeforeUnmount(() => {
     <div v-if="demoDescription || html || demoStack.length" class="vt-demo-frame__meta">
       <p v-if="demoDescription" class="vt-demo-frame__description">{{ demoDescription }}</p>
       <div v-if="html" class="vt-demo-frame__body" v-html="html" />
-      <ul v-if="demoStack.length" class="vt-demo-frame__stack" aria-label="Demo stack">
+      <ul v-if="demoStack.length" class="vt-demo-frame__stack" aria-label="데모 스택">
         <li v-for="item in demoStack" :key="item">{{ item }}</li>
       </ul>
     </div>

@@ -27,9 +27,9 @@ const notice = computed(() => publicVariantNotice())
 </script>
 
 <template>
-  <section class="vt-product-variant-selector" aria-label="Product variant selection">
+  <section class="vt-product-variant-selector" aria-label="상품 옵션 선택">
     <div class="vt-product-variant-selector__header">
-      <p class="vt-product-variant-selector__eyebrow">Variant / entitlement</p>
+      <p class="vt-product-variant-selector__eyebrow">옵션 / 권한</p>
       <h3>{{ title || 'Choose a license option' }}</h3>
       <p>{{ notice }}</p>
     </div>
@@ -63,7 +63,7 @@ const notice = computed(() => publicVariantNotice())
         Continue with {{ selected.label }}
       </a>
       <button v-else class="vt-product-variant-selector__button vt-product-variant-selector__button--disabled" type="button" disabled>
-        Variant checkout pending
+        옵션 결제 준비 중
       </button>
     </div>
   </section>

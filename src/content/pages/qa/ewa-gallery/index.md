@@ -41,7 +41,7 @@ Test low tier downgrade with localStorage.setItem('vt:ewa-tier' 'low'). Test coo
 
 ::case-gallery
 title: EWA Scenario Gallery
-caption: Open each image in the lightbox and inspect EWA diagnostics.
+caption: 각 이미지를 라이트박스에서 열고 EWA 진단 정보를 확인합니다.
 variant: framed
 columns: 2
 captionStyle: below

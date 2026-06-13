@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "slug": "spec-playground",
   "sku": "DEMO-SPEC-PLAYGROUND",
-  "title": "Product Spec Playground",
+  "title": "상품 사양 실험장",
   "isDemo": true,
   "status": "coming-soon",
   "visibility": "public",
@@ -44,7 +44,7 @@
       "keyPrefix": "products/spec-playground/"
     },
     "deliverables": [],
-    "note": "Demo product. No public download URL is exposed. Future Worker should deliver R2 objects after purchase."
+    "note": "데모 상품입니다. 공개 다운로드 URL은 노출하지 않습니다. 향후 Worker가 구매 후 R2 객체를 전달해야 합니다."
   },
   "inquiry": {
     "inquiryUrl": "/inquiry"
@@ -58,7 +58,7 @@
   "variants": [
     {
       "id": "personal",
-      "label": "Personal Demo License",
+      "label": "개인 데모 라이선스",
       "status": "draft",
       "licenseScope": "personal",
       "price": 0,
@@ -70,7 +70,7 @@
     },
     {
       "id": "commercial",
-      "label": "Commercial Demo License",
+      "label": "상업용 데모 라이선스",
       "status": "draft",
       "licenseScope": "commercial",
       "price": 0,
@@ -83,14 +83,14 @@
   "deliverableSets": [
     {
       "id": "demo-pack",
-      "label": "Demo Pack",
+      "label": "데모 팩",
       "deliverableIds": []
     }
   ],
   "bundles": [
     {
       "id": "starter-bundle",
-      "label": "Starter Bundle",
+      "label": "스타터 묶음",
       "status": "draft",
       "productSlugs": [
         "spec-playground",

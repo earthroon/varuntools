@@ -1,5 +1,5 @@
 ---
-title: "Before / After Wiper"
+title: "전후 비교 와이퍼"
 slug: "wiper"
 layout: "tool"
 theme: "showroom"
@@ -16,7 +16,7 @@ series: "markdown-tools"
 related:
   - lab-markdown-gallery
 cover: "./images/cover.svg"
-cardTitle: "Before / After Wiper"
+cardTitle: "전후 비교 와이퍼"
 cardDescription: "이미지 비교를 위한 전후 슬라이더 도구"
 cardCover: "./images/cover.svg"
 tags:
@@ -42,12 +42,12 @@ work:
     - "image"
     - "comparison"
     - "tool"
-seoTitle: "Before / After Wiper"
+seoTitle: "전후 비교 와이퍼"
 seoDescription: "이미지 전후를 비교하는 VARUNTOOLS 와이퍼 도구입니다."
 ogImage: "./images/cover.svg"
 ---
 
-# Before / After Wiper
+# 전후 비교 와이퍼
 
 이미지 전후를 비교하는 와이퍼 도구입니다.
 
@@ -55,7 +55,7 @@ ogImage: "./images/cover.svg"
 size: sm
 ::
 
-## Demo
+## 데모
 
 ::before-after
 before: ./images/before.svg
@@ -65,14 +65,14 @@ initial: 50
 ::
 
 ::section-break
-label: Usage
+label: 사용법
 tone: quiet
 ::
 
-## Authoring Rule
+## 작성 규칙
 
 신규 Markdown 콘텐츠에서는 `[전]`, `[후]` 마커보다 `::before-after` directive를 우선 사용합니다.
 
-### Legacy Compatibility
+### 기존 문법 호환
 
 기존 Super/Notion 마커 파서는 후속 legacy adapter 커밋에서 따로 흡수합니다.

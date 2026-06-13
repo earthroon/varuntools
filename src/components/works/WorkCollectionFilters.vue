@@ -33,7 +33,7 @@ defineEmits<{
     </div>
 
     <label class="vt-work-filters__field vt-work-filters__field--search">
-      <span>Search</span>
+      <span>검색</span>
       <input
         v-model="query"
         type="search"
@@ -44,7 +44,7 @@ defineEmits<{
     <label class="vt-work-filters__field">
       <span>Type</span>
       <select v-model="kind">
-        <option value="">All</option>
+        <option value="">전체</option>
         <option v-for="item in kinds" :key="item" :value="item">
           {{ item }}
         </option>
@@ -52,9 +52,9 @@ defineEmits<{
     </label>
 
     <label class="vt-work-filters__field">
-      <span>Role</span>
+      <span>역할</span>
       <select v-model="role">
-        <option value="">All</option>
+        <option value="">전체</option>
         <option v-for="item in roles" :key="item" :value="item">
           {{ item }}
         </option>
@@ -62,9 +62,9 @@ defineEmits<{
     </label>
 
     <label class="vt-work-filters__field">
-      <span>Stack</span>
+      <span>기술 스택</span>
       <select v-model="stack">
-        <option value="">All</option>
+        <option value="">전체</option>
         <option v-for="item in stacks" :key="item" :value="item">
           {{ item }}
         </option>
@@ -72,9 +72,9 @@ defineEmits<{
     </label>
 
     <label class="vt-work-filters__field">
-      <span>Tag</span>
+      <span>태그</span>
       <select v-model="tag">
-        <option value="">All</option>
+        <option value="">전체</option>
         <option v-for="item in tags" :key="item" :value="item">
           {{ item }}
         </option>
@@ -82,9 +82,9 @@ defineEmits<{
     </label>
 
     <label class="vt-work-filters__field">
-      <span>Year</span>
+      <span>연도</span>
       <select v-model="year">
-        <option value="">All</option>
+        <option value="">전체</option>
         <option v-for="item in years" :key="item" :value="item">
           {{ item }}
         </option>
@@ -93,14 +93,14 @@ defineEmits<{
 
     <label class="vt-work-filters__toggle">
       <input v-model="featuredOnly" type="checkbox" />
-      <span>Featured only</span>
+      <span>대표 작업만</span>
     </label>
 
     <label class="vt-work-filters__field">
-      <span>Sort</span>
+      <span>정렬</span>
       <select v-model="sort">
         <option value="featured">Featured</option>
-        <option value="year">Year</option>
+        <option value="year">연도순</option>
         <option value="title">Title</option>
         <option value="type">Type</option>
         <option value="order">Legacy order</option>

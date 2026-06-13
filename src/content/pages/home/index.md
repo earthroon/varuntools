@@ -31,7 +31,7 @@ title: 작업실 안내
 ::
 
 ::home-section
-title: Featured Products
+title: 추천 상품
 source: products
 featured: true
 limit: 6
@@ -45,7 +45,7 @@ emptyLabel: 상품 카탈로그 보기
 ::
 
 ::home-section
-title: Featured Works
+title: 대표 작업
 source: works
 featured: true
 limit: 6
@@ -56,7 +56,7 @@ emptyBody: 바룬툴즈의 작업 사례와 제작 기록이 이곳에 표시됩
 ::
 
 ::home-section
-title: Tools
+title: 도구
 source: tools
 limit: 6
 layout: card-grid
@@ -64,7 +64,7 @@ emptyMode: hide
 ::
 
 ::home-section
-title: Lab
+title: 실험실
 source: lab
 limit: 4
 layout: compact-list

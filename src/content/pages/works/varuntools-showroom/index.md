@@ -1,5 +1,5 @@
 ---
-title: "VARUNTOOLS Showroom System"
+title: "VARUNTOOLS 쇼룸 시스템"
 slug: "works/varuntools-showroom"
 layout: "default"
 theme: "showroom"
@@ -12,7 +12,7 @@ featured: true
 order: 1
 cover: "./images/cover.svg"
 thumbnail: "./images/cover.svg"
-cardTitle: "VARUNTOOLS Showroom"
+cardTitle: "VARUNTOOLS 쇼룸"
 cardDescription: "홈페이지와 스토어 카탈로그를 함께 운영하기 위한 콘텐츠 쇼룸 구조."
 cardCover: "./images/cover.svg"
 tags:
@@ -41,18 +41,18 @@ work:
     - "portfolio"
     - "showroom"
     - "content-system"
-seoTitle: "VARUNTOOLS Showroom System"
+seoTitle: "VARUNTOOLS 쇼룸 시스템"
 seoDescription: "VARUNTOOLS 홈페이지와 스토어 카탈로그 구조 작업 기록입니다."
 ogImage: "./images/cover.svg"
 ---
 
-# VARUNTOOLS Showroom System
+# VARUNTOOLS 쇼룸 시스템
 
 ::editorial-title
 level: major
 as: h2
 kicker: FEATURED WORK
-title: VARUNTOOLS Showroom System
+title: VARUNTOOLS 쇼룸 시스템
 subtitle: 홈페이지, 작업 기록, 실험실, 상품 카탈로그를 하나의 콘텐츠 동선으로 묶어 개인 작업실의 구조를 보여주는 쇼룸 시스템.
 ::
 
@@ -142,5 +142,5 @@ title: Seed Work 기준
 type: note
 title: Commit 50-0 Seed
 ::
-이 페이지는 실제 판매 상품을 임의로 만들지 않으면서 Featured Works 섹션의 최소 전시 밀도를 확보하기 위한 seed work입니다. 없는 상품을 꾸며내지 않고, 실제 구조와 공개 가능한 작업 단위만 전시 대상으로 삼습니다.
+이 페이지는 실제 판매 상품을 임의로 만들지 않으면서 대표 작업 섹션의 최소 전시 밀도를 확보하기 위한 seed work입니다. 없는 상품을 꾸며내지 않고, 실제 구조와 공개 가능한 작업 단위만 전시 대상으로 삼습니다.
 ::

@@ -28,7 +28,7 @@ const hasSpecs = computed(() => {
 <template>
   <section class="vt-product-specs" :data-state="hasProduct ? 'ready' : 'missing-product'" aria-label="상품 구성과 제공 조건">
     <header class="vt-product-specs__header">
-      <p class="vt-product-specs__eyebrow">Product specs</p>
+      <p class="vt-product-specs__eyebrow">상품 사양</p>
       <h2 class="vt-product-specs__title">구성 및 제공 조건</h2>
       <p class="vt-product-specs__intro">
         {{ hasProduct ? `${title}에서 실제로 받는 것과 옵션, 제공 조건을 확인합니다.` : '상품 정보가 없습니다.' }}
@@ -92,7 +92,7 @@ const hasSpecs = computed(() => {
           <div v-if="resolved.delivery.estimate"><dt>Estimate</dt><dd>{{ resolved.delivery.estimate }}</dd></div>
           <div v-if="resolved.delivery.format"><dt>Format</dt><dd>{{ resolved.delivery.format }}</dd></div>
           <div v-if="resolved.delivery.provider"><dt>Provider</dt><dd>{{ resolved.delivery.provider }}</dd></div>
-          <div v-if="resolved.delivery.note"><dt>Note</dt><dd>{{ resolved.delivery.note }}</dd></div>
+          <div v-if="resolved.delivery.note"><dt>메모</dt><dd>{{ resolved.delivery.note }}</dd></div>
         </dl>
       </article>
 

@@ -22,7 +22,7 @@ const props = withDefaults(
   {
     pages: () => [],
     currentSlug: '',
-    title: 'Related Works',
+    title: '관련 작업',
     items: () => [],
     layout: 'grid',
     showStatus: false,

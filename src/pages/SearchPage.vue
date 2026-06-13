@@ -10,7 +10,7 @@ const { query, hasQuery, results, resultCount, resetSearch } = usePageSearch()
 
 const pageMeta = computed(() => {
   const seo = resolvePageSeo({
-    title: 'Search',
+    title: '검색',
     description: 'VARUNTOOLS의 작업, 문서, 페이지를 검색합니다.',
     routePath: '/search',
     kind: 'page',
@@ -36,8 +36,8 @@ usePageMeta(pageMeta)
   <article class="vt-markdown-page theme-showroom">
     <div class="vt-page-search">
       <header class="vt-page-search__hero">
-        <p class="vt-page-search__eyebrow">VARUNTOOLS SEARCH</p>
-        <h1>Search</h1>
+        <p class="vt-page-search__eyebrow">VARUNTOOLS 검색</p>
+        <h1>검색</h1>
         <p>작업, 문서, 상품, 페이지를 한 번에 찾는 로컬 사이트 검색입니다.</p>
       </header>
 

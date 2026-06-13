@@ -6,10 +6,10 @@
     {
       "slug": "wiper",
       "href": "/wiper",
-      "title": "Before / After Wiper",
+      "title": "전후 비교 와이퍼",
       "description": "전후 비교 와이퍼 도구",
       "type": "work",
-      "section": "Works",
+      "section": "작업",
       "tags": [
         "tool",
         "image",
@@ -27,10 +27,10 @@
     {
       "slug": "lab-markdown-gallery",
       "href": "/lab-markdown-gallery",
-      "title": "Markdown Gallery Lab",
-      "description": "Visual QA board for VARUNTOOLS Markdown components.",
+      "title": "마크다운 갤러리 실험실",
+      "description": "VARUNTOOLS 마크다운 컴포넌트를 검수하는 시각 QA 보드입니다.",
       "type": "work",
-      "section": "Works",
+      "section": "작업",
       "tags": [
         "lab",
         "qa",
@@ -49,10 +49,10 @@
     {
       "slug": "works/varuntools-showroom",
       "href": "/works/varuntools-showroom",
-      "title": "VARUNTOOLS Showroom System",
+      "title": "VARUNTOOLS 쇼룸 시스템",
       "description": "바룬툴즈 홈페이지와 스토어 카탈로그 구조를 정리한 쇼룸 시스템 작업입니다.",
       "type": "work",
-      "section": "Works",
+      "section": "작업",
       "tags": [
         "work",
         "homepage",
@@ -70,10 +70,10 @@
     {
       "slug": "products/categories",
       "href": "/products/categories",
-      "title": "Product Categories",
+      "title": "상품 분류",
       "description": "바룬툴즈 상품 카테고리 안내입니다.",
       "type": "product",
-      "section": "Products",
+      "section": "상품",
       "tags": [
         "products",
         "store",
@@ -90,10 +90,10 @@
     {
       "slug": "products/categories/templates",
       "href": "/products/categories/templates",
-      "title": "Templates",
+      "title": "템플릿",
       "description": "바룬툴즈 템플릿 상품 카테고리입니다.",
       "type": "product",
-      "section": "Products",
+      "section": "상품",
       "tags": [
         "products",
         "store",
@@ -111,7 +111,7 @@
     {
       "slug": "products",
       "href": "/products",
-      "title": "Products",
+      "title": "상품",
       "description": "바룬툴즈 상품 카탈로그입니다.",
       "type": "page",
       "section": "Pages",
@@ -150,7 +150,7 @@
     {
       "slug": "works",
       "href": "/works",
-      "title": "Works",
+      "title": "작업",
       "description": "작업 목록 설명 문서",
       "type": "page",
       "section": "Pages",

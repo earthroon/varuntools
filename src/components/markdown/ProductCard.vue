@@ -97,7 +97,7 @@ const primaryAction = computed(() =>
     </div>
 
     <div class="vt-product-card__actions">
-      <a class="vt-product-card__button" :href="item.href">View</a>
+      <a class="vt-product-card__button" :href="item.href">보기</a>
       <a
         v-if="!primaryAction.disabled"
         class="vt-product-card__button vt-product-card__button--primary"

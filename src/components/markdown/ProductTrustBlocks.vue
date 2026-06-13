@@ -19,7 +19,7 @@ const hasProduct = computed(() => Boolean(props.product))
     aria-label="상품 구매 안내"
   >
     <header class="vt-product-trust__header">
-      <p class="vt-product-trust__eyebrow">Store guide</p>
+      <p class="vt-product-trust__eyebrow">스토어 안내</p>
       <h2 class="vt-product-trust__title">구매 전 확인</h2>
       <p class="vt-product-trust__intro">
         {{ hasProduct ? `${title} 구매 전에 배송, 환불, 개인정보, 다운로드 안내를 확인합니다.` : '상품 정보가 없습니다.' }}

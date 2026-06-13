@@ -1,6 +1,6 @@
 {
   "id": "sample-canvas",
-  "title": "Sample Canvas Demo",
+  "title": "샘플 캔버스 데모",
   "entry": "./index.html",
   "ratio": "16 / 10",
   "status": "stable"

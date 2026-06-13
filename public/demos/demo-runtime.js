@@ -45,7 +45,7 @@
 
   function error(message) {
     post('VARUN_DEMO_ERROR', {
-      message: message || 'Demo failed to initialize.',
+      message: message || '데모 초기화에 실패했습니다.',
     })
   }
 

@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 
@@ -40,13 +40,13 @@ const nextTo = computed(() => normalizeWorkRoute(props.next))
 </script>
 
 <template>
-  <nav v-if="previous || next" class="vt-work-pager" aria-label="Previous and next works">
+  <nav v-if="previous || next" class="vt-work-pager" aria-label="이전/다음 작업">
     <RouterLink
       v-if="previous"
       class="vt-work-pager__link is-previous"
       :to="previousTo"
     >
-      <span>Previous</span>
+      <span>이전 작업</span>
       <strong>{{ previous.title }}</strong>
     </RouterLink>
 
@@ -55,7 +55,7 @@ const nextTo = computed(() => normalizeWorkRoute(props.next))
       class="vt-work-pager__link is-next"
       :to="nextTo"
     >
-      <span>Next</span>
+      <span>다음 작업</span>
       <strong>{{ next.title }}</strong>
     </RouterLink>
   </nav>

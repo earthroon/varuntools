@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed } from 'vue'
 import type { WorkCollectionSort } from '@/markdown/pageRegistry'
 import type { PortfolioFacetItem } from '@/utils/portfolioSearch'
@@ -35,7 +35,7 @@ const activeFilterChips = computed(() => {
   if (selectedType.value) {
     chips.push({
       key: 'category',
-      label: 'Category',
+      label: '분류',
       value: getWorkCategoryLabel(selectedType.value),
       clear: () => {
         selectedType.value = ''
@@ -46,7 +46,7 @@ const activeFilterChips = computed(() => {
   if (selectedRole.value) {
     chips.push({
       key: 'role',
-      label: 'Role',
+      label: '역할',
       value: getWorkRoleLabel(selectedRole.value),
       clear: () => {
         selectedRole.value = ''
@@ -57,7 +57,7 @@ const activeFilterChips = computed(() => {
   if (selectedStack.value) {
     chips.push({
       key: 'stack',
-      label: 'Stack',
+      label: '스택',
       value: getWorkStackLabel(selectedStack.value),
       clear: () => {
         selectedStack.value = ''
@@ -68,7 +68,7 @@ const activeFilterChips = computed(() => {
   if (selectedTag.value) {
     chips.push({
       key: 'tag',
-      label: 'Tag',
+      label: '태그',
       value: selectedTag.value,
       clear: () => {
         selectedTag.value = ''
@@ -79,7 +79,7 @@ const activeFilterChips = computed(() => {
   if (selectedYear.value) {
     chips.push({
       key: 'year',
-      label: 'Year',
+      label: '연도',
       value: selectedYear.value,
       clear: () => {
         selectedYear.value = ''
@@ -111,17 +111,17 @@ function resetAllFilters() {
     <header class="vt-works-search__header">
       <div class="vt-works-search__summary" aria-live="polite" id="works-search-summary">
         <strong id="works-search-title">{{ resultCount }}</strong>
-        <span>/ {{ totalCount }} works found</span>
+        <span>/ {{ totalCount }}개 작업</span>
       </div>
 
       <button class="vt-works-search__reset" type="button" @click="resetAllFilters">
-        Reset
+        초기화
       </button>
     </header>
 
     <div class="vt-works-search__controls">
       <label class="vt-works-search__field vt-works-search__field--query">
-        <span>Search</span>
+        <span>검색</span>
         <input
           v-model="query"
           type="search"
@@ -131,9 +131,9 @@ function resetAllFilters() {
       </label>
 
       <label class="vt-works-search__field">
-        <span>Category</span>
+        <span>분류</span>
         <select v-model="selectedType">
-          <option value="">All</option>
+          <option value="">전체</option>
           <option v-for="item in typeOptions" :key="item.value" :value="item.value">
             {{ getWorkCategoryLabel(item.value) }} ({{ item.count }})
           </option>
@@ -141,9 +141,9 @@ function resetAllFilters() {
       </label>
 
       <label class="vt-works-search__field">
-        <span>Tag</span>
+        <span>태그</span>
         <select v-model="selectedTag">
-          <option value="">All</option>
+          <option value="">전체</option>
           <option v-for="item in tagOptions" :key="item.value" :value="item.value">
             {{ item.value }} ({{ item.count }})
           </option>
@@ -151,9 +151,9 @@ function resetAllFilters() {
       </label>
 
       <label class="vt-works-search__field">
-        <span>Stack</span>
+        <span>기술 스택</span>
         <select v-model="selectedStack">
-          <option value="">All</option>
+          <option value="">전체</option>
           <option v-for="item in stackOptions" :key="item.value" :value="item.value">
             {{ getWorkStackLabel(item.value) }} ({{ item.count }})
           </option>
@@ -161,9 +161,9 @@ function resetAllFilters() {
       </label>
 
       <label class="vt-works-search__field">
-        <span>Role</span>
+        <span>역할</span>
         <select v-model="selectedRole">
-          <option value="">All</option>
+          <option value="">전체</option>
           <option v-for="item in roleOptions" :key="item.value" :value="item.value">
             {{ getWorkRoleLabel(item.value) }} ({{ item.count }})
           </option>
@@ -171,9 +171,9 @@ function resetAllFilters() {
       </label>
 
       <label class="vt-works-search__field">
-        <span>Year</span>
+        <span>연도</span>
         <select v-model="selectedYear">
-          <option value="">All</option>
+          <option value="">전체</option>
           <option v-for="item in yearOptions" :key="item.value" :value="item.value">
             {{ item.value }} ({{ item.count }})
           </option>
@@ -182,17 +182,17 @@ function resetAllFilters() {
 
       <label class="vt-works-search__toggle">
         <input v-model="featuredOnly" type="checkbox" />
-        <span>Featured only</span>
+        <span>대표 작업만</span>
       </label>
 
       <label class="vt-works-search__field">
-        <span>Sort</span>
+        <span>정렬</span>
         <select v-model="sort">
-          <option value="featured">Featured</option>
-          <option value="year">Year</option>
-          <option value="title">Title</option>
-          <option value="type">Type</option>
-          <option value="order">Legacy order</option>
+          <option value="featured">대표순</option>
+          <option value="year">연도순</option>
+          <option value="title">이름순</option>
+          <option value="type">유형순</option>
+          <option value="order">기존 순서</option>
         </select>
       </label>
     </div>

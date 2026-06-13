@@ -17,20 +17,20 @@ defineProps<{
 
 <template>
   <section class="vt-works-tag-landing" :aria-labelledby="`works-tag-${tag.slug}`">
-    <nav class="vt-works-tag-landing__breadcrumb" aria-label="Breadcrumb">
-      <a href="/works">Works</a>
+    <nav class="vt-works-tag-landing__breadcrumb" aria-label="경로">
+      <a href="/works">작업</a>
       <span aria-hidden="true">/</span>
-      <span>Tags</span>
+      <span>태그</span>
       <span aria-hidden="true">/</span>
       <strong>{{ tag.tag }}</strong>
     </nav>
 
     <header class="vt-works-tag-landing__header">
-      <p class="vt-works-tag-landing__eyebrow">Portfolio Tag</p>
+      <p class="vt-works-tag-landing__eyebrow">포트폴리오 태그</p>
       <h1 :id="`works-tag-${tag.slug}`">{{ tag.title }}</h1>
       <p>{{ tag.description }}</p>
       <p class="vt-works-tag-landing__count" aria-live="polite">
-        <strong>{{ works.length }}</strong> works
+        <strong>{{ works.length }}</strong>개 작업
       </p>
     </header>
 

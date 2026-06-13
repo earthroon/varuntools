@@ -44,7 +44,7 @@
       "keyPrefix": "products/dummy-catalog/"
     },
     "deliverables": [],
-    "note": "Demo product. No real private deliverables are uploaded yet. Future Worker should issue purchase-gated access."
+    "note": "데모 상품입니다. 실제 비공개 제공 파일은 아직 업로드되지 않았습니다. 향후 Worker가 구매 검증 후 접근 권한을 발급해야 합니다."
   },
   "inquiry": {
     "inquiryUrl": "/inquiry"

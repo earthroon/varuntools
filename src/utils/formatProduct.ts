@@ -33,33 +33,33 @@ export function formatProductPrice(options: ProductPriceInput): string {
 export function formatProductStatus(status?: string): string {
   switch (status) {
     case 'available':
-      return 'Available'
+      return '판매중'
     case 'coming-soon':
-      return 'Coming soon'
+      return '준비 중'
     case 'sold-out':
-      return 'Sold out'
+      return '품절'
     case 'draft':
-      return 'Draft'
+      return '초안'
     case 'hidden':
-      return 'Hidden'
+      return '숨김'
     default:
-      return 'Coming soon'
+      return '준비 중'
   }
 }
 
 export function formatProductType(type?: string): string {
   switch (type) {
     case 'physical':
-      return 'Physical'
+      return '실물 상품'
     case 'digital':
-      return 'Digital'
+      return '디지털 상품'
     case 'service':
-      return 'Service'
+      return '서비스'
     case 'bundle':
-      return 'Bundle'
+      return '묶음 상품'
     case 'external':
-      return 'External'
+      return '외부 상품'
     default:
-      return 'Product'
+      return '상품'
   }
 }

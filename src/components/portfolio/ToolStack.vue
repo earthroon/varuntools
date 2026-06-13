@@ -10,7 +10,7 @@ const props = withDefaults(
     storage?: string[]
   }>(),
   {
-    title: 'Tool Stack',
+    title: '기술 스택',
     html: '',
     stack: () => [],
     tools: () => [],
@@ -21,18 +21,18 @@ const props = withDefaults(
 )
 
 const groups = [
-  ['Stack', props.stack],
-  ['Tools', props.tools],
-  ['Language', props.language],
-  ['Runtime', props.runtime],
-  ['Storage', props.storage],
+  ['스택', props.stack],
+  ['도구', props.tools],
+  ['언어', props.language],
+  ['런타임', props.runtime],
+  ['저장소', props.storage],
 ].filter(([, items]) => Array.isArray(items) && items.length) as [string, string[]][]
 </script>
 
 <template>
   <section class="vt-portfolio-panel vt-tool-stack">
     <header class="vt-portfolio-panel__header">
-      <p class="vt-portfolio-kicker">Tool Stack</p>
+      <p class="vt-portfolio-kicker">기술 스택</p>
       <h2>{{ title }}</h2>
     </header>
     <div v-if="html" class="vt-markdown vt-portfolio-panel__body" v-html="html" />

@@ -8,7 +8,7 @@ defineProps<{
 </script>
 
 <template>
-  <section class="vt-page-search__results" aria-label="Search results">
+  <section class="vt-page-search__results" aria-label="검색 결과">
     <div v-if="!hasQuery" class="vt-page-search__empty">
       <strong>무엇을 찾을까요?</strong>
       <p>예: CSV 작성법, 포트폴리오, 보안, Cloudflare, 다운로드</p>
@@ -27,7 +27,7 @@ defineProps<{
           <p v-if="result.description">{{ result.description }}</p>
           <span class="vt-page-search__href">{{ result.href }}</span>
           <span v-if="result.matchedFields.length" class="vt-page-search__matches">
-            matched: {{ result.matchedFields.join(', ') }}
+            일치 항목: {{ result.matchedFields.join(', ') }}
           </span>
         </a>
       </li>

@@ -34,13 +34,13 @@ export const sectionNavigation = pageIndex.reduce<Record<NavigationSectionId, Se
     return groups
   },
   {
-    home: { id: 'home', label: 'Home', items: [] },
-    works: { id: 'works', label: 'Works', description: 'Portfolio and case-study pages.', items: [] },
-    products: { id: 'products', label: 'Products', description: 'Store and product discovery pages.', items: [] },
-    tools: { id: 'tools', label: 'Tools', description: 'Interactive utility pages.', items: [] },
-    lab: { id: 'lab', label: 'Lab', description: 'Public experiments that are safe to browse.', items: [] },
-    inquiry: { id: 'inquiry', label: 'Inquiry', description: 'Contact and intake surfaces.', items: [] },
-    policies: { id: 'policies', label: 'Policies', description: 'Operational policy pages. Hidden/noindex pages are excluded by default.', items: [] },
-    utility: { id: 'utility', label: 'Utility', items: [] },
+    home: { id: 'home', label: '홈', items: [] },
+    works: { id: 'works', label: '작업', description: '포트폴리오와 케이스 스터디 페이지.', items: [] },
+    products: { id: 'products', label: '상품', description: '스토어와 상품 탐색 페이지.', items: [] },
+    tools: { id: 'tools', label: '도구', description: '직접 조작할 수 있는 유틸리티 페이지.', items: [] },
+    lab: { id: 'lab', label: '실험실', description: '공개 가능한 실험 페이지.', items: [] },
+    inquiry: { id: 'inquiry', label: '문의', description: '연락과 문의 접수 화면.', items: [] },
+    policies: { id: 'policies', label: '정책', description: '운영 정책 페이지. 숨김/noindex 페이지는 기본 목록에서 제외합니다.', items: [] },
+    utility: { id: 'utility', label: '유틸리티', items: [] },
   },
 )

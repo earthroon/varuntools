@@ -14,8 +14,8 @@ const props = withDefaults(
   }>(),
   {
     limit: 4,
-    title: 'Featured Works',
-    description: 'frontmatter.work로 선별한 대표 작업입니다.',
+    title: '대표 작업',
+    description: 'frontmatter.work 기준으로 고른 대표 작업입니다.',
     showViewAll: true,
   },
 )
@@ -36,7 +36,7 @@ const featuredWorks = computed(() => {
     aria-labelledby="home-featured-works-title"
   >
     <div class="vt-home-featured-works__header">
-      <p class="vt-home-featured-works__eyebrow">Portfolio</p>
+      <p class="vt-home-featured-works__eyebrow">포트폴리오</p>
       <div class="vt-home-featured-works__heading-row">
         <div>
           <h2 id="home-featured-works-title">{{ title }}</h2>

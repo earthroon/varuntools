@@ -42,7 +42,7 @@ export function resolveProductSpecs(product: ProductFrontmatter | null | undefin
 
   const meta: ProductSpecItem[] = []
   if (product.sku) meta.push({ label: 'SKU', value: product.sku })
-  if (product.category) meta.push({ label: 'Category', value: product.category })
+  if (product.category) meta.push({ label: '분류', value: product.category })
   if (product.subcategory) meta.push({ label: 'Subcategory', value: product.subcategory })
   if (product.collection) meta.push({ label: 'Collection', value: product.collection })
   if (product.series) meta.push({ label: 'Series', value: product.series })
@@ -50,7 +50,7 @@ export function resolveProductSpecs(product: ProductFrontmatter | null | undefin
   if (product.size) meta.push({ label: 'Size', value: product.size })
   if (product.license) meta.push({ label: 'License', value: product.license })
   if (product.releaseDate) meta.push({ label: 'Release', value: product.releaseDate })
-  if (product.usageScope) meta.push({ label: 'Usage scope', value: product.usageScope })
+  if (product.usageScope) meta.push({ label: '사용 범위', value: product.usageScope })
 
   const deliveryObject = product.delivery && typeof product.delivery === 'object' && !Array.isArray(product.delivery)
     ? product.delivery
@@ -64,7 +64,7 @@ export function resolveProductSpecs(product: ProductFrontmatter | null | undefin
 
   const notes: ProductSpecItem[] = []
   if (product.shippingNote) notes.push({ label: 'Shipping', value: product.shippingNote })
-  if (product.digitalDeliveryNote) notes.push({ label: 'Digital delivery', value: product.digitalDeliveryNote })
+  if (product.digitalDeliveryNote) notes.push({ label: '디지털 전달', value: product.digitalDeliveryNote })
   if (product.refundNote) notes.push({ label: 'Refund', value: product.refundNote })
   if (product.policyNote) notes.push({ label: 'Policy', value: product.policyNote })
   if (product.updatePolicy) notes.push({ label: 'Updates', value: product.updatePolicy })

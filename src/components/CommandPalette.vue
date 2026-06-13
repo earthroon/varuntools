@@ -136,7 +136,7 @@ onBeforeUnmount(() => {
     aria-label="사이트 검색 열기"
     @click="openPalette"
   >
-    <span class="vt-command-trigger__text">Search</span>
+    <span class="vt-command-trigger__text">검색</span>
     <kbd class="vt-command-trigger__key">{{ shortcutLabel }}</kbd>
   </button>
 

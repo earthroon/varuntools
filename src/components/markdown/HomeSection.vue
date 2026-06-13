@@ -68,7 +68,7 @@ const props = withDefaults(
     tags: () => [],
     showUnavailable: false,
     emptyMode: 'notice',
-    emptyTitle: 'No entries yet.',
+    emptyTitle: '아직 표시할 항목이 없습니다.',
     emptyBody: '',
     emptyHref: '',
     emptyLabel: '',

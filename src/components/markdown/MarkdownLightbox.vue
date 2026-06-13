@@ -710,7 +710,7 @@ onBeforeUnmount(() => {
             rel="noreferrer"
             aria-label="원본 이미지 새 탭에서 열기"
           >
-            <span>Open</span>
+            <span>열기</span>
           </a>
           <button
             type="button"

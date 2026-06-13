@@ -8,7 +8,7 @@ withDefaults(
     title?: string
   }>(),
   {
-    title: 'Related Works',
+    title: '관련 작업',
   },
 )
 </script>

@@ -20,7 +20,7 @@ defineProps<{
       />
     </div>
 
-    <RelatedWorks :entries="context.related" title="Related Works" />
+    <RelatedWorks :entries="context.related" title="관련 작업" />
 
     <WorkPager :previous="context.previous" :next="context.next" />
   </footer>

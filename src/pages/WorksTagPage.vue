@@ -28,7 +28,7 @@ const fallbackTag = computed(() => ({
   slug: tagSlug.value || 'tag',
   href: `/works/tags/${tagSlug.value || 'tag'}`,
   count: 0,
-  title: `${decodeURIComponent(tagSlug.value || 'Tag')} 작업`,
+  title: `${decodeURIComponent(tagSlug.value || '태그')} 작업`,
   description: '해당 태그의 작업이 없습니다.',
 }))
 

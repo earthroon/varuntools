@@ -5,7 +5,7 @@ box,QA SSOT,"This page is a hidden noindex fixture for EWA gallery QA. It is not
 paragraph,,Enable QA with localStorage.setItem('vt:ewa-debug' 'true') and localStorage.setItem('vt:ewa-compare' 'split').,,,,,,,,
 paragraph,,Force rollout with localStorage.setItem('vt:ewa-rollout' 'enabled') then test adaptive with localStorage.setItem('vt:ewa-mode' 'adaptive-tile').,,,,,,,,
 paragraph,,Test low tier downgrade with localStorage.setItem('vt:ewa-tier' 'low'). Test cooldown with sessionStorage.setItem('vt:ewa-health' 'cooldown').,,,,,,,,
-case-gallery-start,EWA Scenario Gallery,Open each image in the lightbox and inspect EWA diagnostics.,,,,,framed,,columns=2; captionStyle=below,
+case-gallery-start,EWA Scenario Gallery,각 이미지를 라이트박스에서 열고 EWA 진단 정보를 확인합니다.,,,,,framed,,columns=2; captionStyle=below,
 case-gallery-item,Photo fixture,Photo preset baseline,/qa/ewa-fixtures/photo-like.svg,Photo fixture,Photo preset should avoid over-smoothing,,, , ,"media.ewaPreset=photo; media.ewaMode=basic; media.ewaNote=Photo EWA baseline; label=Photo", 
 case-gallery-item,UI screenshot fixture,UI low-ring adaptive test,/qa/ewa-fixtures/ui-screenshot.svg,UI screenshot fixture,Check small text and thin border ringing,,, , ,"media.ewaPreset=ui-low-ring; media.ewaMode=adaptive-tile; media.ewaNote=Check text and thin borders; label=UI", 
 case-gallery-item,Line art fixture,Line art adaptive test,/qa/ewa-fixtures/line-art.svg,Line art fixture,Check thin lines and halo,,, , ,"media.ewaPreset=line-art; media.ewaMode=adaptive-tile; label=Line", 

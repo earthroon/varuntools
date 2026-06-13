@@ -46,7 +46,7 @@ function captionId(index: number): string {
 
 function itemLabel(item: CaseGalleryItem, index: number): string {
   const label = item.label || item.caption || item.alt || `Case gallery item ${index + 1}`
-  return item.srcFound === false ? `Missing media: ${label}` : `Open ${label}`
+  return item.srcFound === false ? `미디어 누락: ${label}` : `${label} 열기`
 }
 
 function imageAlt(item: CaseGalleryItem): string {

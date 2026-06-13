@@ -55,10 +55,10 @@ export function resolveTaxonomyLabel(group: StoreTaxonomyGroup, value?: string):
   return GROUPS[group].find((item) => item.id === normalized)?.label || fallbackLabel(normalized)
 }
 
-export function resolveProductTypeLabel(value?: string): string { return resolveTaxonomyLabel('type', value) || 'Product' }
-export function resolveProductCategoryLabel(value?: string): string { return resolveTaxonomyLabel('category', value) || 'Uncategorized' }
+export function resolveProductTypeLabel(value?: string): string { return resolveTaxonomyLabel('type', value) || '상품' }
+export function resolveProductCategoryLabel(value?: string): string { return resolveTaxonomyLabel('category', value) || '미분류' }
 export function resolveProductSubcategoryLabel(value?: string): string { return resolveTaxonomyLabel('subcategory', value) }
-export function resolveProductCollectionLabel(value?: string): string { return resolveTaxonomyLabel('collection', value) || 'Collection' }
+export function resolveProductCollectionLabel(value?: string): string { return resolveTaxonomyLabel('collection', value) || '컬렉션' }
 
 function optionsFor(group: StoreTaxonomyGroup, includeHidden = false): StoreTaxonomyItem[] {
   return [...GROUPS[group]].filter((item) => includeHidden || item.visible !== false).sort((a, b) => a.order - b.order || a.label.localeCompare(b.label))

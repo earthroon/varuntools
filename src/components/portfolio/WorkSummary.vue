@@ -23,8 +23,8 @@ const props = withDefaults(
 )
 
 const groups = [
-  ['Role', props.role],
-  ['Stack', props.stack],
+  ['역할', props.role],
+  ['기술 스택', props.stack],
   ['Scope', props.scope],
 ].filter(([, items]) => Array.isArray(items) && items.length) as [string, string[]][]
 </script>

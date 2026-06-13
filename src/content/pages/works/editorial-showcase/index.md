@@ -3,7 +3,7 @@ title: "Editorial Block Showcase"
 slug: "works/editorial-showcase"
 layout: "default"
 theme: "showroom"
-description: "Portfolio editorial block preview surface for heading hierarchy and responsive column layouts."
+description: "제목 계층과 반응형 컬럼 레이아웃을 확인하는 포트폴리오 편집 블록 미리보기 화면입니다."
 summary: "대제목, 중제목, 소제목, 2/3칼럼 조판을 한 화면에서 검수하기 위한 숨김 쇼케이스 페이지."
 kind: "work"
 status: "active"
@@ -11,7 +11,7 @@ visibility: "hidden"
 featured: false
 order: 125
 cardTitle: "Editorial Block Showcase"
-cardDescription: "Portfolio editorial block preview surface."
+cardDescription: "포트폴리오 편집 블록 미리보기 화면."
 tags:
   - portfolio
   - editorial

@@ -15,6 +15,6 @@
   <circle cx="1032" cy="450" r="92" fill="#0A84FF" opacity="0.08"/>
   <rect x="64" y="70" width="1072" height="490" rx="34" fill="rgba(255,255,255,0.76)" stroke="rgba(15,17,21,0.10)" filter="url(#shadow)"/>
   <text x="112" y="260" font-family="Arial, Helvetica, sans-serif" font-size="78" font-weight="800" fill="#0f1115">VARUNTOOLS</text>
-  <text x="118" y="334" font-family="Arial, Helvetica, sans-serif" font-size="34" fill="#4b5563">Design · Writing · Toolmaking Archive</text>
+  <text x="118" y="334" font-family="Arial, Helvetica, sans-serif" font-size="34" fill="#4b5563">디자인 · 글쓰기 · 도구 제작 아카이브</text>
   <text x="118" y="430" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="#6b7280">varun.tools</text>
 </svg>

@@ -1,5 +1,5 @@
 ---
-title: "Inquiry"
+title: "문의"
 slug: "inquiry"
 description: "VARUN Tools 문의 창구입니다."
 kind: "page"
@@ -9,11 +9,11 @@ tags:
   - inquiry
   - contact
 order: 90
-seoTitle: "Inquiry — VARUN Tools"
+seoTitle: "문의 — VARUN Tools"
 seoDescription: "VARUN Tools 상품 문의, 작업 의뢰, 협업 제안을 남길 수 있는 문의 창구입니다."
 ---
 
-# Inquiry
+# 문의
 
 상품 문의, 작업 의뢰, 협업 제안을 남길 수 있습니다.
 

@@ -36,8 +36,8 @@ const {
   <article class="vt-markdown-page theme-showroom">
     <div class="vt-markdown vt-works-page">
       <header class="vt-works-hero">
-        <p class="vt-works-hero__eyebrow">VARUNTOOLS INDEX</p>
-        <h1>Works</h1>
+        <p class="vt-works-hero__eyebrow">VARUNTOOLS 인덱스</p>
+        <h1>작업</h1>
         <p>
           작업, 도구, 실험, 문서를 frontmatter.work 기준으로 탐색하는 포트폴리오 인덱스입니다.
         </p>

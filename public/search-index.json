@@ -23,7 +23,7 @@
     {
       "slug": "works/varuntools-showroom",
       "href": "/works/varuntools-showroom",
-      "title": "VARUNTOOLS Showroom System",
+      "title": "VARUNTOOLS 쇼룸 시스템",
       "description": "홈, 작업, 도구, 실험, 상품 카탈로그를 하나의 콘텐츠 구조로 묶은 VARUNTOOLS 쇼룸 시스템.",
       "kind": "work",
       "status": "active",
@@ -42,7 +42,7 @@
     {
       "slug": "docs/works",
       "href": "/docs/works",
-      "title": "Works",
+      "title": "작업",
       "description": "VARUNTOOLS 작업과 도구를 카드로 모아보는 인덱스",
       "kind": "page",
       "status": "active",
@@ -56,7 +56,7 @@
     {
       "slug": "tools/wiper",
       "href": "/tools/wiper",
-      "title": "Before / After Wiper",
+      "title": "전후 비교 와이퍼",
       "description": "이미지 전후를 비교하는 쇼룸형 와이퍼 컴포넌트",
       "kind": "tool",
       "status": "active",
@@ -74,8 +74,8 @@
     {
       "slug": "lab/markdown-gallery",
       "href": "/lab/markdown-gallery",
-      "title": "Markdown Gallery Lab",
-      "description": "A validation-clean component gallery for native Markdown surfaces.",
+      "title": "마크다운 갤러리 실험실",
+      "description": "마크다운 화면 구성요소를 검수하는 통과 기준 갤러리입니다.",
       "kind": "lab",
       "status": "active",
       "visibility": "public",
@@ -93,7 +93,7 @@
     {
       "slug": "products",
       "href": "/products",
-      "title": "Products",
+      "title": "상품",
       "description": "판매 가능 상품과 준비 중인 상품을 모아두는 카탈로그입니다.",
       "kind": "page",
       "status": "active",
@@ -110,7 +110,7 @@
     {
       "slug": "products/categories",
       "href": "/products/categories",
-      "title": "Product Categories",
+      "title": "상품 분류",
       "description": "상품을 카테고리별 매대로 둘러봅니다.",
       "kind": "page",
       "status": "active",
@@ -128,7 +128,7 @@
     {
       "slug": "products/categories/templates",
       "href": "/products/categories/templates",
-      "title": "Templates",
+      "title": "템플릿",
       "description": "Notion, 문서, 워크플로우 템플릿 계열 상품을 모아봅니다.",
       "kind": "page",
       "status": "active",
@@ -176,7 +176,7 @@
     {
       "slug": "inquiry",
       "href": "/inquiry",
-      "title": "Inquiry",
+      "title": "문의",
       "description": "VARUN Tools 문의 창구입니다.",
       "kind": "page",
       "status": "active",
@@ -193,7 +193,7 @@
     {
       "slug": "products/spec-playground",
       "href": "/products/spec-playground",
-      "title": "Product Spec Playground",
+      "title": "상품 사양 실험장",
       "description": "상품 스펙 블록, 옵션, 제공 조건 표시를 확인하기 위한 더미 상품 페이지입니다.",
       "kind": "product",
       "status": "active",

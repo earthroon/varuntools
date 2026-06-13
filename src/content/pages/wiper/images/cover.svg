@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-label="Before After Wiper cover">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 600" role="img" aria-label="전후 비교 와이퍼 커버">
   <defs>
     <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
       <stop offset="0" stop-color="#f8fbff"/>
@@ -15,5 +15,5 @@
   <line x1="480" y1="108" x2="480" y2="492" stroke="#fff" stroke-width="8"/>
   <circle cx="480" cy="300" r="46" fill="#fff" stroke="rgba(15,17,21,.14)" stroke-width="4"/>
   <text x="480" y="311" text-anchor="middle" font-size="30" font-family="system-ui" font-weight="800" fill="#0f1115">↔</text>
-  <text x="480" y="552" text-anchor="middle" font-size="28" font-family="system-ui" font-weight="800" fill="#0f1115">Before / After Wiper</text>
+  <text x="480" y="552" text-anchor="middle" font-size="28" font-family="system-ui" font-weight="800" fill="#0f1115">전후 비교 와이퍼</text>
 </svg>

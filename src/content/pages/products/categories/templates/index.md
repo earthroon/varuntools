@@ -1,5 +1,5 @@
 ---
-title: "Templates"
+title: "템플릿"
 slug: "products/categories/templates"
 layout: "default"
 theme: "showroom"
@@ -15,14 +15,14 @@ tags:
   - store
   - category
   - templates
-seoTitle: "VARUNTOOLS Templates"
+seoTitle: "VARUNTOOLS 템플릿"
 seoDescription: "바룬툴즈 템플릿 상품 카테고리입니다."
 ---
 
-# Templates
+# 템플릿
 
 ::store-nav
-title: Store Categories
+title: 상품 분류
 mode: categories
 currentCategory: templates
 showCounts: true
@@ -31,7 +31,7 @@ includeAllLink: true
 ::
 
 ::product-catalog
-title: Templates
+title: 템플릿
 intro: 템플릿 계열 상품을 모아봅니다.
 limit: 48
 showUnavailable: true
