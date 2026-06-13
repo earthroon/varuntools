@@ -53,15 +53,25 @@
   letter-spacing: 0.08em;
 }
 
+/* CMS-205G-R1-R3: public brand SVG mark binding */
 .vt-site-header__brand-mark {
   display: grid;
   width: 2rem;
   height: 2rem;
   place-items: center;
+  flex: 0 0 auto;
   border-radius: 999px;
-  background: var(--vt-ink);
-  color: var(--vt-bg-0);
-  letter-spacing: -0.04em;
+  background: transparent;
+  color: inherit;
+  letter-spacing: normal;
+  overflow: hidden;
+}
+
+.vt-site-header__brand-logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .vt-site-header__nav,
