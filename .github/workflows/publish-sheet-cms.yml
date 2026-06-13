@@ -1,104 +1,23 @@
 name: Publish Sheet CMS
 
 on:
-  repository_dispatch:
-    types: [publish-sheet-content]
   workflow_dispatch:
+    inputs:
+      reason:
+        description: "Legacy Sheet CMS workflow is disabled. Use VACMS/Admin CMS publish flow."
+        required: false
+        default: "disabled"
 
 permissions:
-  contents: write
-  actions: read
-
-concurrency:
-  group: sheet-cms-publish
-  cancel-in-progress: true
-
-env:
-  NODE_VERSION: 20
-  GENERATED_COMMIT_MESSAGE: "Publish sheet CMS content"
-  SHEET_CMS_ASSET_SYNC_MODE: vacms
+  contents: read
 
 jobs:
-  publish:
+  legacy-sheet-cms-disabled:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-
-      - name: Install system image tools
+      - name: Legacy Sheet CMS workflow disabled
         run: |
-          sudo apt-get update
-          sudo apt-get install -y imagemagick
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Check Sheet CMS auth contract
-        run: npm run check:sheet-cms-auth
-        env:
-          APPS_SCRIPT_WEBAPP_URL: ${{ secrets.APPS_SCRIPT_WEBAPP_URL }}
-          SHEET_CMS_SHARED_SECRET: ${{ secrets.SHEET_CMS_SHARED_SECRET }}
-          SHEET_CMS_REQUEST_ID: ${{ github.event.client_payload.requestId || github.run_id }}
-
-      - name: Sync sheet snapshot
-        run: npm run sync:sheets
-        env:
-          APPS_SCRIPT_WEBAPP_URL: ${{ secrets.APPS_SCRIPT_WEBAPP_URL }}
-          SHEET_CMS_SHARED_SECRET: ${{ secrets.SHEET_CMS_SHARED_SECRET }}
-          SHEET_CMS_REQUEST_ID: ${{ github.event.client_payload.requestId || github.run_id }}
-
-      - name: Sync content assets
-        run: npm run sync:drive-assets
-        env:
-          APPS_SCRIPT_WEBAPP_URL: ${{ secrets.APPS_SCRIPT_WEBAPP_URL }}
-          SHEET_CMS_SHARED_SECRET: ${{ secrets.SHEET_CMS_SHARED_SECRET }}
-          SHEET_CMS_REQUEST_ID: ${{ github.event.client_payload.requestId || github.run_id }}
-
-      - name: Generate content JSON
-        run: npm run generate:content-json
-
-      - name: Validate generated content
-        run: npm run validate:generated-content
-
-      - name: Typecheck
-        run: npm run typecheck --if-present
-
-      - name: Build
-        run: npm run build
-
-      - name: Commit generated content
-        id: commit_generated
-        run: |
-          git config user.name "varuntools-bot"
-          git config user.email "actions@github.com"
-          git add src/content/generated src/content/pages
-          if git diff --cached --quiet; then
-            echo "No generated changes"
-            echo "committed=false" >> "$GITHUB_OUTPUT"
-            echo "commit_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-          git commit -m "${GENERATED_COMMIT_MESSAGE}"
-          COMMIT_SHA="$(git rev-parse HEAD)"
-          echo "committed=true" >> "$GITHUB_OUTPUT"
-          echo "commit_sha=${COMMIT_SHA}" >> "$GITHUB_OUTPUT"
-          git push
-
-      - name: Finalize Sheet CMS publish
-        run: npm run finalize:sheet-cms
-        env:
-          APPS_SCRIPT_WEBAPP_URL: ${{ secrets.APPS_SCRIPT_WEBAPP_URL }}
-          SHEET_CMS_SHARED_SECRET: ${{ secrets.SHEET_CMS_SHARED_SECRET }}
-          SHEET_CMS_REQUEST_ID: ${{ github.event.client_payload.requestId || github.run_id }}
-          SHEET_CMS_FINALIZE_STATUS: success
-          SHEET_CMS_COMMIT_SHA: ${{ steps.commit_generated.outputs.commit_sha }}
-          SHEET_CMS_ACTION_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          echo "Legacy Sheet CMS publish workflow is disabled."
+          echo "VACMS/Admin CMS is the current authoring SSOT."
+          echo "Use the Admin CMS publish bridge instead."
+          exit 0
