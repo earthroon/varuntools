@@ -1,4 +1,4 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import { computed } from 'vue'
 import WorksSearchPanel from '@/components/works/WorksSearchPanel.vue'
 import WorksCollectionGrid from '@/components/works/WorksCollectionGrid.vue'
@@ -43,6 +43,8 @@ const {
         </p>
       </header>
 
+      <WorksCollectionGrid :entries="filteredEntries" />
+
       <WorksSearchPanel
         v-model:query="query"
         v-model:selected-type="kind"
@@ -61,8 +63,6 @@ const {
         :total-count="allEntries.length"
         @reset="resetFilters"
       />
-
-      <WorksCollectionGrid :entries="filteredEntries" />
     </div>
   </article>
 </template>
