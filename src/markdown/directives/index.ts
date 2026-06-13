@@ -10,6 +10,7 @@ import { renderVideoDirective } from './videoDirective'
 import { renderVideoPlayerDirective } from './videoPlayerDirective'
 import { renderWorkCardDirective } from './workCardDirective'
 import { renderPagecardGridDirective } from './pagecardGridDirective'
+import { renderPagecardDirective } from './pagecardDirective'
 import { renderMarkdownBoxDirective } from './markdownBoxDirective'
 import { renderFieldSpecDirective } from './fieldSpecDirective'
 import { renderDemoFrameDirective } from './demoFrameDirective'
@@ -74,6 +75,9 @@ export function renderDirective(directive: ParsedDirective): string {
 
     case 'pagecard-grid':
       return renderPagecardGridDirective(directive)
+
+    case 'pagecard':
+      return renderPagecardDirective(directive)
 
     case 'markdown-box':
       return renderMarkdownBoxDirective(directive)
