@@ -11,7 +11,9 @@ const currentPath = computed(() => route.path)
 <template>
   <header class="vt-site-header" data-navigation-surface="header">
     <RouterLink class="vt-site-header__brand" to="/" aria-label="VARUNTOOLS home">
-      <span class="vt-site-header__brand-mark" aria-hidden="true">VT</span>
+      <span class="vt-site-header__brand-mark" aria-hidden="true" data-cms205g-r1-r3-brand-logo-bound>
+        <img class="vt-site-header__brand-logo" src="/assets/brand/by-varun-logo.svg" alt="" width="32" height="32" decoding="async" />
+      </span>
       <span class="vt-site-header__brand-text">VARUNTOOLS</span>
     </RouterLink>
 
