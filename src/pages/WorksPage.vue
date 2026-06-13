@@ -1,4 +1,4 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed } from 'vue'
 import WorksSearchPanel from '@/components/works/WorksSearchPanel.vue'
 import WorksCollectionGrid from '@/components/works/WorksCollectionGrid.vue'
