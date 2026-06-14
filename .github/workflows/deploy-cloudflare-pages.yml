@@ -1,0 +1,79 @@
+name: Deploy varuntools to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/content/pages/**"
+      - "src/content/generated/**"
+      - "public/content/**"
+      - "src/**"
+      - "public/**"
+      - "package.json"
+      - "package-lock.json"
+      - "pnpm-lock.yaml"
+      - "vite.config.*"
+      - ".github/workflows/deploy-cloudflare-pages.yml"
+
+permissions:
+  contents: read
+  deployments: write
+
+concurrency:
+  group: varuntools-cloudflare-pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-cloudflare-pages:
+    name: Deploy Cloudflare Pages
+    runs-on: ubuntu-latest
+
+    env:
+      PUBLIC_SITE_URL: ${{ secrets.PUBLIC_SITE_URL }}
+      VITE_PUBLIC_BUILD_SHA: ${{ github.sha }}
+      VITE_PUBLIC_BUILD_REF: ${{ github.ref_name }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Write public build marker
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          fs.mkdirSync('dist', { recursive: true });
+          fs.writeFileSync('dist/build-meta.json', JSON.stringify({
+            commitSha: process.env.GITHUB_SHA,
+            ref: process.env.GITHUB_REF_NAME,
+            runId: process.env.GITHUB_RUN_ID,
+            runAttempt: process.env.GITHUB_RUN_ATTEMPT,
+            builtAt: new Date().toISOString()
+          }, null, 2));
+          NODE
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }} --branch=${{ github.ref_name }}
+
+      - name: Check public URL
+        if: ${{ secrets.PUBLIC_SITE_URL != '' }}
+        shell: bash
+        run: |
+          curl -I --fail --max-time 20 "${{ secrets.PUBLIC_SITE_URL }}"
