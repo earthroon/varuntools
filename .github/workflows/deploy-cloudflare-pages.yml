@@ -74,7 +74,7 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_PROJECT_NAME: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
+          CLOUDFLARE_PROJECT_NAME: varuntools
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
             echo "CLOUDFLARE_API_TOKEN secret is missing."
@@ -102,7 +102,7 @@ jobs:
           curl -I --fail --max-time 20 "$PUBLIC_SITE_URL"
 
       - name: Record VACMS live check
-        if: ${{ always() && github.event_name == 'repository_dispatch' }}
+        if: ${{ success() && github.event_name == 'repository_dispatch' }}
         env:
           ADMIN_BRIDGE_TOKEN: ${{ secrets.ADMIN_BRIDGE_TOKEN }}
           VACMS_ADMIN_API_URL: ${{ secrets.VACMS_ADMIN_API_URL }}
@@ -139,4 +139,5 @@ jobs:
             -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
             -H "Content-Type: application/json" \
             --data "$LIVE_CHECK_PAYLOAD"
+
 
