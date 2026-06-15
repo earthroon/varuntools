@@ -1,79 +1,124 @@
 name: Deploy varuntools to Cloudflare Pages
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "src/content/pages/**"
-      - "src/content/generated/**"
-      - "public/content/**"
-      - "src/**"
-      - "public/**"
-      - "package.json"
-      - "package-lock.json"
-      - "pnpm-lock.yaml"
-      - "vite.config.*"
-      - ".github/workflows/deploy-cloudflare-pages.yml"
+push:
+branches:
+- main
+paths:
+- "src/content/pages/**"
+- "src/content/generated/**"
+- "public/content/**"
+- "src/**"
+- "public/**"
+- "package.json"
+- "package-lock.json"
+- "pnpm-lock.yaml"
+- "vite.config.*"
+- ".github/workflows/deploy-cloudflare-pages.yml"
+
+repository_dispatch:
+types:
+- public-site-publish
 
 permissions:
-  contents: read
-  deployments: write
+contents: read
+deployments: write
 
 concurrency:
-  group: varuntools-cloudflare-pages-${{ github.ref }}
-  cancel-in-progress: true
+group: varuntools-cloudflare-pages-${{ github.ref }}
+cancel-in-progress: true
 
 jobs:
-  deploy-cloudflare-pages:
-    name: Deploy Cloudflare Pages
-    runs-on: ubuntu-latest
+deploy-cloudflare-pages:
+name: Deploy Cloudflare Pages
+runs-on: ubuntu-latest
 
+```
+env:
+  PUBLIC_SITE_URL: ${{ secrets.PUBLIC_SITE_URL }}
+  VITE_PUBLIC_BUILD_SHA: ${{ github.sha }}
+  VITE_PUBLIC_BUILD_REF: ${{ github.ref_name }}
+
+steps:
+  - name: Checkout
+    uses: actions/checkout@v6
+
+  - name: Setup Node
+    uses: actions/setup-node@v6
+    with:
+      node-version: 20
+      cache: npm
+
+  - name: Install dependencies
+    run: npm ci
+
+  - name: Build
+    run: npm run build
+
+  - name: Write public build marker
+    shell: bash
+    run: |
+      node - <<'NODE'
+      const fs = require('fs');
+      fs.mkdirSync('dist', { recursive: true });
+      fs.writeFileSync('dist/build-meta.json', JSON.stringify({
+        commitSha: process.env.GITHUB_SHA,
+        ref: process.env.GITHUB_REF_NAME,
+        runId: process.env.GITHUB_RUN_ID,
+        runAttempt: process.env.GITHUB_RUN_ATTEMPT,
+        builtAt: new Date().toISOString()
+      }, null, 2));
+      NODE
+
+  - name: Deploy to Cloudflare Pages
+    uses: cloudflare/wrangler-action@v3
+    with:
+      apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      command: pages deploy dist --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }} --branch=${{ github.ref_name }}
+
+  - name: Check public URL
+    if: ${{ secrets.PUBLIC_SITE_URL != '' }}
+    shell: bash
+    run: |
+      curl -I --fail --max-time 20 "${{ secrets.PUBLIC_SITE_URL }}"
+
+  - name: Record VACMS live check
+    if: ${{ always() && github.event_name == 'repository_dispatch' }}
     env:
+      ADMIN_BRIDGE_TOKEN: ${{ secrets.ADMIN_BRIDGE_TOKEN }}
+      VACMS_ADMIN_API_URL: ${{ secrets.VACMS_ADMIN_API_URL }}
+      VACMS_PUBLISH_JOB_ID: ${{ github.event.client_payload.jobId }}
       PUBLIC_SITE_URL: ${{ secrets.PUBLIC_SITE_URL }}
-      VITE_PUBLIC_BUILD_SHA: ${{ github.sha }}
-      VITE_PUBLIC_BUILD_REF: ${{ github.ref_name }}
+    shell: bash
+    run: |
+      if [ -z "$ADMIN_BRIDGE_TOKEN" ]; then
+        echo "ADMIN_BRIDGE_TOKEN secret is missing."
+        exit 1
+      fi
 
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      if [ -z "$VACMS_ADMIN_API_URL" ]; then
+        echo "VACMS_ADMIN_API_URL secret is missing."
+        exit 1
+      fi
 
-      - name: Setup Node
-        uses: actions/setup-node@v6
-        with:
-          node-version: 20
-          cache: npm
+      if [ -z "$VACMS_PUBLISH_JOB_ID" ]; then
+        echo "VACMS_PUBLISH_JOB_ID payload is missing."
+        exit 1
+      fi
 
-      - name: Install dependencies
-        run: npm ci
+      BASE_URL="${VACMS_ADMIN_API_URL%/}"
 
-      - name: Build
-        run: npm run build
+      LIVE_CHECK_PAYLOAD="$(node - <<'NODE'
+      const payload = { mode: 'run' };
+      if (process.env.PUBLIC_SITE_URL) payload.siteBaseUrl = process.env.PUBLIC_SITE_URL;
+      process.stdout.write(JSON.stringify(payload));
+      NODE
+      )"
 
-      - name: Write public build marker
-        shell: bash
-        run: |
-          node - <<'NODE'
-          const fs = require('fs');
-          fs.mkdirSync('dist', { recursive: true });
-          fs.writeFileSync('dist/build-meta.json', JSON.stringify({
-            commitSha: process.env.GITHUB_SHA,
-            ref: process.env.GITHUB_REF_NAME,
-            runId: process.env.GITHUB_RUN_ID,
-            runAttempt: process.env.GITHUB_RUN_ATTEMPT,
-            builtAt: new Date().toISOString()
-          }, null, 2));
-          NODE
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }} --branch=${{ github.ref_name }}
-
-      - name: Check public URL
-        if: ${{ secrets.PUBLIC_SITE_URL != '' }}
-        shell: bash
-        run: |
-          curl -I --fail --max-time 20 "${{ secrets.PUBLIC_SITE_URL }}"
+      curl --fail-with-body \
+        -X POST "$BASE_URL/api/content/publish-jobs/$VACMS_PUBLISH_JOB_ID/live-check" \
+        -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
+        -H "Content-Type: application/json" \
+        --data "$LIVE_CHECK_PAYLOAD"
+```
