@@ -120,3 +120,4 @@ jobs:
             -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
             -H "Content-Type: application/json" \
             --data "$LIVE_CHECK_PAYLOAD"
+
