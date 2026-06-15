@@ -77,7 +77,7 @@ jobs:
           command: pages deploy dist --project-name=${{ secrets.CLOUDFLARE_PROJECT_NAME }} --branch=${{ github.ref_name }}
 
       - name: Check public URL
-        if: ${{ secrets.PUBLIC_SITE_URL != '' }}
+        if: ${{ env.PUBLIC_SITE_URL != '' }}
         shell: bash
         run: |
           curl -I --fail --max-time 20 "${{ secrets.PUBLIC_SITE_URL }}"
