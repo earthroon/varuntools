@@ -60,7 +60,7 @@ jobs:
           curl -I --fail --max-time 20 "$PUBLIC_SITE_URL"
 
       - name: Record VACMS live check
-        if: ${{ success() && github.event_name == 'repository_dispatch' }}
+        if: ${{ false }}
         env:
           ADMIN_BRIDGE_TOKEN: ${{ secrets.ADMIN_BRIDGE_TOKEN }}
           VACMS_ADMIN_API_URL: ${{ secrets.VACMS_ADMIN_API_URL }}
