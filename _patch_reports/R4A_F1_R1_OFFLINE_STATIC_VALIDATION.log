@@ -1,0 +1,111 @@
+PASS_CMS_D1_017A_R2Z_R1W_R4A_F1_R1_DRY_VISIBILITY_WORKFLOW_EARLY_EXIT_GATE_SKIP_CLAIM_EXPORT_MATERIALIZE_PR_FINALIZE_ON_SMOKE_MODE_NO_VACMS_MUTATION_NO_PR
+{
+  "ok": true,
+  "patchId": "CMS-D1-017A-R2Z-R1W-R4A-F1-R1",
+  "previousPatchId": "CMS-D1-017A-R2Z-R1W-R4A-F1",
+  "status": "PASS_CMS_D1_017A_R2Z_R1W_R4A_F1_R1_DRY_VISIBILITY_WORKFLOW_EARLY_EXIT_GATE_SKIP_CLAIM_EXPORT_MATERIALIZE_PR_FINALIZE_ON_SMOKE_MODE_NO_VACMS_MUTATION_NO_PR",
+  "scope": "dry visibility workflow early exit gate static smoke",
+  "workflowPath": ".github/workflows/publish-admin-content.yml",
+  "checks": [
+    {
+      "name": "workflow dispatch input publish_mode exists",
+      "ok": true,
+      "code": null
+    },
+    {
+      "name": "dry visibility smoke seal step exists",
+      "ok": true,
+      "code": null
+    },
+    {
+      "name": "dry visibility artifact upload exists",
+      "ok": true,
+      "code": null
+    },
+    {
+      "name": "Checkout public repository gated",
+      "ok": true,
+      "code": null,
+      "step": "Checkout public repository"
+    },
+    {
+      "name": "Claim VACMS publish job gated",
+      "ok": true,
+      "code": null,
+      "step": "Claim VACMS publish job"
+    },
+    {
+      "name": "Export VACMS publish payload gated",
+      "ok": true,
+      "code": null,
+      "step": "Export VACMS publish payload"
+    },
+    {
+      "name": "Materialize content file gated",
+      "ok": true,
+      "code": null,
+      "step": "Materialize content file"
+    },
+    {
+      "name": "Create branch and draft pull request gated",
+      "ok": true,
+      "code": null,
+      "step": "Create branch and draft pull request"
+    },
+    {
+      "name": "Upload VACMS publish receipts gated",
+      "ok": true,
+      "code": null,
+      "step": "Upload VACMS publish receipts"
+    },
+    {
+      "name": "claim curl only in gated step",
+      "ok": true,
+      "code": null,
+      "occurrences": 1,
+      "step": "Claim VACMS publish job"
+    },
+    {
+      "name": "export curl only in gated step",
+      "ok": true,
+      "code": null,
+      "occurrences": 1,
+      "step": "Export VACMS publish payload"
+    },
+    {
+      "name": "finalize curl only in gated step",
+      "ok": true,
+      "code": null,
+      "occurrences": 2,
+      "step": "Create branch and draft pull request"
+    },
+    {
+      "name": "git push only in gated step",
+      "ok": true,
+      "code": null,
+      "occurrences": 1,
+      "step": "Create branch and draft pull request"
+    },
+    {
+      "name": "gh pr create only in gated step",
+      "ok": true,
+      "code": null,
+      "occurrences": 1,
+      "step": "Create branch and draft pull request"
+    }
+  ],
+  "forbiddenMutations": {
+    "claim": false,
+    "export": false,
+    "materialize": false,
+    "commit": false,
+    "branch": false,
+    "pr": false,
+    "publishedFinalize": false,
+    "failureFinalize": false
+  },
+  "noWorkflowDispatch": true,
+  "noGitHubWrite": true,
+  "noVACMSMutation": true,
+  "nextPatch": "CMS-D1-017A-R2Z-R1W-R4A-R1"
+}

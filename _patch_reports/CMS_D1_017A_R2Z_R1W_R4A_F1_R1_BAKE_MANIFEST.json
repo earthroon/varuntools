@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "patchId": "CMS-D1-017A-R2Z-R1W-R4A-F1-R1",
+  "previousPatchId": "CMS-D1-017A-R2Z-R1W-R4A-F1",
+  "targetRepository": "earthroon/varuntools",
+  "targetFile": ".github/workflows/publish-admin-content.yml",
+  "sourceWorkflowBlobSha": "6b5e5142d839639b982c11dfbea57a0c0878475b",
+  "files": [
+    ".github/workflows/publish-admin-content.yml",
+    "scripts/cms-d1-017a-r2z-r1w-r4a-f1-r1-workflow-early-exit-static-smoke.mjs",
+    "artifacts/CMS_D1_017A_R2Z_R1W_R4A_F1_R1_DRY_VISIBILITY_WORKFLOW_EARLY_EXIT_GATE.json",
+    "docs/CMS_D1_017A_R2Z_R1W_R4A_F1_R1_DRY_VISIBILITY_WORKFLOW_EARLY_EXIT_GATE.md",
+    "_patch_reports/CMS_D1_017A_R2Z_R1W_R4A_F1_R1_BAKE_REPORT.md",
+    "_patch_reports/CMS_D1_017A_R2Z_R1W_R4A_F1_R1_BAKE_MANIFEST.json",
+    "_patch_reports/R4A_F1_R1_OFFLINE_STATIC_VALIDATION.log",
+    "README.md"
+  ],
+  "forbiddenDuringBake": {
+    "githubWrite": false,
+    "workflowDispatch": false,
+    "repositoryDispatch": false,
+    "vacmsMutation": false,
+    "prCreate": false,
+    "branchCreate": false,
+    "tokenValueWritten": false
+  }
+}
