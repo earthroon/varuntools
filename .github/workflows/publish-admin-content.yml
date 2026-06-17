@@ -1,0 +1,191 @@
+name: VACMS Publish Admin Content
+
+on:
+  workflow_dispatch:
+    inputs:
+      job_id:
+        description: VACMS publish job id
+        required: true
+        type: string
+      publish_mode:
+        description: Publish mode
+        required: true
+        default: cms-github-pages-pr-candidate
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  publish-content-pr:
+    runs-on: ubuntu-latest
+    env:
+      ADMIN_API_BASE: https://varuntools-admin-api.ragoon703.workers.dev/api
+      ADMIN_BRIDGE_TOKEN: ${{ secrets.ADMIN_BRIDGE_TOKEN }}
+      JOB_ID: ${{ inputs.job_id }}
+      BRIDGE_VERSION: cms-d1-017a-r2z-r1w-r1
+    steps:
+      - name: Validate inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "$JOB_ID" ]; then
+            echo "job_id is required" >&2
+            exit 1
+          fi
+          case "$JOB_ID" in
+            cms204k_*)
+              echo "job_id is a dispatch correlation id, not a publish job id" >&2
+              exit 1
+              ;;
+          esac
+          if [ -z "$ADMIN_BRIDGE_TOKEN" ]; then
+            echo "ADMIN_BRIDGE_TOKEN secret is required" >&2
+            exit 1
+          fi
+
+      - name: Checkout public repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Claim VACMS publish job
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS -X POST "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID/claim" \
+            -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data "{\"githubRunId\":\"$GITHUB_RUN_ID\",\"githubRunUrl\":\"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\",\"bridgeVersion\":\"$BRIDGE_VERSION\"}" \
+            > claim-result.json
+
+      - name: Export VACMS publish payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsS "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID/export" \
+            -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
+            > export-payload.json
+
+      - name: Materialize content file
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs')
+          const crypto = require('node:crypto')
+
+          const payload = JSON.parse(fs.readFileSync('export-payload.json', 'utf8'))
+          if (!payload || payload.ok !== true || !payload.data) {
+            throw new Error('VACMS export payload is not ok')
+          }
+
+          const data = payload.data
+          const generatedPath = String(data.snapshot?.generatedPath || '')
+          if (!generatedPath) throw new Error('generatedPath is missing')
+          if (!/^(src\/content\/pages\/|src\/content\/generated\/|public\/content\/)/.test(generatedPath)) {
+            throw new Error(`generatedPath is outside allowlist: ${generatedPath}`)
+          }
+          if (generatedPath.includes('..') || generatedPath.startsWith('/') || generatedPath.includes('\\')) {
+            throw new Error(`generatedPath is unsafe: ${generatedPath}`)
+          }
+
+          const page = data.page || {}
+          const revision = data.revision || {}
+          const rawFrontmatter = revision.frontmatter && typeof revision.frontmatter === 'object' && !Array.isArray(revision.frontmatter)
+            ? revision.frontmatter
+            : {}
+          const frontmatter = {
+            ...rawFrontmatter,
+            title: page.title || rawFrontmatter.title || 'Untitled',
+            summary: page.summary || rawFrontmatter.summary || '',
+            category: page.category || rawFrontmatter.category || 'page',
+            slug: page.slug || rawFrontmatter.slug || 'page',
+            source: 'vacms',
+            vacmsPageId: page.id || data.job?.pageId || '',
+            vacmsRevisionId: revision.id || data.job?.revisionId || '',
+          }
+
+          const bodySource = typeof revision.compiledMarkdown === 'string' && revision.compiledMarkdown.trim()
+            ? { kind: 'compiledMarkdown', value: revision.compiledMarkdown }
+            : { kind: 'sourceBody', value: String(revision.sourceBody || '') }
+
+          const yamlValue = (value) => JSON.stringify(String(value ?? ''))
+          const yaml = Object.entries(frontmatter)
+            .map(([key, value]) => `${key}: ${yamlValue(value)}`)
+            .join('\n')
+          const content = `---\n${yaml}\n---\n\n${bodySource.value.replace(/^---[\s\S]*?---\s*/, '')}`
+          fs.mkdirSync(require('node:path').dirname(generatedPath), { recursive: true })
+          fs.writeFileSync(generatedPath, content, 'utf8')
+
+          const contentHash = crypto.createHash('sha256').update(content).digest('hex')
+          const receipt = {
+            jobId: data.job?.id || process.env.JOB_ID,
+            pageId: page.id || null,
+            revisionId: revision.id || null,
+            generatedPath,
+            routePath: data.snapshot?.routePath || null,
+            source: bodySource.kind,
+            contentHash,
+          }
+          fs.writeFileSync('vacms-materialization-receipt.json', JSON.stringify(receipt, null, 2))
+          fs.writeFileSync('vacms-generated-path.txt', generatedPath)
+          NODE
+
+      - name: Create branch and draft pull request
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          GENERATED_PATH="$(cat vacms-generated-path.txt)"
+          BRANCH_NAME="vacms/publish/$JOB_ID"
+          git config user.name "vacms-publish-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git checkout -b "$BRANCH_NAME"
+          git add "$GENERATED_PATH" vacms-materialization-receipt.json
+          if git diff --cached --quiet; then
+            echo "No public content changes detected."
+            curl -fsS -X POST "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID/finalize" \
+              -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
+              -H "Content-Type: application/json" \
+              --data "{\"result\":\"bridge_verified\",\"message\":\"No public content changes detected.\",\"githubRunUrl\":\"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
+              > finalize-result.json
+            exit 0
+          fi
+          git commit -m "VACMS publish $JOB_ID"
+          git push origin HEAD:"$BRANCH_NAME"
+          cat > pr-body.md <<PRBODY
+          ## VACMS Publish Candidate
+
+          - Job ID: \`$JOB_ID\`
+          - Generated path: \`$GENERATED_PATH\`
+          - Branch: \`$BRANCH_NAME\`
+
+          ## Policy
+
+          - Direct main push: disabled
+          - Automatic merge: disabled
+          - Review required: yes
+          PRBODY
+          PR_URL="$(gh pr create --draft --base main --head "$BRANCH_NAME" --title "[VACMS] Publish $JOB_ID" --body-file pr-body.md)"
+          echo "$PR_URL" > vacms-pr-url.txt
+          curl -fsS -X POST "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID/finalize" \
+            -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data "{\"result\":\"bridge_verified\",\"message\":\"Draft PR created: $PR_URL\",\"githubRunUrl\":\"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
+            > finalize-result.json
+
+      - name: Upload VACMS publish receipts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vacms-publish-${{ inputs.job_id }}
+          path: |
+            claim-result.json
+            export-payload.json
+            vacms-materialization-receipt.json
+            vacms-pr-url.txt
+            finalize-result.json
+          if-no-files-found: ignore
