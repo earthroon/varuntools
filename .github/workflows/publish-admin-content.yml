@@ -25,6 +25,7 @@ jobs:
       ADMIN_BRIDGE_TOKEN: ${{ secrets.ADMIN_BRIDGE_TOKEN }}
       JOB_ID: ${{ inputs.job_id }}
       BRIDGE_VERSION: cms-d1-017a-r2z-r1w-r1
+      PUBLISH_MODE: ${{ inputs.publish_mode }}
     steps:
       - name: Validate inputs
         shell: bash
@@ -40,6 +41,11 @@ jobs:
               exit 1
               ;;
           esac
+          if [ "${PUBLISH_MODE:-}" = "cms-dispatch-visibility-smoke" ]; then
+            echo "PASS_CMS_D1_017A_R2Z_R1W_R3_PUBLISH_WORKFLOW_DRY_DISPATCH_VISIBILITY_SMOKE_NO_CONTENT_COMMIT_NO_PR_CREATE_NO_D1_MUTATION"
+            echo "Dry dispatch visibility smoke reached before VACMS claim/export."
+            exit 0
+          fi
           if [ -z "$ADMIN_BRIDGE_TOKEN" ]; then
             echo "ADMIN_BRIDGE_TOKEN secret is required" >&2
             exit 1
