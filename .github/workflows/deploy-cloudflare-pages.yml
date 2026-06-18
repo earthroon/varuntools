@@ -1,4 +1,4 @@
-﻿name: Check varuntools GitHub Pages
+name: Check varuntools GitHub Pages
 
 on:
   push:
@@ -36,11 +36,39 @@ jobs:
       PUBLIC_SITE_URL: ${{ secrets.PUBLIC_SITE_URL }}
       VITE_PUBLIC_BUILD_SHA: ${{ github.sha }}
       VITE_PUBLIC_BUILD_REF: ${{ github.ref_name }}
+      VACMS_REQUESTED_AT: ${{ github.event.client_payload.requestedAt }}
+      VACMS_CONTENT_SCOPE: ${{ github.event.client_payload.contentScope }}
+      VACMS_ACTOR: ${{ github.event.client_payload.actor }}
+      VACMS_SOURCE: ${{ github.event.client_payload.source }}
+      VACMS_DISPATCH_CORRELATION_ID: ${{ github.event.client_payload.dispatchCorrelationId }}
+      VACMS_REQUEST_ID: ${{ github.event.client_payload.requestId }}
+      VACMS_EVENT_ACTION: ${{ github.event.action }}
+      VACMS_EVENT_NAME: ${{ github.event_name }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Validate VACMS public publish dispatch payload
+        if: ${{ github.event_name == 'repository_dispatch' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -z "${VACMS_REQUEST_ID:-}" ]; then
+            echo "VACMS requestId is required for public-site-publish repository_dispatch." >&2
+            exit 1
+          fi
+
+          if [ -z "${VACMS_DISPATCH_CORRELATION_ID:-}" ]; then
+            echo "VACMS dispatchCorrelationId is required for public-site-publish repository_dispatch." >&2
+            exit 1
+          fi
+
+          if [ "${VACMS_EVENT_ACTION:-}" != "public-site-publish" ]; then
+            echo "Unexpected repository_dispatch action: ${VACMS_EVENT_ACTION:-missing}" >&2
+            exit 1
+          fi
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -59,6 +87,58 @@ jobs:
         run: |
           curl -I --fail --max-time 20 "$PUBLIC_SITE_URL"
 
+      - name: Write VACMS public publish receipt
+        if: ${{ github.event_name == 'repository_dispatch' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          node <<'NODE'
+          const fs = require('node:fs')
+
+          const receipt = {
+            ok: true,
+            patchId: 'CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F5',
+            status: 'PASS_CMS_D1_017A_R2Z_R1W_R4_LIVE_R2_F5_CURRENT_VACMS_PUBLIC_PUBLISH_RECEIVER_WORKFLOW_ACTIVATION_REPOSITORY_DISPATCH_PUBLIC_SITE_PUBLISH_TO_ARTIFACT_RECEIPT_SEAL',
+            source: 'vacms-admin-cms',
+            eventType: process.env.VACMS_EVENT_ACTION || 'public-site-publish',
+            requestId: process.env.VACMS_REQUEST_ID || '',
+            dispatchCorrelationId: process.env.VACMS_DISPATCH_CORRELATION_ID || '',
+            publishJobId: process.env.VACMS_PUBLISH_JOB_ID || null,
+            actor: process.env.VACMS_ACTOR || null,
+            contentScope: process.env.VACMS_CONTENT_SCOPE || 'all',
+            requestedAt: process.env.VACMS_REQUESTED_AT || null,
+            repository: process.env.GITHUB_REPOSITORY,
+            ref: process.env.GITHUB_REF_NAME,
+            sha: process.env.GITHUB_SHA,
+            runId: process.env.GITHUB_RUN_ID,
+            runAttempt: process.env.GITHUB_RUN_ATTEMPT,
+            runNumber: process.env.GITHUB_RUN_NUMBER,
+            workflow: process.env.GITHUB_WORKFLOW,
+            legacySheetDisabledExpected: true,
+            googleSheetFlowReactivated: false,
+            directMainPush: false,
+            autoMerge: false,
+            publishedFinalize: false,
+            generatedAt: new Date().toISOString()
+          }
+
+          if (!receipt.requestId) {
+            throw new Error('requestId missing in VACMS public publish receipt')
+          }
+          if (!receipt.dispatchCorrelationId) {
+            throw new Error('dispatchCorrelationId missing in VACMS public publish receipt')
+          }
+
+          fs.writeFileSync('vacms-public-site-publish-receipt.json', JSON.stringify(receipt, null, 2))
+          NODE
+      - name: Upload VACMS public publish receipt
+        if: ${{ github.event_name == 'repository_dispatch' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: vacms-public-site-publish-receipt-${{ github.event.client_payload.dispatchCorrelationId }}
+          path: vacms-public-site-publish-receipt.json
+          if-no-files-found: error
       - name: Record VACMS live check
         if: ${{ false }}
         env:
