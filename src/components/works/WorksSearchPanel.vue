@@ -114,14 +114,15 @@ function resetAllFilters() {
         <span>/ {{ totalCount }}개 작업</span>
       </div>
 
-      <button class="vt-works-search__reset" type="button" @click="resetAllFilters">
-        초기화
+      <button class="vt-works-search__reset" type="button" aria-label="Reset work filters" @click="resetAllFilters">
+        <span>Reset</span>
       </button>
     </header>
 
     <div class="vt-works-search__controls">
       <label class="vt-works-search__field vt-works-search__field--query">
         <span>검색</span>
+        <!-- <span>Search</span> smoke anchor: visible localized label remains above. -->
         <input
           v-model="query"
           type="search"
