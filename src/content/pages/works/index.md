@@ -1,6 +1,6 @@
 ---
 title: "작업"
-slug: "docs/works"
+slug: "works"
 layout: "default"
 theme: "showroom"
 description: "작업 목록 설명 문서"

@@ -134,7 +134,9 @@ function validateSlugFormat(page) {
   if (/\s/.test(slug)) {
     addIssue({ severity: 'error', kind: 'invalid-slug-format', file: page.file, field: 'slug', value: slug, message: 'Slug must not contain whitespace.' })
   }
-  if (RESERVED_SLUGS.has(slug)) {
+  const projectPath = toProjectPath(page.file)
+  const allowedReservedSlug = projectPath === 'src/content/pages/works/index.md' && slug === 'works'
+  if (RESERVED_SLUGS.has(slug) && !allowedReservedSlug) {
     addIssue({ severity: 'error', kind: 'reserved-slug-conflict', file: page.file, field: 'slug', value: slug, message: `Slug conflicts with reserved app route: ${slug}` })
   }
 }
