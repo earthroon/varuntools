@@ -1,0 +1,12 @@
+name = "varuntools-inquiry-api"
+main = "src/index.ts"
+compatibility_date = "2026-06-19"
+
+[vars]
+INQUIRY_ALLOWED_ORIGINS = "https://varun.tools"
+INQUIRY_STORAGE_MODE = "d1"
+
+[[d1_databases]]
+binding = "INQUIRY_DB"
+database_name = "varuntools-inquiry-db"
+database_id = "local-dev-placeholder"
