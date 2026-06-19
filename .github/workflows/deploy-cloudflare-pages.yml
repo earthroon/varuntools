@@ -1,4 +1,4 @@
-name: Check varuntools GitHub Pages
+﻿name: Check varuntools GitHub Pages
 
 on:
   push:
@@ -80,6 +80,8 @@ jobs:
 
       - name: Build smoke
         run: npm run build
+
+      - name: Configure Git author for GitHub Pages branch deploy         if: ${{ github.event_name == 'repository_dispatch' }}         shell: bash         run: |           git config --global user.name "github-actions[bot]"           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Deploy public site to GitHub Pages branch
         if: ${{ github.event_name == 'repository_dispatch' }}
