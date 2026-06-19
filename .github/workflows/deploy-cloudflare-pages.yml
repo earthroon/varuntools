@@ -21,7 +21,7 @@ on:
       - public-site-publish
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: varuntools-github-pages-${{ github.ref }}
@@ -81,6 +81,10 @@ jobs:
       - name: Build smoke
         run: npm run build
 
+      - name: Deploy public site to GitHub Pages branch
+        if: ${{ github.event_name == 'repository_dispatch' }}
+        shell: bash
+        run: npm run deploy:pages -- --push
       - name: Check GitHub Pages URL
         if: ${{ env.PUBLIC_SITE_URL != '' }}
         shell: bash
@@ -98,8 +102,9 @@ jobs:
 
           const receipt = {
             ok: true,
-            patchId: 'CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F5',
-            status: 'PASS_CMS_D1_017A_R2Z_R1W_R4_LIVE_R2_F5_CURRENT_VACMS_PUBLIC_PUBLISH_RECEIVER_WORKFLOW_ACTIVATION_REPOSITORY_DISPATCH_PUBLIC_SITE_PUBLISH_TO_ARTIFACT_RECEIPT_SEAL',
+            patchId: 'CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F6',
+            previousPatchId: 'CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F5-LIVE',
+            status: 'PASS_CMS_D1_017A_R2Z_R1W_R4_LIVE_R2_F6_PUBLIC_SITE_DEPLOY_EXECUTION_REPOSITORY_DISPATCH_BUILD_TO_GITHUB_PAGES_GH_PAGES_BRANCH_SEAL',
             source: 'vacms-admin-cms',
             eventType: process.env.VACMS_EVENT_ACTION || 'public-site-publish',
             requestId: process.env.VACMS_REQUEST_ID || '',
@@ -115,6 +120,13 @@ jobs:
             runAttempt: process.env.GITHUB_RUN_ATTEMPT,
             runNumber: process.env.GITHUB_RUN_NUMBER,
             workflow: process.env.GITHUB_WORKFLOW,
+            deploy: {
+              mode: 'github-pages-branch',
+              branch: 'gh-pages',
+              command: 'npm run deploy:pages -- --push',
+              ghPagesBranchPush: true,
+              mainBranchDirectPush: false
+            },
             legacySheetDisabledExpected: true,
             googleSheetFlowReactivated: false,
             directMainPush: false,
