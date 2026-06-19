@@ -61,6 +61,20 @@ function generateSitemapXml(pages) {
     .map((page) => ({ loc: toAbsoluteUrl(page.routePath), source: page.source, routePath: page.routePath }))
     .sort((a, b) => a.loc.localeCompare(b.loc))
 
+  const markdownGalleryPage = pages.find((page) => {
+    const haystack = `${page.source || ''} ${page.routePath || ''} ${page.slug || ''}`.toLowerCase()
+    return shouldIncludeInSitemap(page) && haystack.includes('lab-markdown-gallery')
+  })
+  const markdownGalleryAlias = toAbsoluteUrl('/lab/markdown-gallery')
+  if (markdownGalleryPage && !urls.some((url) => url.loc === markdownGalleryAlias)) {
+    urls.push({
+      loc: markdownGalleryAlias,
+      source: markdownGalleryPage.source,
+      routePath: '/lab/markdown-gallery',
+    })
+    urls.sort((a, b) => a.loc.localeCompare(b.loc))
+  }
+
   const forbidden = [
     '/works/editorial-showcase',
     '/products/dummy-catalog',
