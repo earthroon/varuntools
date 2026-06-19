@@ -69,6 +69,7 @@ jobs:
             echo "Unexpected repository_dispatch action: ${VACMS_EVENT_ACTION:-missing}" >&2
             exit 1
           fi
+
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
@@ -81,12 +82,17 @@ jobs:
       - name: Build smoke
         run: npm run build
 
-      - name: Configure Git author for GitHub Pages branch deploy         if: ${{ github.event_name == 'repository_dispatch' }}         shell: bash         run: |           git config --global user.name "github-actions[bot]"           git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Configure Git author for GitHub Pages branch deploy
+        shell: bash
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Deploy public site to GitHub Pages branch
         if: ${{ github.event_name == 'repository_dispatch' }}
         shell: bash
         run: npm run deploy:pages -- --push
+
       - name: Check GitHub Pages URL
         if: ${{ env.PUBLIC_SITE_URL != '' }}
         shell: bash
@@ -146,6 +152,7 @@ jobs:
 
           fs.writeFileSync('vacms-public-site-publish-receipt.json', JSON.stringify(receipt, null, 2))
           NODE
+
       - name: Upload VACMS public publish receipt
         if: ${{ github.event_name == 'repository_dispatch' }}
         uses: actions/upload-artifact@v4
@@ -153,6 +160,7 @@ jobs:
           name: vacms-public-site-publish-receipt-${{ github.event.client_payload.dispatchCorrelationId }}
           path: vacms-public-site-publish-receipt.json
           if-no-files-found: error
+
       - name: Record VACMS live check
         if: ${{ false }}
         env:
