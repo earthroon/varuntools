@@ -91,7 +91,7 @@ defineEmits<{
       </select>
     </label>
 
-    <label class="vt-work-filters__toggle">
+    <label class="vt-work-filters__toggle" data-legacy-label="Featured only">
       <input v-model="featuredOnly" type="checkbox" />
       <span>대표 작업만</span>
     </label>
