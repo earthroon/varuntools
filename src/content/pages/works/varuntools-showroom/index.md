@@ -46,7 +46,8 @@ seoDescription: "VARUNTOOLS 홈페이지와 스토어 카탈로그 구조 작업
 ogImage: "./images/cover.svg"
 ---
 
-# VARUNTOOLS 쇼룸 시스템
+# VARUNTOOLS Showroom System
+<!-- # VARUNTOOLS Showroom System -->
 
 ::editorial-title
 level: major
