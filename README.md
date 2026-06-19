@@ -29,3 +29,9 @@ Fetched current `earthroon/varuntools/.github/workflows/publish-admin-content.ym
 ## No write during bake
 
 No GitHub write, workflow dispatch, repository dispatch, PR creation, branch creation, or VACMS mutation was performed during bake.
+
+<!-- VACMS F6-F29 CSV authoring smoke anchors: do not remove without updating scripts/smoke-csv-authoring.mjs. -->
+## CSV authoring quick commands
+
+- `npm run csv:page -- path/to/page.csv` converts one CSV page source into Markdown.
+- `npm run new:page -- works project-name --csv` creates a work page scaffold with a CSV source and generated Markdown.
