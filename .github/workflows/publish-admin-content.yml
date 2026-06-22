@@ -45,6 +45,10 @@ jobs:
               echo "job_id is a dispatch correlation id, not a publish job id" >&2
               exit 1
               ;;
+            ghdisp_*)
+              echo "job_id is a workflow dispatch request id, not a publish job id" >&2
+              exit 1
+              ;;
           esac
           if [ "${PUBLISH_MODE:-}" != "cms-dispatch-visibility-smoke" ] && [ -z "$ADMIN_BRIDGE_TOKEN" ]; then
             echo "ADMIN_BRIDGE_TOKEN secret is required" >&2
@@ -54,6 +58,56 @@ jobs:
             echo "request_id is required for dry visibility smoke" >&2
             exit 1
           fi
+
+      - name: Prepare safe publish job URL segment
+        if: ${{ inputs.publish_mode != 'cms-dispatch-visibility-smoke' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const crypto = require('node:crypto')
+          const fs = require('node:fs')
+
+          const raw = String(process.env.JOB_ID || '')
+          const publishMode = String(process.env.PUBLISH_MODE || '')
+          const requestId = String(process.env.REQUEST_ID || '')
+
+          const fail = (code, detail) => {
+            const digest = crypto.createHash('sha256').update(raw).digest('hex').slice(0, 16)
+            console.error('CMS-204V job_id rejected: ' + code)
+            console.error('job_id_length=' + raw.length)
+            console.error('job_id_sha256_16=' + digest)
+            console.error('publish_mode=' + publishMode)
+            console.error('request_id_present=' + (requestId ? 'true' : 'false'))
+            if (detail) console.error('detail=' + detail)
+            process.exit(1)
+          }
+
+          if (!raw) fail('empty')
+          if (raw.startsWith('cms204k_')) fail('dispatch_correlation_id_not_publish_job_id')
+          if (raw.startsWith('ghdisp_')) fail('request_id_not_publish_job_id')
+          if (/[\u0000-\u001f\u007f]/.test(raw)) fail('control_character')
+          if (/\s/.test(raw)) fail('whitespace')
+          if (/[\/\\]/.test(raw)) fail('path_separator')
+          if (/["'<>?#&%]/.test(raw)) fail('url_reserved_or_quote_character')
+
+          const allowed = /^[A-Za-z0-9._:-]+$/.test(raw)
+          if (!allowed) fail('outside_allowed_job_id_charset', 'allowed=A-Za-z0-9._:-')
+
+          const encoded = encodeURIComponent(raw)
+          if (!encoded || encoded.includes('/')) fail('encoding_failed')
+
+          fs.appendFileSync(process.env.GITHUB_ENV, 'JOB_ID_PATH_SEGMENT=' + encoded + '\n')
+
+          const digest = crypto.createHash('sha256').update(raw).digest('hex').slice(0, 16)
+          console.log('CMS-204V job_id URL path segment prepared')
+          console.log('job_id_length=' + raw.length)
+          console.log('job_id_sha256_16=' + digest)
+          console.log('job_id_allowed_charset=true')
+          console.log('job_id_encoded_length=' + encoded.length)
+          console.log('publish_mode=' + publishMode)
+          console.log('request_id_present=' + (requestId ? 'true' : 'false'))
+          NODE
 
       - name: Dry visibility smoke seal
         if: ${{ inputs.publish_mode == 'cms-dispatch-visibility-smoke' }}
@@ -122,7 +176,13 @@ jobs:
           }
           JSON
           echo "requestId=${REQUEST_ID}" >> "$GITHUB_STEP_SUMMARY"
-          echo "jobId=${JOB_ID}" >> "$GITHUB_STEP_SUMMARY"
+          node <<'NODE' >> "$GITHUB_STEP_SUMMARY"
+          const crypto = require('node:crypto')
+          const raw = String(process.env.JOB_ID || '')
+          const digest = crypto.createHash('sha256').update(raw).digest('hex').slice(0, 16)
+          console.log('jobIdLength=' + raw.length)
+          console.log('jobIdSha25616=' + digest)
+          NODE
           echo "publishMode=${PUBLISH_MODE}" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload dry visibility smoke artifact
@@ -146,7 +206,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsS -X POST "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID/claim" \
+          curl -fsS -X POST "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID_PATH_SEGMENT/claim" \
             -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
             -H "Content-Type: application/json" \
             --data "{\"githubRunId\":\"$GITHUB_RUN_ID\",\"githubRunUrl\":\"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\",\"bridgeVersion\":\"$BRIDGE_VERSION\"}" \
@@ -157,7 +217,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsS "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID/export" \
+          curl -fsS "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID_PATH_SEGMENT/export" \
             -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
             > export-payload.json
 
@@ -319,7 +379,7 @@ jobs:
           }
           fs.writeFileSync('vacms-live-finalize.json', JSON.stringify(finalize, null, 2))
           NODE
-          curl -fsS -X POST "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID/finalize" \
+          curl -fsS -X POST "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID_PATH_SEGMENT/finalize" \
             -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
             -H "Content-Type: application/json" \
             --data @vacms-live-finalize.json \
@@ -350,7 +410,7 @@ jobs:
           git add "$GENERATED_PATH" vacms-materialization-receipt.json
           if git diff --cached --quiet; then
             echo "No public content changes detected."
-            curl -fsS -X POST "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID/finalize" \
+            curl -fsS -X POST "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID_PATH_SEGMENT/finalize" \
               -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
               -H "Content-Type: application/json" \
               --data "{\"result\":\"bridge_verified\",\"message\":\"No public content changes detected.\",\"githubRunUrl\":\"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \
@@ -374,7 +434,7 @@ jobs:
           PRBODY
           PR_URL="$(gh pr create --draft --base main --head "$BRANCH_NAME" --title "[VACMS] Publish $JOB_ID" --body-file pr-body.md)"
           echo "$PR_URL" > vacms-pr-url.txt
-          curl -fsS -X POST "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID/finalize" \
+          curl -fsS -X POST "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID_PATH_SEGMENT/finalize" \
             -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
             -H "Content-Type: application/json" \
             --data "{\"result\":\"bridge_verified\",\"message\":\"Draft PR created: $PR_URL\",\"githubRunUrl\":\"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\"}" \

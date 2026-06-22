@@ -1,0 +1,37 @@
+{
+  "patch_id": "CMS-204V",
+  "status": "PASS_CMS_204V_PUBLISH_ADMIN_WORKFLOW_JOBID_URL_PATH_SEGMENT_ENCODING_CURL_URL_MALFORMED_GUARD_AND_DEBUG_SAFE_INPUT_ECHO_SEAL",
+  "pass": true,
+  "blocked_reason_code": null,
+  "blocked_reason": null,
+  "checks": {
+    "workflow_exists": true,
+    "workflow_dispatch_inputs_exist": true,
+    "validate_rejects_cms204k": true,
+    "validate_rejects_ghdisp": true,
+    "safe_path_segment_step_exists": true,
+    "encodeURIComponent_used": true,
+    "github_env_exports_job_id_path_segment": true,
+    "claim_uses_encoded_job_id": true,
+    "export_uses_encoded_job_id": true,
+    "finalize_uses_encoded_job_id": true,
+    "raw_job_id_not_used_in_curl_url_path": true,
+    "debug_safe_echo_present": true,
+    "raw_job_id_echo_absent": true,
+    "admin_bridge_token_not_printed": true,
+    "dry_visibility_smoke_path_preserved": true,
+    "live_branch_apply_path_preserved": true,
+    "no_secret_literal_detected": true
+  },
+  "url_path_segment_policy": {
+    "source": "workflow_dispatch.inputs.job_id",
+    "encoded_env": "JOB_ID_PATH_SEGMENT",
+    "encoder": "encodeURIComponent",
+    "rejected_prefixes": [
+      "cms204k_",
+      "ghdisp_"
+    ],
+    "allowed_pattern": "^[A-Za-z0-9._:-]+$",
+    "raw_log_policy": "never print raw job_id in debug-safe input echo"
+  }
+}
