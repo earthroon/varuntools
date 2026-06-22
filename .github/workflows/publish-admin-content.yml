@@ -324,6 +324,16 @@ jobs:
             -H "Content-Type: application/json" \
             --data @vacms-live-finalize.json \
             > finalize-result.json
+          node <<'NODE' >> "$GITHUB_STEP_SUMMARY"
+          const fs = require('node:fs')
+          const receipt = JSON.parse(fs.readFileSync('vacms-live-deploy-receipt.json', 'utf8'))
+          console.log('publishMode=' + receipt.publishMode)
+          console.log('jobId=' + receipt.jobId)
+          console.log('generatedPath=' + receipt.generatedPath)
+          console.log('finalizeResult=bridge_live_deployed')
+          console.log('deployTarget=' + receipt.deployTarget)
+          console.log('liveDeployReceipt=vacms-live-deploy-receipt.json')
+          NODE
 
       - name: Create branch and draft pull request
         if: ${{ inputs.publish_mode == 'cms-github-pages-pr-candidate' || inputs.publish_mode == 'cms-09-snapshot-apply' }}
@@ -379,6 +389,8 @@ jobs:
             claim-result.json
             export-payload.json
             vacms-materialization-receipt.json
+            vacms-live-deploy-receipt.json
+            vacms-live-finalize.json
             vacms-pr-url.txt
             finalize-result.json
           if-no-files-found: ignore
