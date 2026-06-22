@@ -10,7 +10,7 @@ on:
       publish_mode:
         description: Publish mode
         required: true
-        default: cms-github-pages-pr-candidate
+        default: cms-live-branch-apply
         type: string
       request_id:
         description: VACMS Worker dispatch request id
@@ -227,8 +227,106 @@ jobs:
           fs.writeFileSync('vacms-generated-path.txt', generatedPath)
           NODE
 
+      - name: Setup Node for live branch apply
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install public site dependencies for live branch apply
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: npm ci
+
+      - name: Validate and build live branch apply content
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: npm run build
+
+      - name: Configure Git author for live branch deploy
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Deploy live public site branch
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: npm run deploy:pages -- --push
+
+      - name: Finalize live public site deploy
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs')
+          const crypto = require('node:crypto')
+          const childProcess = require('node:child_process')
+
+          const exportPayload = JSON.parse(fs.readFileSync('export-payload.json', 'utf8'))
+          const data = exportPayload.data || {}
+          const generatedPath = String(data.snapshot?.generatedPath || fs.readFileSync('vacms-generated-path.txt', 'utf8')).trim()
+          if (!generatedPath) throw new Error('generatedPath is missing for live deploy finalize')
+
+          const content = fs.readFileSync(generatedPath)
+          const contentHash = crypto.createHash('sha256').update(content).digest('hex')
+          let deploySha = ''
+          try {
+            deploySha = childProcess.execFileSync('git', ['ls-remote', 'origin', 'refs/heads/gh-pages'], { encoding: 'utf8' }).trim().split(/\s+/)[0] || ''
+          } catch {}
+
+          const githubRunUrl = process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY + '/actions/runs/' + process.env.GITHUB_RUN_ID
+          const receipt = {
+            ok: true,
+            patchId: 'CMS-204T',
+            status: 'PASS_CMS_204T_PUBLIC_SITE_PUBLISH_PIPELINE_REBIND_MATERIALIZE_CONTENT_TO_LIVE_DEPLOY_BRIDGE_SEAL',
+            jobId: data.job?.id || process.env.JOB_ID,
+            pageId: data.page?.id || null,
+            revisionId: data.revision?.id || null,
+            generatedPath,
+            routePath: data.snapshot?.routePath || null,
+            publishMode: 'cms-live-branch-apply',
+            deployTarget: 'gh-pages',
+            contentHash,
+            deploySha: deploySha || null,
+            githubRunUrl,
+            generatedAt: new Date().toISOString()
+          }
+          fs.writeFileSync('vacms-live-deploy-receipt.json', JSON.stringify(receipt, null, 2))
+
+          const finalize = {
+            result: 'bridge_live_deployed',
+            message: 'Public site content materialized, validated, and deployed to gh-pages.',
+            githubRunUrl,
+            commitSha: deploySha || null,
+            snapshotWriterVersion: data.snapshot?.snapshotWriterVersion || 'cms-snapshot-writer-v1',
+            generatedPath,
+            generatedFiles: [{
+              path: generatedPath,
+              action: 'update',
+              kind: 'page_markdown',
+              reason: 'cms-live-branch-apply materialized content',
+              previousHash: null,
+              nextHash: contentHash
+            }],
+            publishMode: 'cms-live-branch-apply',
+            deployTarget: 'gh-pages',
+            contentHash,
+            liveDeployReceipt: 'vacms-live-deploy-receipt.json'
+          }
+          fs.writeFileSync('vacms-live-finalize.json', JSON.stringify(finalize, null, 2))
+          NODE
+          curl -fsS -X POST "$ADMIN_API_BASE/content/publish-jobs/$JOB_ID/finalize" \
+            -H "Authorization: Bearer $ADMIN_BRIDGE_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data @vacms-live-finalize.json \
+            > finalize-result.json
+
       - name: Create branch and draft pull request
-        if: ${{ inputs.publish_mode != 'cms-dispatch-visibility-smoke' }}
+        if: ${{ inputs.publish_mode == 'cms-github-pages-pr-candidate' || inputs.publish_mode == 'cms-09-snapshot-apply' }}
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
