@@ -279,9 +279,38 @@ jobs:
             ? { kind: 'compiledMarkdown', value: revision.compiledMarkdown }
             : { kind: 'sourceBody', value: String(revision.sourceBody || '') }
 
-          const yamlValue = (value) => JSON.stringify(String(value ?? ''))
+          const CMS204AJ_YAML_ARRAY_PRESERVATION = 'cms-204aj-yaml-array-preservation@1'
+          const normalizeStringArray = (value) => {
+            if (Array.isArray(value)) {
+              return value
+                .filter((item) => typeof item === 'string')
+                .map((item) => item.trim())
+                .filter(Boolean)
+            }
+
+            if (typeof value === 'string') {
+              return value
+                .split(',')
+                .map((item) => item.trim())
+                .filter(Boolean)
+            }
+
+            return []
+          }
+
+          frontmatter.tags = normalizeStringArray(frontmatter.tags)
+
+          const yamlScalar = (value) => JSON.stringify(String(value ?? ''))
+          const yamlEntry = ([key, value]) => {
+            if (Array.isArray(value)) {
+              if (value.length === 0) return key + ': []'
+              return key + ':\n' + value.map((item) => '  - ' + yamlScalar(item)).join('\n')
+            }
+
+            return key + ': ' + yamlScalar(value)
+          }
           const yaml = Object.entries(frontmatter)
-            .map(([key, value]) => `${key}: ${yamlValue(value)}`)
+            .map(yamlEntry)
             .join('\n')
           const content = `---\n${yaml}\n---\n\n${bodySource.value.replace(/^---[\s\S]*?---\s*/, '')}`
           fs.mkdirSync(require('node:path').dirname(generatedPath), { recursive: true })

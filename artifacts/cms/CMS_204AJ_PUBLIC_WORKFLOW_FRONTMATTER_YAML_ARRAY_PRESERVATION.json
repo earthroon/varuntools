@@ -1,0 +1,39 @@
+{
+  "patch_id": "CMS-204AJ",
+  "status": "PASS_CMS_204AJ_PUBLIC_WORKFLOW_FRONTMATTER_YAML_ARRAY_PRESERVATION_MATERIALIZER_TAGS_ARRAY_SEAL",
+  "pass": true,
+  "blocked_reason_code": null,
+  "blocked_reason": null,
+  "checks": {
+    "workflow_exists": true,
+    "materialize_step_exists": true,
+    "yaml_array_preservation_marker_exists": true,
+    "normalize_string_array_helper_exists": true,
+    "frontmatter_tags_forced_to_array_after_merge": true,
+    "yaml_entry_array_branch_exists": true,
+    "empty_array_outputs_inline_empty_array": true,
+    "array_items_render_as_yaml_sequence": true,
+    "scalar_helper_preserved_for_non_arrays": true,
+    "old_scalar_only_yaml_writer_removed": true,
+    "package_json_exists": true,
+    "validate_content_not_bypassed": true,
+    "npm_build_not_bypassed": true,
+    "no_generated_page_manual_patch": true,
+    "no_vacms_worker_mutation": true,
+    "no_secret_literal_detected": true,
+    "single_string_tags_fixture_passes": true,
+    "comma_string_tags_fixture_passes": true,
+    "empty_string_tags_fixture_passes": true,
+    "array_tags_trim_filter_fixture_passes": true,
+    "generated_yaml_does_not_emit_scalar_tags": true
+  },
+  "yaml_array_policy": {
+    "repo": "earthroon/varuntools",
+    "workflow": ".github/workflows/publish-admin-content.yml",
+    "materializer_preserves_arrays": true,
+    "tags_scalar_output_allowed": false,
+    "empty_tags_output": "tags: []",
+    "validator_bypass": false,
+    "manual_generated_page_patch": false
+  }
+}
