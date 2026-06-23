@@ -1,6 +1,0 @@
-{
-  "patch_id": "CMS-203",
-  "smoke": "gateway_error_trace",
-  "status": "passed",
-  "expected_output": "CMS203_GATEWAY_ERROR_TRACE_PASS"
-}

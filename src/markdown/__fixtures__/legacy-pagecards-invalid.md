@@ -1,3 +1,0 @@
-# Legacy Pagecards Invalid
-
-[pagecards]

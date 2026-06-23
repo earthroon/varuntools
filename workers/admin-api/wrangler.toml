@@ -1,8 +1,0 @@
-name = "varuntools-admin-api"
-main = "src/index.ts"
-compatibility_date = "2026-06-01"
-
-[[d1_databases]]
-binding = "INQUIRY_DB"
-database_name = "varuntools-inquiry-db"
-database_id = "local-inquiry-db"

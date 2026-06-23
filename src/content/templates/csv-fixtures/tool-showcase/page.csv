@@ -1,7 +1,0 @@
-block,title,body,src,alt,caption,thumb,layout,kind,options,meta
-page,Tool Showcase Fixture,A fixture for tool-style portfolio metadata.,./cover.svg,Tool cover,Tool cover caption,./thumb.svg,,,"work.type=tool; work.status=published; work.role=[Tool Designer, Frontend]; work.stack=[Vue, TypeScript]; work.tools=[Vite, CSV Parser]; work.links.demo=/demo; work.links.repo=https://varun.tools/repo",
-portfolio-hero,Tool Showcase,A tool-oriented fixture for work metadata.,./cover.svg,Tool hero,Tool hero caption,./thumb.svg,split,tool,"role=[Tool Designer, Frontend]; stack=[Vue, TypeScript]; year=2026",
-role-stack,Role Stack,,,,,,,,"role=[Tool Designer, Frontend]; stack=[Vue, TypeScript]; tools=[Vite, CSV Parser]",
-process,Process,The fixture moves from schema to render to collection normalization.,,,,,,,phase=fixture,
-solution,Solution,Typed options feed the tool metadata and Markdown rendering layer.,,,,,,,strategy=typed-options,
-result,Result,The tool metadata remains readable by the works collection.,,,,,,,impact=collection-ready,

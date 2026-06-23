@@ -1,6 +1,0 @@
-{
-  "patch_id": "CMS-203",
-  "smoke": "publish_workflow_no_legacy_hard_fail",
-  "status": "passed",
-  "expected_output": "CMS203_PUBLISH_WORKFLOW_NO_LEGACY_HARD_FAIL_PASS"
-}

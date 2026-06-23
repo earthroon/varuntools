@@ -1,8 +1,0 @@
-block,title,body,src,alt,caption,thumb,layout,kind,options,meta
-page,Experiment Title,실험 설명을 여기에 작성합니다.,./images/cover.webp,,,./images/cover.webp,,,tags=lab|experiment; order=50; gallery.autoMini=true; slug=__SLUG__; kind=lab; status=active; visibility=public,
-heading,Experiment Title,,,,,,,h1,,
-box,실험 개요,이 실험의 목적과 관찰 지점을 정리합니다.,,,,,,note,,
-image,,,./images/cover.webp,Experiment Cover,[필수] 실험 대표 이미지,,,,,
-section-gap,,,,,,,,,,
-heading,Notes,,,,,,,h2,,
-paragraph,,실험 과정과 결과를 기록합니다.,,,,,,,,

@@ -1,5 +1,0 @@
-block,title,body,src,alt,caption,thumb,layout,kind,options,meta
-page,Product Fixture,A fixture proving product pages do not become work pages.,./product.svg,Product image,Product caption,./product.svg,,,"slug=fixtures/product; status=available; featured=true; tags=[store, csv]",
-product,Fixture Digital Product,A product row should not create frontmatter.work.,./product.svg,Product image,Product caption,./product.svg,,,type=digital; status=available; price=1000; checkoutUrl=/checkout; downloadUrl=/download; sku=FIXTURE-001; readyForCatalog=true,
-product-cta,,,,,,,,,,
-product-trust,,,,,,,,,,

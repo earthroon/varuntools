@@ -1,3 +1,0 @@
-block,title,body,src,alt,caption,thumb,layout,kind,options,meta
-page,Invalid Missing Asset,This fixture should fail.,,,,,,,,
-image,,Missing asset,./missing.svg,Missing asset,Caption,,,,,
