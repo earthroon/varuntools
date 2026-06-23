@@ -9,6 +9,8 @@ const SOURCE_BRANCH = 'main'
 const DEPLOY_BRANCH = 'gh-pages'
 const CUSTOM_DOMAIN = 'varun.tools'
 const PAGES_FOLDER = '/'
+const CMS204AL_RELEASE_PAGES_PUSH_SEAL = 'cms-204al-release-pages-push-seal@1'
+const DEPLOY_EVIDENCE_FILE = 'vacms-pages-deploy-evidence.json'
 
 const args = new Set(process.argv.slice(2))
 const shouldPush = args.has('--push')
@@ -69,6 +71,22 @@ function copyDirContents(source, target) {
   for (const entry of fs.readdirSync(source)) {
     fs.cpSync(path.join(source, entry), path.join(target, entry), { recursive: true })
   }
+}
+
+function writeDeployEvidence({ pushed }) {
+  const deployEvidence = {
+    ok: pushed === true && dryRun !== true,
+    patchId: 'CMS-204AL',
+    status: pushed === true ? 'PASS_CMS_204AL_RELEASE_PAGES_PUSH_SEAL' : 'CMS_204AL_PUSH_SKIPPED',
+    deployBranch: DEPLOY_BRANCH,
+    pushed: pushed === true,
+    dryRun,
+    customDomain: CUSTOM_DOMAIN,
+    pagesFolder: PAGES_FOLDER,
+    marker: CMS204AL_RELEASE_PAGES_PUSH_SEAL,
+    generatedAt: new Date().toISOString(),
+  }
+  fs.writeFileSync(path.join(process.cwd(), DEPLOY_EVIDENCE_FILE), JSON.stringify(deployEvidence, null, 2))
 }
 
 function gitWorktreeList() {
@@ -155,6 +173,7 @@ try {
     } else {
       console.log(`[release:pages] push skipped; run: git push origin ${DEPLOY_BRANCH}`)
     }
+    writeDeployEvidence({ pushed: shouldPush === true })
   } finally {
     cleanupWorktree(worktreeRoot)
   }

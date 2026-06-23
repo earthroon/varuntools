@@ -1,0 +1,40 @@
+{
+  "patch_id": "CMS-204AL",
+  "status": "PASS_CMS_204AL_PUBLIC_LIVE_DEPLOY_PUSH_ARGUMENT_PROPAGATION_RELEASE_PAGES_PUSH_SEAL",
+  "pass": true,
+  "blocked_reason_code": null,
+  "blocked_reason": null,
+  "checks": {
+    "workflow_exists": true,
+    "deploy_step_exists": true,
+    "workflow_uses_release_pages_push_directly": true,
+    "workflow_no_longer_uses_deploy_pages_push_wrapper": true,
+    "deploy_script_exists": true,
+    "deploy_script_push_arg_detection_exists": true,
+    "cms204al_marker_exists": true,
+    "deploy_evidence_file_written": true,
+    "deploy_evidence_records_pushed_true": true,
+    "finalize_step_reads_deploy_evidence": true,
+    "finalize_requires_deploy_evidence_pushed_true": true,
+    "finalize_requires_non_empty_deploy_sha": true,
+    "finalize_receipt_includes_deploy_pushed": true,
+    "finalize_receipt_includes_deploy_evidence": true,
+    "finalize_sends_non_null_commit_sha": true,
+    "release_prepare_not_bypassed": true,
+    "check_launch_not_bypassed": true,
+    "npm_build_not_bypassed": true,
+    "no_generated_page_manual_patch": true,
+    "no_vacms_worker_mutation": true,
+    "no_secret_literal_detected": true
+  },
+  "deploy_push_policy": {
+    "repo": "earthroon/varuntools",
+    "workflow": ".github/workflows/publish-admin-content.yml",
+    "deployScript": "scripts/deploy-pages-branch.mjs",
+    "deployBranch": "gh-pages",
+    "workflowCallsReleasePagesDirectly": true,
+    "pushEvidenceRequiredBeforeSuccessFinalize": true,
+    "deployShaRequiredBeforeSuccessFinalize": true,
+    "successWithoutRemotePushAllowed": false
+  }
+}

@@ -390,10 +390,20 @@ jobs:
 
           const content = fs.readFileSync(generatedPath)
           const contentHash = crypto.createHash('sha256').update(content).digest('hex')
+          const deployEvidencePath = 'vacms-pages-deploy-evidence.json'
+          const deployEvidence = JSON.parse(fs.readFileSync(deployEvidencePath, 'utf8'))
+          if (!deployEvidence || deployEvidence.pushed !== true) {
+            throw new Error('CMS-204AL live deploy push evidence is missing or pushed is not true')
+          }
           let deploySha = ''
           try {
             deploySha = childProcess.execFileSync('git', ['ls-remote', 'origin', 'refs/heads/gh-pages'], { encoding: 'utf8' }).trim().split(/\s+/)[0] || ''
-          } catch {}
+          } catch (error) {
+            throw new Error('CMS-204AL gh-pages deploy SHA readback failed: ' + (error instanceof Error ? error.message : String(error)))
+          }
+          if (!deploySha) {
+            throw new Error('CMS-204AL gh-pages deploy SHA readback failed')
+          }
 
           const githubRunUrl = process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY + '/actions/runs/' + process.env.GITHUB_RUN_ID
           const receipt = {
@@ -408,7 +418,9 @@ jobs:
             publishMode: 'cms-live-branch-apply',
             deployTarget: 'gh-pages',
             contentHash,
-            deploySha: deploySha || null,
+            deploySha,
+            deployPushed: deployEvidence.pushed === true,
+            deployEvidence: deployEvidencePath,
             githubRunUrl,
             generatedAt: new Date().toISOString()
           }
@@ -418,7 +430,7 @@ jobs:
             result: 'bridge_live_deployed',
             message: 'Public site content materialized, validated, and deployed to gh-pages.',
             githubRunUrl,
-            commitSha: deploySha || null,
+            commitSha: deploySha,
             snapshotWriterVersion: data.snapshot?.snapshotWriterVersion || 'cms-snapshot-writer-v1',
             generatedPath,
             generatedFiles: [{
@@ -431,6 +443,8 @@ jobs:
             }],
             publishMode: 'cms-live-branch-apply',
             deployTarget: 'gh-pages',
+            deployPushed: deployEvidence.pushed === true,
+            deployEvidence: deployEvidencePath,
             contentHash,
             liveDeployReceipt: 'vacms-live-deploy-receipt.json'
           }
@@ -451,6 +465,8 @@ jobs:
           console.log('generatedPath=' + receipt.generatedPath)
           console.log('finalizeResult=bridge_live_deployed')
           console.log('deployTarget=' + receipt.deployTarget)
+          console.log('deployPushed=' + String(receipt.deployPushed))
+          console.log('deploySha=' + receipt.deploySha)
           console.log('liveDeployReceipt=vacms-live-deploy-receipt.json')
           NODE
 
