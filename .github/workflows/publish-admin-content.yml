@@ -377,6 +377,14 @@ jobs:
           NODE
           echo "materialize" > vacms-last-success-stage.txt
 
+      - name: Build VACMS live markdown registry source
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/build-vacms-live-markdown-registry.mjs --workflow
+          echo "registry_source_rebind" > vacms-last-success-stage.txt
+
       - name: Setup Node for live branch apply
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         uses: actions/setup-node@v4
@@ -657,6 +665,8 @@ jobs:
             claim-result.json
             export-payload.json
             vacms-materialization-receipt.json
+            vacms-pages-deploy-evidence.json
+            vacms-live-markdown-registry-source-rebind.json
             vacms-page-registry-receipt.json
             vacms-live-deploy-receipt.json
             vacms-live-finalize.json

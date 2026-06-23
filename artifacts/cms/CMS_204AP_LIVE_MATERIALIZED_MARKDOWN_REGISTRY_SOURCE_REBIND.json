@@ -1,0 +1,48 @@
+{
+  "patch_id": "CMS-204AP",
+  "status": "PASS_CMS_204AP_LIVE_MATERIALIZED_MARKDOWN_REGISTRY_SOURCE_REBIND_IMPORT_GLOB_INCLUSION_SEAL",
+  "pass": true,
+  "blocked_reason_code": null,
+  "blocked_reason": null,
+  "checks": {
+    "workflow_exists": true,
+    "registry_source_step_exists": true,
+    "registry_source_step_after_materialize_before_build": true,
+    "registry_source_step_live_only": true,
+    "registry_builder_script_exists": true,
+    "registry_builder_reads_materialization_receipt": true,
+    "registry_builder_reads_generated_markdown": true,
+    "registry_builder_writes_generated_ts_module": true,
+    "registry_builder_writes_runtime_receipt": true,
+    "generated_module_exists": true,
+    "generated_module_default_empty_array": true,
+    "load_markdown_pages_imports_generated_module": true,
+    "load_markdown_pages_merges_glob_and_live_sources": true,
+    "live_source_overrides_same_content_dir": true,
+    "cms204ao_post_build_registry_guard_preserved": true,
+    "cms204al_finalize_gate_preserved": true,
+    "cms204am_rebase_gate_preserved": true,
+    "cms204an_slug_alignment_preserved": true,
+    "no_force_push": true,
+    "no_dist_manual_patch": true,
+    "no_vacms_worker_mutation": true,
+    "no_secret_literal_detected": true,
+    "fixture_live_registry_source_positive_passes": true,
+    "fixture_empty_default_module_passes": true,
+    "artifact_includes_live_registry_receipt": true,
+    "artifact_includes_page_registry_receipt": true
+  },
+  "registry_source_policy": {
+    "globRemainsPrimary": true,
+    "liveGeneratedRegistrySupplementsGlob": true,
+    "liveRegistryOverridesSameContentDir": true,
+    "distManualPatchAllowed": false,
+    "deployBlockedIfPostBuildRegistryMissing": true,
+    "example": {
+      "generatedPath": "src/content/pages/page/sdsdsd/index.md",
+      "materializedSlug": "page/sdsdsd",
+      "registryModule": "src/markdown/vacmsLivePages.generated.ts"
+    }
+  },
+  "generatedAt": "2026-06-23T23:04:56.749Z"
+}
