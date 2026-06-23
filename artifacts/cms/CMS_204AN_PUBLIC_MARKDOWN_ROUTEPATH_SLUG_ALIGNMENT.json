@@ -1,0 +1,43 @@
+{
+  "patch_id": "CMS-204AN-R3",
+  "base_patch_id": "CMS-204AN",
+  "status": "PASS_CMS_204AN_R3_PUBLIC_MARKDOWN_ROUTEPATH_SLUG_ALIGNMENT_WINDOWS_FILEURL_FIX_SEAL",
+  "pass": true,
+  "blocked_reason_code": null,
+  "blocked_reason": null,
+  "checks": {
+    "workflow_exists": true,
+    "materialize_step_exists": true,
+    "normalize_route_slug_helper_exists": true,
+    "content_dir_from_generated_path_helper_exists": true,
+    "materialized_slug_computed": true,
+    "frontmatter_slug_uses_materialized_slug": true,
+    "page_slug_no_longer_overrides_route_path": true,
+    "vacms_slug_preserved_separately": true,
+    "materialization_receipt_includes_materialized_slug": true,
+    "materialization_receipt_includes_slug_source": true,
+    "fixture_route_page_slug_alignment_passes": true,
+    "fixture_generated_path_fallback_passes": true,
+    "cms204al_finalize_gate_preserved": true,
+    "cms204am_deploy_rebase_preserved": true,
+    "no_generated_page_manual_patch": true,
+    "no_force_push": true,
+    "no_vacms_worker_mutation": true,
+    "no_secret_literal_detected": true
+  },
+  "route_slug_policy": {
+    "repo": "earthroon/varuntools",
+    "workflow": ".github/workflows/publish-admin-content.yml",
+    "routePathOwnsPublicSlug": true,
+    "generatedPathFallbackAllowed": true,
+    "pageSlugPreservedAsVacmsSlug": true,
+    "pageSlugMayOverrideRoutePath": false,
+    "guardFix": "receipt-block-canonicalization-and-force-push-scope",
+    "example": {
+      "routePath": "/page/sdsdsd",
+      "pageSlug": "sdsdsd",
+      "materializedSlug": "page/sdsdsd",
+      "slugSource": "routePath"
+    }
+  }
+}

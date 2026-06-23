@@ -1,4 +1,4 @@
-﻿name: VACMS Publish Admin Content
+name: VACMS Publish Admin Content
 
 on:
   workflow_dispatch:
@@ -259,18 +259,53 @@ jobs:
             throw new Error(`generatedPath is unsafe: ${generatedPath}`)
           }
 
+          const CMS204AN_PUBLIC_ROUTE_SLUG_ALIGNMENT = 'cms-204an-public-route-slug-alignment@1'
+
+          const normalizeRouteSlug = (value) => {
+            return String(value || '')
+              .trim()
+              .replace(/^https?:\/\/[^/]+/i, '')
+              .replace(/[?#].*$/, '')
+              .replace(/^\/+|\/+$/g, '')
+              .replace(/\/+/g, '/')
+          }
+
+          const contentDirFromGeneratedPath = (value) => {
+            return String(value || '')
+              .replace(/^src\/content\/pages\//, '')
+              .replace(/\/index\.md$/, '')
+              .replace(/^\/+|\/+$/g, '')
+              .replace(/\/+/g, '/')
+          }
+
           const page = data.page || {}
           const revision = data.revision || {}
           const rawFrontmatter = revision.frontmatter && typeof revision.frontmatter === 'object' && !Array.isArray(revision.frontmatter)
             ? revision.frontmatter
             : {}
+          const routeSlug = normalizeRouteSlug(data.snapshot?.routePath)
+          const generatedPathSlug = contentDirFromGeneratedPath(generatedPath)
+          const rawFrontmatterSlug = normalizeRouteSlug(rawFrontmatter.slug)
+          const vacmsSlug = normalizeRouteSlug(page.slug)
+          const materializedSlug = routeSlug || generatedPathSlug || rawFrontmatterSlug || vacmsSlug || 'page'
+          const slugSource = routeSlug
+            ? 'routePath'
+            : generatedPathSlug
+              ? 'generatedPath'
+              : rawFrontmatterSlug
+                ? 'frontmatter.slug'
+                : vacmsSlug
+                  ? 'page.slug'
+                  : 'fallback'
+
           const frontmatter = {
             ...rawFrontmatter,
             title: page.title || rawFrontmatter.title || 'Untitled',
             summary: page.summary || rawFrontmatter.summary || '',
             category: page.category || rawFrontmatter.category || 'page',
-            slug: page.slug || rawFrontmatter.slug || 'page',
+            slug: materializedSlug,
             source: 'vacms',
+            vacmsSlug,
             vacmsPageId: page.id || data.job?.pageId || '',
             vacmsRevisionId: revision.id || data.job?.revisionId || '',
           }
@@ -330,6 +365,10 @@ jobs:
             revisionId: revision.id || null,
             generatedPath,
             routePath: data.snapshot?.routePath || null,
+            materializedSlug,
+            vacmsSlug,
+            generatedPathSlug,
+            slugSource,
             source: bodySource.kind,
             contentHash,
           }
