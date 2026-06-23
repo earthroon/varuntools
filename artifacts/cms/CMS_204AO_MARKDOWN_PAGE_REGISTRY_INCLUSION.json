@@ -1,0 +1,44 @@
+{
+  "patch_id": "CMS-204AO",
+  "status": "PASS_CMS_204AO_R1_MARKDOWN_PAGE_REGISTRY_INCLUSION_GUARD_FIX_SEAL",
+  "pass": true,
+  "blocked_reason_code": null,
+  "blocked_reason": null,
+  "checks": {
+    "workflow_exists": true,
+    "registry_step_exists": true,
+    "registry_step_after_build_before_deploy": true,
+    "registry_step_runs_only_live_branch_apply": true,
+    "registry_guard_script_exists": true,
+    "registry_guard_reads_materialization_receipt": true,
+    "registry_guard_requires_generated_path_exists": true,
+    "registry_guard_requires_source_slug_alignment": true,
+    "registry_guard_requires_dist_index": true,
+    "registry_guard_checks_page_lookup_assets": true,
+    "registry_guard_rejects_search_or_sitemap_only": true,
+    "registry_guard_writes_page_registry_receipt": true,
+    "artifact_includes_page_registry_receipt": true,
+    "artifact_includes_deploy_evidence": true,
+    "cms204al_finalize_gate_preserved": true,
+    "cms204am_rebase_gate_preserved": true,
+    "cms204an_slug_alignment_preserved": true,
+    "no_force_push": true,
+    "no_generated_dist_manual_patch": true,
+    "no_vacms_worker_mutation": true,
+    "no_secret_literal_detected": true,
+    "fixture_page_lookup_positive_passes": true,
+    "fixture_search_only_negative_fails": true
+  },
+  "page_lookup_policy": {
+    "materializedSlugMustReachPageLookupBundle": true,
+    "searchIndexIsNotSufficient": true,
+    "sitemapIsNotSufficient": true,
+    "deployBlockedBeforePushIfRegistryMissing": true,
+    "example": {
+      "routePath": "/page/sdsdsd",
+      "materializedSlug": "page/sdsdsd",
+      "requiredBundleMatch": "dist/assets/pageLookup-*.js"
+    }
+  },
+  "generated_at": "2026-06-23T09:21:05.947Z"
+}

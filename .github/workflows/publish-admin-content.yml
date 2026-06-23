@@ -397,6 +397,14 @@ jobs:
           npm run build
           echo "build" > vacms-last-success-stage.txt
 
+      - name: Verify live materialized markdown page registry
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms-204ao-markdown-page-registry-inclusion-guard.mjs --workflow
+          echo "registry" > vacms-last-success-stage.txt
+
       - name: Configure Git author for live branch deploy
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -649,6 +657,7 @@ jobs:
             claim-result.json
             export-payload.json
             vacms-materialization-receipt.json
+            vacms-page-registry-receipt.json
             vacms-live-deploy-receipt.json
             vacms-live-finalize.json
             vacms-pr-url.txt
