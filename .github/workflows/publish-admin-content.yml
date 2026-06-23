@@ -370,7 +370,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npm run deploy:pages -- --push
+          npm run release:pages -- --push
           echo "deploy" > vacms-last-success-stage.txt
 
       - name: Finalize live public site deploy
@@ -607,4 +607,5 @@ jobs:
             vacms-failure-finalized.txt
             vacms-failure-stage.txt
           if-no-files-found: ignore
+
 
