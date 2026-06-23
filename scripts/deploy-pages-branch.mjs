@@ -10,6 +10,7 @@ const DEPLOY_BRANCH = 'gh-pages'
 const CUSTOM_DOMAIN = 'varun.tools'
 const PAGES_FOLDER = '/'
 const CMS204AL_RELEASE_PAGES_PUSH_SEAL = 'cms-204al-release-pages-push-seal@1'
+const CMS204AM_REMOTE_DEPLOY_REF_REBASE = 'cms-204am-remote-deploy-ref-rebase@1'
 const DEPLOY_EVIDENCE_FILE = 'vacms-pages-deploy-evidence.json'
 
 const args = new Set(process.argv.slice(2))
@@ -52,11 +53,20 @@ function getCurrentBranch() {
   return run('git', ['rev-parse', '--abbrev-ref', 'HEAD'])
 }
 
-function branchExists(branch) {
-  const result = spawnSync('git', ['show-ref', '--verify', '--quiet', `refs/heads/${branch}`], {
+function remoteBranchExists(branch) {
+  const result = spawnSync('git', ['ls-remote', '--exit-code', '--heads', 'origin', branch], {
     shell: process.platform === 'win32',
   })
   return result.status === 0
+}
+
+function remoteBranchSha(branch) {
+  const output = run('git', ['ls-remote', 'origin', `refs/heads/${branch}`])
+  return output.trim().split(/\s+/)[0] || ''
+}
+
+function fetchRemoteDeployBranch(branch) {
+  run('git', ['fetch', 'origin', `${branch}:refs/remotes/origin/${branch}`])
 }
 
 function removeContentsExceptGit(dir) {
@@ -73,17 +83,21 @@ function copyDirContents(source, target) {
   }
 }
 
-function writeDeployEvidence({ pushed }) {
+function writeDeployEvidence({ pushed, remoteDeployBranchExists, remoteBaseSha, localDeploySha }) {
   const deployEvidence = {
     ok: pushed === true && dryRun !== true,
-    patchId: 'CMS-204AL',
+    patchId: 'CMS-204AM',
     status: pushed === true ? 'PASS_CMS_204AL_RELEASE_PAGES_PUSH_SEAL' : 'CMS_204AL_PUSH_SKIPPED',
     deployBranch: DEPLOY_BRANCH,
     pushed: pushed === true,
     dryRun,
     customDomain: CUSTOM_DOMAIN,
     pagesFolder: PAGES_FOLDER,
+    remoteDeployBranchExists: remoteDeployBranchExists === true,
+    remoteBaseSha: remoteBaseSha || null,
+    localDeploySha: localDeploySha || null,
     marker: CMS204AL_RELEASE_PAGES_PUSH_SEAL,
+    remoteRefRebaseMarker: CMS204AM_REMOTE_DEPLOY_REF_REBASE,
     generatedAt: new Date().toISOString(),
   }
   fs.writeFileSync(path.join(process.cwd(), DEPLOY_EVIDENCE_FILE), JSON.stringify(deployEvidence, null, 2))
@@ -108,6 +122,22 @@ function cleanupWorktree(worktreePath) {
   } catch {
     if (fs.existsSync(worktreePath)) fs.rmSync(worktreePath, { recursive: true, force: true })
   }
+}
+
+function prepareDeployWorktree(worktreeRoot) {
+  const remoteDeployBranchExists = remoteBranchExists(DEPLOY_BRANCH)
+  const remoteBaseSha = remoteDeployBranchExists ? remoteBranchSha(DEPLOY_BRANCH) : ''
+
+  if (remoteDeployBranchExists) {
+    console.log(`[release:pages] remote ${DEPLOY_BRANCH} base: ${remoteBaseSha}`)
+    fetchRemoteDeployBranch(DEPLOY_BRANCH)
+    run('git', ['worktree', 'add', '-B', DEPLOY_BRANCH, worktreeRoot, `origin/${DEPLOY_BRANCH}`])
+    return { remoteDeployBranchExists, remoteBaseSha }
+  }
+
+  console.log(`[release:pages] remote ${DEPLOY_BRANCH} not found; creating deploy branch from ${SOURCE_BRANCH}`)
+  run('git', ['worktree', 'add', '-B', DEPLOY_BRANCH, worktreeRoot, 'HEAD'])
+  return { remoteDeployBranchExists, remoteBaseSha }
 }
 
 try {
@@ -144,12 +174,7 @@ try {
 
   const worktreeRoot = path.join(os.tmpdir(), `varuntools-${DEPLOY_BRANCH}-${Date.now()}`)
   cleanupWorktree(worktreeRoot)
-
-  if (branchExists(DEPLOY_BRANCH)) {
-    run('git', ['worktree', 'add', worktreeRoot, DEPLOY_BRANCH])
-  } else {
-    run('git', ['worktree', 'add', '-B', DEPLOY_BRANCH, worktreeRoot, 'HEAD'])
-  }
+  const deployBase = prepareDeployWorktree(worktreeRoot)
 
   try {
     removeContentsExceptGit(worktreeRoot)
@@ -167,13 +192,21 @@ try {
       console.log(`[release:pages] committed ${DEPLOY_BRANCH} deployment`)
     }
 
+    const localDeploySha = run('git', ['-C', worktreeRoot, 'rev-parse', 'HEAD'])
+    console.log(`[release:pages] local ${DEPLOY_BRANCH} deploy sha: ${localDeploySha}`)
+
     if (shouldPush) {
       run('git', ['-C', worktreeRoot, 'push', 'origin', DEPLOY_BRANCH], { stdio: 'inherit' })
       console.log(`[release:pages] pushed origin ${DEPLOY_BRANCH}`)
     } else {
       console.log(`[release:pages] push skipped; run: git push origin ${DEPLOY_BRANCH}`)
     }
-    writeDeployEvidence({ pushed: shouldPush === true })
+    writeDeployEvidence({
+      pushed: shouldPush === true,
+      remoteDeployBranchExists: deployBase.remoteDeployBranchExists,
+      remoteBaseSha: deployBase.remoteBaseSha,
+      localDeploySha,
+    })
   } finally {
     cleanupWorktree(worktreeRoot)
   }
