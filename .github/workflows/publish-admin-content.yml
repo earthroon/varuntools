@@ -1,4 +1,4 @@
-name: VACMS Publish Admin Content
+﻿name: VACMS Publish Admin Content
 
 on:
   workflow_dispatch:
@@ -281,7 +281,9 @@ jobs:
 
           const CMS204AJ_YAML_ARRAY_PRESERVATION = 'cms-204aj-yaml-array-preservation@1'
           
-          const CMS204AK_OBJECT_SERIALIZATION_GUARD = 'cms-204ak-object-serialization-guard@1'const normalizeStringArray = (value) => {
+          const CMS204AK_OBJECT_SERIALIZATION_GUARD = 'cms-204ak-object-serialization-guard@1'
+
+          const normalizeStringArray = (value) => {
             if (Array.isArray(value)) {
               return value
                 .filter((item) => typeof item === 'string')
@@ -605,3 +607,4 @@ jobs:
             vacms-failure-finalized.txt
             vacms-failure-stage.txt
           if-no-files-found: ignore
+
