@@ -280,7 +280,8 @@ jobs:
             : { kind: 'sourceBody', value: String(revision.sourceBody || '') }
 
           const CMS204AJ_YAML_ARRAY_PRESERVATION = 'cms-204aj-yaml-array-preservation@1'
-          const normalizeStringArray = (value) => {
+          
+          const CMS204AK_OBJECT_SERIALIZATION_GUARD = 'cms-204ak-object-serialization-guard@1'const normalizeStringArray = (value) => {
             if (Array.isArray(value)) {
               return value
                 .filter((item) => typeof item === 'string')
@@ -300,7 +301,11 @@ jobs:
 
           frontmatter.tags = normalizeStringArray(frontmatter.tags)
 
-          const yamlScalar = (value) => JSON.stringify(String(value ?? ''))
+          const yamlScalar = (value) => {
+            if (value === null || value === undefined) return '""'
+            if (typeof value === 'object') return JSON.stringify(JSON.stringify(value))
+            return JSON.stringify(String(value))
+          }
           const yamlEntry = ([key, value]) => {
             if (Array.isArray(value)) {
               if (value.length === 0) return key + ': []'
