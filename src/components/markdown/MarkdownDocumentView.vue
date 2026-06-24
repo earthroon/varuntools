@@ -11,6 +11,7 @@ import { useMarkdownInternalLinks } from '@/composables/useMarkdownInternalLinks
 import { useMarkdownComponentMount } from '@/markdown/useMarkdownComponentMount'
 import { createPageMeta } from '@/metadata/pageMeta'
 import { getWorkDetailContext } from '@/markdown/pageRegistry'
+import { resolvePublicExposure } from '@/content/exposureTaxonomy'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 
 const props = withDefaults(
@@ -79,9 +80,20 @@ const pageMeta = computed(() => {
 
 usePageMeta(pageMeta)
 
-const workDetailContext = computed(() => {
-  if (!props.showRelatedFooter || !props.page) return null
+const shouldUseWorkDetailFooter = computed(() => {
+  if (!props.showRelatedFooter || !props.page) return false
+  const exposure = resolvePublicExposure(props.page)
+  return (
+    exposure.category === 'work' ||
+    exposure.category === 'case-study' ||
+    exposure.kind === 'work' ||
+    exposure.kind === 'case-study' ||
+    props.page.slug.startsWith('works/')
+  )
+})
 
+const workDetailContext = computed(() => {
+  if (!shouldUseWorkDetailFooter.value || !props.page) return null
   return getWorkDetailContext(props.pages, props.page.slug)
 })
 

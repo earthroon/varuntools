@@ -95,6 +95,8 @@ export type WorkDetailContext = {
 
 const INDEX_EXCLUDED_SLUGS = new Set(['works'])
 const INDEX_ALLOWED_KINDS = new Set(['work', 'tool', 'lab', 'doc', 'post', 'case-study', 'page'])
+const WORK_DETAIL_ALLOWED_KINDS = new Set(['work', 'case-study'])
+const WORK_DETAIL_ALLOWED_CATEGORIES = new Set(['works', 'work', 'case-study'])
 const HIDDEN_WORK_STATUSES = new Set(['draft', 'private'])
 
 function readRecord(value: unknown): Record<string, unknown> {
@@ -436,13 +438,26 @@ export function buildWorkFilterOptions(entries: WorkCardEntry[]): WorkFilterOpti
   }
 }
 
+
+function isWorkDetailEligible(entry: WorkCardEntry): boolean {
+  return (
+    isDetailEligible(entry) &&
+    (
+      WORK_DETAIL_ALLOWED_KINDS.has(entry.kind) ||
+      WORK_DETAIL_ALLOWED_KINDS.has(entry.type) ||
+      WORK_DETAIL_ALLOWED_CATEGORIES.has(entry.category) ||
+      entry.slug.startsWith('works/')
+    )
+  )
+}
+
 export function getVisibleWorkEntries(
   pages: LoadedMarkdownPage[],
 ): WorkCardEntry[] {
   return sortWorkEntries(
     pages
       .map(toWorkCardEntry)
-      .filter(isDetailEligible),
+      .filter(isWorkDetailEligible),
     'featured',
   )
 }

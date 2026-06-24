@@ -227,7 +227,8 @@
     "smoke:cms206a-no-orphan": "node scripts/cms206a-no-orphan-published-markdown-smoke.mjs",
     "smoke:cms206a-indexing": "node scripts/cms206a-search-sitemap-indexing-policy-smoke.mjs",
     "smoke:cms206a": "npm run smoke:cms206a-exposure-taxonomy && npm run smoke:cms206a-post-section && npm run smoke:cms206a-homepage-surface && npm run smoke:cms206a-no-orphan && npm run smoke:cms206a-indexing",
-    "smoke:cms206b": "node scripts/cms206b-taxonomy-ssot-sync-smoke.mjs && node scripts/cms206b-public-content-index-category-split-smoke.mjs && node scripts/cms206b-works-route-work-only-smoke.mjs && node scripts/cms206b-no-mixed-work-index-smoke.mjs && node scripts/cms206b-home-post-section-smoke.mjs"
+    "smoke:cms206b": "node scripts/cms206b-taxonomy-ssot-sync-smoke.mjs && node scripts/cms206b-public-content-index-category-split-smoke.mjs && node scripts/cms206b-works-route-work-only-smoke.mjs && node scripts/cms206b-no-mixed-work-index-smoke.mjs && node scripts/cms206b-home-post-section-smoke.mjs && npm run smoke:cms206b-r1",
+    "smoke:cms206b-r1": "node scripts/cms206b-r1-work-detail-footer-scope-smoke.mjs && node scripts/cms206b-r1-product-related-work-leak-smoke.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
