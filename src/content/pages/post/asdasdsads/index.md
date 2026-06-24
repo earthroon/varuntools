@@ -27,17 +27,22 @@ slug: "post/asdasdsads"
 source: "vacms"
 vacmsSlug: "asdasdsads"
 vacmsPageId: "page_4bea12ab6b5422fd5541a816"
-vacmsRevisionId: "rev_5285b21f8eb8ab1e80c87866"
+vacmsRevisionId: "rev_95249701e2a91b34d32665e9"
 ---
 
-
-
-*italic text*Write a short caption for this video.
-::`code`dfdfdfdfdf`code`*italic text*
 
 
 ::tip
 title: Tip
 ::
 ㄴㅇㄴㅇㄴㅇㄴㅇㅁㄹㅀㅀㄹ
+::
+
+::section-break
+
+
+::note
+title: Note
+::
+ㄴㅇㄴㅇㄴ
 ::
