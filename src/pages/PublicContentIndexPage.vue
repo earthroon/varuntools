@@ -39,8 +39,6 @@ const {
         </p>
       </header>
 
-      <ContentCollectionGrid :entries="filteredEntries" />
-
       <ContentSearchPanel
         v-model:query="query"
         v-model:selected-category="category"
@@ -55,6 +53,8 @@ const {
         :total-count="allEntries.length"
         @reset="resetFilters"
       />
+
+      <ContentCollectionGrid :entries="filteredEntries" />
     </div>
   </article>
 </template>

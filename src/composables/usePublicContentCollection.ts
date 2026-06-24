@@ -1,4 +1,4 @@
-﻿import { computed, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 import { resolveContentCategory, resolveContentKind, resolvePublicExposure } from '@/content/exposureTaxonomy'
@@ -248,4 +248,3 @@ export function usePublicContentCollection(
     resetFilters,
   }
 }
-

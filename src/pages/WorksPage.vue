@@ -1,9 +1,9 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed } from 'vue'
-import ContentSearchPanel from '@/components/content/ContentSearchPanel.vue'
-import ContentCollectionGrid from '@/components/content/ContentCollectionGrid.vue'
+import WorksCollectionGrid from '@/components/works/WorksCollectionGrid.vue'
+import WorksSearchPanel from '@/components/works/WorksSearchPanel.vue'
 import { useRouteManifest } from '@/composables/useRouteManifest'
-import { usePublicContentCollection } from '@/composables/usePublicContentCollection'
+import { useWorksCollection } from '@/composables/useWorksCollection'
 import { usePageMeta } from '@/composables/usePageMeta'
 import { createWorksPageMeta } from '@/metadata/staticPageMeta'
 
@@ -14,18 +14,22 @@ usePageMeta(pageMeta)
 
 const {
   query,
-  category,
+  kind,
+  role,
+  stack,
   tag,
   year,
   featuredOnly,
   sort,
   allEntries,
   filteredEntries,
-  categoryOptions,
+  typeOptions,
+  roleOptions,
+  stackOptions,
   tagOptions,
   yearOptions,
   resetFilters,
-} = usePublicContentCollection(pages, { scope: 'works' })
+} = useWorksCollection(pages)
 </script>
 
 <template>
@@ -39,14 +43,18 @@ const {
         </p>
       </header>
 
-      <ContentSearchPanel
+      <WorksSearchPanel
         v-model:query="query"
-        v-model:selected-category="category"
+        v-model:selected-type="kind"
+        v-model:selected-role="role"
+        v-model:selected-stack="stack"
         v-model:selected-tag="tag"
         v-model:selected-year="year"
         v-model:featured-only="featuredOnly"
         v-model:sort="sort"
-        :category-options="categoryOptions"
+        :type-options="typeOptions"
+        :role-options="roleOptions"
+        :stack-options="stackOptions"
         :tag-options="tagOptions"
         :year-options="yearOptions"
         :result-count="filteredEntries.length"
@@ -54,9 +62,7 @@ const {
         @reset="resetFilters"
       />
 
-      <ContentCollectionGrid :entries="filteredEntries" />
+      <WorksCollectionGrid :entries="filteredEntries" />
     </div>
   </article>
 </template>
-
-
