@@ -1,11 +1,4 @@
 User-agent: *
 Allow: /
 
-Disallow: /checkout/
-Disallow: /qa/
-Disallow: /works/editorial-showcase
-Disallow: /products/dummy-catalog
-Disallow: /products/spec-playground
-Disallow: /claim
-
 Sitemap: https://varun.tools/sitemap.xml

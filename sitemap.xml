@@ -2,55 +2,37 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://varun.tools</loc>
-    <lastmod>2026-05-06</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://varun.tools/docs/works</loc>
-    <lastmod>2026-05-08</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://varun.tools/inquiry</loc>
-    <lastmod>2026-05-06</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://varun.tools/lab/markdown-gallery</loc>
-    <lastmod>2026-05-08</lastmod>
+    <loc>https://varun.tools/lab-markdown-gallery</loc>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://varun.tools/products</loc>
-    <lastmod>2026-05-06</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://varun.tools/products/categories</loc>
-    <lastmod>2026-05-06</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://varun.tools/products/categories/templates</loc>
-    <lastmod>2026-05-06</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://varun.tools/products/dummy-catalog</loc>
-    <lastmod>2026-05-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://varun.tools/products/spec-playground</loc>
-    <lastmod>2026-05-07</lastmod>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -60,10 +42,16 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://varun.tools/tools/wiper</loc>
-    <lastmod>2026-05-08</lastmod>
+    <loc>https://varun.tools/wiper</loc>
+    <lastmod>2026-06-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://varun.tools/works</loc>
+    <lastmod>2026-06-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://varun.tools/works/tags/homepage</loc>
@@ -87,7 +75,7 @@
   </url>
   <url>
     <loc>https://varun.tools/works/varuntools-showroom</loc>
-    <lastmod>2026-05-08</lastmod>
+    <lastmod>2026-06-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
