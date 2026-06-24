@@ -4,9 +4,11 @@ import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import process from 'node:process'
 
-const PATCH_ID = 'CMS-204AS'
-const PASS_STATUS = 'PASS_CMS_204AS_LIVE_MATERIALIZED_SOURCE_COMMIT_BACK_MAIN_BRANCH_CONTENT_PERSISTENCE_SEAL'
+const PATCH_ID = 'CMS-207A'
+const PASS_STATUS = 'PASS_CMS_207A_VACMS_PUBLISH_INCREMENTAL_SOURCE_COMMIT_SEAL'
 const RECEIPT_FILE = 'vacms-source-commit-receipt.json'
+const HOME_MARKDOWN = 'src/content/pages/home/index.md'
+const ONE_SHOT_LIVE_REGISTRY = 'src/markdown/vacmsLivePages.generated.ts'
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -91,10 +93,80 @@ function exactGeneratedDiff(generatedPath) {
   return Boolean(status.trim())
 }
 
+function stagedFiles() {
+  return run('git', ['diff', '--cached', '--name-only'])
+    .split(/\r?\n/)
+    .map((item) => normalizeSlash(item.trim()))
+    .filter(Boolean)
+}
+
+function statusFiles(paths) {
+  const result = run('git', ['status', '--porcelain', '--', ...paths])
+  return result
+    .split(/\r?\n/)
+    .map((line) => normalizeSlash(line.slice(3).trim()))
+    .filter(Boolean)
+}
+
+function isDistPath(file) {
+  return file === 'dist' || file.startsWith('dist/')
+}
+
+function isReceiptOrRuntimeEvidence(file) {
+  return file === RECEIPT_FILE ||
+    file === 'vacms-materialization-receipt.json' ||
+    file === 'vacms-live-markdown-registry-source-rebind.json' ||
+    file === 'vacms-page-registry-receipt.json' ||
+    file === 'vacms-pages-deploy-evidence.json'
+}
+
+function forbiddenFilesForSourceCommit(files, generatedPath) {
+  const allowed = new Set([normalizeSlash(generatedPath)])
+  return files.filter((file) => {
+    const normalized = normalizeSlash(file)
+    if (!normalized) return false
+    if (allowed.has(normalized)) return false
+    return true
+  })
+}
+
+function computeForbiddenFlags(files) {
+  return {
+    homepageRewritten: files.includes(HOME_MARKDOWN),
+    distCommittedToMain: files.some(isDistPath),
+    registrySourceCommitted: files.includes(ONE_SHOT_LIVE_REGISTRY),
+    receiptCommittedToMain: files.some(isReceiptOrRuntimeEvidence),
+  }
+}
+
+function blockForbiddenFiles(files, generatedPath) {
+  const normalized = files.map(normalizeSlash).filter(Boolean)
+  const forbidden = forbiddenFilesForSourceCommit(normalized, generatedPath)
+  const flags = computeForbiddenFlags(normalized)
+
+  if (flags.homepageRewritten) {
+    fail('CMS_207A_HOME_MARKDOWN_REWRITE_BLOCKED', 'VACMS publish must not rewrite home markdown.', { files: normalized })
+  }
+  if (flags.distCommittedToMain) {
+    fail('CMS_207A_DIST_COMMIT_TO_MAIN_BLOCKED', 'VACMS publish must not commit dist/** to main.', { files: normalized })
+  }
+  if (flags.registrySourceCommitted) {
+    fail('CMS_207A_ONE_SHOT_REGISTRY_SOURCE_COMMIT_BLOCKED', 'VACMS publish must not commit one-shot live registry source.', { files: normalized })
+  }
+  if (flags.receiptCommittedToMain) {
+    fail('CMS_207A_RUNTIME_RECEIPT_COMMIT_BLOCKED', 'VACMS publish runtime receipts must remain workflow artifacts, not main source commits.', { files: normalized })
+  }
+  if (forbidden.length) {
+    fail('CMS_207A_FORBIDDEN_SOURCE_COMMIT_FILES', 'Forbidden files staged for VACMS source commit: ' + forbidden.join(', '), { forbidden })
+  }
+
+  return { forbidden, flags }
+}
+
 function commitMaterializedSource() {
   const materializationPath = 'vacms-materialization-receipt.json'
   if (!fs.existsSync(materializationPath)) {
-    fail('CMS_204AS_MATERIALIZATION_RECEIPT_MISSING', 'vacms-materialization-receipt.json is missing')
+    fail('CMS_207A_MATERIALIZATION_RECEIPT_MISSING', 'vacms-materialization-receipt.json is missing')
   }
 
   const materialization = readJson(materializationPath)
@@ -116,23 +188,39 @@ function commitMaterializedSource() {
     sourceCommitSha: null,
     sourcePushSucceeded: false,
     sourceCommitSkippedReason: null,
+    committedFiles: [],
+    forbiddenCommittedFiles: [],
+    homepageRewritten: false,
+    distCommittedToMain: false,
+    registrySourceCommitted: false,
+    receiptCommittedToMain: false,
+    publicListingInclusionExpected: true,
     blockedReasonCode: null,
     blockedReason: null,
     generatedAt: new Date().toISOString(),
   }
 
   try {
-    if (!generatedPath) fail('CMS_204AS_GENERATED_PATH_MISSING', 'generatedPath is missing')
-    if (!isSafeGeneratedPath(generatedPath)) fail('CMS_204AS_GENERATED_PATH_UNSAFE', 'generatedPath is unsafe or outside src/content/pages/**/index.md: ' + generatedPath)
-    if (!fs.existsSync(generatedPath)) fail('CMS_204AS_GENERATED_SOURCE_MISSING', 'generated source is missing: ' + generatedPath)
-    if (!generatedPath.endsWith('/index.md')) fail('CMS_204AS_GENERATED_SOURCE_NOT_MARKDOWN_INDEX', 'generated source is not an index.md file: ' + generatedPath)
+    if (!generatedPath) fail('CMS_207A_GENERATED_PATH_MISSING', 'generatedPath is missing')
+    if (!isSafeGeneratedPath(generatedPath)) fail('CMS_207A_GENERATED_PATH_UNSAFE', 'generatedPath is unsafe or outside src/content/pages/**/index.md: ' + generatedPath)
+    if (!fs.existsSync(generatedPath)) fail('CMS_207A_GENERATED_SOURCE_MISSING', 'generated source is missing: ' + generatedPath)
+    if (!generatedPath.endsWith('/index.md')) fail('CMS_207A_GENERATED_SOURCE_NOT_MARKDOWN_INDEX', 'generated source is not an index.md file: ' + generatedPath)
 
     const branch = currentBranch()
-    if (branch !== 'main') fail('CMS_204AS_NOT_ON_MAIN', 'current branch must be main; got ' + branch)
+    if (branch !== 'main') fail('CMS_207A_NOT_ON_MAIN', 'current branch must be main; got ' + branch)
 
     ensureGitAuthor()
     const beforeSha = headSha()
     receipt.sourceCommitSha = beforeSha
+
+    const preStagedFiles = stagedFiles()
+    const dirtyForbiddenFiles = statusFiles([HOME_MARKDOWN, 'dist', ONE_SHOT_LIVE_REGISTRY, RECEIPT_FILE, 'vacms-materialization-receipt.json', 'vacms-live-markdown-registry-source-rebind.json', 'vacms-page-registry-receipt.json', 'vacms-pages-deploy-evidence.json'])
+    const preflightFiles = [...new Set([...preStagedFiles, ...dirtyForbiddenFiles])]
+    const preflight = blockForbiddenFiles(preflightFiles, generatedPath)
+    receipt.homepageRewritten = preflight.flags.homepageRewritten
+    receipt.distCommittedToMain = preflight.flags.distCommittedToMain
+    receipt.registrySourceCommitted = preflight.flags.registrySourceCommitted
+    receipt.receiptCommittedToMain = preflight.flags.receiptCommittedToMain
 
     if (!exactGeneratedDiff(generatedPath)) {
       receipt.ok = true
@@ -140,28 +228,38 @@ function commitMaterializedSource() {
       receipt.sourceCommitted = false
       receipt.sourceCommitSkippedReason = 'no_diff'
       receipt.sourcePushSucceeded = true
+      receipt.forbiddenCommittedFiles = []
       receipt.blockedReasonCode = null
       receipt.blockedReason = null
       writeReceipt(receipt)
       console.log(PASS_STATUS)
       console.log('sourceCommitted=false')
       console.log('sourceCommitSha=' + beforeSha)
+      console.log('committedFiles=')
       return receipt
     }
 
     run('git', ['add', generatedPath])
-    const staged = run('git', ['diff', '--cached', '--name-only', '--', generatedPath])
-    if (!staged.trim()) fail('CMS_204AS_SOURCE_GIT_ADD_FAILED', 'generated source did not stage: ' + generatedPath)
+    const staged = stagedFiles()
+    if (!staged.includes(generatedPath)) fail('CMS_207A_SOURCE_GIT_ADD_FAILED', 'generated source did not stage: ' + generatedPath)
+
+    const stageGuard = blockForbiddenFiles(staged, generatedPath)
+    receipt.committedFiles = staged
+    receipt.forbiddenCommittedFiles = stageGuard.forbidden
+    receipt.homepageRewritten = stageGuard.flags.homepageRewritten
+    receipt.distCommittedToMain = stageGuard.flags.distCommittedToMain
+    receipt.registrySourceCommitted = stageGuard.flags.registrySourceCommitted
+    receipt.receiptCommittedToMain = stageGuard.flags.receiptCommittedToMain
 
     const safeSlugForMessage = materializedSlug || generatedPath.replace(/^src\/content\/pages\//, '').replace(/\/index\.md$/, '')
     run('git', ['commit', '-m', `publish: persist VACMS page ${safeSlugForMessage}`], { stdio: 'inherit' })
     const afterSha = headSha()
-    if (!afterSha || afterSha === beforeSha) fail('CMS_204AS_SOURCE_COMMIT_SHA_MISSING', 'source commit sha missing or unchanged')
+    if (!afterSha || afterSha === beforeSha) fail('CMS_207A_SOURCE_COMMIT_SHA_MISSING', 'source commit sha missing or unchanged')
 
     try {
       run('git', ['push', 'origin', 'main'], { stdio: 'inherit' })
     } catch (error) {
-      fail('CMS_204AS_SOURCE_PUSH_FAILED', error.message || String(error))
+      fail('CMS_207A_SOURCE_PUSH_FAILED', error.message || String(error))
     }
 
     receipt.ok = true
@@ -170,16 +268,18 @@ function commitMaterializedSource() {
     receipt.sourceCommitSha = afterSha
     receipt.sourcePushSucceeded = true
     receipt.sourceCommitSkippedReason = null
+    receipt.forbiddenCommittedFiles = []
     receipt.blockedReasonCode = null
     receipt.blockedReason = null
     writeReceipt(receipt)
     console.log(PASS_STATUS)
     console.log('sourceCommitted=true')
     console.log('sourceCommitSha=' + afterSha)
+    console.log('committedFiles=' + receipt.committedFiles.join(','))
     return receipt
   } catch (error) {
     receipt.ok = false
-    receipt.blockedReasonCode = error.code || 'CMS_204AS_UNKNOWN_FAILURE'
+    receipt.blockedReasonCode = error.code || 'CMS_207A_UNKNOWN_FAILURE'
     receipt.blockedReason = error.message || String(error)
     if (error.extra) receipt.extra = error.extra
     writeReceipt(receipt)
