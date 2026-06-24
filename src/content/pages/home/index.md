@@ -70,3 +70,11 @@ limit: 4
 layout: compact-list
 emptyMode: hide
 ::
+
+::home-section
+title: 최근 글
+source: post
+limit: 6
+layout: compact-list
+emptyMode: hide
+::
