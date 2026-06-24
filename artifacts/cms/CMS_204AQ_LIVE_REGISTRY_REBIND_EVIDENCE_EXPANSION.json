@@ -1,0 +1,55 @@
+{
+  "patch_id": "CMS-204AQ",
+  "status": "PASS_CMS_204AQ_LIVE_REGISTRY_REBIND_EVIDENCE_EXPANSION_POST_BUILD_BUNDLE_CANDIDATE_AUDIT_SEAL",
+  "pass": true,
+  "blocked_reason_code": null,
+  "blocked_reason": null,
+  "checks": {
+    "workflow_exists": true,
+    "ap_builder_exists": true,
+    "ap_builder_writes_rebind_receipt": true,
+    "ap_builder_receipt_includes_module_sha": true,
+    "ap_builder_receipt_includes_entry_count": true,
+    "ap_builder_receipt_includes_raw_sha": true,
+    "ao_guard_exists": true,
+    "ao_guard_audits_all_dist_js": true,
+    "ao_guard_classifies_registry_candidates": true,
+    "ao_guard_classifies_search_only_candidates": true,
+    "ao_guard_records_unknown_runtime_hits": true,
+    "ao_guard_requires_registry_ownership_for_unknown_hit": true,
+    "ao_guard_rejects_search_or_sitemap_only": true,
+    "ao_guard_writes_bundle_audit_receipt": true,
+    "artifact_includes_ap_rebind_receipt": true,
+    "artifact_includes_page_registry_receipt": true,
+    "artifact_includes_deploy_evidence": true,
+    "cms204al_finalize_gate_preserved": true,
+    "cms204am_rebase_gate_preserved": true,
+    "cms204an_slug_alignment_preserved": true,
+    "cms204ap_registry_rebind_preserved": true,
+    "no_force_push": true,
+    "no_dist_manual_patch": true,
+    "no_vacms_worker_mutation": true,
+    "no_secret_literal_detected": true,
+    "fixture_registry_candidate_hit_passes": true,
+    "fixture_search_only_hit_fails": true,
+    "fixture_unknown_runtime_without_owner_fails": true,
+    "fixture_unknown_runtime_with_owner_passes": true,
+    "fixture_ap_builder_positive_passes": true
+  },
+  "bundle_audit_policy": {
+    "allDistJsAudited": true,
+    "searchIndexIsNotSufficient": true,
+    "sitemapIsNotSufficient": true,
+    "unknownRuntimeHitRequiresRegistryOwnershipToken": true,
+    "deployBlockedBeforePushIfRegistryMissing": true,
+    "example": {
+      "materializedSlug": "page/sdsdsd",
+      "registryCandidates": [
+        "dist/assets/useRouteManifest-*.js",
+        "dist/assets/pageLookup-*.js",
+        "dist/assets/MarkdownPage-*.js",
+        "dist/assets/index-*.js"
+      ]
+    }
+  }
+}
