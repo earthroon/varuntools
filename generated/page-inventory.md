@@ -1,11 +1,11 @@
 # Content Page Inventory
 
-Generated at: 2026-06-24T14:06:21.685Z
+Generated at: 2026-06-24T14:18:16.907Z
 
 ## Summary
 
-- Total pages: 22
-- Public: 12
+- Total pages: 23
+- Public: 13
 - Hidden: 10
 - Private: 0
 - Draft: 0
@@ -20,6 +20,7 @@ Generated at: 2026-06-24T14:06:21.685Z
 {
   "lab": 2,
   "page": 15,
+  "post": 1,
   "products": 2,
   "tools": 1,
   "works": 2
@@ -36,6 +37,7 @@ Generated at: 2026-06-24T14:06:21.685Z
 | page | page | / | src/content/pages/home/index.md | page | page | active | public | false | route, collection:page, search, sitemap | - |
 | page | page | /inquiry | src/content/pages/inquiry/index.md | inquiry | page | active | public | false | route, collection:page, search, sitemap | - |
 | lab | lab | /lab-markdown-gallery | src/content/pages/lab-markdown-gallery/index.md | lab | lab | active | public | true | route, collection:lab, search, sitemap | - |
+| post | post | /post/asdasdsads | src/content/pages/post/asdasdsads/index.md | post | post | active | public | false | route, collection:post, search, sitemap | - |
 | page | page | /products/categories | src/content/pages/products/categories/index.md | product | page | active | public | false | route, collection:page, search, sitemap | - |
 | page | page | /products/categories/templates | src/content/pages/products/categories/templates/index.md | product | page | active | public | false | route, collection:page, search, sitemap | - |
 | page | page | /products | src/content/pages/products/index.md | product | page | active | public | false | route, collection:page, search, sitemap | - |

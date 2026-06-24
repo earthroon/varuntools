@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T14:06:21.685Z",
+  "generatedAt": "2026-06-24T14:18:16.907Z",
   "pages": [
     {
       "source": "src/content/pages/checkout/fail/index.md",
@@ -508,6 +508,46 @@
       ]
     },
     {
+      "source": "src/content/pages/post/asdasdsads/index.md",
+      "routePath": "/post/asdasdsads",
+      "slug": "post/asdasdsads",
+      "title": "asdasdsads",
+      "category": "post",
+      "kind": "post",
+      "status": "active",
+      "visibility": "public",
+      "featured": false,
+      "robots": null,
+      "noindex": false,
+      "section": "post",
+      "collection": "post",
+      "exposure": {
+        "route": true,
+        "home": false,
+        "collection": "post",
+        "search": true,
+        "sitemap": true,
+        "nav": false,
+        "featured": false,
+        "routeOnly": false,
+        "blockedReasons": []
+      },
+      "resolvedSurfaces": [
+        "route",
+        "collection:post",
+        "search",
+        "sitemap"
+      ],
+      "routeEligible": true,
+      "homeEligible": false,
+      "searchEligible": true,
+      "sitemapEligible": true,
+      "navEligible": false,
+      "tags": [
+        "fdshjfusjdk"
+      ]
+    },
+    {
       "source": "src/content/pages/products/categories/index.md",
       "routePath": "/products/categories",
       "slug": "products/categories",
@@ -945,8 +985,8 @@
     }
   ],
   "summary": {
-    "total": 22,
-    "public": 12,
+    "total": 23,
+    "public": 13,
     "hidden": 10,
     "private": 0,
     "draft": 0,
@@ -957,6 +997,7 @@
     "sections": {
       "lab": 2,
       "page": 15,
+      "post": 1,
       "products": 2,
       "tools": 1,
       "works": 2

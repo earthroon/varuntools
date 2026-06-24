@@ -1,4 +1,4 @@
-import type { LoadedMarkdownPage } from '@/markdown/types'
+﻿import type { LoadedMarkdownPage } from '@/markdown/types'
 
 export type PublicVisibility = 'public' | 'hidden' | 'private' | 'draft'
 
@@ -36,6 +36,11 @@ export const PUBLIC_CATEGORY_KEYS = [
   'case-study',
   'post',
   'page',
+  'checkout',
+  'claim',
+  'inquiry',
+  'policies',
+  'qa',
 ] as const
 
 export const PUBLIC_KIND_KEYS = [
@@ -265,3 +270,5 @@ export function findExposureIssues(page: LoadedMarkdownPage): PublicExposureIssu
 
   return issues
 }
+
+
