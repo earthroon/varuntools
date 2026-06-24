@@ -1,17 +1,28 @@
-export type PageTheme = 'default' | 'showroom'
+﻿export type PageTheme = 'default' | 'showroom'
 
 export type PageLayout = 'default' | 'wide' | 'tool'
 
-export type PageKind = 'page' | 'work' | 'tool' | 'lab' | 'doc' | 'product'
+export type PageKind = 'page' | 'work' | 'tool' | 'lab' | 'doc' | 'product' | 'post' | 'case-study' | 'catalog' | 'commission'
 
 export type PageStatus = 'draft' | 'active' | 'archived'
 
-export type PageVisibility = 'public' | 'hidden'
+export type PageVisibility = 'public' | 'hidden' | 'private' | 'draft'
 
 export type RobotsDirective =
   | 'index,follow'
   | 'noindex,nofollow'
   | 'noindex,follow'
+
+export type PublicExposureFrontmatter = {
+  route?: boolean
+  home?: boolean
+  collection?: string
+  search?: boolean
+  sitemap?: boolean
+  nav?: boolean
+  featured?: boolean
+  routeOnly?: boolean
+}
 
 export type ProductCheckoutProvider =
   | 'toss-payments'
@@ -138,6 +149,7 @@ export type MarkdownFrontmatter = {
   order?: number
   tags?: string[]
 
+  category?: string
   kind?: PageKind
   status?: PageStatus
   summary?: string
@@ -159,6 +171,7 @@ export type MarkdownFrontmatter = {
   series?: string
   related?: string[]
   visibility?: PageVisibility
+  exposure?: PublicExposureFrontmatter
 
   seoTitle?: string
   seoDescription?: string
@@ -175,3 +188,4 @@ export type MarkdownFrontmatter = {
   }
   work?: PortfolioWorkFrontmatter
 }
+
