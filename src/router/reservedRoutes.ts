@@ -1,4 +1,4 @@
-export type ReservedRouteName = 'home' | 'works' | 'works-tags' | 'search' | 'not-found'
+export type ReservedRouteName = 'home' | 'index' | 'works' | 'works-tags' | 'search' | 'not-found'
 
 export type ReservedRoute = {
   name: ReservedRouteName
@@ -11,6 +11,11 @@ export const RESERVED_ROUTES: ReservedRoute[] = [
     name: 'home',
     path: '',
     reason: 'site-home',
+  },
+  {
+    name: 'index',
+    path: 'index',
+    reason: 'public-content-index-page',
   },
   {
     name: 'works',

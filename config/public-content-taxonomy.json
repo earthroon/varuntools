@@ -1,0 +1,88 @@
+{
+  "publicCategories": [
+    "page",
+    "post",
+    "work",
+    "case-study",
+    "lab",
+    "tool",
+    "product",
+    "doc",
+    "catalog",
+    "commission",
+    "checkout",
+    "claim",
+    "inquiry",
+    "policies",
+    "qa"
+  ],
+  "publicKinds": [
+    "page",
+    "post",
+    "work",
+    "case-study",
+    "lab",
+    "tool",
+    "product",
+    "doc",
+    "catalog",
+    "commission"
+  ],
+  "publicIndexCategories": [
+    "page",
+    "post",
+    "work",
+    "case-study",
+    "lab",
+    "tool",
+    "product",
+    "doc",
+    "catalog",
+    "commission"
+  ],
+  "utilityRouteCategories": [
+    "checkout",
+    "claim",
+    "inquiry",
+    "policies",
+    "qa"
+  ],
+  "workRouteCategories": [
+    "work",
+    "case-study"
+  ],
+  "collections": {
+    "page": "page",
+    "post": "post",
+    "work": "works",
+    "case-study": "works",
+    "lab": "lab",
+    "tool": "tools",
+    "product": "products",
+    "doc": "docs",
+    "catalog": "products",
+    "commission": "works",
+    "checkout": "none",
+    "claim": "none",
+    "inquiry": "none",
+    "policies": "none",
+    "qa": "none"
+  },
+  "labels": {
+    "page": "페이지",
+    "post": "글",
+    "work": "작업",
+    "case-study": "사례",
+    "lab": "실험실",
+    "tool": "도구",
+    "product": "상품",
+    "doc": "문서",
+    "catalog": "카탈로그",
+    "commission": "커미션",
+    "checkout": "결제",
+    "claim": "수령",
+    "inquiry": "문의",
+    "policies": "정책",
+    "qa": "QA"
+  }
+}

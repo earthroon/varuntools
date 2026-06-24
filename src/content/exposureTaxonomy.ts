@@ -1,4 +1,13 @@
-﻿import type { LoadedMarkdownPage } from '@/markdown/types'
+import type { LoadedMarkdownPage } from '@/markdown/types'
+import {
+  DEFAULT_EXPOSURE_BY_KIND,
+  PUBLIC_CATEGORY_KEYS,
+  PUBLIC_KIND_KEYS,
+  collectionForCategory,
+  isKnownPublicCategory,
+  isKnownPublicKind,
+  normalizePublicCategory,
+} from './publicContentTaxonomy'
 
 export type PublicVisibility = 'public' | 'hidden' | 'private' | 'draft'
 
@@ -28,49 +37,7 @@ export type PublicExposureIssue = {
   message: string
 }
 
-export const PUBLIC_CATEGORY_KEYS = [
-  'work',
-  'tool',
-  'lab',
-  'product',
-  'case-study',
-  'post',
-  'page',
-  'checkout',
-  'claim',
-  'inquiry',
-  'policies',
-  'qa',
-] as const
-
-export const PUBLIC_KIND_KEYS = [
-  'work',
-  'tool',
-  'lab',
-  'product',
-  'case-study',
-  'post',
-  'page',
-  'doc',
-  'catalog',
-  'commission',
-] as const
-
-const KNOWN_CATEGORIES = new Set<string>(PUBLIC_CATEGORY_KEYS)
-const KNOWN_KINDS = new Set<string>(PUBLIC_KIND_KEYS)
-
-const DEFAULT_EXPOSURE_BY_KIND: Record<string, PublicExposure> = {
-  work: { route: true, home: false, collection: 'works', search: true, sitemap: true, nav: false, featured: false, routeOnly: false },
-  tool: { route: true, home: false, collection: 'tools', search: true, sitemap: true, nav: false, featured: false, routeOnly: false },
-  lab: { route: true, home: false, collection: 'lab', search: true, sitemap: true, nav: false, featured: false, routeOnly: false },
-  product: { route: true, home: false, collection: 'products', search: true, sitemap: true, nav: false, featured: false, routeOnly: false },
-  'case-study': { route: true, home: false, collection: 'works', search: true, sitemap: true, nav: false, featured: false, routeOnly: false },
-  post: { route: true, home: false, collection: 'post', search: true, sitemap: true, nav: false, featured: false, routeOnly: false },
-  page: { route: true, home: false, collection: 'page', search: true, sitemap: true, nav: false, featured: false, routeOnly: false },
-  doc: { route: true, home: false, collection: 'docs', search: true, sitemap: true, nav: false, featured: false, routeOnly: false },
-  catalog: { route: true, home: false, collection: 'products', search: true, sitemap: true, nav: false, featured: false, routeOnly: false },
-  commission: { route: true, home: false, collection: 'works', search: true, sitemap: true, nav: false, featured: false, routeOnly: false },
-}
+export { PUBLIC_CATEGORY_KEYS, PUBLIC_KIND_KEYS }
 
 function readRecord(value: unknown): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value)
@@ -109,27 +76,24 @@ function categoryFromSlug(page: LoadedMarkdownPage): string {
   if (first === 'lab' || first === 'lab-markdown-gallery') return 'lab'
   if (first === 'post') return 'post'
   if (first === 'case-study' || first === 'case-studies') return 'case-study'
+  if (first === 'checkout') return 'checkout'
+  if (first === 'claim') return 'claim'
+  if (first === 'inquiry') return 'inquiry'
+  if (first === 'policies') return 'policies'
+  if (first === 'qa') return 'qa'
   return first === 'home' ? 'page' : first
 }
 
-function normalizeCategory(value: string): string {
-  const normalized = normalizeSlug(value || '')
-  if (!normalized) return 'page'
-  return KNOWN_CATEGORIES.has(normalized) ? normalized : normalized
-}
-
 function normalizeKind(value: string): string {
-  const normalized = normalizeSlug(value || '')
+  const normalized = normalizePublicCategory(value || '')
   if (!normalized) return 'page'
-  if (normalized === 'works') return 'work'
-  if (normalized === 'products') return 'product'
-  if (normalized === 'tools') return 'tool'
-  return KNOWN_KINDS.has(normalized) ? normalized : normalized
+  if (normalized === 'checkout' || normalized === 'claim' || normalized === 'inquiry' || normalized === 'policies' || normalized === 'qa') return 'page'
+  return normalized
 }
 
 export function resolveContentCategory(page: LoadedMarkdownPage): string {
   const fm = page.frontmatter as Record<string, unknown>
-  return normalizeCategory(
+  return normalizePublicCategory(
     readString(fm.category) ||
     readString(fm.section) ||
     categoryFromSlug(page),
@@ -155,13 +119,13 @@ export function resolveVisibility(page: LoadedMarkdownPage): PublicVisibility {
   return 'public'
 }
 
-function mergeExposure(kind: string, rawExposure: Record<string, unknown>): PublicExposure {
-  const base = DEFAULT_EXPOSURE_BY_KIND[kind] || DEFAULT_EXPOSURE_BY_KIND.page
+function mergeExposure(category: string, kind: string, rawExposure: Record<string, unknown>): PublicExposure {
+  const base = DEFAULT_EXPOSURE_BY_KIND[category] || DEFAULT_EXPOSURE_BY_KIND[kind] || DEFAULT_EXPOSURE_BY_KIND.page
   const rawCollection = readString(rawExposure.collection)
   return {
     route: readBoolean(rawExposure.route, base.route),
     home: readBoolean(rawExposure.home, base.home),
-    collection: rawCollection || base.collection,
+    collection: rawCollection || base.collection || collectionForCategory(category),
     search: readBoolean(rawExposure.search, base.search),
     sitemap: readBoolean(rawExposure.sitemap, base.sitemap),
     nav: readBoolean(rawExposure.nav, base.nav),
@@ -173,7 +137,7 @@ function mergeExposure(kind: string, rawExposure: Record<string, unknown>): Publ
 function surfacesOf(exposure: PublicExposure): string[] {
   const surfaces: string[] = []
   if (exposure.route) surfaces.push('route')
-  if (exposure.collection && exposure.collection !== 'none') surfaces.push(`collection:${exposure.collection}`)
+  if (exposure.collection && exposure.collection !== 'none') surfaces.push('collection:' + exposure.collection)
   if (exposure.home) surfaces.push('home')
   if (exposure.search) surfaces.push('search')
   if (exposure.sitemap) surfaces.push('sitemap')
@@ -190,7 +154,7 @@ export function resolvePublicExposure(page: LoadedMarkdownPage): ResolvedPublicE
   const visibility = resolveVisibility(page)
   const status = readString(fm.status) || 'active'
   const rawExposure = readRecord(fm.exposure)
-  const merged = mergeExposure(kind, rawExposure)
+  const merged = mergeExposure(category, kind, rawExposure)
   const blockedReasons: string[] = []
 
   if (visibility !== 'public') {
@@ -200,7 +164,7 @@ export function resolvePublicExposure(page: LoadedMarkdownPage): ResolvedPublicE
     merged.sitemap = false
     merged.nav = false
     merged.featured = false
-    blockedReasons.push(`visibility:${visibility}`)
+    blockedReasons.push('visibility:' + visibility)
   }
 
   if (status === 'archived' || status === 'trashed') {
@@ -210,7 +174,7 @@ export function resolvePublicExposure(page: LoadedMarkdownPage): ResolvedPublicE
     merged.sitemap = false
     merged.nav = false
     merged.featured = false
-    blockedReasons.push(`status:${status}`)
+    blockedReasons.push('status:' + status)
   }
 
   return {
@@ -252,23 +216,17 @@ export function findExposureIssues(page: LoadedMarkdownPage): PublicExposureIssu
   const issues: PublicExposureIssue[] = []
   const discoverySurfaces = exposure.resolvedSurfaces.filter((surface) => surface !== 'route' && surface !== 'routeOnly')
 
-  if (exposure.visibility === 'public' && !KNOWN_CATEGORIES.has(exposure.category)) {
-    issues.push({ severity: 'error', code: 'PUBLIC_CATEGORY_UNKNOWN', message: `Unknown public category: ${exposure.category}` })
+  if (exposure.visibility === 'public' && !isKnownPublicCategory(exposure.category)) {
+    issues.push({ severity: 'error', code: 'PUBLIC_CATEGORY_UNKNOWN', message: 'Unknown public category: ' + exposure.category })
   }
 
-  if (exposure.visibility === 'public' && !KNOWN_KINDS.has(exposure.kind)) {
-    issues.push({ severity: 'error', code: 'PUBLIC_KIND_UNKNOWN', message: `Unknown public kind: ${exposure.kind}` })
+  if (exposure.visibility === 'public' && !isKnownPublicKind(exposure.kind)) {
+    issues.push({ severity: 'error', code: 'PUBLIC_KIND_UNKNOWN', message: 'Unknown public kind: ' + exposure.kind })
   }
 
   if (exposure.visibility === 'public' && exposure.route && discoverySurfaces.length === 0 && !exposure.routeOnly) {
     issues.push({ severity: 'error', code: 'ORPHAN_PUBLISHED_MARKDOWN', message: 'Public route has no collection/search/sitemap/nav/home/featured discovery surface.' })
   }
 
-  if (exposure.home && (!exposure.collection || exposure.collection === 'none')) {
-    issues.push({ severity: 'error', code: 'HOMEPAGE_EXPOSURE_REQUEST_UNRESOLVED', message: 'Homepage exposure requires a concrete collection key.' })
-  }
-
   return issues
 }
-
-

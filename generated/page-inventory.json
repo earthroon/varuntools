@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T14:23:14.298Z",
+  "generatedAt": "2026-06-24T14:46:33.143Z",
   "pages": [
     {
       "source": "src/content/pages/checkout/fail/index.md",
@@ -38,6 +38,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": true,
       "tags": []
     },
     {
@@ -77,6 +80,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": true,
       "tags": []
     },
     {
@@ -117,6 +123,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": true,
       "tags": [
         "claim",
         "delivery",
@@ -161,6 +170,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": true,
+      "worksEligible": false,
+      "utilityRoute": false,
       "tags": [
         "home",
         "portfolio",
@@ -205,6 +217,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": true,
       "tags": [
         "inquiry",
         "contact"
@@ -248,6 +263,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": true,
+      "worksEligible": false,
+      "utilityRoute": false,
       "tags": [
         "lab",
         "qa",
@@ -292,6 +310,9 @@
       "searchEligible": false,
       "sitemapEligible": false,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": true,
       "tags": [
         "policy",
         "digital-download"
@@ -334,6 +355,9 @@
       "searchEligible": false,
       "sitemapEligible": false,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": true,
       "tags": [
         "policy",
         "store"
@@ -376,6 +400,9 @@
       "searchEligible": false,
       "sitemapEligible": false,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": true,
       "tags": [
         "policy",
         "privacy"
@@ -418,6 +445,9 @@
       "searchEligible": false,
       "sitemapEligible": false,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": true,
       "tags": [
         "policy",
         "refund"
@@ -460,6 +490,9 @@
       "searchEligible": false,
       "sitemapEligible": false,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": true,
       "tags": [
         "policy",
         "shipping"
@@ -502,6 +535,9 @@
       "searchEligible": false,
       "sitemapEligible": false,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": true,
       "tags": [
         "policy",
         "store"
@@ -543,6 +579,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": true,
+      "worksEligible": false,
+      "utilityRoute": false,
       "tags": [
         "fdshjfusjdk"
       ]
@@ -561,12 +600,12 @@
       "order": 21,
       "robots": null,
       "noindex": false,
-      "section": "page",
-      "collection": "page",
+      "section": "products",
+      "collection": "products",
       "exposure": {
         "route": true,
         "home": false,
-        "collection": "page",
+        "collection": "products",
         "search": true,
         "sitemap": true,
         "nav": false,
@@ -576,7 +615,7 @@
       },
       "resolvedSurfaces": [
         "route",
-        "collection:page",
+        "collection:products",
         "search",
         "sitemap"
       ],
@@ -585,6 +624,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": true,
+      "worksEligible": false,
+      "utilityRoute": false,
       "tags": [
         "products",
         "store",
@@ -605,12 +647,12 @@
       "order": 22,
       "robots": null,
       "noindex": false,
-      "section": "page",
-      "collection": "page",
+      "section": "products",
+      "collection": "products",
       "exposure": {
         "route": true,
         "home": false,
-        "collection": "page",
+        "collection": "products",
         "search": true,
         "sitemap": true,
         "nav": false,
@@ -620,7 +662,7 @@
       },
       "resolvedSurfaces": [
         "route",
-        "collection:page",
+        "collection:products",
         "search",
         "sitemap"
       ],
@@ -629,6 +671,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": true,
+      "worksEligible": false,
+      "utilityRoute": false,
       "tags": [
         "products",
         "store",
@@ -673,6 +718,9 @@
       "searchEligible": false,
       "sitemapEligible": false,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": false,
       "tags": [
         "product",
         "dummy",
@@ -694,12 +742,12 @@
       "order": 20,
       "robots": null,
       "noindex": false,
-      "section": "page",
-      "collection": "page",
+      "section": "products",
+      "collection": "products",
       "exposure": {
         "route": true,
         "home": false,
-        "collection": "page",
+        "collection": "products",
         "search": true,
         "sitemap": true,
         "nav": false,
@@ -709,7 +757,7 @@
       },
       "resolvedSurfaces": [
         "route",
-        "collection:page",
+        "collection:products",
         "search",
         "sitemap"
       ],
@@ -718,6 +766,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": true,
+      "worksEligible": false,
+      "utilityRoute": false,
       "tags": [
         "products",
         "store"
@@ -760,6 +811,9 @@
       "searchEligible": false,
       "sitemapEligible": false,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": false,
       "tags": [
         "demo",
         "scaffold",
@@ -804,6 +858,9 @@
       "searchEligible": false,
       "sitemapEligible": false,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": true,
       "tags": [
         "qa",
         "ewa",
@@ -849,6 +906,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": true,
+      "worksEligible": false,
+      "utilityRoute": false,
       "tags": [
         "tool",
         "image",
@@ -892,6 +952,9 @@
       "searchEligible": false,
       "sitemapEligible": false,
       "navEligible": false,
+      "indexEligible": false,
+      "worksEligible": false,
+      "utilityRoute": false,
       "tags": [
         "portfolio",
         "editorial",
@@ -912,12 +975,12 @@
       "order": 2,
       "robots": null,
       "noindex": false,
-      "section": "page",
-      "collection": "page",
+      "section": "works",
+      "collection": "works",
       "exposure": {
         "route": true,
         "home": false,
-        "collection": "page",
+        "collection": "works",
         "search": true,
         "sitemap": true,
         "nav": false,
@@ -927,7 +990,7 @@
       },
       "resolvedSurfaces": [
         "route",
-        "collection:page",
+        "collection:works",
         "search",
         "sitemap"
       ],
@@ -936,6 +999,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": true,
+      "worksEligible": true,
+      "utilityRoute": false,
       "tags": []
     },
     {
@@ -976,6 +1042,9 @@
       "searchEligible": true,
       "sitemapEligible": true,
       "navEligible": false,
+      "indexEligible": true,
+      "worksEligible": true,
+      "utilityRoute": false,
       "tags": [
         "work",
         "homepage",
@@ -996,11 +1065,11 @@
     "errors": 0,
     "sections": {
       "lab": 2,
-      "page": 15,
+      "page": 11,
       "post": 1,
-      "products": 2,
+      "products": 5,
       "tools": 1,
-      "works": 2
+      "works": 3
     }
   },
   "warnings": [],

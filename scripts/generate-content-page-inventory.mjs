@@ -8,10 +8,15 @@ const pagesRoot = path.join(root, 'src/content/pages')
 const generatedDir = path.join(root, 'generated')
 const jsonPath = path.join(generatedDir, 'page-inventory.json')
 const mdPath = path.join(generatedDir, 'page-inventory.md')
+const taxonomyPath = path.join(root, 'config/public-content-taxonomy.json')
+const taxonomy = JSON.parse(fs.readFileSync(taxonomyPath, 'utf8'))
 
 const VALID_VISIBILITY = new Set(['public', 'hidden', 'private', 'draft'])
-const VALID_CATEGORY = new Set(['work', 'tool', 'lab', 'product', 'case-study', 'post', 'page', 'checkout', 'claim', 'inquiry', 'policies', 'qa'])
-const VALID_KIND = new Set(['work', 'tool', 'lab', 'product', 'case-study', 'post', 'page', 'doc', 'catalog', 'commission'])
+const VALID_CATEGORY = new Set(taxonomy.publicCategories)
+const VALID_KIND = new Set(taxonomy.publicKinds)
+const PUBLIC_INDEX_CATEGORY = new Set(taxonomy.publicIndexCategories)
+const WORK_ROUTE_CATEGORY = new Set(taxonomy.workRouteCategories)
+const UTILITY_ROUTE_CATEGORY = new Set(taxonomy.utilityRouteCategories)
 
 const DEFAULT_EXPOSURE_BY_KIND = {
   work: { route: true, home: false, collection: 'works', search: true, sitemap: true, nav: false, featured: false, routeOnly: false },
@@ -107,6 +112,15 @@ function normalizedPath(value) {
   return clean === 'home' ? '' : clean
 }
 
+function normalizeCategoryToken(value) {
+  const normalized = normalizedPath(String(value || '')) || 'page'
+  if (normalized === 'works') return 'work'
+  if (normalized === 'products') return 'product'
+  if (normalized === 'tools') return 'tool'
+  if (normalized === 'case-studies') return 'case-study'
+  return normalized
+}
+
 function readRecord(value) {
   return value && typeof value === 'object' && !Array.isArray(value) ? value : {}
 }
@@ -126,8 +140,8 @@ function slugPrefix(routePath) {
 }
 
 function categoryFromPath(routePath, data) {
-  const category = String(data.category || '').trim()
-  if (category) return category
+  const category = normalizeCategoryToken(data.category)
+  if (data.category) return category
   const first = slugPrefix(routePath)
   if (first === 'works') return 'work'
   if (first === 'products') return 'product'
@@ -139,7 +153,9 @@ function categoryFromPath(routePath, data) {
 }
 
 function kindFor(routePath, data) {
-  return String(data.kind || data.type || categoryFromPath(routePath, data) || 'page').trim()
+  const kind = normalizeCategoryToken(data.kind || data.type || categoryFromPath(routePath, data) || 'page')
+  if (UTILITY_ROUTE_CATEGORY.has(kind)) return 'page'
+  return kind
 }
 
 function visibilityFor(data) {
@@ -164,7 +180,8 @@ function resolveExposure(routePath, data) {
   const visibility = visibilityFor(data)
   const status = statusFor(data)
   const raw = readRecord(data.exposure)
-  const base = DEFAULT_EXPOSURE_BY_KIND[kind] || DEFAULT_EXPOSURE_BY_KIND.page
+  const category = categoryFromPath(routePath, data)
+  const base = DEFAULT_EXPOSURE_BY_KIND[category] || DEFAULT_EXPOSURE_BY_KIND[kind] || DEFAULT_EXPOSURE_BY_KIND.page
   const exposure = {
     route: bool(raw.route, base.route),
     home: bool(raw.home, base.home),
@@ -270,6 +287,9 @@ function itemFor(file) {
     searchEligible: exposure.search,
     sitemapEligible: exposure.sitemap,
     navEligible: exposure.nav,
+    indexEligible: visibility === 'public' && exposure.route && PUBLIC_INDEX_CATEGORY.has(category),
+    worksEligible: visibility === 'public' && exposure.route && WORK_ROUTE_CATEGORY.has(category),
+    utilityRoute: UTILITY_ROUTE_CATEGORY.has(category),
     tags: Array.isArray(data.tags) ? data.tags : [],
   }
 }
@@ -289,6 +309,9 @@ function auditItem(item, sourceText) {
     if (!discovery.length && item.exposure.routeOnly !== true) issues.push(issue('error', 'ORPHAN_PUBLISHED_MARKDOWN', item.source, 'Public route has no discovery surface and is not routeOnly.'))
   }
   if (item.homeEligible && (!item.collection || item.collection === 'none')) issues.push(issue('error', 'HOMEPAGE_EXPOSURE_REQUEST_UNRESOLVED', item.source, 'Homepage exposure requires a concrete collection.'))
+  if (item.visibility === 'public' && item.collection === 'works' && !WORK_ROUTE_CATEGORY.has(item.category)) issues.push(issue('error', 'WORKS_ROUTE_CATEGORY_LEAK', item.source, 'Works route must only expose work/case-study entries.'))
+  if (item.visibility === 'public' && item.category === 'post' && item.collection === 'works') issues.push(issue('error', 'POST_LEAKED_INTO_WORKS', item.source, 'Post must not be exposed through works collection.'))
+  if (item.visibility === 'public' && item.category === 'page' && item.collection === 'works') issues.push(issue('error', 'PAGE_LEAKED_INTO_WORKS', item.source, 'Page must not be exposed through works collection.'))
   if (item.visibility === 'public' && /dummy/.test(sourceLower)) issues.push(issue('warning', 'PUBLIC_DUMMY_PAGE', item.source, 'Public page path contains dummy; confirm this is intentional.'))
   if (item.visibility === 'public' && /(spec-playground|playground)/.test(sourceLower)) issues.push(issue('warning', 'PUBLIC_PLAYGROUND_PAGE', item.source, 'Public page path contains playground/spec; confirm this is intentional.'))
   if (item.visibility === 'public' && item.section === 'qa') issues.push(issue('warning', 'QA_PAGE_PUBLIC', item.source, 'QA page is public; confirm this is intentional.'))

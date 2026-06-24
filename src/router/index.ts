@@ -15,6 +15,11 @@ export const router = createRouter({
       component: () => import('@/pages/WorksPage.vue'),
     },
     {
+      path: '/index',
+      name: 'content-index',
+      component: () => import('@/pages/PublicContentIndexPage.vue'),
+    },
+    {
       path: '/search',
       name: 'search',
       component: () => import('@/pages/SearchPage.vue'),

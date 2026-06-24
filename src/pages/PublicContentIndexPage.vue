@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import WorksSearchPanel from '@/components/works/WorksSearchPanel.vue'
-import WorksCollectionGrid from '@/components/works/WorksCollectionGrid.vue'
+import ContentCollectionGrid from '@/components/content/ContentCollectionGrid.vue'
+import ContentSearchPanel from '@/components/content/ContentSearchPanel.vue'
 import { useRouteManifest } from '@/composables/useRouteManifest'
 import { usePublicContentCollection } from '@/composables/usePublicContentCollection'
 import { usePageMeta } from '@/composables/usePageMeta'
-import { createWorksPageMeta } from '@/metadata/staticPageMeta'
+import { createPublicContentIndexPageMeta } from '@/metadata/staticPageMeta'
 
 const { pages } = useRouteManifest()
-const pageMeta = computed(() => createWorksPageMeta())
+const pageMeta = computed(() => createPublicContentIndexPageMeta())
 
 usePageMeta(pageMeta)
 
@@ -29,7 +29,7 @@ const {
   tagOptions,
   yearOptions,
   resetFilters,
-} = usePublicContentCollection(pages, { scope: 'works' })
+} = usePublicContentCollection(pages, { scope: 'index' })
 </script>
 
 <template>
@@ -37,15 +37,17 @@ const {
     <div class="vt-markdown vt-works-page">
       <header class="vt-works-hero">
         <p class="vt-works-hero__eyebrow">VARUNTOOLS 인덱스</p>
-        <h1>작업</h1>
-        <p>
-          작업과 사례를 분류, 역할, 스택, 태그 기준으로 탐색하는 작업 인덱스입니다.
-        </p>
+        <h1>인덱스</h1>
+        <p>페이지, 글, 작업, 실험, 도구, 상품을 분류별로 탐색하는 공개 콘텐츠 인덱스입니다.</p>
       </header>
 
-      <WorksCollectionGrid :entries="filteredEntries" />
+      <ContentCollectionGrid
+        :entries="filteredEntries"
+        empty-title="조건에 맞는 콘텐츠가 없습니다."
+        empty-body="분류나 검색 조건을 줄여 다시 확인해보세요."
+      />
 
-      <WorksSearchPanel
+      <ContentSearchPanel
         v-model:query="query"
         v-model:selected-type="kind"
         v-model:selected-role="role"
@@ -61,6 +63,7 @@ const {
         :year-options="yearOptions"
         :result-count="filteredEntries.length"
         :total-count="allEntries.length"
+        noun="콘텐츠"
         @reset="resetFilters"
       />
     </div>

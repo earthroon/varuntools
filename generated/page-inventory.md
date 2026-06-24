@@ -1,6 +1,6 @@
 # Content Page Inventory
 
-Generated at: 2026-06-24T14:23:14.298Z
+Generated at: 2026-06-24T14:46:33.143Z
 
 ## Summary
 
@@ -19,11 +19,11 @@ Generated at: 2026-06-24T14:23:14.298Z
 ```json
 {
   "lab": 2,
-  "page": 15,
+  "page": 11,
   "post": 1,
-  "products": 2,
+  "products": 5,
   "tools": 1,
-  "works": 2
+  "works": 3
 }
 ```
 
@@ -38,11 +38,11 @@ Generated at: 2026-06-24T14:23:14.298Z
 | page | page | /inquiry | src/content/pages/inquiry/index.md | inquiry | page | active | public | false | route, collection:page, search, sitemap | - |
 | lab | lab | /lab-markdown-gallery | src/content/pages/lab-markdown-gallery/index.md | lab | lab | active | public | true | route, collection:lab, search, sitemap | - |
 | post | post | /post/asdasdsads | src/content/pages/post/asdasdsads/index.md | post | post | active | public | false | route, collection:post, search, sitemap | - |
-| page | page | /products/categories | src/content/pages/products/categories/index.md | product | page | active | public | false | route, collection:page, search, sitemap | - |
-| page | page | /products/categories/templates | src/content/pages/products/categories/templates/index.md | product | page | active | public | false | route, collection:page, search, sitemap | - |
-| page | page | /products | src/content/pages/products/index.md | product | page | active | public | false | route, collection:page, search, sitemap | - |
+| products | products | /products/categories | src/content/pages/products/categories/index.md | product | page | active | public | false | route, collection:products, search, sitemap | - |
+| products | products | /products/categories/templates | src/content/pages/products/categories/templates/index.md | product | page | active | public | false | route, collection:products, search, sitemap | - |
+| products | products | /products | src/content/pages/products/index.md | product | page | active | public | false | route, collection:products, search, sitemap | - |
 | tools | tools | /wiper | src/content/pages/wiper/index.md | tool | tool | active | public | true | route, collection:tools, search, sitemap | - |
-| page | page | /works | src/content/pages/works/index.md | work | page | active | public | false | route, collection:page, search, sitemap | - |
+| works | works | /works | src/content/pages/works/index.md | work | page | active | public | false | route, collection:works, search, sitemap | - |
 | works | works | /works/varuntools-showroom | src/content/pages/works/varuntools-showroom/index.md | work | work | active | public | true | route, collection:works, search, sitemap | - |
 
 ## Hidden / Private / Draft Pages

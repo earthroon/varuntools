@@ -18,8 +18,17 @@ function toPageMeta(seo: ReturnType<typeof resolvePageSeo>): PageMeta {
 export function createWorksPageMeta(): PageMeta {
   return toPageMeta(resolvePageSeo({
     title: 'Works',
-    description: 'VARUNTOOLS의 작업, 도구, 실험, 문서를 탐색하는 인덱스입니다.',
+    description: 'VARUNTOOLS의 작업과 사례를 탐색하는 작업 인덱스입니다.',
     routePath: '/works',
+    kind: 'page',
+  }))
+}
+
+export function createPublicContentIndexPageMeta(): PageMeta {
+  return toPageMeta(resolvePageSeo({
+    title: 'Index',
+    description: '페이지, 글, 작업, 실험, 도구, 상품을 분류별로 탐색하는 공개 콘텐츠 인덱스입니다.',
+    routePath: '/index',
     kind: 'page',
   }))
 }
