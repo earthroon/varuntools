@@ -1,0 +1,37 @@
+{
+  "patch_id": "CMS-204AR",
+  "status": "PASS_CMS_204AR_LIVE_DEPLOY_VERIFIED_DIST_REUSE_RELEASE_PAGES_SKIP_PREPARE_SEAL",
+  "pass": true,
+  "blocked_reason_code": null,
+  "blocked_reason": null,
+  "checks": {
+    "workflow_exists": true,
+    "deploy_script_exists": true,
+    "live_deploy_uses_skip_prepare": true,
+    "release_prepare_guard_preserved": true,
+    "deploy_script_parses_skip_prepare": true,
+    "deploy_evidence_records_skip_prepare": true,
+    "deploy_evidence_records_verified_dist_reuse": true,
+    "deploy_evidence_records_source_dist_hash": true,
+    "deploy_evidence_records_copied_dist_hash": true,
+    "deploy_script_computes_dist_manifest": true,
+    "deploy_script_compares_verified_dist_before_push": true,
+    "cms204aq_registry_audit_preserved": true,
+    "artifact_includes_deploy_evidence": true,
+    "artifact_includes_page_registry_receipt": true,
+    "artifact_includes_live_rebind_receipt": true,
+    "no_force_push": true,
+    "no_dist_manual_patch": true,
+    "no_vacms_worker_mutation": true,
+    "no_secret_literal_detected": true
+  },
+  "verified_dist_reuse_policy": {
+    "liveDeployUsesSkipPrepare": true,
+    "aqVerifiedDistMustBeReused": true,
+    "releasePrepareMayNotRebuildAfterRegistryGuard": true,
+    "deployEvidenceRecordsDistHashes": true,
+    "forcePushAllowed": false,
+    "distManualPatchAllowed": false,
+    "deployBlockedOnDistReuseMismatch": true
+  }
+}

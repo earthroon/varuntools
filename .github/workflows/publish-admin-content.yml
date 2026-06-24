@@ -425,7 +425,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          npm run release:pages -- --push
+          npm run release:pages -- --push --skip-prepare
           echo "deploy" > vacms-last-success-stage.txt
 
       - name: Finalize live public site deploy
