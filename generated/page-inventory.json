@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T14:20:57.508Z",
+  "generatedAt": "2026-06-24T14:23:14.298Z",
   "pages": [
     {
       "source": "src/content/pages/checkout/fail/index.md",
@@ -993,7 +993,7 @@
     "noindex": 12,
     "featured": 3,
     "warnings": 0,
-    "errors": 4,
+    "errors": 0,
     "sections": {
       "lab": 2,
       "page": 15,
@@ -1004,30 +1004,5 @@
     }
   },
   "warnings": [],
-  "errors": [
-    {
-      "severity": "error",
-      "code": "PUBLIC_CATEGORY_UNKNOWN",
-      "source": "src/content/pages/checkout/fail/index.md",
-      "message": "Unknown public category: checkout."
-    },
-    {
-      "severity": "error",
-      "code": "PUBLIC_CATEGORY_UNKNOWN",
-      "source": "src/content/pages/checkout/success/index.md",
-      "message": "Unknown public category: checkout."
-    },
-    {
-      "severity": "error",
-      "code": "PUBLIC_CATEGORY_UNKNOWN",
-      "source": "src/content/pages/claim/index.md",
-      "message": "Unknown public category: claim."
-    },
-    {
-      "severity": "error",
-      "code": "PUBLIC_CATEGORY_UNKNOWN",
-      "source": "src/content/pages/inquiry/index.md",
-      "message": "Unknown public category: inquiry."
-    }
-  ]
+  "errors": []
 }

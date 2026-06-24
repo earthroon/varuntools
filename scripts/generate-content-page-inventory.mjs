@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
@@ -10,7 +10,7 @@ const jsonPath = path.join(generatedDir, 'page-inventory.json')
 const mdPath = path.join(generatedDir, 'page-inventory.md')
 
 const VALID_VISIBILITY = new Set(['public', 'hidden', 'private', 'draft'])
-const VALID_CATEGORY = new Set(['work', 'tool', 'lab', 'product', 'case-study', 'post', 'page'])
+const VALID_CATEGORY = new Set(['work', 'tool', 'lab', 'product', 'case-study', 'post', 'page', 'checkout', 'claim', 'inquiry', 'policies', 'qa'])
 const VALID_KIND = new Set(['work', 'tool', 'lab', 'product', 'case-study', 'post', 'page', 'doc', 'catalog', 'commission'])
 
 const DEFAULT_EXPOSURE_BY_KIND = {
@@ -309,7 +309,7 @@ function renderTable(items) {
 
 function renderIssues(title, issues) {
   if (!issues.length) return `## ${title}\n\nNone.`
-  return `## ${title}\n\n${issues.map((item) => `- **${item.code}** — ${item.source}: ${item.message}`).join('\n')}`
+  return `## ${title}\n\n${issues.map((item) => `- **${item.code}** ??${item.source}: ${item.message}`).join('\n')}`
 }
 
 function build() {
@@ -354,3 +354,4 @@ function build() {
 }
 
 build()
+

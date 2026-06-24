@@ -1,6 +1,6 @@
 # Content Page Inventory
 
-Generated at: 2026-06-24T14:20:57.508Z
+Generated at: 2026-06-24T14:23:14.298Z
 
 ## Summary
 
@@ -12,7 +12,7 @@ Generated at: 2026-06-24T14:20:57.508Z
 - Noindex: 12
 - Featured: 3
 - Warnings: 0
-- Errors: 4
+- Errors: 0
 
 ## Sections
 
@@ -91,7 +91,4 @@ None.
 
 ## Errors
 
-- **PUBLIC_CATEGORY_UNKNOWN** — src/content/pages/checkout/fail/index.md: Unknown public category: checkout.
-- **PUBLIC_CATEGORY_UNKNOWN** — src/content/pages/checkout/success/index.md: Unknown public category: checkout.
-- **PUBLIC_CATEGORY_UNKNOWN** — src/content/pages/claim/index.md: Unknown public category: claim.
-- **PUBLIC_CATEGORY_UNKNOWN** — src/content/pages/inquiry/index.md: Unknown public category: inquiry.
+None.
