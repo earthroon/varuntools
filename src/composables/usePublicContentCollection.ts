@@ -1,24 +1,38 @@
-import { computed, ref, watch } from 'vue'
+﻿import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { LoadedMarkdownPage } from '@/markdown/types'
-import {
-  sortWorkEntries,
-  toWorkCardEntry,
-  type WorkCardEntry,
-  type WorkCollectionSort,
-} from '@/markdown/pageRegistry'
-import { buildFacetIndex, filterPortfolioEntries } from '@/utils/portfolioSearch'
-import { filterWorks } from '@/utils/workFilters'
-import { loadGeneratedPages } from '@/lib/generated-content/loadGeneratedPages'
-import { getGeneratedWorkCardEntries } from '@/lib/generated-content/generatedWorkEntries'
-import { resolvePublicExposure } from '@/content/exposureTaxonomy'
-import {
-  isPublicIndexCategory,
-  isWorkRouteCategory,
-  normalizePublicCategory,
-} from '@/content/publicContentTaxonomy'
+import { resolveContentCategory, resolveContentKind, resolvePublicExposure } from '@/content/exposureTaxonomy'
+import { getPublicContentCategoryLabel } from '@/content/publicContentCategoryLabels'
+import { normalizeSearchText } from '@/utils/portfolioSearch'
+import taxonomy from '../../config/public-content-taxonomy.json'
 
-export type PublicContentCollectionScope = 'index' | 'works'
+export type PublicContentCardEntry = {
+  slug: string
+  href: string
+  title: string
+  description: string
+  category: string
+  kind: string
+  collection: string
+  tags: string[]
+  order: number
+  featured: boolean
+  cover: string
+  thumbnail: string
+  contentDir: string
+  status: string
+  visibility: string
+  year?: number
+}
+
+export type PublicContentSort = 'featured' | 'title' | 'category' | 'order'
+
+const typedTaxonomy = taxonomy as {
+  publicIndexCategories: string[]
+  primaryPublicIndexCategories?: string[]
+  workRouteCategories: string[]
+  collectionIndexSlugs: string[]
+}
 
 function readString(value: unknown): string {
   return typeof value === 'string' ? value : ''
@@ -30,100 +44,155 @@ function readBoolean(value: unknown): boolean {
   return false
 }
 
-function readSort(value: unknown): WorkCollectionSort {
-  if (value === 'title' || value === 'kind' || value === 'type' || value === 'year' || value === 'featured' || value === 'order') return value
+function readSort(value: unknown): PublicContentSort {
+  if (value === 'title' || value === 'category' || value === 'order') return value
   return 'featured'
 }
 
-function allowedForScope(category: string, scope: PublicContentCollectionScope): boolean {
-  if (scope === 'works') return isWorkRouteCategory(category)
-  return isPublicIndexCategory(category)
+function normalizeSlug(value: string): string {
+  return value.trim().replace(/^\/+|\/+$/g, '').replace(/\/+/g, '/')
 }
 
-function scopedEntryFromMarkdown(page: LoadedMarkdownPage, scope: PublicContentCollectionScope): WorkCardEntry | null {
-  const exposure = resolvePublicExposure(page)
-  const category = normalizePublicCategory(exposure.category)
-  if (exposure.visibility !== 'public') return null
-  if (!exposure.route) return null
-  if (!allowedForScope(category, scope)) return null
+function hrefOf(page: LoadedMarkdownPage): string {
+  return page.slug === 'home' ? '/' : '/' + page.slug
+}
 
-  const entry = toWorkCardEntry(page)
+function tagsOf(value: unknown): string[] {
+  return Array.isArray(value) ? value.map((item) => String(item || '').trim()).filter(Boolean) : []
+}
+
+function extractYear(value: unknown): number | undefined {
+  const text = String(value || '')
+  const match = text.match(/(?:19|20)\d{2}/)
+  if (!match) return undefined
+  const parsed = Number(match[0])
+  return Number.isFinite(parsed) ? parsed : undefined
+}
+
+function pageToEntry(page: LoadedMarkdownPage): PublicContentCardEntry {
+  const fm = page.frontmatter
+  const exposure = resolvePublicExposure(page)
+  const category = resolveContentCategory(page)
+  const kind = resolveContentKind(page)
+  const collection = exposure.collection && exposure.collection !== 'none' ? exposure.collection : kind
+  const title = fm.cardTitle || fm.title || page.slug
+  const description = fm.cardDescription || fm.summary || fm.description || ''
+  const cover = fm.cardCover || fm.thumbnail || fm.cover || fm.ogImage || ''
   return {
-    ...entry,
-    kind: exposure.kind,
-    type: category,
+    slug: page.slug,
+    href: hrefOf(page),
+    title,
+    description,
     category,
-    workStatus: entry.workStatus || 'published',
-    hasWorkMetadata: entry.hasWorkMetadata || category === 'work' || category === 'case-study',
+    kind,
+    collection,
+    tags: tagsOf(fm.tags),
+    order: typeof fm.order === 'number' ? fm.order : 9999,
+    featured: fm.featured === true || exposure.featured === true,
+    cover,
+    thumbnail: fm.thumbnail || cover,
+    contentDir: page.contentDir,
+    status: exposure.status || fm.status || 'active',
+    visibility: exposure.visibility || fm.visibility || 'public',
+    year: extractYear(fm.date || (fm as Record<string, unknown>).publishedDate || fm.updated || page.slug),
   }
 }
 
-function scopedGeneratedEntries(scope: PublicContentCollectionScope): WorkCardEntry[] {
-  return getGeneratedWorkCardEntries(loadGeneratedPages())
-    .map((entry) => {
-      const category = normalizePublicCategory(entry.category || entry.type || entry.kind)
-      return { ...entry, category, type: category }
-    })
-    .filter((entry) => allowedForScope(entry.category, scope))
+function entryToSearchText(entry: PublicContentCardEntry): string {
+  return [
+    entry.title,
+    entry.description,
+    entry.category,
+    entry.kind,
+    entry.collection,
+    entry.slug,
+    entry.status,
+    String(entry.year || ''),
+    ...entry.tags,
+  ].map(normalizeSearchText).filter(Boolean).join(' ')
+}
+
+function buildValueOptions(entries: PublicContentCardEntry[], field: 'tags' | 'year') {
+  const counts = new Map<string, number>()
+  for (const entry of entries) {
+    const values = field === 'tags' ? entry.tags : (entry.year ? [String(entry.year)] : [])
+    for (const value of values) {
+      const key = String(value || '').trim()
+      if (!key) continue
+      counts.set(key, (counts.get(key) || 0) + 1)
+    }
+  }
+  return Array.from(counts.entries())
+    .map(([value, count]) => ({ value, count }))
+    .sort((a, b) => b.count - a.count || a.value.localeCompare(b.value))
+}
+
+function sortEntries(entries: PublicContentCardEntry[], sort: string): PublicContentCardEntry[] {
+  const copy = [...entries]
+  if (sort === 'title') return copy.sort((a, b) => a.title.localeCompare(b.title))
+  if (sort === 'category') return copy.sort((a, b) => a.category.localeCompare(b.category) || a.order - b.order || a.title.localeCompare(b.title))
+  if (sort === 'order') return copy.sort((a, b) => a.order - b.order || a.title.localeCompare(b.title))
+  return copy.sort((a, b) => Number(b.featured) - Number(a.featured) || a.order - b.order || a.title.localeCompare(b.title))
 }
 
 export function usePublicContentCollection(
   pages: LoadedMarkdownPage[],
-  options: { scope: PublicContentCollectionScope },
+  options: { scope: 'index' | 'works' } = { scope: 'index' },
 ) {
   const route = useRoute()
   const router = useRouter()
-  const scope = options.scope
 
   const query = ref(readString(route.query.q))
-  const kind = ref(readString(route.query.category || route.query.type || route.query.kind))
-  const role = ref(readString(route.query.role))
-  const stack = ref(readString(route.query.stack))
+  const category = ref(readString(route.query.category || route.query.type))
   const tag = ref(readString(route.query.tag))
   const year = ref(readString(route.query.year))
   const featuredOnly = ref(readBoolean(route.query.featured))
-  const sort = ref<WorkCollectionSort>(readSort(route.query.sort))
+  const sort = ref<string>(readSort(route.query.sort))
 
-  const allEntries = computed(() => sortWorkEntries([
-    ...pages
-      .map((page) => scopedEntryFromMarkdown(page, scope))
-      .filter((entry): entry is WorkCardEntry => Boolean(entry)),
-    ...scopedGeneratedEntries(scope),
-  ], 'featured'))
+  const allowedCategories = computed(() => (
+    options.scope === 'works'
+      ? typedTaxonomy.workRouteCategories
+      : typedTaxonomy.publicIndexCategories
+  ))
+  const indexSlugs = computed(() => new Set((typedTaxonomy.collectionIndexSlugs || []).map(normalizeSlug)))
 
-  const typeOptions = computed(() => buildFacetIndex(allEntries.value, 'type'))
-  const roleOptions = computed(() => buildFacetIndex(allEntries.value, 'role'))
-  const stackOptions = computed(() => buildFacetIndex(allEntries.value, 'stack'))
-  const tagOptions = computed(() => buildFacetIndex(allEntries.value, 'tags'))
-  const yearOptions = computed(() => buildFacetIndex(allEntries.value, 'year'))
+  const allEntries = computed(() => {
+    const allowed = new Set(allowedCategories.value)
+    return sortEntries(
+      pages
+        .map(pageToEntry)
+        .filter((entry) => !indexSlugs.value.has(normalizeSlug(entry.slug)))
+        .filter((entry) => allowed.has(entry.category))
+        .filter((entry) => entry.visibility === 'public')
+        .filter((entry) => entry.status !== 'draft' && entry.status !== 'archived' && entry.status !== 'trashed')
+        .filter((entry) => entry.href !== '/'),
+      'featured',
+    )
+  })
+
+  const categoryOptions = computed(() => allowedCategories.value.map((value) => ({
+    value,
+    label: getPublicContentCategoryLabel(value),
+    count: allEntries.value.filter((entry) => entry.category === value).length,
+  })))
+  const tagOptions = computed(() => buildValueOptions(allEntries.value, 'tags'))
+  const yearOptions = computed(() => buildValueOptions(allEntries.value, 'year'))
 
   const filteredEntries = computed(() => {
-    const taxonomyFiltered = filterWorks(allEntries.value, {
-      category: kind.value || 'all',
-      role: role.value || 'all',
-      stack: stack.value || 'all',
-      tag: tag.value || 'all',
-      featuredOnly: featuredOnly.value,
-    })
-
-    const filtered = filterPortfolioEntries(taxonomyFiltered, {
-      query: query.value,
-      selectedType: kind.value,
-      selectedRole: role.value,
-      selectedStack: stack.value,
-      selectedTag: tag.value,
-      selectedYear: year.value,
-      featuredOnly: featuredOnly.value,
-    })
-
-    return sortWorkEntries(filtered, sort.value)
+    const normalizedQuery = normalizeSearchText(query.value)
+    return sortEntries(allEntries.value.filter((entry) => {
+      if (category.value && category.value !== 'all' && entry.category !== category.value) return false
+      if (tag.value && !entry.tags.includes(tag.value)) return false
+      if (year.value && String(entry.year || '') !== year.value) return false
+      if (featuredOnly.value && !entry.featured) return false
+      if (normalizedQuery && !entryToSearchText(entry).includes(normalizedQuery)) return false
+      return true
+    }), sort.value)
   })
 
   function resetFilters() {
     query.value = ''
-    kind.value = ''
-    role.value = ''
-    stack.value = ''
+    category.value = ''
     tag.value = ''
     year.value = ''
     featuredOnly.value = false
@@ -134,18 +203,13 @@ export function usePublicContentCollection(
     () => route.query,
     (nextQuery) => {
       const nextSearch = readString(nextQuery.q)
-      const nextKind = readString(nextQuery.category || nextQuery.type || nextQuery.kind)
-      const nextRole = readString(nextQuery.role)
-      const nextStack = readString(nextQuery.stack)
+      const nextCategory = readString(nextQuery.category || nextQuery.type)
       const nextTag = readString(nextQuery.tag)
       const nextYear = readString(nextQuery.year)
       const nextFeatured = readBoolean(nextQuery.featured)
       const nextSort = readSort(nextQuery.sort)
-
       if (query.value !== nextSearch) query.value = nextSearch
-      if (kind.value !== nextKind) kind.value = nextKind
-      if (role.value !== nextRole) role.value = nextRole
-      if (stack.value !== nextStack) stack.value = nextStack
+      if (category.value !== nextCategory) category.value = nextCategory
       if (tag.value !== nextTag) tag.value = nextTag
       if (year.value !== nextYear) year.value = nextYear
       if (featuredOnly.value !== nextFeatured) featuredOnly.value = nextFeatured
@@ -154,19 +218,16 @@ export function usePublicContentCollection(
   )
 
   watch(
-    [query, kind, role, stack, tag, year, featuredOnly, sort],
+    [query, category, tag, year, featuredOnly, sort],
     () => {
       const nextQuery = {
         ...(query.value ? { q: query.value } : {}),
-        ...(kind.value ? { category: kind.value } : {}),
-        ...(role.value ? { role: role.value } : {}),
-        ...(stack.value ? { stack: stack.value } : {}),
+        ...(category.value ? { category: category.value } : {}),
         ...(tag.value ? { tag: tag.value } : {}),
         ...(year.value ? { year: year.value } : {}),
         ...(featuredOnly.value ? { featured: '1' } : {}),
         ...(sort.value !== 'featured' ? { sort: sort.value } : {}),
       }
-
       router.replace({ query: nextQuery })
     },
     { flush: 'post' },
@@ -174,20 +235,17 @@ export function usePublicContentCollection(
 
   return {
     query,
-    kind,
-    role,
-    stack,
+    category,
     tag,
     year,
     featuredOnly,
     sort,
     allEntries,
     filteredEntries,
-    typeOptions,
-    roleOptions,
-    stackOptions,
+    categoryOptions,
     tagOptions,
     yearOptions,
     resetFilters,
   }
 }
+

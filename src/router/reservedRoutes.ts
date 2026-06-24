@@ -1,4 +1,4 @@
-export type ReservedRouteName = 'home' | 'index' | 'works' | 'works-tags' | 'search' | 'not-found'
+export type ReservedRouteName = 'home' | 'index' | 'works' | 'works-tags' | 'search' | 'content-index' | 'not-found'
 
 export type ReservedRoute = {
   name: ReservedRouteName
@@ -28,6 +28,11 @@ export const RESERVED_ROUTES: ReservedRoute[] = [
     reason: 'works-tag-landing-prefix',
   },
   {
+    name: 'content-index',
+    path: 'index',
+    reason: 'public-content-index-page',
+  },
+  {
     name: 'search',
     path: 'search',
     reason: 'site-search-page',
@@ -51,3 +56,4 @@ export function isReservedRoute(path: string): boolean {
 export function getReservedRoutePaths(): string[] {
   return RESERVED_ROUTES.map((route) => route.path)
 }
+

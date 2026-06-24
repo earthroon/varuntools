@@ -26,7 +26,12 @@
     "product",
     "doc",
     "catalog",
-    "commission"
+    "commission",
+    "checkout",
+    "claim",
+    "inquiry",
+    "policies",
+    "qa"
   ],
   "publicIndexCategories": [
     "page",
@@ -40,6 +45,14 @@
     "catalog",
     "commission"
   ],
+  "primaryPublicIndexCategories": [
+    "page",
+    "post",
+    "work",
+    "lab",
+    "tool",
+    "product"
+  ],
   "utilityRouteCategories": [
     "checkout",
     "claim",
@@ -51,6 +64,16 @@
     "work",
     "case-study"
   ],
+  "collectionIndexSlugs": [
+    "home",
+    "index",
+    "works",
+    "products",
+    "products/categories",
+    "post",
+    "lab",
+    "tools"
+  ],
   "collections": {
     "page": "page",
     "post": "post",
@@ -61,12 +84,7 @@
     "product": "products",
     "doc": "docs",
     "catalog": "products",
-    "commission": "works",
-    "checkout": "none",
-    "claim": "none",
-    "inquiry": "none",
-    "policies": "none",
-    "qa": "none"
+    "commission": "works"
   },
   "labels": {
     "page": "페이지",

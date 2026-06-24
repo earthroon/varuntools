@@ -1,45 +1,53 @@
 <script setup lang="ts">
-import WorkCard from '@/components/markdown/WorkCard.vue'
-import WorkEmptyState from '@/components/portfolio/WorkEmptyState.vue'
-import type { WorkCardEntry } from '@/markdown/pageRegistry'
+import { resolveContentAssetMeta } from '@/markdown/resolveContentAssets'
+import { getPublicContentCategoryLabel } from '@/content/publicContentCategoryLabels'
+import type { PublicContentCardEntry } from '@/composables/usePublicContentCollection'
 
-withDefaults(defineProps<{
-  entries: WorkCardEntry[]
-  emptyTitle?: string
-  emptyBody?: string
-}>(), {
-  emptyTitle: '조건에 맞는 콘텐츠가 없습니다.',
-  emptyBody: '분류나 검색 조건을 줄여 다시 확인해보세요.',
-})
+defineProps<{
+  entries: PublicContentCardEntry[]
+}>()
+
+function thumbnailUrl(entry: PublicContentCardEntry): string {
+  const thumbnail = entry.thumbnail || entry.cover
+  if (!thumbnail) return ''
+  const asset = resolveContentAssetMeta(entry.contentDir || '', thumbnail)
+  return asset.found ? asset.url : thumbnail
+}
 </script>
 
 <template>
   <section class="vt-works-collection" aria-label="콘텐츠 목록">
     <div v-if="entries.length" class="vt-works-collection__grid">
-      <WorkCard
+      <a
         v-for="entry in entries"
         :key="entry.slug"
-        :slug="entry.slug"
-        :title="entry.title"
-        :description="entry.summary || entry.description"
-        :cover="entry.cover"
+        class="vt-work-card"
         :href="entry.href"
-        :tag="entry.category || entry.type || entry.kind"
-        :content-dir="entry.contentDir"
-        :role="entry.role"
-        :stack="entry.stack"
-        :tags="entry.tags"
-        :year="entry.year"
-        :period="entry.period"
-        :featured="entry.featured"
-        :status="entry.workStatus"
-      />
+      >
+        <span class="vt-work-card__media" aria-hidden="true">
+          <img
+            v-if="thumbnailUrl(entry)"
+            :src="thumbnailUrl(entry)"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+          <span v-else class="vt-work-card__placeholder">No cover</span>
+        </span>
+        <span class="vt-work-card__body">
+          <span class="vt-work-card__badge">{{ getPublicContentCategoryLabel(entry.category) }}</span>
+          <strong class="vt-work-card__title">{{ entry.title }}</strong>
+          <span v-if="entry.description" class="vt-work-card__description">{{ entry.description }}</span>
+          <span v-if="entry.tags.length" class="vt-work-card__tags">
+            <span v-for="tag in entry.tags.slice(0, 4)" :key="tag">#{{ tag }}</span>
+          </span>
+        </span>
+      </a>
     </div>
 
-    <WorkEmptyState
-      v-else
-      :title="emptyTitle"
-      :body="emptyBody"
-    />
+    <article v-else class="vt-work-empty-state">
+      <h2>조건에 맞는 콘텐츠가 없습니다.</h2>
+      <p>분류나 검색어를 줄여 다시 확인해보세요.</p>
+    </article>
   </section>
 </template>

@@ -132,7 +132,7 @@ function resetAllFilters() {
       </label>
 
       <label class="vt-works-search__field">
-        <span>분류</span>
+        <span>작업 유형</span>
         <select v-model="selectedType">
           <option value="">전체</option>
           <option v-for="item in typeOptions" :key="item.value" :value="item.value">

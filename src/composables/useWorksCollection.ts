@@ -8,8 +8,6 @@ import {
 } from '@/markdown/pageRegistry'
 import { buildFacetIndex, filterPortfolioEntries } from '@/utils/portfolioSearch'
 import { filterWorks } from '@/utils/workFilters'
-import { loadGeneratedPages } from '@/lib/generated-content/loadGeneratedPages'
-import { getGeneratedWorkCardEntries } from '@/lib/generated-content/generatedWorkEntries'
 
 function readString(value: unknown): string {
   return typeof value === 'string' ? value : ''
@@ -48,11 +46,7 @@ export function useWorksCollection(pages: LoadedMarkdownPage[]) {
   const featuredOnly = ref(readBoolean(route.query.featured))
   const sort = ref<WorkCollectionSort>(readSort(route.query.sort))
 
-  const generatedEntries = computed(() => getGeneratedWorkCardEntries(loadGeneratedPages()))
-  const allEntries = computed(() => sortWorkEntries([
-    ...getWorkCollectionEntries(pages),
-    ...generatedEntries.value,
-  ], 'featured'))
+  const allEntries = computed(() => sortWorkEntries(getWorkCollectionEntries(pages), 'featured'))
   const typeOptions = computed(() => buildFacetIndex(allEntries.value, 'type'))
   const roleOptions = computed(() => buildFacetIndex(allEntries.value, 'role'))
   const stackOptions = computed(() => buildFacetIndex(allEntries.value, 'stack'))
