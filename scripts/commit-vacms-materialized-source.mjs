@@ -4,11 +4,15 @@ import path from 'node:path'
 import { spawnSync } from 'node:child_process'
 import process from 'node:process'
 
-const PATCH_ID = 'CMS-207A'
-const PASS_STATUS = 'PASS_CMS_207A_VACMS_PUBLISH_INCREMENTAL_SOURCE_COMMIT_SEAL'
+const PATCH_ID = 'CMS-207A-R1'
+const PASS_STATUS = 'PASS_CMS_207A_R1_VACMS_PUBLISH_INCREMENTAL_SOURCE_COMMIT_RUNTIME_RECEIPT_DIRTY_ALLOWED_SEAL'
 const RECEIPT_FILE = 'vacms-source-commit-receipt.json'
 const HOME_MARKDOWN = 'src/content/pages/home/index.md'
 const ONE_SHOT_LIVE_REGISTRY = 'src/markdown/vacmsLivePages.generated.ts'
+const MATERIALIZATION_RECEIPT = 'vacms-materialization-receipt.json'
+const LIVE_MARKDOWN_REGISTRY_RECEIPT = 'vacms-live-markdown-registry-source-rebind.json'
+const PAGE_REGISTRY_RECEIPT = 'vacms-page-registry-receipt.json'
+const PAGES_DEPLOY_EVIDENCE = 'vacms-pages-deploy-evidence.json'
 
 function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
@@ -108,16 +112,30 @@ function statusFiles(paths) {
     .filter(Boolean)
 }
 
+function runtimeReceiptFiles() {
+  return [
+    RECEIPT_FILE,
+    MATERIALIZATION_RECEIPT,
+    LIVE_MARKDOWN_REGISTRY_RECEIPT,
+    PAGE_REGISTRY_RECEIPT,
+    PAGES_DEPLOY_EVIDENCE,
+  ]
+}
+
+function dirtyRuntimeReceiptFiles() {
+  return statusFiles(runtimeReceiptFiles()).filter(isReceiptOrRuntimeEvidence)
+}
+
+function sourceDirtyGuardFiles() {
+  return [HOME_MARKDOWN, 'dist', ONE_SHOT_LIVE_REGISTRY]
+}
+
 function isDistPath(file) {
   return file === 'dist' || file.startsWith('dist/')
 }
 
 function isReceiptOrRuntimeEvidence(file) {
-  return file === RECEIPT_FILE ||
-    file === 'vacms-materialization-receipt.json' ||
-    file === 'vacms-live-markdown-registry-source-rebind.json' ||
-    file === 'vacms-page-registry-receipt.json' ||
-    file === 'vacms-pages-deploy-evidence.json'
+  return runtimeReceiptFiles().includes(normalizeSlash(file))
 }
 
 function forbiddenFilesForSourceCommit(files, generatedPath) {
@@ -164,7 +182,7 @@ function blockForbiddenFiles(files, generatedPath) {
 }
 
 function commitMaterializedSource() {
-  const materializationPath = 'vacms-materialization-receipt.json'
+  const materializationPath = MATERIALIZATION_RECEIPT
   if (!fs.existsSync(materializationPath)) {
     fail('CMS_207A_MATERIALIZATION_RECEIPT_MISSING', 'vacms-materialization-receipt.json is missing')
   }
@@ -190,6 +208,7 @@ function commitMaterializedSource() {
     sourceCommitSkippedReason: null,
     committedFiles: [],
     forbiddenCommittedFiles: [],
+    workflowArtifactReceiptFiles: [],
     homepageRewritten: false,
     distCommittedToMain: false,
     registrySourceCommitted: false,
@@ -214,9 +233,10 @@ function commitMaterializedSource() {
     receipt.sourceCommitSha = beforeSha
 
     const preStagedFiles = stagedFiles()
-    const dirtyForbiddenFiles = statusFiles([HOME_MARKDOWN, 'dist', ONE_SHOT_LIVE_REGISTRY, RECEIPT_FILE, 'vacms-materialization-receipt.json', 'vacms-live-markdown-registry-source-rebind.json', 'vacms-page-registry-receipt.json', 'vacms-pages-deploy-evidence.json'])
-    const preflightFiles = [...new Set([...preStagedFiles, ...dirtyForbiddenFiles])]
+    const dirtySourceFiles = statusFiles(sourceDirtyGuardFiles())
+    const preflightFiles = [...new Set([...preStagedFiles, ...dirtySourceFiles])]
     const preflight = blockForbiddenFiles(preflightFiles, generatedPath)
+    receipt.workflowArtifactReceiptFiles = dirtyRuntimeReceiptFiles()
     receipt.homepageRewritten = preflight.flags.homepageRewritten
     receipt.distCommittedToMain = preflight.flags.distCommittedToMain
     receipt.registrySourceCommitted = preflight.flags.registrySourceCommitted
@@ -236,6 +256,7 @@ function commitMaterializedSource() {
       console.log('sourceCommitted=false')
       console.log('sourceCommitSha=' + beforeSha)
       console.log('committedFiles=')
+      console.log('workflowArtifactReceiptFiles=' + receipt.workflowArtifactReceiptFiles.join(','))
       return receipt
     }
 
@@ -269,6 +290,7 @@ function commitMaterializedSource() {
     receipt.sourcePushSucceeded = true
     receipt.sourceCommitSkippedReason = null
     receipt.forbiddenCommittedFiles = []
+    receipt.workflowArtifactReceiptFiles = dirtyRuntimeReceiptFiles()
     receipt.blockedReasonCode = null
     receipt.blockedReason = null
     writeReceipt(receipt)
@@ -276,6 +298,7 @@ function commitMaterializedSource() {
     console.log('sourceCommitted=true')
     console.log('sourceCommitSha=' + afterSha)
     console.log('committedFiles=' + receipt.committedFiles.join(','))
+    console.log('workflowArtifactReceiptFiles=' + receipt.workflowArtifactReceiptFiles.join(','))
     return receipt
   } catch (error) {
     receipt.ok = false
