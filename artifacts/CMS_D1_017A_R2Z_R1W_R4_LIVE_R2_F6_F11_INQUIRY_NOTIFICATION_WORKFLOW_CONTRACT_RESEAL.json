@@ -1,0 +1,46 @@
+{
+  "ok": true,
+  "patchId": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F6-F11",
+  "status": "PASS_CMS_D1_017A_R2Z_R1W_R4_LIVE_R2_F6_F11_INQUIRY_NOTIFICATION_WORKFLOW_CONTRACT_RESEAL_COMMIT_119_SMOKE_SEAL",
+  "changed": [
+    "workers/inquiry-api/src/notificationTypes.ts",
+    "workers/inquiry-api/src/notificationConfig.ts",
+    "workers/inquiry-api/src/notification.ts",
+    "workers/inquiry-api/src/status.ts",
+    "workers/inquiry-api/src/index.ts",
+    "admin/src/types/inquiryReply.ts",
+    "admin/src/lib/inquiryReplyTemplates.ts",
+    "admin/src/components/inquiries/InquiryReplyTemplatePicker.vue",
+    "admin/src/components/inquiries/InquiryManualReplyChecklist.vue",
+    "admin/src/components/inquiries/InquiryReplyWorkflowPanel.vue",
+    "admin/src/components/inquiries/InquiryDetailPanel.vue",
+    "admin/src/types/inquiryAdmin.ts",
+    "workers/admin-api/src/inquiryTypes.ts",
+    "docs/authoring/inquiry-notification-workflow.md",
+    "docs/authoring/inquiry-reply-workflow.md",
+    "docs/migration/commit-119.md",
+    "BAKE_REPORT_COMMIT_119.md"
+  ],
+  "checks": {
+    "notificationExists": true,
+    "notificationTypesExists": true,
+    "notificationConfigExists": true,
+    "notificationTypesTokens": true,
+    "statusTokens": true,
+    "indexTokens": true,
+    "notificationTokens": true,
+    "adminReplyFiles": true,
+    "replyTemplateTokens": true,
+    "replyPanelTokens": true,
+    "adminStatusTokens": true,
+    "docs": true,
+    "noObjectLeak": true
+  },
+  "failed": [],
+  "forbiddenMutations": {
+    "mainBranchDirectPush": false,
+    "autoMerge": false,
+    "googleSheetLegacyReactivation": false,
+    "publishedFinalize": false
+  }
+}

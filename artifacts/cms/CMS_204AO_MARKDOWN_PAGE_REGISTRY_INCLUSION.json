@@ -1,9 +1,10 @@
 {
   "patch_id": "CMS-204AO",
-  "status": "PASS_CMS_204AO_R1_MARKDOWN_PAGE_REGISTRY_INCLUSION_GUARD_FIX_SEAL",
-  "pass": true,
-  "blocked_reason_code": null,
-  "blocked_reason": null,
+  "revision_patch_id": "CMS-204AO-R2",
+  "status": "FAIL_PASS_CMS_204AO_R2_MARKDOWN_PAGE_REGISTRY_OWNER_BUNDLE_GUARD_FIX_SEAL",
+  "pass": false,
+  "blocked_reason_code": "BLOCKED_NO_SECRET_LITERAL_DETECTED",
+  "blocked_reason": "no_secret_literal_detected was not satisfied",
   "checks": {
     "workflow_exists": true,
     "registry_step_exists": true,
@@ -25,20 +26,25 @@
     "no_force_push": true,
     "no_generated_dist_manual_patch": true,
     "no_vacms_worker_mutation": true,
-    "no_secret_literal_detected": true,
+    "no_secret_literal_detected": false,
     "fixture_page_lookup_positive_passes": true,
     "fixture_search_only_negative_fails": true
   },
   "page_lookup_policy": {
-    "materializedSlugMustReachPageLookupBundle": true,
+    "materializedSlugMustReachRouteManifestOwnerBundle": true,
+    "pageLookupChunkMayOnlyImportRegistryOwner": true,
+    "useRouteManifestChunkIsAcceptedRegistryOwner": true,
     "searchIndexIsNotSufficient": true,
     "sitemapIsNotSufficient": true,
     "deployBlockedBeforePushIfRegistryMissing": true,
     "example": {
       "routePath": "/page/sdsdsd",
       "materializedSlug": "page/sdsdsd",
-      "requiredBundleMatch": "dist/assets/pageLookup-*.js"
+      "acceptedBundleMatches": [
+        "dist/assets/useRouteManifest-*.js",
+        "dist/assets/pageLookup-*.js"
+      ]
     }
   },
-  "generated_at": "2026-06-23T10:01:00.346Z"
+  "generatedAt": "2026-06-23T10:29:14.951Z"
 }

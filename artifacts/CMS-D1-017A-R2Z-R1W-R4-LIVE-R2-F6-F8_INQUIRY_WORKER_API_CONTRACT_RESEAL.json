@@ -1,0 +1,35 @@
+{
+  "ok": true,
+  "patchId": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F6-F8",
+  "status": "PASS_CMS_D1_017A_R2Z_R1W_R4_LIVE_R2_F6_F8_INQUIRY_WORKER_API_CONTRACT_RESEAL_MISSING_WORKER_SOURCE_SEAL",
+  "changed": [
+    "workers/inquiry-api/package.json",
+    "workers/inquiry-api/tsconfig.json",
+    "workers/inquiry-api/wrangler.toml",
+    "workers/inquiry-api/src/worker-runtime.d.ts",
+    "workers/inquiry-api/src/types.ts",
+    "workers/inquiry-api/src/rateLimit.ts",
+    "workers/inquiry-api/src/validation.ts",
+    "workers/inquiry-api/src/http.ts",
+    "workers/inquiry-api/src/index.ts",
+    "docs/authoring/inquiry-worker-api.md",
+    "docs/migration/commit-116.md",
+    "BAKE_REPORT_COMMIT_116.md"
+  ],
+  "sourceMutation": {
+    "workerInquiryApiContractAdded": true,
+    "publicRuntimeBehaviorChanged": false,
+    "publishedFinalize": false
+  },
+  "forbiddenMutations": {
+    "mainBranchDirectPush": false,
+    "autoMerge": false,
+    "googleSheetLegacyReactivation": false,
+    "publishedFinalize": false
+  },
+  "smoke": {
+    "status": 0,
+    "stdout": "smoke:inquiry-worker-api-contract OK\n",
+    "stderr": ""
+  }
+}

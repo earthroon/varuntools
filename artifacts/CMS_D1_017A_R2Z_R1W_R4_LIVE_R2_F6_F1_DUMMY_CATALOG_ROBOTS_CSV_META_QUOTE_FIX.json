@@ -1,0 +1,25 @@
+{
+  "ok": true,
+  "patchId": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F6-F1",
+  "patchRevision": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F6-F1",
+  "status": "PASS_CMS_D1_017A_R2Z_R1W_R4_LIVE_R2_F6_F1_DUMMY_CATALOG_ROBOTS_CSV_META_QUOTE_FIX_SEAL",
+  "workflowContext": "F6 live deploy content validation blocker repair",
+  "csvPath": "D:\\11124\\dd\\varuntools\\src\\content\\pages\\products\\dummy-catalog\\page.csv",
+  "indexPath": "D:\\11124\\dd\\varuntools\\src\\content\\pages\\products\\dummy-catalog\\index.md",
+  "changed": [
+    "dummy-catalog/page.csv robots meta quoted"
+  ],
+  "csvPagesRun": "ok",
+  "checks": {
+    "pageRowFound": true,
+    "metaQuoted": true,
+    "robotsValidInCsv": true,
+    "robotsValidInIndex": true
+  },
+  "fix": {
+    "source": "page.csv",
+    "generated": "index.md regenerated via npm run csv:pages",
+    "robots": "noindex,nofollow",
+    "reason": "CSV meta field must be quoted because robots enum contains a comma."
+  }
+}

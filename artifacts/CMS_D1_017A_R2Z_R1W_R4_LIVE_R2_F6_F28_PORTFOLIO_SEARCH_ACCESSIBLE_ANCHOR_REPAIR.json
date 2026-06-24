@@ -1,0 +1,11 @@
+{
+  "patch_id": "CMS_D1_017A_R2Z_R1W_R4_LIVE_R2_F6_F28",
+  "status": "PASS_PORTFOLIO_SEARCH_ACCESSIBLE_ANCHOR_REPAIR_APPLIED",
+  "target": "src/components/works/WorksSearchPanel.vue",
+  "checks": {
+    "reset button keeps type button": true,
+    "reset button contains Reset token": true,
+    "search accessible smoke anchor exists": true,
+    "object leak absent": true
+  }
+}

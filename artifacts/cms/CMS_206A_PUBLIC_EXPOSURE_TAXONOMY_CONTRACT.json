@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "patchId": "CMS-206A",
+  "status": "PASS_CMS_206A_PUBLIC_EXPOSURE_TAXONOMY_CONTRACT_NO_ORPHAN_PUBLISHED_MARKDOWN_NO_HOMEPAGE_SILENT_MISS",
+  "scope": [
+    "VACMS",
+    "varuntools"
+  ],
+  "contracts": [
+    "category",
+    "kind",
+    "visibility",
+    "status",
+    "exposure",
+    "indexing"
+  ],
+  "nonGoals": [
+    "asset binary materialization",
+    "R2 asset copy",
+    "automatic slug relocation"
+  ]
+}

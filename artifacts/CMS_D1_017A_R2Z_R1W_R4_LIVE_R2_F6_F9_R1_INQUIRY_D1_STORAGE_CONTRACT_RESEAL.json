@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "patchId": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F6-F9-R1",
+  "status": "PASS_CMS_D1_017A_R2Z_R1W_R4_LIVE_R2_F6_F9_R1_INQUIRY_D1_STORAGE_CONTRACT_RESEAL_APPLY_SCRIPT_SYNTAX_REPAIR",
+  "changed": [],
+  "checks": {
+    "migrationExists": true,
+    "indexExists": true,
+    "typesExists": true,
+    "statusExists": true,
+    "storageExists": true,
+    "idExists": true,
+    "runtimeExists": true,
+    "wranglerExists": true,
+    "docsExists": true,
+    "workerDocsExists": true,
+    "migration116Exists": true,
+    "migration117Exists": true,
+    "report116Exists": true,
+    "report117Exists": true,
+    "migrationCreatesInquiries": true,
+    "migrationCreatesEvents": true,
+    "migrationHasIpHash": true,
+    "wranglerD1": true,
+    "statusModel": true,
+    "priorityModel": true,
+    "eventModel": true,
+    "storageAdapter": true,
+    "mockAdapter": true,
+    "indexStorageCall": true,
+    "indexIpHash": true,
+    "docs": true,
+    "report": true
+  },
+  "failed": [],
+  "forbiddenMutations": {
+    "mainBranchDirectPush": false,
+    "autoMerge": false,
+    "googleSheetLegacyReactivation": false,
+    "publishedFinalize": false
+  }
+}

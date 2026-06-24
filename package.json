@@ -220,7 +220,13 @@
     "smoke:generated-renderer": "node scripts/sheet-cms/smoke-generated-renderer.mjs",
     "finalize:sheet-cms": "node scripts/sheet-cms/finalize-publish.mjs",
     "smoke:finalize-publish": "node scripts/sheet-cms/smoke-finalize-publish.mjs",
-    "sync:drive-assets:legacy-appscript": "node scripts/sheet-cms/sync-appscript-assets.mjs"
+    "sync:drive-assets:legacy-appscript": "node scripts/sheet-cms/sync-appscript-assets.mjs",
+    "smoke:cms206a-exposure-taxonomy": "node scripts/cms206a-public-exposure-taxonomy-smoke.mjs",
+    "smoke:cms206a-post-section": "node scripts/cms206a-post-section-classification-smoke.mjs",
+    "smoke:cms206a-homepage-surface": "node scripts/cms206a-homepage-surface-resolution-smoke.mjs",
+    "smoke:cms206a-no-orphan": "node scripts/cms206a-no-orphan-published-markdown-smoke.mjs",
+    "smoke:cms206a-indexing": "node scripts/cms206a-search-sitemap-indexing-policy-smoke.mjs",
+    "smoke:cms206a": "npm run smoke:cms206a-exposure-taxonomy && npm run smoke:cms206a-post-section && npm run smoke:cms206a-homepage-surface && npm run smoke:cms206a-no-orphan && npm run smoke:cms206a-indexing"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

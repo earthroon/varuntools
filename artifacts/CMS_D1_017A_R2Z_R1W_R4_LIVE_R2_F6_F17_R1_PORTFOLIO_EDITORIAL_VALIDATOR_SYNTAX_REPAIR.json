@@ -1,0 +1,23 @@
+{
+  "ok": false,
+  "patchId": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F6-F17-R1",
+  "status": "FAIL_R4_LIVE_R2_F6_F17_R1_PORTFOLIO_EDITORIAL_VALIDATOR_SYNTAX_REPAIR",
+  "checks": {
+    "syntaxOk": true,
+    "invalidCommandOk": true,
+    "reportsTitleLevel": false,
+    "reportsColumnCount": false,
+    "reportsObjectLeak": false,
+    "smokeOk": false
+  },
+  "invalidStdout": "",
+  "invalidStderr": "",
+  "smokeStdout": "",
+  "smokeStderr": "smoke:portfolio-editorial-content-validation FAILED\n- invalid fixture reports title level error\n- invalid fixture reports column count error\n- invalid fixture reports object leak error\n",
+  "forbiddenMutations": {
+    "mainBranchDirectPush": false,
+    "autoMerge": false,
+    "googleSheetLegacyReactivation": false,
+    "publishedFinalize": false
+  }
+}

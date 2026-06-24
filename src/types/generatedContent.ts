@@ -7,6 +7,8 @@ export type GeneratedPageType =
   | 'doc'
   | 'lab'
   | 'tool'
+  | 'post'
+  | 'case-study'
 
 export type GeneratedAssetType = 'image' | 'video' | 'file' | 'embed'
 

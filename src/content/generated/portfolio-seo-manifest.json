@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-05-08T01:45:09.498Z",
+  "generatedAt": "2026-06-23T05:47:35.716Z",
   "site": {
     "origin": "https://varun.tools",
     "defaultTitle": "VARUNTOOLS",
@@ -11,7 +11,7 @@
       "slug": "checkout/fail",
       "href": "/checkout/fail",
       "canonicalUrl": "https://varun.tools/checkout/fail",
-      "title": "결제 실패 또는 취소",
+      "title": "Checkout failed or canceled",
       "description": "Buyer landing page after checkout failure or cancellation.",
       "image": "https://varun.tools/og/default-og.svg",
       "imageExists": true,
@@ -20,7 +20,7 @@
       "indexable": false,
       "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/checkout/fail/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -29,7 +29,7 @@
       "slug": "checkout/success",
       "href": "/checkout/success",
       "canonicalUrl": "https://varun.tools/checkout/success",
-      "title": "결제 확인",
+      "title": "Checkout confirmation",
       "description": "Buyer landing page after checkout provider success redirect.",
       "image": "https://varun.tools/og/default-og.svg",
       "imageExists": true,
@@ -38,7 +38,7 @@
       "indexable": false,
       "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/checkout/success/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -56,7 +56,7 @@
       "indexable": false,
       "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/claim/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -74,7 +74,7 @@
       "indexable": true,
       "noindexReason": "",
       "sourcePath": "src/content/pages/home/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": []
     },
     {
@@ -82,7 +82,7 @@
       "href": "/inquiry",
       "canonicalUrl": "https://varun.tools/inquiry",
       "title": "문의 — VARUN Tools",
-      "description": "바룬툴즈 상품 문의, 작업 의뢰, 협업 제안을 남길 수 있는 문의 창구입니다.",
+      "description": "VARUN Tools 상품 문의, 작업 의뢰, 협업 제안을 남길 수 있는 문의 창구입니다.",
       "image": "https://varun.tools/og/default-og.svg",
       "imageExists": true,
       "type": "page",
@@ -90,15 +90,15 @@
       "indexable": true,
       "noindexReason": "",
       "sourcePath": "src/content/pages/inquiry/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
     },
     {
-      "slug": "lab/markdown-gallery",
-      "href": "/lab/markdown-gallery",
-      "canonicalUrl": "https://varun.tools/lab/markdown-gallery",
+      "slug": "lab-markdown-gallery",
+      "href": "/lab-markdown-gallery",
+      "canonicalUrl": "https://varun.tools/lab-markdown-gallery",
       "title": "마크다운 갤러리 실험실",
       "description": "VARUNTOOLS Markdown 컴포넌트의 시각 QA 기준판입니다.",
       "image": "https://varun.tools/content/lab-markdown-gallery/images/cover.svg",
@@ -108,7 +108,7 @@
       "indexable": true,
       "noindexReason": "",
       "sourcePath": "src/content/pages/lab-markdown-gallery/index.md",
-      "lastmod": "2026-05-08",
+      "lastmod": "2026-06-13",
       "warningCodes": []
     },
     {
@@ -124,7 +124,7 @@
       "indexable": false,
       "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/policies/digital-download/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -142,7 +142,7 @@
       "indexable": false,
       "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/policies/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -160,7 +160,7 @@
       "indexable": false,
       "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/policies/privacy/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -178,7 +178,7 @@
       "indexable": false,
       "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/policies/refund/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -196,7 +196,7 @@
       "indexable": false,
       "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/policies/shipping/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -214,7 +214,7 @@
       "indexable": false,
       "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/policies/store/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -232,7 +232,7 @@
       "indexable": true,
       "noindexReason": "",
       "sourcePath": "src/content/pages/products/categories/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -250,7 +250,7 @@
       "indexable": true,
       "noindexReason": "",
       "sourcePath": "src/content/pages/products/categories/templates/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -265,10 +265,10 @@
       "imageExists": true,
       "type": "product",
       "status": "active",
-      "indexable": true,
-      "noindexReason": "",
+      "indexable": false,
+      "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/products/dummy-catalog/index.md",
-      "lastmod": "2026-05-07",
+      "lastmod": "2026-06-23",
       "warningCodes": []
     },
     {
@@ -284,7 +284,7 @@
       "indexable": true,
       "noindexReason": "",
       "sourcePath": "src/content/pages/products/index.md",
-      "lastmod": "2026-05-06",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -297,12 +297,12 @@
       "description": "상품 스펙 블록, 옵션, 제공 조건 표시를 확인하기 위한 더미 상품 페이지입니다.",
       "image": "https://varun.tools/content/products/spec-playground/images/cover.svg",
       "imageExists": true,
-      "type": "",
+      "type": "product",
       "status": "active",
-      "indexable": true,
-      "noindexReason": "",
+      "indexable": false,
+      "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/products/spec-playground/index.md",
-      "lastmod": "2026-05-07",
+      "lastmod": "2026-06-23",
       "warningCodes": []
     },
     {
@@ -313,18 +313,18 @@
       "description": "EWA gallery processor QA page. This page is hidden and noindex.",
       "image": "https://varun.tools/qa/ewa-fixtures/qa-cover.svg",
       "imageExists": true,
-      "type": "qa",
+      "type": "lab",
       "status": "active",
       "indexable": false,
       "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/qa/ewa-gallery/index.md",
-      "lastmod": "2026-05-07",
+      "lastmod": "2026-06-23",
       "warningCodes": []
     },
     {
-      "slug": "tools/wiper",
-      "href": "/tools/wiper",
-      "canonicalUrl": "https://varun.tools/tools/wiper",
+      "slug": "wiper",
+      "href": "/wiper",
+      "canonicalUrl": "https://varun.tools/wiper",
       "title": "전후 비교 와이퍼",
       "description": "이미지 전후를 비교하는 VARUNTOOLS 와이퍼 도구입니다.",
       "image": "https://varun.tools/content/wiper/images/cover.svg",
@@ -334,7 +334,7 @@
       "indexable": true,
       "noindexReason": "",
       "sourcePath": "src/content/pages/wiper/index.md",
-      "lastmod": "2026-05-08",
+      "lastmod": "2026-06-13",
       "warningCodes": []
     },
     {
@@ -350,15 +350,15 @@
       "indexable": false,
       "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/works/editorial-showcase/index.md",
-      "lastmod": "2026-05-08",
+      "lastmod": "2026-06-13",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
     },
     {
-      "slug": "docs/works",
-      "href": "/docs/works",
-      "canonicalUrl": "https://varun.tools/docs/works",
+      "slug": "works",
+      "href": "/works",
+      "canonicalUrl": "https://varun.tools/works",
       "title": "작업",
       "description": "작업 목록 설명 문서",
       "image": "https://varun.tools/og/default-og.svg",
@@ -368,7 +368,7 @@
       "indexable": true,
       "noindexReason": "",
       "sourcePath": "src/content/pages/works/index.md",
-      "lastmod": "2026-05-08",
+      "lastmod": "2026-06-19",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -386,14 +386,14 @@
       "indexable": true,
       "noindexReason": "",
       "sourcePath": "src/content/pages/works/varuntools-showroom/index.md",
-      "lastmod": "2026-05-08",
+      "lastmod": "2026-06-19",
       "warningCodes": []
     },
     {
       "slug": "search",
       "href": "/search",
       "canonicalUrl": "https://varun.tools/search",
-      "title": "검색 | VARUNTOOLS",
+      "title": "Search | VARUNTOOLS",
       "description": "VARUNTOOLS의 작업, 문서, 페이지를 검색합니다.",
       "image": "https://varun.tools/og/default-og.svg",
       "imageExists": true,
@@ -472,8 +472,8 @@
   ],
   "summary": {
     "total": 27,
-    "indexable": 16,
-    "noindex": 11,
+    "indexable": 14,
+    "noindex": 13,
     "missingTitle": 0,
     "missingDescription": 0,
     "missingImage": 15

@@ -1,0 +1,43 @@
+{
+  "ok": true,
+  "patchId": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F6",
+  "patchRevision": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F6-R1",
+  "status": "PASS_CMS_D1_017A_R2Z_R1W_R4_LIVE_R2_F6_PUBLIC_SITE_DEPLOY_EXECUTION_REPOSITORY_DISPATCH_BUILD_TO_GITHUB_PAGES_GH_PAGES_BRANCH_SEAL",
+  "workflowPath": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml",
+  "deployment": {
+    "mode": "github-pages-branch",
+    "branch": "gh-pages",
+    "command": "npm run deploy:pages -- --push"
+  },
+  "allowedMutations": {
+    "ghPagesBranchPush": true
+  },
+  "forbiddenMutations": {
+    "mainBranchDirectPush": false,
+    "autoMerge": false,
+    "googleSheetLegacyReactivation": false,
+    "publishedFinalize": false
+  },
+  "checks": {
+    "repositoryDispatch": true,
+    "publicSitePublishType": true,
+    "contentsWrite": true,
+    "buildStep": true,
+    "deployStep": true,
+    "deployCommand": true,
+    "deployRepositoryDispatchGated": true,
+    "deployAfterBuild": true,
+    "liveCheckAfterDeploy": true,
+    "receiptAfterDeploy": true,
+    "artifactAfterReceipt": true,
+    "receiptDeployMode": true,
+    "receiptGhPagesBranch": true,
+    "receiptDeployCommand": true,
+    "ghPagesBranchPushAllowed": true,
+    "mainBranchDirectPushFalse": true,
+    "noDirectMainPushCommand": true,
+    "noAutoMergeTrue": true,
+    "noGoogleSheetLegacyReactivation": true,
+    "noPublishedFinalizeTrue": true
+  }
+}

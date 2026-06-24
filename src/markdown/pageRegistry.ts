@@ -1,4 +1,5 @@
 import type { LoadedMarkdownPage } from './types'
+import { getCollectionKey, resolveContentKind, resolvePublicExposure } from '@/content/exposureTaxonomy'
 
 export type WorkType =
   | 'case-study'
@@ -93,7 +94,7 @@ export type WorkDetailContext = {
 }
 
 const INDEX_EXCLUDED_SLUGS = new Set(['works'])
-const INDEX_ALLOWED_KINDS = new Set(['work', 'tool', 'lab', 'doc'])
+const INDEX_ALLOWED_KINDS = new Set(['work', 'tool', 'lab', 'doc', 'post', 'case-study', 'page'])
 const HIDDEN_WORK_STATUSES = new Set(['draft', 'private'])
 
 function readRecord(value: unknown): Record<string, unknown> {
@@ -216,7 +217,10 @@ export function toWorkCardEntry(page: LoadedMarkdownPage): WorkCardEntry {
   const work = getWorkObject(frontmatter)
   const pageStatus = frontmatter.status || 'active'
   const workStatus = normalizeWorkStatus(pageStatus, readString(work.status))
-  const type = readString(work.type) || frontmatter.kind || 'page'
+  const publicKind = resolveContentKind(page)
+  const exposure = resolvePublicExposure(page)
+  const collectionKey = getCollectionKey(page)
+  const type = readString(work.type) || publicKind || 'page'
   const role = uniqueStrings(readStringArray(work.role).concat(readStringArray(frontmatter.role)))
   const stack = uniqueStrings(readStringArray(work.stack))
   const tools = uniqueStrings(readStringArray(work.tools))
@@ -240,13 +244,13 @@ export function toWorkCardEntry(page: LoadedMarkdownPage): WorkCardEntry {
     cover,
     thumbnail: frontmatter.thumbnail || cover,
     icon: frontmatter.cardIcon || '',
-    kind: frontmatter.kind || 'page',
+    kind: publicKind,
     type,
     status: pageStatus,
     workStatus,
     tags,
     order: typeof frontmatter.order === 'number' ? frontmatter.order : 9999,
-    featured: readBoolean(work.featured, frontmatter.featured === true),
+    featured: readBoolean(work.featured, exposure.featured || frontmatter.featured === true),
     weight: readNumber(work.weight) ?? 0,
     contentDir: page.contentDir,
 
@@ -256,7 +260,7 @@ export function toWorkCardEntry(page: LoadedMarkdownPage): WorkCardEntry {
     role,
     stack,
     tools,
-    category: readString(work.category) || readString(frontmatter.collection),
+    category: readString(work.category) || collectionKey,
     mood: getWorkMood(work),
     links: getWorkLinks(work),
     hasWorkMetadata: hasWorkMetadata(work),
@@ -276,6 +280,7 @@ export function getFeaturedWorkEntries(
     pages
       .map(toWorkCardEntry)
       .filter((entry) => entry.featured)
+      .filter((entry) => entry.category === 'works')
       .filter((entry) => isCollectionVisible(entry)),
     'featured',
   )
@@ -290,6 +295,7 @@ export function getWorkCollectionEntries(
       .map(toWorkCardEntry)
       .filter((entry) => !INDEX_EXCLUDED_SLUGS.has(entry.slug))
       .filter((entry) => isCollectionVisible(entry, options.includeDrafts))
+      .filter((entry) => entry.category === 'works')
       .filter(
         (entry) => INDEX_ALLOWED_KINDS.has(entry.kind) || entry.featured || entry.hasWorkMetadata,
       ),

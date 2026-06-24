@@ -1,0 +1,106 @@
+[1mdiff --git a/.github/workflows/publish-admin-content.yml b/.github/workflows/publish-admin-content.yml[m
+[1mindex 359f835..b5c3833 100644[m
+[1m--- a/.github/workflows/publish-admin-content.yml[m
+[1m+++ b/.github/workflows/publish-admin-content.yml[m
+[36m@@ -12,6 +12,10 @@[m [mon:[m
+         required: true[m
+         default: cms-github-pages-pr-candidate[m
+         type: string[m
+[32m+[m[32m      request_id:[m
+[32m+[m[32m        description: VACMS Worker dispatch request id[m
+[32m+[m[32m        required: false[m
+[32m+[m[32m        type: string[m
+ [m
+ permissions:[m
+   contents: write[m
+[36m@@ -26,6 +30,7 @@[m [mjobs:[m
+       JOB_ID: ${{ inputs.job_id }}[m
+       BRIDGE_VERSION: cms-d1-017a-r2z-r1w-r1[m
+       PUBLISH_MODE: ${{ inputs.publish_mode }}[m
+[32m+[m[32m      REQUEST_ID: ${{ inputs.request_id }}[m
+     steps:[m
+       - name: Validate inputs[m
+         shell: bash[m
+[36m@@ -45,6 +50,10 @@[m [mjobs:[m
+             echo "ADMIN_BRIDGE_TOKEN secret is required" >&2[m
+             exit 1[m
+           fi[m
+[32m+[m[32m          if [ "${PUBLISH_MODE:-}" = "cms-dispatch-visibility-smoke" ] && [ -z "${REQUEST_ID:-}" ]; then[m
+[32m+[m[32m            echo "request_id is required for dry visibility smoke" >&2[m
+[32m+[m[32m            exit 1[m
+[32m+[m[32m          fi[m
+ [m
+       - name: Dry visibility smoke seal[m
+         if: ${{ inputs.publish_mode == 'cms-dispatch-visibility-smoke' }}[m
+[36m@@ -60,6 +69,7 @@[m [mjobs:[m
+             "status": "PASS_CMS_D1_017A_R2Z_R1W_R4A_F1_R1_DRY_VISIBILITY_WORKFLOW_EARLY_EXIT_GATE_SKIP_CLAIM_EXPORT_MATERIALIZE_PR_FINALIZE_ON_SMOKE_MODE_NO_VACMS_MUTATION_NO_PR",[m
+             "publishMode": "cms-dispatch-visibility-smoke",[m
+             "jobId": "${JOB_ID}",[m
+[32m+[m[32m            "requestId": "${REQUEST_ID}",[m
+             "githubRunId": "${GITHUB_RUN_ID}",[m
+             "githubRunUrl": "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}",[m
+             "claim": false,[m
+[36m@@ -69,16 +79,60 @@[m [mjobs:[m
+             "branch": false,[m
+             "pr": false,[m
+             "publishedFinalize": false,[m
+[31m-            "failureFinalize": false[m
+[32m+[m[32m            "failureFinalize": false,[m
+[32m+[m[32m            "forbiddenMutations": {[m
+[32m+[m[32m              "d1": false,[m
+[32m+[m[32m              "claim": false,[m
+[32m+[m[32m              "export": false,[m
+[32m+[m[32m              "materialize": false,[m
+[32m+[m[32m              "commit": false,[m
+[32m+[m[32m              "branch": false,[m
+[32m+[m[32m              "pr": false,[m
+[32m+[m[32m              "publishedFinalize": false[m
+[32m+[m[32m            }[m
+           }[m
+           JSON[m
+[32m+[m[32m          cat > vacms-dispatch-correlation.json <<JSON[m
+[32m+[m[32m          {[m
+[32m+[m[32m            "ok": true,[m
+[32m+[m[32m            "patchId": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R1C-R2-RUN-CORRELATION-SEAL",[m
+[32m+[m[32m            "status": "PASS_CMS_D1_017A_R2Z_R1W_R4_LIVE_R1C_R2_RUN_CORRELATION_SEAL_WORKFLOW_ARTIFACT_WRITTEN",[m
+[32m+[m[32m            "mode": "cms-dispatch-visibility-smoke",[m
+[32m+[m[32m            "jobId": "${JOB_ID}",[m
+[32m+[m[32m            "publishMode": "${PUBLISH_MODE}",[m
+[32m+[m[32m            "requestId": "${REQUEST_ID}",[m
+[32m+[m[32m            "runId": "${GITHUB_RUN_ID}",[m
+[32m+[m[32m            "runAttempt": "${GITHUB_RUN_ATTEMPT}",[m
+[32m+[m[32m            "runNumber": "${GITHUB_RUN_NUMBER}",[m
+[32m+[m[32m            "workflow": "${GITHUB_WORKFLOW}",[m
+[32m+[m[32m            "eventName": "${GITHUB_EVENT_NAME}",[m
+[32m+[m[32m            "repository": "${GITHUB_REPOSITORY}",[m
+[32m+[m[32m            "ref": "${GITHUB_REF_NAME}",[m
+[32m+[m[32m            "sha": "${GITHUB_SHA}",[m
+[32m+[m[32m            "forbiddenMutations": {[m
+[32m+[m[32m              "d1": false,[m
+[32m+[m[32m              "claim": false,[m
+[32m+[m[32m              "export": false,[m
+[32m+[m[32m              "materialize": false,[m
+[32m+[m[32m              "commit": false,[m
+[32m+[m[32m              "branch": false,[m
+[32m+[m[32m              "pr": false,[m
+[32m+[m[32m              "publishedFinalize": false[m
+[32m+[m[32m            }[m
+[32m+[m[32m          }[m
+[32m+[m[32m          JSON[m
+[32m+[m[32m          echo "requestId=${REQUEST_ID}" >> "$GITHUB_STEP_SUMMARY"[m
+[32m+[m[32m          echo "jobId=${JOB_ID}" >> "$GITHUB_STEP_SUMMARY"[m
+[32m+[m[32m          echo "publishMode=${PUBLISH_MODE}" >> "$GITHUB_STEP_SUMMARY"[m
+ [m
+       - name: Upload dry visibility smoke artifact[m
+         if: ${{ inputs.publish_mode == 'cms-dispatch-visibility-smoke' }}[m
+         uses: actions/upload-artifact@v4[m
+         with:[m
+[31m-          name: vacms-dry-visibility-smoke-${{ inputs.job_id }}[m
+[31m-          path: dry-visibility-result.json[m
+[32m+[m[32m          name: vacms-dispatch-correlation-${{ inputs.request_id }}[m
+[32m+[m[32m          path: |[m
+[32m+[m[32m            dry-visibility-result.json[m
+[32m+[m[32m            vacms-dispatch-correlation.json[m
+           if-no-files-found: error[m
+ [m
+       - name: Checkout public repository[m

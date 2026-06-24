@@ -1,4 +1,5 @@
 import type { LoadedMarkdownPage } from '@/markdown/types'
+import { getCollectionKey, resolveContentCategory, resolveContentKind, resolvePublicExposure } from '@/content/exposureTaxonomy'
 
 export type PagecardGridSort = 'manual' | 'title' | 'order' | 'date'
 
@@ -62,7 +63,9 @@ function fallbackTitleFromHref(href: string): string {
 function pageToCard(page: LoadedMarkdownPage): PagecardResolvedItem {
   const frontmatter = page.frontmatter
   const href = page.slug === 'home' ? '/' : `/${page.slug}`
-  const kind = frontmatter.kind || 'page'
+  const kind = resolveContentKind(page)
+  const category = resolveContentCategory(page)
+  const collection = getCollectionKey(page)
 
   return {
     href,
@@ -79,9 +82,11 @@ function pageToCard(page: LoadedMarkdownPage): PagecardResolvedItem {
       '',
     tag:
       frontmatter.cardIcon ||
-      frontmatter.kind ||
+      kind ||
+      category ||
+      collection ||
       (Array.isArray(frontmatter.tags) ? frontmatter.tags[0] : '') ||
-      kind,
+      'page',
     order: typeof frontmatter.order === 'number' ? frontmatter.order : 9999,
     date: frontmatter.date || frontmatter.updated || '',
     contentDir: page.contentDir,
@@ -126,13 +131,16 @@ function pageMatchesQuery(page: LoadedMarkdownPage, options: PagecardQueryOption
   const href = `/${page.slug}`
   const tags = Array.isArray(frontmatter.tags) ? frontmatter.tags : []
 
-  if (frontmatter.status === 'archived' || frontmatter.visibility === 'hidden') return false
+  const exposure = resolvePublicExposure(page)
+
+  if (!exposure.route) return false
 
   if (options.featured && frontmatter.featured !== true) return false
 
   if (options.section) {
     const section = trimSlashes(options.section)
-    if (!page.slug.startsWith(`${section}/`) && page.slug !== section) return false
+    const collection = getCollectionKey(page)
+    if (collection !== section && !page.slug.startsWith(`${section}/`) && page.slug !== section) return false
   }
 
   if (options.tag) {
@@ -149,6 +157,10 @@ function pageMatchesQuery(page: LoadedMarkdownPage, options: PagecardQueryOption
       frontmatter.summary,
       frontmatter.description,
       frontmatter.kind,
+      frontmatter.category,
+      resolveContentKind(page),
+      resolveContentCategory(page),
+      getCollectionKey(page),
       ...tags,
     ]
       .filter(Boolean)

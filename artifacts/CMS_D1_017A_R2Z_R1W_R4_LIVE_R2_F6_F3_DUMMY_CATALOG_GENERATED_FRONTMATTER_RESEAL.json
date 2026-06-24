@@ -1,0 +1,29 @@
+{
+  "ok": true,
+  "patchId": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F6-F3",
+  "status": "PASS_CMS_D1_017A_R2Z_R1W_R4_LIVE_R2_F6_F3_DUMMY_CATALOG_GENERATED_FRONTMATTER_RESEAL_CSV_SOURCE_AND_INDEX_SYNC_SEAL",
+  "csvPath": "D:\\11124\\dd\\varuntools\\src\\content\\pages\\products\\dummy-catalog\\page.csv",
+  "indexPath": "D:\\11124\\dd\\varuntools\\src\\content\\pages\\products\\dummy-catalog\\index.md",
+  "changed": {
+    "csv": false,
+    "generatedIndex": true,
+    "csvPagesRan": true
+  },
+  "checks": {
+    "pageMeta": "robots=noindex,nofollow; releaseDate=",
+    "pageRowColumns": 11,
+    "csvRobotsAllowed": true,
+    "csvReleaseDateEmpty": true,
+    "csvNoReleaseDateComma": true,
+    "indexRobotsAllowed": true,
+    "indexNoInvalidRobotsNoindexOnly": true,
+    "indexNoReleaseDateComma": true,
+    "indexNoReleaseDateField": true
+  },
+  "forbiddenMutations": {
+    "mainBranchDirectPush": false,
+    "autoMerge": false,
+    "googleSheetLegacyReactivation": false,
+    "publishedFinalize": false
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "ok": true,
+  "patchId": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F5",
+  "previousPatchId": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F4",
+  "basePatchId": "CMS-D1-017A-R2Z-R1W-R4",
+  "status": "PASS_CMS_D1_017A_R2Z_R1W_R4_LIVE_R2_F5_CURRENT_VACMS_PUBLIC_PUBLISH_RECEIVER_WORKFLOW_ACTIVATION_REPOSITORY_DISPATCH_PUBLIC_SITE_PUBLISH_TO_ARTIFACT_RECEIPT_SEAL",
+  "sourceMutation": {
+    "vacmsWorkerBehaviorChanged": false,
+    "vacmsUiBehaviorChanged": false,
+    "varuntoolsWorkflowChanged": false,
+    "receiverWorkflowChanged": false
+  },
+  "receiver": {
+    "repo": "earthroon/varuntools",
+    "workflowPath": ".github/workflows/deploy-cloudflare-pages.yml",
+    "event": "repository_dispatch",
+    "type": "public-site-publish",
+    "requestIdReferenced": true,
+    "dispatchCorrelationIdReferenced": true,
+    "artifactReceiptGenerated": true,
+    "artifactName": "vacms-public-site-publish-receipt-<dispatchCorrelationId>",
+    "artifactEntry": "vacms-public-site-publish-receipt.json"
+  },
+  "legacySheet": {
+    "workflowPath": ".github/workflows/publish-sheet-cms.yml",
+    "disabledExpected": true,
+    "reactivated": false
+  },
+  "forbiddenMutations": {
+    "googleSheetLegacyReactivation": false,
+    "directMainPush": false,
+    "autoMerge": false,
+    "publishedFinalize": false
+  },
+  "checks": [
+    {
+      "code": "R4_LIVE_R2_F5_WORKFLOW_FILE_MISSING",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_REPOSITORY_DISPATCH_TRIGGER_MISSING",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_PUBLIC_SITE_PUBLISH_TYPE_MISSING",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_REQUEST_ID_REFERENCE_MISSING",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_DISPATCH_CORRELATION_ID_REFERENCE_MISSING",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_REQUEST_ID_PREFLIGHT_MISSING",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_DISPATCH_CORRELATION_ID_PREFLIGHT_MISSING",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_RECEIPT_JSON_WRITE_MISSING",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_ARTIFACT_UPLOAD_MISSING",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_ARTIFACT_NAME_CORRELATION_MISSING",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_GOOGLE_SHEET_LEGACY_REACTIVATED",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_DIRECT_MAIN_PUSH_DETECTED",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_AUTO_MERGE_DETECTED",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_PUBLISHED_FINALIZE_DETECTED",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\deploy-cloudflare-pages.yml"
+    },
+    {
+      "code": "R4_LIVE_R2_F5_LEGACY_SHEET_DISABLED_EXPECTED",
+      "ok": true,
+      "evidence": "D:\\11124\\dd\\varuntools\\.github\\workflows\\publish-sheet-cms.yml"
+    }
+  ],
+  "nextPatch": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F5-LIVE"
+}

@@ -1,0 +1,56 @@
+{
+  "patchId": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F6-F17-R2",
+  "ok": false,
+  "status": "FAIL_R4_LIVE_R2_F6_F17_R2_PORTFOLIO_EDITORIAL_EXPECT_INVALID_STDOUT_REPAIR",
+  "checks": {
+    "validatorExists": true,
+    "invalidFixtureExists": true,
+    "syntaxPass": true,
+    "invalidExitClean": true,
+    "invalidReportsTitleLevel": false,
+    "invalidReportsColumnCount": false,
+    "invalidReportsObjectLeak": false,
+    "smokePass": false
+  },
+  "commands": {
+    "syntax": {
+      "command": "node",
+      "args": [
+        "--check",
+        "scripts/validate-portfolio-editorial-blocks.mjs"
+      ],
+      "status": 0,
+      "stdout": "",
+      "stderr": "",
+      "error": ""
+    },
+    "invalid": {
+      "command": "node",
+      "args": [
+        "scripts/validate-portfolio-editorial-blocks.mjs",
+        "--expect-invalid",
+        "src/markdown/__fixtures__/portfolio-editorial-invalid-cases.md"
+      ],
+      "status": 0,
+      "stdout": "",
+      "stderr": "",
+      "error": ""
+    },
+    "smoke": {
+      "command": "node",
+      "args": [
+        "scripts/smoke-portfolio-editorial-content-validation.mjs"
+      ],
+      "status": 1,
+      "stdout": "",
+      "stderr": "smoke:portfolio-editorial-content-validation FAILED\n- invalid fixture reports title level error\n- invalid fixture reports column count error\n- invalid fixture reports object leak error\n",
+      "error": ""
+    }
+  },
+  "forbiddenMutations": {
+    "mainBranchDirectPush": false,
+    "autoMerge": false,
+    "googleSheetLegacyReactivation": false,
+    "publishedFinalize": false
+  }
+}

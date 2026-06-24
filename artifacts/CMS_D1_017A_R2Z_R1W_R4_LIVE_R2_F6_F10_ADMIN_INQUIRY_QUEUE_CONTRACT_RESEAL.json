@@ -1,0 +1,28 @@
+{
+  "ok": true,
+  "patchId": "CMS-D1-017A-R2Z-R1W-R4-LIVE-R2-F6-F10",
+  "status": "PASS_CMS_D1_017A_R2Z_R1W_R4_LIVE_R2_F6_F10_ADMIN_INQUIRY_QUEUE_CONTRACT_RESEAL_D1_SMOKE_READ_GUARD_AND_ADMIN_QUEUE_SMOKE_SEAL",
+  "changed": [
+    "BAKE_REPORT_COMMIT_118.md",
+    "admin\\src\\router.ts",
+    "admin\\src\\views\\InquiriesView.vue",
+    "admin\\src\\types\\inquiryAdmin.ts",
+    "admin\\src\\lib\\adminInquiryApi.ts",
+    "admin\\src\\components\\inquiries\\InquiryFilterBar.vue",
+    "admin\\src\\components\\inquiries\\InquiryQueueTable.vue",
+    "admin\\src\\components\\inquiries\\InquiryDetailPanel.vue",
+    "admin\\src\\components\\inquiries\\InquiryEventTimeline.vue",
+    "workers\\admin-api\\src\\types.ts",
+    "workers\\admin-api\\wrangler.toml",
+    "workers\\admin-api\\src\\inquiryStatusTransition.ts",
+    "workers\\admin-api\\src\\inquiryTypes.ts",
+    "workers\\admin-api\\src\\inquiries.ts",
+    "workers\\admin-api\\src\\index.ts"
+  ],
+  "forbiddenMutations": {
+    "mainBranchDirectPush": false,
+    "autoMerge": false,
+    "googleSheetLegacyReactivation": false,
+    "publishedFinalize": false
+  }
+}

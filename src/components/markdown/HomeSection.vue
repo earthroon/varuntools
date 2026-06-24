@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 import { resolveContentAssetMeta } from '@/markdown/resolveContentAssets'
+import { getCollectionKey, resolvePublicExposure } from '@/content/exposureTaxonomy'
 import ProductCard from './ProductCard.vue'
 
 type ProductCardProduct = {
@@ -29,7 +30,7 @@ type ProductCardItem = {
 }
 
 export type HomeSectionLayout = 'product-grid' | 'card-grid' | 'compact-list'
-export type HomeSectionSource = 'products' | 'works' | 'tools' | 'lab' | 'all'
+export type HomeSectionSource = 'products' | 'works' | 'tools' | 'lab' | 'post' | 'page' | 'case-study' | 'all'
 export type HomeSectionEmptyMode = 'notice' | 'hide'
 
 type CardItem = ProductCardItem & {
@@ -76,11 +77,7 @@ const props = withDefaults(
 )
 
 function categoryOf(page: LoadedMarkdownPage): string {
-  if (page.slug.startsWith('products/')) return 'products'
-  if (page.slug.startsWith('tools/') || page.frontmatter.kind === 'tool') return 'tools'
-  if (page.slug.startsWith('lab/') || page.frontmatter.kind === 'lab') return 'lab'
-  if (page.slug.startsWith('works/') || page.frontmatter.kind === 'work') return 'works'
-  return page.frontmatter.kind || 'page'
+  return getCollectionKey(page)
 }
 
 function hrefOf(page: LoadedMarkdownPage) {
@@ -88,10 +85,11 @@ function hrefOf(page: LoadedMarkdownPage) {
 }
 
 function isHidden(page: LoadedMarkdownPage) {
+  const exposure = resolvePublicExposure(page)
   return (
+    exposure.visibility !== 'public' ||
+    exposure.status === 'archived' ||
     page.frontmatter.draft === true ||
-    page.frontmatter.visibility === 'hidden' ||
-    page.frontmatter.status === 'archived' ||
     page.frontmatter.product?.status === 'hidden' ||
     page.frontmatter.product?.status === 'draft'
   )
@@ -134,7 +132,10 @@ const items = computed(() => {
 
       const category = categoryOf(page)
       if (source !== 'all' && category !== source) return false
-      if (props.featured && page.frontmatter.featured !== true) return false
+      if (props.featured) {
+        const exposure = resolvePublicExposure(page)
+        if (page.frontmatter.featured !== true && exposure.featured !== true) return false
+      }
 
       if (category === 'products') {
         if (!page.frontmatter.product) return false

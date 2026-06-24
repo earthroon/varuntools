@@ -1,44 +1,21 @@
-# CMS-204AO-R1 Markdown Page Registry Inclusion For Live Materialized Route
+# CMS-204AO-R2
 
-## SSOT
+## Markdown Page Registry Owner Bundle Guard Fix
 
-CMS-204AO seals the post-build runtime registry layer for live materialized VACMS pages.
+CMS-204AO-R2 fixes the registry seal target.
 
-The publish chain may successfully materialize, build, push to `gh-pages`, and finalize while the public route still renders a not-found page if the live materialized slug is not present in the built Markdown page lookup bundle.
+The runtime markdown registry can be owned by `useRouteManifest-*.js`, while `pageLookup-*.js` may only import that owner bundle. Therefore a direct `pageLookup-*.js` string check is too narrow.
 
-## Scope
+Accepted runtime bundle evidence:
 
-- Add a workflow step after `npm run build` and before live deploy.
-- Verify `vacms-materialization-receipt.json`.
-- Verify the generated markdown source exists.
-- Verify the markdown frontmatter slug matches the materialized route slug.
-- Verify `dist/assets/pageLookup-*.js` contains the materialized slug.
-- Reject sitemap/search-only inclusion.
-- Upload `vacms-page-registry-receipt.json` with publish artifacts.
+- `dist/assets/useRouteManifest-*.js` contains the materialized slug
+- or `dist/assets/pageLookup-*.js` contains the materialized slug
+- or a non-SearchPage JavaScript chunk contains the materialized slug
 
-## Runtime receipt
+Rejected evidence:
 
-The workflow writes:
+- `dist/sitemap.xml` only
+- `dist/search-index.json` only
+- `dist/assets/SearchPage-*.js` only
 
-```txt
-vacms-page-registry-receipt.json
-```
-
-PASS status:
-
-```txt
-PASS_CMS_204AO_R1_MARKDOWN_PAGE_REGISTRY_INCLUSION_GUARD_FIX_SEAL
-```
-
-## Non-goals
-
-- No force push.
-- No manual generated dist patching.
-- No VACMS Worker mutation.
-- No D1 schema mutation.
-- No weakening CMS-204AL, CMS-204AM, or CMS-204AN gates.
-
-
-## R1 note
-
-R1 narrows the no-force-push static guard to actual `git push` commands only. Cleanup commands such as `git worktree remove --force` are not treated as force pushes.
+The workflow still blocks before gh-pages deploy if the live materialized route is missing from the runtime registry owner bundle.

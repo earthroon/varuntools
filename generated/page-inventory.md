@@ -1,6 +1,6 @@
 # Content Page Inventory
 
-Generated at: 2026-05-08T03:01:03.832Z
+Generated at: 2026-06-24T14:06:21.685Z
 
 ## Summary
 
@@ -12,64 +12,76 @@ Generated at: 2026-05-08T03:01:03.832Z
 - Noindex: 12
 - Featured: 3
 - Warnings: 0
-- Errors: 0
+- Errors: 4
+
+## Sections
+
+```json
+{
+  "lab": 2,
+  "page": 15,
+  "products": 2,
+  "tools": 1,
+  "works": 2
+}
+```
 
 ## Public Pages
 
-| Section | Route | Source | Status | Visibility | Featured | Robots |
-|---|---|---|---|---|---|---|
-| checkout | /checkout/fail | src/content/pages/checkout/fail/index.md | active | public | false | noindex,follow |
-| checkout | /checkout/success | src/content/pages/checkout/success/index.md | active | public | false | noindex,follow |
-| claim | /claim | src/content/pages/claim/index.md | active | public | false | noindex,follow |
-| home | / | src/content/pages/home/index.md | active | public | false | - |
-| inquiry | /inquiry | src/content/pages/inquiry/index.md | active | public | false | - |
-| lab | /lab-markdown-gallery | src/content/pages/lab-markdown-gallery/index.md | active | public | true | - |
-| products | /products/categories | src/content/pages/products/categories/index.md | active | public | false | - |
-| products | /products/categories/templates | src/content/pages/products/categories/templates/index.md | active | public | false | - |
-| products | /products | src/content/pages/products/index.md | active | public | false | - |
-| tools | /wiper | src/content/pages/wiper/index.md | active | public | true | - |
-| works | /works | src/content/pages/works/index.md | active | public | false | - |
-| works | /works/varuntools-showroom | src/content/pages/works/varuntools-showroom/index.md | active | public | true | - |
+| Section | Collection | Route | Source | Category | Kind | Status | Visibility | Featured | Surfaces | Robots |
+|---|---|---|---|---|---|---|---|---|---|---|
+| page | page | /checkout/fail | src/content/pages/checkout/fail/index.md | checkout | page | active | public | false | route, collection:page, search, sitemap | noindex,follow |
+| page | page | /checkout/success | src/content/pages/checkout/success/index.md | checkout | page | active | public | false | route, collection:page, search, sitemap | noindex,follow |
+| page | page | /claim | src/content/pages/claim/index.md | claim | page | active | public | false | route, collection:page, search, sitemap | noindex,follow |
+| page | page | / | src/content/pages/home/index.md | page | page | active | public | false | route, collection:page, search, sitemap | - |
+| page | page | /inquiry | src/content/pages/inquiry/index.md | inquiry | page | active | public | false | route, collection:page, search, sitemap | - |
+| lab | lab | /lab-markdown-gallery | src/content/pages/lab-markdown-gallery/index.md | lab | lab | active | public | true | route, collection:lab, search, sitemap | - |
+| page | page | /products/categories | src/content/pages/products/categories/index.md | product | page | active | public | false | route, collection:page, search, sitemap | - |
+| page | page | /products/categories/templates | src/content/pages/products/categories/templates/index.md | product | page | active | public | false | route, collection:page, search, sitemap | - |
+| page | page | /products | src/content/pages/products/index.md | product | page | active | public | false | route, collection:page, search, sitemap | - |
+| tools | tools | /wiper | src/content/pages/wiper/index.md | tool | tool | active | public | true | route, collection:tools, search, sitemap | - |
+| page | page | /works | src/content/pages/works/index.md | work | page | active | public | false | route, collection:page, search, sitemap | - |
+| works | works | /works/varuntools-showroom | src/content/pages/works/varuntools-showroom/index.md | work | work | active | public | true | route, collection:works, search, sitemap | - |
 
 ## Hidden / Private / Draft Pages
 
-| Section | Route | Source | Status | Visibility | Featured | Robots |
-|---|---|---|---|---|---|---|
-| policies | /policies/digital-download | src/content/pages/policies/digital-download/index.md | active | hidden | false | noindex,follow |
-| policies | /policies | src/content/pages/policies/index.md | active | hidden | false | noindex,follow |
-| policies | /policies/privacy | src/content/pages/policies/privacy/index.md | active | hidden | false | noindex,follow |
-| policies | /policies/refund | src/content/pages/policies/refund/index.md | active | hidden | false | noindex,follow |
-| policies | /policies/shipping | src/content/pages/policies/shipping/index.md | active | hidden | false | noindex,follow |
-| policies | /policies/store | src/content/pages/policies/store/index.md | active | hidden | false | noindex,follow |
-| products | /products/dummy-catalog | src/content/pages/products/dummy-catalog/index.md | active | hidden | false | noindex |
-| products | /products/spec-playground | src/content/pages/products/spec-playground/index.md | active | hidden | false | noindex |
-| qa | /qa/ewa-gallery | src/content/pages/qa/ewa-gallery/index.md | active | hidden | false | noindex,follow |
-| works | /works/editorial-showcase | src/content/pages/works/editorial-showcase/index.md | active | hidden | false | - |
+| Section | Collection | Route | Source | Category | Kind | Status | Visibility | Featured | Surfaces | Robots |
+|---|---|---|---|---|---|---|---|---|---|---|
+| page | page | /policies/digital-download | src/content/pages/policies/digital-download/index.md | policies | page | active | hidden | false | collection:page | noindex,follow |
+| page | page | /policies | src/content/pages/policies/index.md | policies | page | active | hidden | false | collection:page | noindex,follow |
+| page | page | /policies/privacy | src/content/pages/policies/privacy/index.md | policies | page | active | hidden | false | collection:page | noindex,follow |
+| page | page | /policies/refund | src/content/pages/policies/refund/index.md | policies | page | active | hidden | false | collection:page | noindex,follow |
+| page | page | /policies/shipping | src/content/pages/policies/shipping/index.md | policies | page | active | hidden | false | collection:page | noindex,follow |
+| page | page | /policies/store | src/content/pages/policies/store/index.md | policies | page | active | hidden | false | collection:page | noindex,follow |
+| products | products | /products/dummy-catalog | src/content/pages/products/dummy-catalog/index.md | product | product | active | hidden | false | collection:products | noindex,nofollow |
+| products | products | /products/spec-playground | src/content/pages/products/spec-playground/index.md | product | product | active | hidden | false | collection:products | noindex,follow |
+| lab | lab | /qa/ewa-gallery | src/content/pages/qa/ewa-gallery/index.md | qa | lab | active | hidden | false | collection:lab | noindex,follow |
+| works | works | /works/editorial-showcase | src/content/pages/works/editorial-showcase/index.md | work | work | active | hidden | false | collection:works | - |
 
 ## Noindex Pages
 
-| Section | Route | Source | Status | Visibility | Featured | Robots |
-|---|---|---|---|---|---|---|
-| checkout | /checkout/fail | src/content/pages/checkout/fail/index.md | active | public | false | noindex,follow |
-| checkout | /checkout/success | src/content/pages/checkout/success/index.md | active | public | false | noindex,follow |
-| claim | /claim | src/content/pages/claim/index.md | active | public | false | noindex,follow |
-| policies | /policies/digital-download | src/content/pages/policies/digital-download/index.md | active | hidden | false | noindex,follow |
-| policies | /policies | src/content/pages/policies/index.md | active | hidden | false | noindex,follow |
-| policies | /policies/privacy | src/content/pages/policies/privacy/index.md | active | hidden | false | noindex,follow |
-| policies | /policies/refund | src/content/pages/policies/refund/index.md | active | hidden | false | noindex,follow |
-| policies | /policies/shipping | src/content/pages/policies/shipping/index.md | active | hidden | false | noindex,follow |
-| policies | /policies/store | src/content/pages/policies/store/index.md | active | hidden | false | noindex,follow |
-| products | /products/dummy-catalog | src/content/pages/products/dummy-catalog/index.md | active | hidden | false | noindex |
-| products | /products/spec-playground | src/content/pages/products/spec-playground/index.md | active | hidden | false | noindex |
-| qa | /qa/ewa-gallery | src/content/pages/qa/ewa-gallery/index.md | active | hidden | false | noindex,follow |
+| Section | Collection | Route | Source | Category | Kind | Status | Visibility | Featured | Surfaces | Robots |
+|---|---|---|---|---|---|---|---|---|---|---|
+| page | page | /checkout/fail | src/content/pages/checkout/fail/index.md | checkout | page | active | public | false | route, collection:page, search, sitemap | noindex,follow |
+| page | page | /checkout/success | src/content/pages/checkout/success/index.md | checkout | page | active | public | false | route, collection:page, search, sitemap | noindex,follow |
+| page | page | /claim | src/content/pages/claim/index.md | claim | page | active | public | false | route, collection:page, search, sitemap | noindex,follow |
+| page | page | /policies/digital-download | src/content/pages/policies/digital-download/index.md | policies | page | active | hidden | false | collection:page | noindex,follow |
+| page | page | /policies | src/content/pages/policies/index.md | policies | page | active | hidden | false | collection:page | noindex,follow |
+| page | page | /policies/privacy | src/content/pages/policies/privacy/index.md | policies | page | active | hidden | false | collection:page | noindex,follow |
+| page | page | /policies/refund | src/content/pages/policies/refund/index.md | policies | page | active | hidden | false | collection:page | noindex,follow |
+| page | page | /policies/shipping | src/content/pages/policies/shipping/index.md | policies | page | active | hidden | false | collection:page | noindex,follow |
+| page | page | /policies/store | src/content/pages/policies/store/index.md | policies | page | active | hidden | false | collection:page | noindex,follow |
+| products | products | /products/dummy-catalog | src/content/pages/products/dummy-catalog/index.md | product | product | active | hidden | false | collection:products | noindex,nofollow |
+| products | products | /products/spec-playground | src/content/pages/products/spec-playground/index.md | product | product | active | hidden | false | collection:products | noindex,follow |
+| lab | lab | /qa/ewa-gallery | src/content/pages/qa/ewa-gallery/index.md | qa | lab | active | hidden | false | collection:lab | noindex,follow |
 
 ## Featured Pages
 
-| Section | Route | Source | Status | Visibility | Featured | Robots |
-|---|---|---|---|---|---|---|
-| lab | /lab-markdown-gallery | src/content/pages/lab-markdown-gallery/index.md | active | public | true | - |
-| tools | /wiper | src/content/pages/wiper/index.md | active | public | true | - |
-| works | /works/varuntools-showroom | src/content/pages/works/varuntools-showroom/index.md | active | public | true | - |
+| Section | Collection | Route | Source | Category | Kind | Status | Visibility | Featured | Surfaces | Robots |
+|---|---|---|---|---|---|---|---|---|---|---|
+| lab | lab | /lab-markdown-gallery | src/content/pages/lab-markdown-gallery/index.md | lab | lab | active | public | true | route, collection:lab, search, sitemap | - |
+| tools | tools | /wiper | src/content/pages/wiper/index.md | tool | tool | active | public | true | route, collection:tools, search, sitemap | - |
+| works | works | /works/varuntools-showroom | src/content/pages/works/varuntools-showroom/index.md | work | work | active | public | true | route, collection:works, search, sitemap | - |
 
 ## Warnings
 
@@ -77,4 +89,7 @@ None.
 
 ## Errors
 
-None.
+- **PUBLIC_CATEGORY_UNKNOWN** — src/content/pages/checkout/fail/index.md: Unknown public category: checkout.
+- **PUBLIC_CATEGORY_UNKNOWN** — src/content/pages/checkout/success/index.md: Unknown public category: checkout.
+- **PUBLIC_CATEGORY_UNKNOWN** — src/content/pages/claim/index.md: Unknown public category: claim.
+- **PUBLIC_CATEGORY_UNKNOWN** — src/content/pages/inquiry/index.md: Unknown public category: inquiry.

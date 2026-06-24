@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-05-07T12:00:39.013Z",
+  "generatedAt": "2026-06-23T05:47:35.976Z",
   "summary": {
     "checked": 1,
     "passed": 1,
@@ -13,7 +13,7 @@
     {
       "slug": "works/varuntools-showroom",
       "href": "/works/varuntools-showroom",
-      "title": "VARUNTOOLS Showroom System",
+      "title": "VARUNTOOLS 쇼룸 시스템",
       "status": "active",
       "passed": true,
       "errors": [],
