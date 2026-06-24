@@ -377,6 +377,14 @@ jobs:
           NODE
           echo "materialize" > vacms-last-success-stage.txt
 
+      - name: Commit materialized source back to main
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/commit-vacms-materialized-source.mjs --workflow
+          echo "source_commit" > vacms-last-success-stage.txt
+
       - name: Build VACMS live markdown registry source
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -447,6 +455,14 @@ jobs:
           const contentHash = crypto.createHash('sha256').update(content).digest('hex')
           const deployEvidencePath = 'vacms-pages-deploy-evidence.json'
           const deployEvidence = JSON.parse(fs.readFileSync(deployEvidencePath, 'utf8'))
+          const sourceCommitReceiptPath = 'vacms-source-commit-receipt.json'
+          if (!fs.existsSync(sourceCommitReceiptPath)) {
+            throw new Error('CMS-204AS source commit receipt is missing')
+          }
+          const sourceCommitReceipt = JSON.parse(fs.readFileSync(sourceCommitReceiptPath, 'utf8'))
+          if (!sourceCommitReceipt || sourceCommitReceipt.ok !== true || !sourceCommitReceipt.sourceCommitSha) {
+            throw new Error('CMS-204AS source commit receipt is not ok or sourceCommitSha is missing')
+          }
           if (!deployEvidence || deployEvidence.pushed !== true) {
             throw new Error('CMS-204AL live deploy push evidence is missing or pushed is not true')
           }
@@ -458,6 +474,9 @@ jobs:
           }
           if (!deploySha) {
             throw new Error('CMS-204AL gh-pages deploy SHA readback failed')
+          }
+          if (deployEvidence.verifiedDistReuse !== true) {
+            throw new Error('CMS-204AR verified dist reuse evidence is missing or false')
           }
 
           const githubRunUrl = process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY + '/actions/runs/' + process.env.GITHUB_RUN_ID
@@ -476,6 +495,11 @@ jobs:
             deploySha,
             deployPushed: deployEvidence.pushed === true,
             deployEvidence: deployEvidencePath,
+            sourceCommitReceipt: sourceCommitReceiptPath,
+            sourceCommitted: sourceCommitReceipt.sourceCommitted === true,
+            sourceCommitSha: sourceCommitReceipt.sourceCommitSha,
+            sourceBranch: sourceCommitReceipt.sourceBranch || 'main',
+            verifiedDistReuse: deployEvidence.verifiedDistReuse === true,
             githubRunUrl,
             generatedAt: new Date().toISOString()
           }
@@ -522,6 +546,8 @@ jobs:
           console.log('deployTarget=' + receipt.deployTarget)
           console.log('deployPushed=' + String(receipt.deployPushed))
           console.log('deploySha=' + receipt.deploySha)
+          console.log('sourceCommitSha=' + receipt.sourceCommitSha)
+          console.log('sourceCommitted=' + String(receipt.sourceCommitted))
           console.log('liveDeployReceipt=vacms-live-deploy-receipt.json')
           NODE
 
@@ -665,6 +691,7 @@ jobs:
             claim-result.json
             export-payload.json
             vacms-materialization-receipt.json
+            vacms-source-commit-receipt.json
             vacms-pages-deploy-evidence.json
             vacms-live-markdown-registry-source-rebind.json
             vacms-page-registry-receipt.json

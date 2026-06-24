@@ -1,0 +1,47 @@
+{
+  "patch_id": "CMS-204AS",
+  "status": "PASS_CMS_204AS_LIVE_MATERIALIZED_SOURCE_COMMIT_BACK_MAIN_BRANCH_CONTENT_PERSISTENCE_SEAL",
+  "pass": true,
+  "blocked_reason_code": null,
+  "blocked_reason": null,
+  "checks": {
+    "workflow_exists": true,
+    "source_commit_step_exists": true,
+    "source_commit_step_after_materialize_before_build": true,
+    "source_commit_step_live_only": true,
+    "source_commit_script_exists": true,
+    "source_commit_script_reads_materialization_receipt": true,
+    "source_commit_script_validates_generated_path_allowlist": true,
+    "source_commit_script_adds_exact_generated_path_only": true,
+    "source_commit_script_commits_to_main": true,
+    "source_commit_script_pushes_origin_main": true,
+    "source_commit_script_writes_runtime_receipt": true,
+    "deploy_evidence_reads_source_commit_receipt": true,
+    "deploy_evidence_includes_source_commit_sha": true,
+    "finalize_requires_source_commit_sha": true,
+    "finalize_includes_source_commit_sha": true,
+    "artifact_includes_source_commit_receipt": true,
+    "cms204ap_registry_rebind_preserved": true,
+    "cms204aq_bundle_audit_preserved": true,
+    "cms204ar_skip_prepare_preserved": true,
+    "no_git_add_all": true,
+    "no_force_push": true,
+    "no_dist_manual_patch": true,
+    "no_vacms_worker_mutation": true,
+    "no_secret_literal_detected": true,
+    "fixture_source_commit_receipt_positive_passes": "ee341c8cecc8ee82d4e143c6ec9f58f6e88ba8d4",
+    "fixture_missing_source_commit_receipt_fails_finalize": true
+  },
+  "source_persistence_policy": {
+    "sourceBranch": "main",
+    "sourceCommitRequiredBeforeDeploy": true,
+    "sourceCommitShaRequiredForFinalize": true,
+    "generatedPathAllowlist": "src/content/pages/**/index.md",
+    "exactGitAddOnly": true,
+    "deployBlockedIfSourceCommitFails": true,
+    "example": {
+      "generatedPath": "src/content/pages/post/asdasdsads/index.md",
+      "materializedSlug": "post/asdasdsads"
+    }
+  }
+}
