@@ -1,0 +1,40 @@
+{
+  "patch_id": "CMS-204AR-R1",
+  "status": "PASS_CMS_204AR_R1_LIVE_DEPLOY_MANIFEST_REGEX_ESCAPE_FIX_SEAL",
+  "pass": true,
+  "blocked_reason_code": null,
+  "blocked_reason": null,
+  "checks": {
+    "workflow_exists": true,
+    "deploy_script_exists": true,
+    "deploy_script_node_check_passes": true,
+    "live_deploy_uses_skip_prepare": true,
+    "release_prepare_guard_preserved": true,
+    "deploy_script_parses_skip_prepare": true,
+    "deploy_script_computes_dist_manifest": true,
+    "deploy_script_normalizes_windows_paths": true,
+    "deploy_script_no_invalid_windows_path_regex": true,
+    "deploy_script_compares_verified_dist_before_push": true,
+    "deploy_evidence_records_skip_prepare": true,
+    "deploy_evidence_records_verified_dist_reuse": true,
+    "deploy_evidence_records_source_dist_hash": true,
+    "deploy_evidence_records_copied_dist_hash": true,
+    "cms204ar_base_receipt_preserved": true,
+    "cms204aq_registry_audit_preserved": true,
+    "artifact_includes_deploy_evidence": true,
+    "no_force_push": true,
+    "no_dist_manual_patch": true,
+    "no_vacms_worker_mutation": true,
+    "no_secret_literal_detected": true
+  },
+  "syntax_check": {
+    "status": 0,
+    "stderr": ""
+  },
+  "regex_escape_policy": {
+    "generatedDeployScriptMustParse": true,
+    "windowsPathNormalizationRegex": "replace(/\\\\/g, '/')",
+    "invalidRegexFromPriorBakeBlocked": true,
+    "verifiedDistReusePolicyPreserved": true
+  }
+}
