@@ -1,20 +1,11 @@
 <script setup lang="ts">
 import WorkCard from '@/components/markdown/WorkCard.vue'
-import WorkEmptyState from '@/components/portfolio/WorkEmptyState.vue'
 import { getPublicContentCategoryLabel } from '@/content/publicContentCategoryLabels'
 import type { PublicContentCardEntry } from '@/composables/usePublicContentCollection'
 
 defineProps<{
   entries: PublicContentCardEntry[]
 }>()
-
-function categoryTag(entry: PublicContentCardEntry): string {
-  return getPublicContentCategoryLabel(entry.category)
-}
-
-function coverOf(entry: PublicContentCardEntry): string {
-  return entry.cover || entry.thumbnail
-}
 </script>
 
 <template>
@@ -26,9 +17,9 @@ function coverOf(entry: PublicContentCardEntry): string {
         :slug="entry.slug"
         :title="entry.title"
         :description="entry.description"
-        :cover="coverOf(entry)"
+        :cover="entry.cover"
         :href="entry.href"
-        :tag="categoryTag(entry)"
+        :tag="getPublicContentCategoryLabel(entry.category)"
         :content-dir="entry.contentDir"
         :tags="entry.tags"
         :year="entry.year"
@@ -37,10 +28,9 @@ function coverOf(entry: PublicContentCardEntry): string {
       />
     </div>
 
-    <WorkEmptyState
-      v-else
-      title="조건에 맞는 콘텐츠가 없습니다."
-      body="분류나 검색어를 줄여 다시 확인해보세요."
-    />
+    <article v-else class="vt-work-empty-state">
+      <h2>조건에 맞는 콘텐츠가 없습니다.</h2>
+      <p>작업 유형이나 검색어를 줄여 다시 확인해보세요.</p>
+    </article>
   </section>
 </template>

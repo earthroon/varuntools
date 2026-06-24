@@ -103,6 +103,7 @@ function entryToSearchText(entry: PublicContentCardEntry): string {
     entry.title,
     entry.description,
     entry.category,
+    getPublicContentCategoryLabel(entry.category),
     entry.kind,
     entry.collection,
     entry.slug,
@@ -154,6 +155,14 @@ export function usePublicContentCollection(
       ? typedTaxonomy.workRouteCategories
       : typedTaxonomy.publicIndexCategories
   ))
+
+  const visibleCategoryOptions = computed(() => {
+    if (options.scope === 'works') return typedTaxonomy.workRouteCategories
+    return typedTaxonomy.primaryPublicIndexCategories?.length
+      ? typedTaxonomy.primaryPublicIndexCategories
+      : typedTaxonomy.publicIndexCategories
+  })
+
   const indexSlugs = computed(() => new Set((typedTaxonomy.collectionIndexSlugs || []).map(normalizeSlug)))
 
   const allEntries = computed(() => {
@@ -170,7 +179,7 @@ export function usePublicContentCollection(
     )
   })
 
-  const categoryOptions = computed(() => allowedCategories.value.map((value) => ({
+  const categoryOptions = computed(() => visibleCategoryOptions.value.map((value) => ({
     value,
     label: getPublicContentCategoryLabel(value),
     count: allEntries.value.filter((entry) => entry.category === value).length,
@@ -198,6 +207,13 @@ export function usePublicContentCollection(
     featuredOnly.value = false
     sort.value = 'featured'
   }
+
+  watch(category, (next, prev) => {
+    if (next === prev) return
+    tag.value = ''
+    year.value = ''
+    featuredOnly.value = false
+  })
 
   watch(
     () => route.query,
