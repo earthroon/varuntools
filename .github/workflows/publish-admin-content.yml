@@ -1,4 +1,4 @@
-name: VACMS Publish Admin Content
+﻿name: VACMS Publish Admin Content
 
 on:
   workflow_dispatch:
@@ -20,6 +20,8 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
+  pages: write
 
 jobs:
   publish-content-pr:
@@ -31,6 +33,10 @@ jobs:
       BRIDGE_VERSION: cms-d1-017a-r2z-r1w-r1
       PUBLISH_MODE: ${{ inputs.publish_mode }}
       REQUEST_ID: ${{ inputs.request_id }}
+      PAGES_DEPLOY_STRATEGY: ${{ vars.PAGES_DEPLOY_STRATEGY || 'actions' }}
+      LIVE_ORIGIN: https://www.varun.tools
+      LIVE_READBACK_RETRY_COUNT: ${{ vars.LIVE_READBACK_RETRY_COUNT || '18' }}
+      LIVE_READBACK_RETRY_DELAY_MS: ${{ vars.LIVE_READBACK_RETRY_DELAY_MS || '10000' }}
     steps:
       - name: Validate inputs
         shell: bash
@@ -486,6 +492,22 @@ jobs:
           npm run smoke:cms207h
           echo "public_content_index_smoke" > vacms-last-success-stage.txt
 
+      - name: Verify GitHub Pages deployment mode
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207l-pages-deploy-mode-smoke.mjs --workflow
+          echo "pages_deploy_mode" > vacms-last-success-stage.txt
+
+      - name: Verify dist artifact before Pages deploy
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207l-dist-artifact-readback-smoke.mjs --workflow
+          echo "dist_artifact_readback" > vacms-last-success-stage.txt
+
       - name: Verify live materialized markdown page registry
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -502,15 +524,40 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Deploy live public site branch
-        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' && env.PAGES_DEPLOY_STRATEGY == 'branch' }}
         shell: bash
         run: |
           set -euo pipefail
           npm run release:pages -- --push --skip-prepare
-          echo "deploy" > vacms-last-success-stage.txt
+          echo "deploy_branch" > vacms-last-success-stage.txt
+
+      - name: Configure GitHub Pages
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' && env.PAGES_DEPLOY_STRATEGY == 'actions' }}
+        uses: actions/configure-pages@v5
+
+      - name: Upload GitHub Pages artifact
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' && env.PAGES_DEPLOY_STRATEGY == 'actions' }}
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+      - name: Deploy GitHub Pages artifact
+        id: deployment
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' && env.PAGES_DEPLOY_STRATEGY == 'actions' }}
+        uses: actions/deploy-pages@v4
+
+      - name: Seal GitHub Pages Actions deploy receipt
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' && env.PAGES_DEPLOY_STRATEGY == 'actions' }}
+        shell: bash
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          node scripts/cms207l-pages-actions-deploy-receipt.mjs --workflow
+          echo "deploy_actions" > vacms-last-success-stage.txt
 
       - name: Verify gh-pages static route readback
-        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' && env.PAGES_DEPLOY_STRATEGY == 'branch' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -518,7 +565,7 @@ jobs:
           echo "static_route_readback" > vacms-last-success-stage.txt
 
       - name: Verify gh-pages static article readback
-        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' && env.PAGES_DEPLOY_STRATEGY == 'branch' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -526,7 +573,7 @@ jobs:
           echo "static_article_readback" > vacms-last-success-stage.txt
 
       - name: Verify gh-pages homepage recent feed readback
-        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' && env.PAGES_DEPLOY_STRATEGY == 'branch' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -534,7 +581,7 @@ jobs:
           echo "homepage_recent_feed_readback" > vacms-last-success-stage.txt
 
       - name: Verify publish button gh-pages route and public index readback
-        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' && env.PAGES_DEPLOY_STRATEGY == 'branch' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -542,12 +589,24 @@ jobs:
           echo "publish_button_gh_pages_readback" > vacms-last-success-stage.txt
 
       - name: Verify gh-pages runtime public content index readback
-        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' && env.PAGES_DEPLOY_STRATEGY == 'branch' }}
         shell: bash
         run: |
           set -euo pipefail
           node scripts/cms207h-public-content-index-readback-smoke.mjs --workflow
           echo "public_content_index_readback" > vacms-last-success-stage.txt
+
+      - name: Verify live published Pages artifact
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        env:
+          LIVE_ORIGIN: ${{ env.LIVE_ORIGIN }}
+          LIVE_READBACK_RETRY_COUNT: ${{ env.LIVE_READBACK_RETRY_COUNT }}
+          LIVE_READBACK_RETRY_DELAY_MS: ${{ env.LIVE_READBACK_RETRY_DELAY_MS }}
+        run: |
+          set -euo pipefail
+          node scripts/cms207l-live-published-artifact-smoke.mjs --workflow
+          echo "live_published_artifact_readback" > vacms-last-success-stage.txt
 
       - name: Verify live GitHub Pages domain readback
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
@@ -562,7 +621,7 @@ jobs:
           echo "live_pages_readback" > vacms-last-success-stage.txt
 
       - name: Verify publish button remote commit deploy closure
-        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' && env.PAGES_DEPLOY_STRATEGY == 'branch' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -586,22 +645,62 @@ jobs:
 
           const content = fs.readFileSync(generatedPath)
           const contentHash = crypto.createHash('sha256').update(content).digest('hex')
-          const deployEvidencePath = 'vacms-pages-deploy-evidence.json'
-          const deployEvidence = JSON.parse(fs.readFileSync(deployEvidencePath, 'utf8'))
-          const publishButtonClosureReceiptPath = 'vacms-publish-button-closure-receipt.json'
-          if (!fs.existsSync(publishButtonClosureReceiptPath)) {
-            throw new Error('CMS-207I publish button closure receipt is missing')
+          const pagesDeployStrategy = String(process.env.PAGES_DEPLOY_STRATEGY || 'actions')
+          const pagesDeployModeReceiptPath = 'vacms-pages-deploy-mode-receipt.json'
+          const distArtifactReadbackReceiptPath = 'vacms-dist-artifact-readback-receipt.json'
+          const livePublishedArtifactReceiptPath = 'vacms-live-published-artifact-receipt.json'
+          for (const requiredReceipt of [pagesDeployModeReceiptPath, distArtifactReadbackReceiptPath, livePublishedArtifactReceiptPath]) {
+            if (!fs.existsSync(requiredReceipt)) {
+              throw new Error('CMS-207L required Pages receipt is missing: ' + requiredReceipt)
+            }
           }
-          const publishButtonClosureReceipt = JSON.parse(fs.readFileSync(publishButtonClosureReceiptPath, 'utf8'))
+          const pagesDeployModeReceipt = JSON.parse(fs.readFileSync(pagesDeployModeReceiptPath, 'utf8'))
+          const distArtifactReadbackReceipt = JSON.parse(fs.readFileSync(distArtifactReadbackReceiptPath, 'utf8'))
+          const livePublishedArtifactReceipt = JSON.parse(fs.readFileSync(livePublishedArtifactReceiptPath, 'utf8'))
+          if (!pagesDeployModeReceipt.ok || pagesDeployModeReceipt.strategy !== pagesDeployStrategy) {
+            throw new Error('CMS-207L pages deploy mode receipt is not sealed')
+          }
+          if (!distArtifactReadbackReceipt.ok) {
+            throw new Error('CMS-207L dist artifact readback receipt is not sealed')
+          }
           if (
-            !publishButtonClosureReceipt ||
-            publishButtonClosureReceipt.ok !== true ||
-            publishButtonClosureReceipt.localPushRequired !== false ||
-            publishButtonClosureReceipt.mainReadbackVerified !== true ||
-            publishButtonClosureReceipt.ghPagesRouteReadbackVerified !== true ||
-            publishButtonClosureReceipt.publicContentIndexReadbackVerified !== true
+            !livePublishedArtifactReceipt.ok ||
+            livePublishedArtifactReceipt.finalizeAllowed !== true ||
+            livePublishedArtifactReceipt.live?.publicIndexJsonOk !== true ||
+            livePublishedArtifactReceipt.live?.routeHtmlOk !== true ||
+            livePublishedArtifactReceipt.live?.latestAssetOk !== true
           ) {
-            throw new Error('CMS-207I publish button closure receipt is not sealed')
+            throw new Error('CMS-207L live published artifact receipt is not sealed')
+          }
+          let deployEvidencePath = 'vacms-pages-deploy-evidence.json'
+          let deployEvidence = { pushed: true, verifiedDistReuse: true }
+          if (pagesDeployStrategy === 'branch') {
+            deployEvidencePath = 'vacms-pages-deploy-evidence.json'
+            deployEvidence = JSON.parse(fs.readFileSync(deployEvidencePath, 'utf8'))
+            const publishButtonClosureReceiptPath = 'vacms-publish-button-closure-receipt.json'
+            if (!fs.existsSync(publishButtonClosureReceiptPath)) {
+              throw new Error('CMS-207I publish button closure receipt is missing')
+            }
+            const publishButtonClosureReceipt = JSON.parse(fs.readFileSync(publishButtonClosureReceiptPath, 'utf8'))
+            if (
+              !publishButtonClosureReceipt ||
+              publishButtonClosureReceipt.ok !== true ||
+              publishButtonClosureReceipt.localPushRequired !== false ||
+              publishButtonClosureReceipt.mainReadbackVerified !== true ||
+              publishButtonClosureReceipt.ghPagesRouteReadbackVerified !== true ||
+              publishButtonClosureReceipt.publicContentIndexReadbackVerified !== true
+            ) {
+              throw new Error('CMS-207I publish button closure receipt is not sealed')
+            }
+          } else if (pagesDeployStrategy === 'actions') {
+            deployEvidencePath = 'vacms-pages-actions-deploy-receipt.json'
+            const pagesActionsDeployReceipt = JSON.parse(fs.readFileSync(deployEvidencePath, 'utf8'))
+            if (!pagesActionsDeployReceipt.ok || pagesActionsDeployReceipt.strategy !== 'actions') {
+              throw new Error('CMS-207L Pages Actions deploy receipt is not sealed')
+            }
+            deployEvidence = { pushed: true, verifiedDistReuse: true, pagesUrl: pagesActionsDeployReceipt.pagesUrl, deploymentId: pagesActionsDeployReceipt.deploymentId }
+          } else {
+            throw new Error('CMS-207L pages deployment strategy is invalid: ' + pagesDeployStrategy)
           }
 
           const livePagesReadbackReceiptPath = 'vacms-live-pages-readback-receipt.json'
@@ -635,13 +734,17 @@ jobs:
             throw new Error('CMS-204AL live deploy push evidence is missing or pushed is not true')
           }
           let deploySha = ''
-          try {
-            deploySha = childProcess.execFileSync('git', ['ls-remote', 'origin', 'refs/heads/gh-pages'], { encoding: 'utf8' }).trim().split(/\s+/)[0] || ''
-          } catch (error) {
-            throw new Error('CMS-204AL gh-pages deploy SHA readback failed: ' + (error instanceof Error ? error.message : String(error)))
-          }
-          if (!deploySha) {
-            throw new Error('CMS-204AL gh-pages deploy SHA readback failed')
+          if (pagesDeployStrategy === 'branch') {
+            try {
+              deploySha = childProcess.execFileSync('git', ['ls-remote', 'origin', 'refs/heads/gh-pages'], { encoding: 'utf8' }).trim().split(/\s+/)[0] || ''
+            } catch (error) {
+              throw new Error('CMS-204AL gh-pages deploy SHA readback failed: ' + (error instanceof Error ? error.message : String(error)))
+            }
+            if (!deploySha) {
+              throw new Error('CMS-204AL gh-pages deploy SHA readback failed')
+            }
+          } else {
+            deploySha = String(deployEvidence.deploymentId || process.env.GITHUB_RUN_ID || '')
           }
           if (deployEvidence.verifiedDistReuse !== true) {
             throw new Error('CMS-204AR verified dist reuse evidence is missing or false')
@@ -659,6 +762,12 @@ jobs:
             routePath: data.snapshot?.routePath || null,
             publishMode: 'cms-live-branch-apply',
             deployTarget: 'gh-pages',
+            pagesDeployStrategy: process.env.PAGES_DEPLOY_STRATEGY || 'actions',
+            liveOrigin: process.env.LIVE_ORIGIN || 'https://www.varun.tools',
+            livePublishedArtifactReceipt: 'vacms-live-published-artifact-receipt.json',
+            distArtifactReadbackReceipt: 'vacms-dist-artifact-readback-receipt.json',
+            branchOnlySuccessBlocked: true,
+            liveReadbackRequired: true,
             contentHash,
             deploySha,
             deployPushed: deployEvidence.pushed === true,
@@ -695,6 +804,12 @@ jobs:
             }],
             publishMode: 'cms-live-branch-apply',
             deployTarget: 'gh-pages',
+            pagesDeployStrategy: process.env.PAGES_DEPLOY_STRATEGY || 'actions',
+            liveOrigin: process.env.LIVE_ORIGIN || 'https://www.varun.tools',
+            livePublishedArtifactReceipt: 'vacms-live-published-artifact-receipt.json',
+            distArtifactReadbackReceipt: 'vacms-dist-artifact-readback-receipt.json',
+            branchOnlySuccessBlocked: true,
+            liveReadbackRequired: true,
             deployPushed: deployEvidence.pushed === true,
             deployEvidence: deployEvidencePath,
             contentHash,
@@ -888,6 +1003,7 @@ jobs:
             vacms-failure-finalized.txt
             vacms-failure-stage.txt
           if-no-files-found: ignore
+
 
 
 

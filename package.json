@@ -239,7 +239,10 @@
     "smoke:cms207h": "node scripts/cms207h-public-content-index-smoke.mjs && node scripts/cms207h-home-runtime-index-contract-smoke.mjs",
     "smoke:cms207i": "node scripts/cms207i-no-local-push-contract-smoke.mjs",
     "smoke:cms207k": "node scripts/cms207k-no-branch-only-success-contract-smoke.mjs",
-    "smoke:cms207k:live": "node scripts/cms207k-live-pages-readback-smoke.mjs"
+    "smoke:cms207k:live": "node scripts/cms207k-live-pages-readback-smoke.mjs",
+    "smoke:cms207l": "node scripts/cms207l-pages-deploy-mode-smoke.mjs && node scripts/cms207l-dist-artifact-readback-smoke.mjs",
+    "smoke:cms207l-live": "node scripts/cms207l-live-published-artifact-smoke.mjs",
+    "smoke:cms207l-contract": "node scripts/cms207l-no-stale-pages-artifact-contract-smoke.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
