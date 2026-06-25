@@ -85,20 +85,77 @@ function isDirectiveEnd(line) {
   return /^\s*:{2,3}\s*$/.test(String(line || ''))
 }
 
+const BODY_DIRECTIVE_NAMES = new Set(['markdown-box', 'note', 'tip', 'warning'])
+
+function isDirectiveAttrLine(line) {
+  return /^[a-zA-Z][a-zA-Z0-9_-]*:\s*.*$/.test(String(line || '').trim())
+}
+
+function findDirectiveEndIndex(lines, startIndex, name) {
+  let firstEnd = -1
+
+  for (let i = startIndex + 1; i < lines.length; i += 1) {
+    if (isDirectiveEnd(lines[i])) {
+      firstEnd = i
+      break
+    }
+  }
+
+  if (firstEnd < 0) return -1
+  if (!BODY_DIRECTIVE_NAMES.has(name)) return firstEnd
+
+  const beforeFirstEnd = lines.slice(startIndex + 1, firstEnd)
+  const hasLooseBodyBeforeFirstEnd = beforeFirstEnd.some((line) => {
+    const trimmed = String(line || '').trim()
+    return Boolean(trimmed) && !isDirectiveAttrLine(trimmed)
+  })
+
+  if (hasLooseBodyBeforeFirstEnd) return firstEnd
+
+  for (let i = firstEnd + 1; i < lines.length; i += 1) {
+    if (isDirectiveEnd(lines[i])) return i
+  }
+
+  return firstEnd
+}
+
 function directiveLabel(name) {
   return ({ note: 'Note', warning: 'Warning', tip: 'Tip', 'markdown-box': 'Markdown Box' })[name] || name
 }
 
+function splitDirectiveAttrBody(lines) {
+  const separatorIndex = lines.findIndex((line) => String(line || '').trim() === '::')
+  const attrLines = separatorIndex >= 0 ? lines.slice(0, separatorIndex) : lines
+  const bodyLines = separatorIndex >= 0 ? lines.slice(separatorIndex + 1) : []
+
+  const attrs = {}
+  const looseBody = []
+
+  for (const line of attrLines) {
+    const match = String(line || '').match(/^([a-zA-Z][a-zA-Z0-9_-]*):\s*(.*)$/)
+    if (match) attrs[match[1]] = match[2].trim()
+    else looseBody.push(line)
+  }
+
+  return {
+    attrs,
+    body: [...looseBody, ...bodyLines].join('\n').trim(),
+  }
+}
+
 function renderDirective(name, innerMarkdown, diagnostics) {
   diagnostics.directiveCount += 1
-  const inner = renderMarkdownBody(innerMarkdown, diagnostics)
+  const parsed = splitDirectiveAttrBody(String(innerMarkdown || '').replace(/\r\n/g, '\n').split('\n'))
+  const inner = renderMarkdownBody(parsed.body, diagnostics)
+  const title = String(parsed.attrs.title || directiveLabel(name)).trim()
+
   switch (name) {
     case 'note':
     case 'warning':
     case 'tip':
-      return `<aside class="markdown-callout markdown-callout-${escapeHtmlAttr(name)}" data-directive="${escapeHtmlAttr(name)}"><div class="markdown-callout-label">${escapeHtml(directiveLabel(name))}</div><div class="markdown-callout-body">${inner}</div></aside>`
+      return `<aside class="markdown-callout markdown-callout-${escapeHtmlAttr(name)}" data-directive="${escapeHtmlAttr(name)}"><div class="markdown-callout-label">${escapeHtml(title)}</div><div class="markdown-callout-body">${inner}</div></aside>`
     case 'markdown-box':
-      return `<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body">${inner}</div></section>`
+      return `<section class="markdown-box" data-directive="markdown-box">${title ? `<div class="markdown-box-title">${escapeHtml(title)}</div>` : ''}<div class="markdown-box-body">${inner}</div></section>`
     default:
       diagnostics.unknownDirectives.push(name)
       return `<section class="markdown-unknown-directive" data-directive="${escapeHtmlAttr(name)}"><div class="markdown-unknown-directive-body">${inner}</div></section>`
@@ -159,15 +216,15 @@ export function renderMarkdownBody(markdown, diagnostics = { directiveCount: 0, 
 
     const directive = parseDirectiveStart(line)
     if (directive) {
-      flushAllFlow()
-      const body = []
-      i += 1
-      while (i < lines.length && !isDirectiveEnd(lines[i])) {
-        body.push(lines[i])
-        i += 1
+      const endIndex = findDirectiveEndIndex(lines, i, directive.name)
+
+      if (endIndex >= 0) {
+        flushAllFlow()
+        const body = lines.slice(i + 1, endIndex)
+        out.push(renderDirective(directive.name, body.join('\n'), diagnostics))
+        i = endIndex
+        continue
       }
-      out.push(renderDirective(directive.name, body.join('\n'), diagnostics))
-      continue
     }
 
     if (!trimmed) {
