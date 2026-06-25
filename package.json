@@ -234,7 +234,10 @@
     "smoke:cms207d": "node scripts/cms207d-static-article-prerender-smoke.mjs && node scripts/cms207d-no-empty-app-shell-smoke.mjs",
     "smoke:cms207e": "node scripts/cms207e-static-prerender-client-mount-preservation-smoke.mjs && node scripts/cms207e-no-runtime-clobber-source-guard.mjs",
     "smoke:cms207f": "node scripts/cms207f-homepage-recent-public-content-smoke.mjs && node scripts/cms207f-homepage-no-featured-works-only-smoke.mjs",
-    "smoke:cms207g": "node scripts/cms207g-homepage-static-recent-feed-smoke.mjs && node scripts/cms207g-no-spa-only-home-feed-smoke.mjs"},
+    "smoke:cms207g": "node scripts/cms207g-homepage-static-recent-feed-smoke.mjs && node scripts/cms207g-no-spa-only-home-feed-smoke.mjs",
+    "build:public-content-index": "node scripts/build-public-content-index.mjs",
+    "smoke:cms207h": "node scripts/cms207h-public-content-index-smoke.mjs && node scripts/cms207h-home-runtime-index-contract-smoke.mjs"
+  },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
     "gray-matter": "^4.0.3",

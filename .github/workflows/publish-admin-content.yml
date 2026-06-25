@@ -453,6 +453,22 @@ jobs:
           node scripts/cms207g-no-spa-only-home-feed-smoke.mjs --workflow
           echo "homepage_recent_feed_guard" > vacms-last-success-stage.txt
 
+      - name: Build runtime public content index
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/build-public-content-index.mjs --workflow
+          echo "public_content_index_build" > vacms-last-success-stage.txt
+
+      - name: Verify runtime public content index
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run smoke:cms207h
+          echo "public_content_index_smoke" > vacms-last-success-stage.txt
+
       - name: Verify live materialized markdown page registry
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -499,6 +515,14 @@ jobs:
           set -euo pipefail
           node scripts/cms207g-home-surface-readback-smoke.mjs --workflow
           echo "homepage_recent_feed_readback" > vacms-last-success-stage.txt
+
+      - name: Verify gh-pages runtime public content index readback
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207h-public-content-index-readback-smoke.mjs --workflow
+          echo "public_content_index_readback" > vacms-last-success-stage.txt
 
       - name: Finalize live public site deploy
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}

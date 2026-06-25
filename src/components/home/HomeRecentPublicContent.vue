@@ -5,9 +5,14 @@ import {
   usePublicContentCollection,
   type PublicContentCardEntry,
 } from '@/composables/usePublicContentCollection'
+import {
+  useRuntimePublicContentIndex,
+  type RuntimePublicContentIndexEntry,
+} from '@/composables/useRuntimePublicContentIndex'
 import { getPublicContentCategoryLabel } from '@/content/publicContentCategoryLabels'
 
 type SourceFrontmatter = Record<string, unknown>
+type HomeRecentEntry = PublicContentCardEntry | RuntimePublicContentIndexEntry
 
 const props = withDefaults(
   defineProps<{
@@ -28,6 +33,7 @@ const props = withDefaults(
 
 const { pages } = useRouteManifest()
 const { allEntries } = usePublicContentCollection(pages, { scope: 'index' })
+const { runtimeEntries, runtimeStatus } = useRuntimePublicContentIndex()
 
 const sourceByEntryKey = computed(() => {
   const out = new Map<string, SourceFrontmatter>()
@@ -39,7 +45,10 @@ const sourceByEntryKey = computed(() => {
   return out
 })
 
-function readComparableTime(entry: PublicContentCardEntry): number {
+function readComparableTime(entry: HomeRecentEntry): number {
+  const runtimeTime = Number((entry as RuntimePublicContentIndexEntry).time)
+  if (Number.isFinite(runtimeTime) && runtimeTime > 0) return runtimeTime
+
   const frontmatter = sourceByEntryKey.value.get(entry.slug) || sourceByEntryKey.value.get(entry.contentDir)
   const candidates = [
     frontmatter?.publishedDate,
@@ -65,7 +74,7 @@ function readComparableTime(entry: PublicContentCardEntry): number {
   return 0
 }
 
-function compareRecent(a: PublicContentCardEntry, b: PublicContentCardEntry): number {
+function compareRecent(a: HomeRecentEntry, b: HomeRecentEntry): number {
   return (
     readComparableTime(b) - readComparableTime(a) ||
     Number(b.featured) - Number(a.featured) ||
@@ -74,16 +83,24 @@ function compareRecent(a: PublicContentCardEntry, b: PublicContentCardEntry): nu
   )
 }
 
+const sourceEntries = computed<HomeRecentEntry[]>(() => {
+  if (runtimeStatus.value === 'ready' && runtimeEntries.value.length) {
+    return runtimeEntries.value
+  }
+  return allEntries.value as HomeRecentEntry[]
+})
+
 const recentEntries = computed(() => {
   const allowed = new Set(props.includeCategories.map((category) => category.trim()).filter(Boolean))
-  return [...allEntries.value]
+  return [...sourceEntries.value]
     .filter((entry) => allowed.has(entry.category))
     .sort(compareRecent)
     .slice(0, props.limit)
 })
 
-function categoryLabel(category: string): string {
-  return getPublicContentCategoryLabel(category)
+function categoryLabel(entry: HomeRecentEntry): string {
+  const runtimeLabel = (entry as RuntimePublicContentIndexEntry).categoryLabel
+  return runtimeLabel || getPublicContentCategoryLabel(entry.category)
 }
 </script>
 
@@ -91,6 +108,8 @@ function categoryLabel(category: string): string {
   <section
     v-if="recentEntries.length"
     class="vt-home-recent-public-content"
+    data-vacms-home-recent-feed="true"
+    :data-vacms-home-recent-source="runtimeStatus === 'ready' ? 'runtime-public-index' : 'bundled-route-manifest'"
     aria-labelledby="home-recent-public-content-title"
   >
     <div class="vt-home-recent-public-content__header">
@@ -118,9 +137,12 @@ function categoryLabel(category: string): string {
         v-for="entry in recentEntries"
         :key="entry.slug"
         class="vt-home-recent-public-content__card"
+        data-vacms-home-recent-card="true"
+        :data-vacms-home-recent-slug="entry.slug"
+        :data-vacms-home-recent-category="entry.category"
       >
         <p class="vt-home-recent-public-content__category">
-          {{ categoryLabel(entry.category) }}
+          {{ categoryLabel(entry) }}
         </p>
 
         <h3 class="vt-home-recent-public-content__title">
@@ -218,22 +240,15 @@ function categoryLabel(category: string): string {
   flex-wrap: wrap;
   gap: 0.35rem;
   list-style: none;
-  margin: 0.85rem 0 0;
+  margin: 0.75rem 0 0;
   padding: 0;
 }
 
 .vt-home-recent-public-content__tags li {
-  border: 1px solid var(--vt-border-subtle, rgba(26, 58, 50, 0.16));
+  background: var(--vt-surface-muted, rgba(26, 58, 50, 0.08));
   border-radius: 999px;
   color: var(--vt-color-muted, #66756f);
-  font-size: 0.75rem;
-  padding: 0.18rem 0.55rem;
-}
-
-@media (max-width: 720px) {
-  .vt-home-recent-public-content__heading-row {
-    align-items: start;
-    flex-direction: column;
-  }
+  font-size: 0.76rem;
+  padding: 0.2rem 0.5rem;
 }
 </style>
