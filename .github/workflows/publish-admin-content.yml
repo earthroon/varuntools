@@ -421,6 +421,13 @@ jobs:
           node scripts/materialize-static-routes.mjs --workflow
           echo "static_route_materialization" > vacms-last-success-stage.txt
 
+      - name: Prerender homepage recent public content feed
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/prerender-homepage-recent-feed.mjs --workflow
+          echo "homepage_recent_feed_prerender" > vacms-last-success-stage.txt
       - name: Verify static route HTML materialization
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -436,7 +443,15 @@ jobs:
           set -euo pipefail
           node scripts/cms207d-no-empty-app-shell-smoke.mjs --workflow
           echo "static_article_shell_guard" > vacms-last-success-stage.txt
-      - name: Verify live materialized markdown page registry
+
+      - name: Verify homepage static recent feed
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207g-homepage-static-recent-feed-smoke.mjs --workflow
+          node scripts/cms207g-no-spa-only-home-feed-smoke.mjs --workflow
+          echo "homepage_recent_feed_guard" > vacms-last-success-stage.txt      - name: Verify live materialized markdown page registry
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
         run: |
@@ -474,7 +489,14 @@ jobs:
           set -euo pipefail
           node scripts/cms207d-gh-pages-static-article-readback-smoke.mjs --workflow
           echo "static_article_readback" > vacms-last-success-stage.txt
-      - name: Finalize live public site deploy
+
+      - name: Verify gh-pages homepage recent feed readback
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207g-home-surface-readback-smoke.mjs --workflow
+          echo "homepage_recent_feed_readback" > vacms-last-success-stage.txt      - name: Finalize live public site deploy
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
         run: |
