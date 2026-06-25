@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run validate:content && vue-tsc --noEmit && vite build && node scripts/create-spa-fallback.mjs",
+    "build": "npm run validate:content && vue-tsc --noEmit && vite build && node scripts/create-spa-fallback.mjs && node scripts/materialize-static-shell-routes.mjs",
     "build:pages": "npm run build",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
