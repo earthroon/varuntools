@@ -413,6 +413,22 @@ jobs:
           npm run build
           echo "build" > vacms-last-success-stage.txt
 
+      - name: Materialize static route HTML
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/materialize-static-routes.mjs --workflow
+          echo "static_route_materialization" > vacms-last-success-stage.txt
+
+      - name: Verify static route HTML materialization
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207c-static-route-materialization-guard.mjs --workflow
+          echo "static_route_guard" > vacms-last-success-stage.txt
+
       - name: Verify live materialized markdown page registry
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -435,6 +451,14 @@ jobs:
           set -euo pipefail
           npm run release:pages -- --push --skip-prepare
           echo "deploy" > vacms-last-success-stage.txt
+
+      - name: Verify gh-pages static route readback
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207c-gh-pages-static-route-readback-smoke.mjs --workflow
+          echo "static_route_readback" > vacms-last-success-stage.txt
 
       - name: Finalize live public site deploy
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
@@ -708,5 +732,6 @@ jobs:
             vacms-failure-finalized.txt
             vacms-failure-stage.txt
           if-no-files-found: ignore
+
 
 
