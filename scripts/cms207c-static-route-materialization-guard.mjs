@@ -1,63 +1,37 @@
 #!/usr/bin/env node
 import fs from 'node:fs'
-import process from 'node:process'
 
-const PASS_STATUS = 'PASS_CMS_207C_STATIC_ROUTE_GUARD'
+const PASS_STATUS = 'PASS_CMS_207D_STATIC_ARTICLE_MATERIALIZATION_GUARD'
 const RECEIPT_FILE = 'static-route-materialization-receipt.json'
-const workflowMode = new Set(process.argv.slice(2)).has('--workflow')
-
-function fail(code, message, extra = {}) {
-  const error = new Error(message)
-  error.code = code
-  error.extra = extra
-  throw error
-}
 
 function readJson(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8'))
 }
 
-function normalizeSlash(value) {
-  return String(value || '').replace(/\\/g, '/')
-}
-
-function trimSlashes(value) {
-  return normalizeSlash(value).replace(/^\/+|\/+$/g, '')
+function fail(message) {
+  throw new Error(message)
 }
 
 function main() {
-  if (!fs.existsSync(RECEIPT_FILE)) fail('CMS_207C_STATIC_ROUTE_RECEIPT_MISSING', RECEIPT_FILE + ' is missing')
+  if (!fs.existsSync(RECEIPT_FILE)) fail(RECEIPT_FILE + ' is missing')
   const receipt = readJson(RECEIPT_FILE)
-  if (!receipt || receipt.ok !== true) fail('CMS_207C_STATIC_ROUTE_RECEIPT_NOT_OK', RECEIPT_FILE + ' is not ok')
-
-  let routePath = receipt.routePath || receipt.expectedRoute?.routePath || ''
-  let distPath = receipt.distStaticRoutePath || receipt.expectedRoute?.distStaticRoutePath || ''
-  let sourcePath = receipt.source || receipt.expectedRoute?.sourcePath || ''
-
-  if (workflowMode) {
-    if (!fs.existsSync('vacms-materialization-receipt.json')) fail('CMS_207C_MATERIALIZATION_RECEIPT_MISSING', 'workflow guard requires vacms-materialization-receipt.json')
-    const materialization = readJson('vacms-materialization-receipt.json')
-    routePath = routePath || materialization.routePath
-    sourcePath = sourcePath || materialization.generatedPath
-  }
-
-  if (!routePath) fail('CMS_207C_ROUTE_PATH_MISSING', 'routePath is missing from static route receipt')
-  if (!distPath) distPath = 'dist/' + trimSlashes(routePath) + '/index.html'
-  distPath = normalizeSlash(distPath)
-
-  if (!fs.existsSync(distPath)) fail('CMS_207C_DIST_STATIC_ROUTE_MISSING', distPath + ' is missing')
-  const html = fs.readFileSync(distPath, 'utf8')
-  const routeMarker = `name="vacms-static-route" content="/${trimSlashes(routePath)}"`
-  if (!html.includes(routeMarker)) fail('CMS_207C_STATIC_ROUTE_MARKER_MISSING', 'static route marker missing from ' + distPath, { routeMarker })
-  if (sourcePath) {
-    const sourceMarker = `name="vacms-static-route-source" content="${normalizeSlash(sourcePath)}"`
-    if (!html.includes(sourceMarker)) fail('CMS_207C_STATIC_ROUTE_SOURCE_MARKER_MISSING', 'static route source marker missing from ' + distPath, { sourceMarker })
-  }
-  if (!html.includes('<script') || !html.includes('/assets/')) fail('CMS_207C_STATIC_ROUTE_SPA_ENTRY_MISSING', 'static route HTML does not include SPA asset entry')
-
+  if (receipt.ok !== true) fail('static route receipt is not ok')
+  const route = receipt.expectedRoute || receipt.routes?.[0]
+  if (!route) fail('static route receipt has no route')
+  const file = route.distStaticRoutePath || receipt.distStaticRoutePath
+  if (!file || !fs.existsSync(file)) fail('dist static route html is missing: ' + file)
+  const html = fs.readFileSync(file, 'utf8')
+  const routePath = receipt.routePath || route.routePath
+  if (!html.includes('name="vacms-static-route"')) fail('vacms-static-route meta marker missing')
+  if (!html.includes('name="vacms-static-article-prerender" content="true"')) fail('vacms-static-article-prerender meta marker missing')
+  if (!html.includes('data-vacms-static-article="true"')) fail('static article marker missing')
+  if (!html.includes('data-vacms-static-prerender="true"')) fail('static prerender marker missing')
+  if (/<div\s+id=["']app["']\s*>\s*<\/div>/i.test(html)) fail('empty app shell remains in static route html')
+  if (/(^|\n)\s*:{2,3}\s*[a-zA-Z0-9_-]+/.test(html)) fail('raw markdown directive leaked into static route html')
+  if (routePath && !html.includes(`content="${routePath}"`) && !html.includes(`data-vacms-route="${routePath}"`)) fail('route marker mismatch: ' + routePath)
+  if ((receipt.renderedArticleHtmlLength ?? route.renderedArticleHtmlLength ?? 0) <= 0) fail('rendered article length is zero')
   console.log(PASS_STATUS)
-  console.log('routePath=/' + trimSlashes(routePath))
-  console.log('distStaticRoutePath=' + distPath)
+  console.log('distStaticRoutePath=' + file)
 }
 
 main()

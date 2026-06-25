@@ -429,6 +429,13 @@ jobs:
           node scripts/cms207c-static-route-materialization-guard.mjs --workflow
           echo "static_route_guard" > vacms-last-success-stage.txt
 
+      - name: Verify no empty app shell static article
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207d-no-empty-app-shell-smoke.mjs --workflow
+          echo "static_article_shell_guard" > vacms-last-success-stage.txt
       - name: Verify live materialized markdown page registry
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -460,6 +467,13 @@ jobs:
           node scripts/cms207c-gh-pages-static-route-readback-smoke.mjs --workflow
           echo "static_route_readback" > vacms-last-success-stage.txt
 
+      - name: Verify gh-pages static article readback
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207d-gh-pages-static-article-readback-smoke.mjs --workflow
+          echo "static_article_readback" > vacms-last-success-stage.txt
       - name: Finalize live public site deploy
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
