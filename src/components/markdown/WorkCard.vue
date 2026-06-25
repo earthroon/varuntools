@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { RouterLink } from 'vue-router'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 import { toWorkCardEntry } from '@/markdown/pageRegistry'
 import { resolveContentAssetMeta } from '@/markdown/resolveContentAssets'
@@ -80,12 +79,6 @@ const safeHref = computed(() => card.value.href || '#')
 const external = computed(() => /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(safeHref.value))
 const opensNewTab = computed(() => /^(?:https?:)?\/\//i.test(safeHref.value))
 const browserHandled = computed(() => external.value || safeHref.value.startsWith('#'))
-const routeTo = computed(() => {
-  const href = safeHref.value.trim()
-  if (!href || href === '#') return '/'
-  if (href.startsWith('/')) return href
-  return `/${href.replace(/^\.\//, '').replace(/^\/+/, '')}`
-})
 const roleChips = computed(() => firstItems(card.value.role, 3))
 const stackChips = computed(() => firstItems(card.value.stack, 4))
 const tagChips = computed(() => firstItems(card.value.tags, 4))
@@ -93,11 +86,9 @@ const metaLine = computed(() => card.value.period || (card.value.year ? String(c
 </script>
 
 <template>
-  <component
-    :is="browserHandled ? 'a' : RouterLink"
+  <a
     class="vt-work-card"
-    :href="browserHandled ? safeHref : undefined"
-    :to="browserHandled ? undefined : routeTo"
+    :href="safeHref"
     :target="opensNewTab ? '_blank' : undefined"
     :rel="opensNewTab ? 'noopener noreferrer' : undefined"
   >
@@ -146,5 +137,5 @@ const metaLine = computed(() => card.value.period || (card.value.year ? String(c
         </span>
       </div>
     </div>
-  </component>
+  </a>
 </template>
