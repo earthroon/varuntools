@@ -1,4 +1,4 @@
-import type { DirectiveFieldValue, ParsedDirective } from '../directiveTypes'
+﻿import type { DirectiveFieldValue, ParsedDirective } from '../directiveTypes'
 import { attrValue, attrsToHtml, renderInvalidDirective } from '../directiveHtml'
 
 const VALID_SOURCES = new Set(['products', 'works', 'tools', 'lab', 'post', 'page', 'case-study', 'all'])
@@ -71,3 +71,4 @@ export function renderHomeSectionDirective(directive: ParsedDirective): string {
 
   return `<home-section ${htmlAttrs}></home-section>`
 }
+
