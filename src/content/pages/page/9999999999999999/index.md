@@ -12,37 +12,26 @@ slug: "page/9999999999999999"
 source: "vacms"
 vacmsSlug: "9999999999999999"
 vacmsPageId: "page_3576763e4b3169f973471d57"
-vacmsRevisionId: "rev_725c3c887bff0fea21e5b8bf"
+vacmsRevisionId: "rev_641608de9e944f84c454e7db"
 ---
 
 
 
-::work-card
-id: work-1
-title: 
-summary: 
-href: 
-status: active
-tags: 
-::
 
-::pagecard-grid
-title: 
-columns: 3
-items: page-1|Page title|Short description|/page|tag
-::
 
-::editorial-columns
-::
-### Left
-fdfdfdfdfdfd
 
-### Right
-fdfdfdfdfd
-::
+
+
 
 ::warning
 title: Warning
 ::
 ?댁슜???낅젰?섏꽭??
+::
+
+::work-summary
+problem: ㅇㄹㅇㄹ
+solution: ㅇㄹㅇㄹ
+impact: ㅇㄹㅇㄹ
+summary: ㅇㄹㅇㄹㅇ
 ::
