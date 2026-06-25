@@ -12,7 +12,7 @@ slug: "page/9999999999999999"
 source: "vacms"
 vacmsSlug: "9999999999999999"
 vacmsPageId: "page_3576763e4b3169f973471d57"
-vacmsRevisionId: "rev_71d76f7923a65aceb8e706b2"
+vacmsRevisionId: "rev_eca2196054c0951dd65c59d5"
 ---
 
 
@@ -37,9 +37,10 @@ subtitle: 그대여, 어떻게 살 것인가?
 
 ::gallery-strip
 title: Visual Experiments
-caption: 吏곸젒 怨좊Ⅸ ?대?吏 臾띠쓬
+caption: ㄴㅇㄴㅇㄴㅇㄴㅇㄴ
 layout: strip
 lightbox: true
 ::
-- ./images/manual-image.webp | Manual image alt text |  | id=image-1; caption=Manual image
+- /assets/content/page_3576763e4b3169f973471d57/asset_5fa1e212ec89d381e349611b/cde4c859-1996-43f7-8daa-363c2f87142c.png | ㄴㅇㄴㅇㄴㅇㄴㅇㄴㄴ |  | id=ㄴㄴㄴ; assetId=asset_5fa1e212ec89d381e349611b; caption=ㄴㅇㄴㅇㄴㄴ
+- /assets/content/page_3576763e4b3169f973471d57/asset_5fa1e212ec89d381e349611b/cde4c859-1996-43f7-8daa-363c2f87142c.png | ㅇㄴㅇㄴㅇㄴ |  | id=image-2; assetId=asset_5fa1e212ec89d381e349611b; caption=ㄴㅇㄴㅇㄴㅇㄴ
 ::
