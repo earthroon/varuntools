@@ -1,14 +1,20 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
+import MarkdownToc from '@/components/markdown/MarkdownToc.vue'
 import ContentSearchPanel from '@/components/content/ContentSearchPanel.vue'
 import ContentCollectionGrid from '@/components/content/ContentCollectionGrid.vue'
 import { useRouteManifest } from '@/composables/useRouteManifest'
 import { usePublicContentCollection } from '@/composables/usePublicContentCollection'
 import { usePageMeta } from '@/composables/usePageMeta'
+import { useObservedHeadings } from '@/composables/useObservedHeadings'
+import { useActiveHeading } from '@/composables/useActiveHeading'
 import { createWorksPageMeta } from '@/metadata/staticPageMeta'
 
 const { pages } = useRouteManifest()
 const pageMeta = computed(() => createWorksPageMeta())
+const worksRoot = ref<HTMLElement | null>(null)
+const { observedHeadings: headings } = useObservedHeadings(worksRoot)
+const { activeHeadingId } = useActiveHeading(worksRoot, headings)
 
 usePageMeta(pageMeta)
 
@@ -30,7 +36,13 @@ const {
 
 <template>
   <article class="vt-markdown-page theme-showroom">
-    <div class="vt-markdown vt-works-page">
+    <MarkdownToc
+      v-if="headings.length > 0"
+      :headings="headings"
+      :active-heading-id="activeHeadingId"
+    />
+
+    <div ref="worksRoot" class="vt-markdown vt-works-page">
       <header class="vt-works-hero">
         <p class="vt-works-hero__eyebrow">VARUNTOOLS 인덱스</p>
         <h1>작업</h1>
@@ -39,22 +51,28 @@ const {
         </p>
       </header>
 
-      <ContentSearchPanel
-        v-model:query="query"
-        v-model:selected-category="category"
-        v-model:selected-tag="tag"
-        v-model:selected-year="year"
-        v-model:featured-only="featuredOnly"
-        v-model:sort="sort"
-        :category-options="categoryOptions"
-        :tag-options="tagOptions"
-        :year-options="yearOptions"
-        :result-count="filteredEntries.length"
-        :total-count="allEntries.length"
-        @reset="resetFilters"
-      />
+      <section class="vt-works-section" aria-labelledby="works-filter-heading">
+        <h2 id="works-filter-heading" class="vt-works-section__heading">탐색</h2>
+        <ContentSearchPanel
+          v-model:query="query"
+          v-model:selected-category="category"
+          v-model:selected-tag="tag"
+          v-model:selected-year="year"
+          v-model:featured-only="featuredOnly"
+          v-model:sort="sort"
+          :category-options="categoryOptions"
+          :tag-options="tagOptions"
+          :year-options="yearOptions"
+          :result-count="filteredEntries.length"
+          :total-count="allEntries.length"
+          @reset="resetFilters"
+        />
+      </section>
 
-      <ContentCollectionGrid :entries="filteredEntries" />
+      <section class="vt-works-section" aria-labelledby="works-results-heading">
+        <h2 id="works-results-heading" class="vt-works-section__heading">공개 콘텐츠</h2>
+        <ContentCollectionGrid :entries="filteredEntries" />
+      </section>
     </div>
   </article>
 </template>

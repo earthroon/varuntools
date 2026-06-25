@@ -4,6 +4,7 @@ import MarkdownLightbox from '@/components/markdown/MarkdownLightbox.vue'
 import MarkdownToc from '@/components/markdown/MarkdownToc.vue'
 import WorkDetailFooter from '@/components/works/WorkDetailFooter.vue'
 import { useActiveHeading } from '@/composables/useActiveHeading'
+import { useObservedHeadings } from '@/composables/useObservedHeadings'
 import { useSectionLightbox } from '@/composables/useSectionLightbox'
 import { mountImageMagnifier } from '@/composables/useImageMagnifier'
 import { usePageMeta } from '@/composables/usePageMeta'
@@ -37,7 +38,11 @@ let cleanupImageMagnifier: (() => void) | null = null
 
 const pageRef = computed(() => props.page)
 const pagesRef = computed(() => props.pages)
-const headings = computed(() => props.page?.headings || [])
+const compiledHeadings = computed(() => props.page?.headings || [])
+const { observedHeadings, refreshObservedHeadings } = useObservedHeadings(markdownRoot)
+const headings = computed(() =>
+  observedHeadings.value.length > 0 ? observedHeadings.value : compiledHeadings.value,
+)
 
 const { activeHeadingId, refreshActiveHeading } = useActiveHeading(
   markdownRoot,
@@ -63,6 +68,7 @@ useMarkdownComponentMount({
   pages: pagesRef,
   onMounted: async () => {
     unmountLightbox()
+    await refreshObservedHeadings()
     await refreshActiveHeading()
     const autoMiniGallery = (props.page?.frontmatter as any)?.gallery?.autoMini !== false
     mountLightbox({ miniGallery: autoMiniGallery })
@@ -96,7 +102,6 @@ const workDetailContext = computed(() => {
   if (!shouldUseWorkDetailFooter.value || !props.page) return null
   return getWorkDetailContext(props.pages, props.page.slug)
 })
-
 
 onBeforeUnmount(() => {
   cleanupImageMagnifier?.()

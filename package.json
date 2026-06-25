@@ -243,7 +243,8 @@
     "smoke:cms207l": "node scripts/cms207l-pages-deploy-mode-smoke.mjs && node scripts/cms207l-dist-artifact-readback-smoke.mjs",
     "smoke:cms207l-live": "node scripts/cms207l-live-published-artifact-smoke.mjs",
     "smoke:cms207l-contract": "node scripts/cms207l-no-stale-pages-artifact-contract-smoke.mjs",
-    "smoke:cms207m": "node scripts/cms207m-static-prerender-rehydrate-smoke.mjs && node scripts/cms207m-no-raw-static-markdown-freeze-smoke.mjs"
+    "smoke:cms207m": "node scripts/cms207m-static-prerender-rehydrate-smoke.mjs && node scripts/cms207m-no-raw-static-markdown-freeze-smoke.mjs",
+    "smoke:cms207n": "node scripts/cms207n-observed-heading-navigation-smoke.mjs && node scripts/cms207n-works-page-toc-smoke.mjs && node scripts/cms207n-runtime-markdown-heading-observer-smoke.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
