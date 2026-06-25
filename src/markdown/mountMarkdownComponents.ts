@@ -533,6 +533,8 @@ export function mountMarkdownComponents(
       pages: options.pages,
       title: stringAttr(el.dataset.title, ''),
       kind: stringAttr(el.dataset.kind, ''),
+      items: parseListAttr(el.dataset.items),
+      layout: stringAttr(el.dataset.layout, 'grid'),
       limit: numberAttr(el.dataset.limit, 12),
     }
 
