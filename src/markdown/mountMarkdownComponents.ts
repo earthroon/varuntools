@@ -490,6 +490,7 @@ export function mountMarkdownComponents(
     const el = element as HTMLElement
     const props = {
       type: el.dataset.type || 'note',
+      title: stringAttr(el.dataset.title, ''),
       html: el.innerHTML,
     }
 
