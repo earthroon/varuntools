@@ -1,7 +1,7 @@
 import type { DirectiveFieldValue, ParsedDirective } from '../directiveTypes'
 import { attrValue, attrsToHtml, renderInvalidDirective } from '../directiveHtml'
 
-const VALID_SOURCES = new Set(['products', 'works', 'tools', 'lab', 'all'])
+const VALID_SOURCES = new Set(['products', 'works', 'tools', 'lab', 'post', 'page', 'case-study', 'all'])
 const VALID_LAYOUTS = new Set(['product-grid', 'card-grid', 'compact-list'])
 const VALID_EMPTY_MODES = new Set(['notice', 'hide'])
 
