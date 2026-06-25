@@ -42,6 +42,12 @@ const assetMap = new Map<string, string>(
   Object.entries(assetModules).map(([key, value]) => [normalizeSlash(key), String(value)]),
 )
 
+const CONTENT_ASSET_PUBLIC_BASE_URL = String(
+  import.meta.env.VITE_ASSET_PUBLIC_BASE_URL ||
+  import.meta.env.VITE_CONTENT_ASSET_PUBLIC_BASE_URL ||
+  'https://assets.varun.tools',
+).replace(/\/+$/, '')
+
 function normalizeSlash(value: string): string {
   return value.replace(/\\/g, '/')
 }
@@ -52,6 +58,14 @@ function trimSource(value: string | undefined): string {
 
 function isExternalUrl(value: string): boolean {
   return /^https?:\/\//i.test(value) || /^\/\//.test(value)
+}
+
+function isRuntimeContentAssetPath(value: string): boolean {
+  return /^\/assets\/content\//i.test(value)
+}
+
+function resolveRuntimeContentAssetUrl(value: string): string {
+  return `${CONTENT_ASSET_PUBLIC_BASE_URL}${value.startsWith('/') ? value : `/${value}`}`
 }
 
 function isUnsupportedProtocol(value: string): boolean {
@@ -134,6 +148,17 @@ export function resolveContentAsset(options: ResolveContentAssetOptions): AssetR
   }
 
   if (source.startsWith('/')) {
+    if (isRuntimeContentAssetPath(source)) {
+      return {
+        source,
+        url: resolveRuntimeContentAssetUrl(source),
+        kind: 'external',
+        found: true,
+        reason: 'external_url',
+        relativePath: source.replace(/^\/+/, ''),
+      }
+    }
+
     return {
       source,
       url: source,
