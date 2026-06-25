@@ -385,6 +385,14 @@ jobs:
           node scripts/commit-vacms-materialized-source.mjs --workflow
           echo "source_commit" > vacms-last-success-stage.txt
 
+      - name: Verify main source commit readback
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207i-main-source-readback-smoke.mjs --workflow
+          echo "main_source_readback" > vacms-last-success-stage.txt
+
       - name: Build VACMS live markdown registry source
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -428,6 +436,15 @@ jobs:
           set -euo pipefail
           node scripts/prerender-homepage-recent-feed.mjs --workflow
           echo "homepage_recent_feed_prerender" > vacms-last-success-stage.txt
+
+      - name: Build runtime public content index
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/build-public-content-index.mjs --workflow
+          npm run smoke:cms207h
+          echo "runtime_public_content_index" > vacms-last-success-stage.txt
       - name: Verify static route HTML materialization
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -516,6 +533,14 @@ jobs:
           node scripts/cms207g-home-surface-readback-smoke.mjs --workflow
           echo "homepage_recent_feed_readback" > vacms-last-success-stage.txt
 
+      - name: Verify publish button gh-pages route and public index readback
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207i-gh-pages-route-and-index-readback-smoke.mjs --workflow
+          echo "publish_button_gh_pages_readback" > vacms-last-success-stage.txt
+
       - name: Verify gh-pages runtime public content index readback
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -523,6 +548,14 @@ jobs:
           set -euo pipefail
           node scripts/cms207h-public-content-index-readback-smoke.mjs --workflow
           echo "public_content_index_readback" > vacms-last-success-stage.txt
+
+      - name: Verify publish button remote commit deploy closure
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207i-publish-button-closure-smoke.mjs --workflow
+          echo "publish_button_remote_closure" > vacms-last-success-stage.txt
 
       - name: Finalize live public site deploy
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
@@ -543,6 +576,22 @@ jobs:
           const contentHash = crypto.createHash('sha256').update(content).digest('hex')
           const deployEvidencePath = 'vacms-pages-deploy-evidence.json'
           const deployEvidence = JSON.parse(fs.readFileSync(deployEvidencePath, 'utf8'))
+          const publishButtonClosureReceiptPath = 'vacms-publish-button-closure-receipt.json'
+          if (!fs.existsSync(publishButtonClosureReceiptPath)) {
+            throw new Error('CMS-207I publish button closure receipt is missing')
+          }
+          const publishButtonClosureReceipt = JSON.parse(fs.readFileSync(publishButtonClosureReceiptPath, 'utf8'))
+          if (
+            !publishButtonClosureReceipt ||
+            publishButtonClosureReceipt.ok !== true ||
+            publishButtonClosureReceipt.localPushRequired !== false ||
+            publishButtonClosureReceipt.mainReadbackVerified !== true ||
+            publishButtonClosureReceipt.ghPagesRouteReadbackVerified !== true ||
+            publishButtonClosureReceipt.publicContentIndexReadbackVerified !== true
+          ) {
+            throw new Error('CMS-207I publish button closure receipt is not sealed')
+          }
+
           const sourceCommitReceiptPath = 'vacms-source-commit-receipt.json'
           if (!fs.existsSync(sourceCommitReceiptPath)) {
             throw new Error('CMS-204AS source commit receipt is missing')

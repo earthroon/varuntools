@@ -236,7 +236,8 @@
     "smoke:cms207f": "node scripts/cms207f-homepage-recent-public-content-smoke.mjs && node scripts/cms207f-homepage-no-featured-works-only-smoke.mjs",
     "smoke:cms207g": "node scripts/cms207g-homepage-static-recent-feed-smoke.mjs && node scripts/cms207g-no-spa-only-home-feed-smoke.mjs",
     "build:public-content-index": "node scripts/build-public-content-index.mjs",
-    "smoke:cms207h": "node scripts/cms207h-public-content-index-smoke.mjs && node scripts/cms207h-home-runtime-index-contract-smoke.mjs"
+    "smoke:cms207h": "node scripts/cms207h-public-content-index-smoke.mjs && node scripts/cms207h-home-runtime-index-contract-smoke.mjs",
+    "smoke:cms207i": "node scripts/cms207i-no-local-push-contract-smoke.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
