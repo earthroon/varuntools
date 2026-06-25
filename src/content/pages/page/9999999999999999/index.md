@@ -12,7 +12,7 @@ slug: "page/9999999999999999"
 source: "vacms"
 vacmsSlug: "9999999999999999"
 vacmsPageId: "page_3576763e4b3169f973471d57"
-vacmsRevisionId: "rev_0d829870166b1b39a90bfe3c"
+vacmsRevisionId: "rev_99f66a20522c620a0d69d882"
 ---
 
 
@@ -25,8 +25,7 @@ vacmsRevisionId: "rev_0d829870166b1b39a90bfe3c"
 
 ::warning
 title: Warning
-::
-?댁슜???낅젰?섏꽭??
+ㅇㄹㅇㄹㅇㄹㅇ
 ::
 
 
@@ -34,4 +33,13 @@ title: Warning
 eyebrow: 나는
 title: 나는
 subtitle: 나는
+::
+
+
+
+
+::featured-works
+title: Featured Works
+items: work-1|Work title|/works/work-1|featured
+layout: compact
 ::
