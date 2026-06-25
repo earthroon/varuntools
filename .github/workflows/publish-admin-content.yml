@@ -609,7 +609,7 @@ jobs:
           echo "live_published_artifact_readback" > vacms-last-success-stage.txt
 
       - name: Verify live GitHub Pages domain readback
-        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' && env.PAGES_DEPLOY_STRATEGY == 'branch' }}
         shell: bash
         env:
           LIVE_ORIGIN: https://www.varun.tools
