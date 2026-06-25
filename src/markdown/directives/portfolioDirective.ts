@@ -115,8 +115,12 @@ export function renderPortfolioHeroDirective(directive: ParsedDirective): string
   return templateHtml('portfolio-hero', directive)
 }
 
+function hasWorkSummaryAttrs(directive: ParsedDirective): boolean {
+  return ['problem', 'solution', 'impact', 'summary'].some((key) => stringField(directive.attrs[key]))
+}
+
 export function renderWorkSummaryDirective(directive: ParsedDirective): string {
-  if (!stringField(directive.attrs.title) && !directive.body.trim()) return renderInvalidDirective('work-summary', 'missing_title_or_body')
+  if (!stringField(directive.attrs.title) && !directive.body.trim() && !hasWorkSummaryAttrs(directive)) return renderInvalidDirective('work-summary', 'missing_title_or_body')
   return templateHtml('work-summary', directive)
 }
 
