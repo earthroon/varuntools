@@ -467,6 +467,14 @@ jobs:
           node scripts/cms207d-no-empty-app-shell-smoke.mjs --workflow
           echo "static_article_shell_guard" > vacms-last-success-stage.txt
 
+      - name: Verify static prerender fallback rehydrate
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run smoke:cms207m
+          echo "static_prerender_rehydrate" > vacms-last-success-stage.txt
+
       - name: Verify homepage static recent feed
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash

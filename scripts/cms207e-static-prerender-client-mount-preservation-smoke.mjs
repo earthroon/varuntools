@@ -11,30 +11,24 @@ function fail(code, message) {
   throw error
 }
 
+function stripComments(source) {
+  return String(source || '')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/(^|\s)\/\/.*$/gm, '')
+}
+
 function main() {
   if (!fs.existsSync(MAIN_FILE)) fail('CMS_207E_MAIN_TS_MISSING', `${MAIN_FILE} is missing`)
-  const source = fs.readFileSync(MAIN_FILE, 'utf8')
+  const source = stripComments(fs.readFileSync(MAIN_FILE, 'utf8'))
 
-  const required = [
-    ['CMS_207E_META_MARKER_MISSING', 'meta[name="vacms-static-article-prerender"]'],
-    ['CMS_207E_ROOT_MARKER_MISSING', 'data-vacms-static-prerender'],
-    ['CMS_207E_ARTICLE_MARKER_MISSING', 'data-vacms-static-article'],
-    ['CMS_207E_GUARD_NAME_MISSING', 'hasStaticArticlePrerender'],
-  ]
-
-  for (const [code, token] of required) {
-    if (!source.includes(token)) fail(code, `${MAIN_FILE} does not contain ${token}`)
+  if (source.includes('hasStaticArticlePrerender') || source.includes('if (!hasStaticArticlePrerender)')) {
+    fail('CMS_207E_LEGACY_MOUNT_SKIP_REMAINS', 'legacy static prerender mount skip remains; CMS-207M requires client rehydrate')
   }
-
-  const mountIndex = source.indexOf('createApp(App).use(router).mount')
-  const guardIndex = source.indexOf('if (!hasStaticArticlePrerender)')
-  if (mountIndex < 0) fail('CMS_207E_MOUNT_CALL_MISSING', 'Vue mount call missing')
-  if (guardIndex < 0) fail('CMS_207E_MOUNT_GUARD_MISSING', 'mount guard missing')
-  if (mountIndex < guardIndex) fail('CMS_207E_MOUNT_BEFORE_GUARD', 'Vue mount appears before static prerender guard')
-
-  const guardedBlock = /if\s*\(!hasStaticArticlePrerender\)\s*\{[\s\S]*?createApp\(App\)\.use\(router\)\.mount\(['"]#app['"]\)[\s\S]*?\}/m
-  if (!guardedBlock.test(source)) {
-    fail('CMS_207E_MOUNT_NOT_GUARDED', 'Vue mount is not guarded by !hasStaticArticlePrerender')
+  if (!/const\s+root\s*=\s*document\.querySelector\(['"]#app['"]\)/.test(source)) {
+    fail('CMS_207E_ROOT_MOUNT_GUARD_MISSING', 'root mount guard missing')
+  }
+  if (!source.includes('createApp(App).use(router).mount(root)')) {
+    fail('CMS_207E_MOUNT_CALL_MISSING', 'Vue root mount call missing')
   }
 
   console.log(PASS_STATUS)

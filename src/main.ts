@@ -29,13 +29,6 @@ import './styles/generated-content.css'
 
 const root = document.querySelector('#app')
 
-const hasStaticArticlePrerender =
-  document
-    .querySelector('meta[name="vacms-static-article-prerender"]')
-    ?.getAttribute('content') === 'true' &&
-  root?.getAttribute('data-vacms-static-prerender') === 'true' &&
-  Boolean(root.querySelector('[data-vacms-static-article="true"]'))
-
-if (!hasStaticArticlePrerender) {
-  createApp(App).use(router).mount('#app')
+if (root) {
+  createApp(App).use(router).mount(root)
 }
