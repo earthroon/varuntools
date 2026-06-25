@@ -28,8 +28,25 @@
     <link rel="stylesheet" crossorigin href="/assets/index-IbLPVqmz.css">
       <meta name="vacms-static-route" content="/products">
     <meta name="vacms-static-route-source" content="src/content/pages/products/index.md">
+    <meta name="vacms-static-article-prerender" content="true">
+    <meta name="vacms-static-article-title" content="상품">
   </head>
   <body>
-    <div id="app"></div>
+    <main id="app" data-vacms-static-prerender="true">
+<article class="vacms-static-article" data-vacms-static-article="true" data-vacms-route="/products" data-vacms-source="src/content/pages/products/index.md">
+<header class="vacms-static-article-header">
+<p class="vacms-static-article-kicker">products</p>
+<h1>상품</h1>
+<p class="vacms-static-article-summary">판매 가능 상품과 준비 중인 상품을 모아두는 카탈로그입니다.</p>
+</header>
+<section class="markdown-document vacms-static-article-body"><h1>상품</h1>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: 상품 카탈로그</p></div></section>
+<p>바룬툴즈의 판매 가능 상품과 준비 중인 상품을 모아두는 카탈로그입니다. Commit 48 기준으로 자체 결제는 구현하지 않고, Toss Payments 결제 링크와 Cloudflare 디지털 다운로드 URL을 상품 메타데이터로 관리합니다. ::</p>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: note title: 스토어 정책</p></div></section>
+<p>상품 가격은 공개한다. <code>coming-soon</code>과 <code>sold-out</code> 상태의 상품도 메인/목록 노출 후보로 유지할 수 있다. 구매는 <code>product.checkoutUrl</code>에 연결한 Toss Payments 링크를 사용하고, 디지털 상품 다운로드는 추후 <code>product.downloadUrl</code>에 Cloudflare 연동 URL을 연결한다. ::</p>
+<section class="markdown-unknown-directive" data-directive="store-nav"><div class="markdown-unknown-directive-body"><p>title: 상품 분류 intro: 상품을 매대별로 둘러봅니다. mode: categories currentCategory: all showCounts: true showEmpty: true includeAllLink: true</p></div></section>
+<section class="markdown-unknown-directive" data-directive="product-catalog"><div class="markdown-unknown-directive-body"><p>title: 상품 카탈로그 intro: 판매 가능 상품과 준비 중인 상품을 검색하고 상태별로 확인합니다. limit: 48 showUnavailable: true showCategoryFilter: true showCollectionFilter: true showSubcategoryFilter: false defaultCategory: all defaultStatus: all defaultType: all defaultCollection: all defaultTag: all defaultSort: order emptyTitle: 상품이 없습니다 emptyBody: 필터 조건을 바꾸거나 전체 상품으로 돌아가세요.</p></div></section></section>
+</article>
+</main>
   </body>
 </html>

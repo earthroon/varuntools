@@ -28,8 +28,192 @@
     <link rel="stylesheet" crossorigin href="/assets/index-IbLPVqmz.css">
       <meta name="vacms-static-route" content="/experiment/lab-markdown-gallery">
     <meta name="vacms-static-route-source" content="src/content/pages/lab-markdown-gallery/index.md">
+    <meta name="vacms-static-article-prerender" content="true">
+    <meta name="vacms-static-article-title" content="마크다운 갤러리 실험실">
   </head>
   <body>
-    <div id="app"></div>
+    <main id="app" data-vacms-static-prerender="true">
+<article class="vacms-static-article" data-vacms-static-article="true" data-vacms-route="/experiment/lab-markdown-gallery" data-vacms-source="src/content/pages/lab-markdown-gallery/index.md">
+<header class="vacms-static-article-header">
+<p class="vacms-static-article-kicker">experiment</p>
+<h1>마크다운 갤러리 실험실</h1>
+<p class="vacms-static-article-summary">마크다운 화면 구성요소를 검수하는 시각 QA 갤러리입니다.</p>
+</header>
+<section class="markdown-document vacms-static-article-body"><h1>마크다운 갤러리 실험실</h1>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: 시각 QA 기준</p></div></section>
+<p>이 페이지는 바룬툴즈 Markdown 컴포넌트의 시각 검수 기준판입니다.</p>
+<ul><li>실제 Markdown renderer를 통과합니다.</li><li>intentionally broken sample은 실제 content에 넣지 않습니다.</li><li>오류/누락/경계 케이스는 fixture와 smoke script에서 검증합니다.</li></ul>
+<p>::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: sm</p></div></section>
+<h2>1. 캡션 이미지</h2>
+<p>일반 Markdown image와 <code>captioned-image</code> directive의 tooltip/chip/lightbox 연결을 확인합니다.</p>
+<p><img src="./images/qa-card-a.svg" alt="caption 없는 이미지"></p>
+<p><img src="./images/qa-card-a.svg &quot;[필수] 대표 이미지 설명입니다.&quot;" alt="필수 캡션"></p>
+<p><img src="./images/qa-card-b.svg &quot;[선택] 보조 설명 이미지입니다.&quot;" alt="선택 캡션"></p>
+<p><img src="./images/qa-card-c.svg &quot;[기타] 기타 참고 이미지입니다.&quot;" alt="기타 캡션"></p>
+<section class="markdown-unknown-directive" data-directive="captioned-image"><div class="markdown-unknown-directive-body"><p>src: ./images/qa-card-b.svg alt: 명시형 captioned image caption: Directive 기반 캡션 툴팁입니다. tag: 선택 lightbox: true</p></div></section>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>1.5. 캡션 이미지 프레임</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: 캡션 이미지 프레임 Contract</p></div></section>
+<p>Captioned image의 badge, help button, tooltip은 반드시 image frame 내부 overlay로 귀속됩니다. badge는 줄바꿈/세로쓰기 없이 한 줄 pill 형태로 보여야 합니다. tooltip은 이미지 frame hover로 열리지 않고, 오직 <code>?</code> help button hover 또는 keyboard focus-visible 상태에서만 열립니다. ::</p>
+<p><img src="./images/qa-card-a.svg &quot;[필수] 필수 뱃지 프레임 고정 확인&quot;" alt="Required Badge"></p>
+<p><img src="./images/qa-card-b.svg &quot;[선택] 선택 뱃지 프레임 고정 확인&quot;" alt="Optional Badge"></p>
+<p><img src="./images/qa-card-c.svg &quot;[기타] 기타 뱃지 프레임 고정 확인&quot;" alt="Misc Badge"></p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>2. Before / After</h2>
+<p>기본 전후 비교와 세로형 이미지의 natural aspect-ratio 반영을 확인합니다.</p>
+<section class="markdown-unknown-directive" data-directive="before-after"><div class="markdown-unknown-directive-body"><p>before: ./images/qa-before.svg after: ./images/qa-after.svg caption: 기본 전후 비교 initial: 50</p></div></section>
+<section class="markdown-unknown-directive" data-directive="before-after"><div class="markdown-unknown-directive-body"><p>before: ./images/qa-before.svg after: ./images/qa-after.svg caption: initial 30 비교 initial: 30</p></div></section>
+<section class="markdown-unknown-directive" data-directive="before-after"><div class="markdown-unknown-directive-body"><p>before: ./images/qa-before-tall.svg after: ./images/qa-after-tall.svg caption: 세로형 이미지 비율 검수 initial: 35</p></div></section>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>3. Pagecard Grid</h2>
+<p>명시 items와 registry query 기반 pagecard grid를 확인합니다.</p>
+<section class="markdown-unknown-directive" data-directive="pagecard-grid"><div class="markdown-unknown-directive-body"><p>items: /wiper,/lab-markdown-gallery columns: auto</p></div></section>
+<section class="markdown-unknown-directive" data-directive="pagecard-grid"><div class="markdown-unknown-directive-body"><p>query: lab limit: 3 sort: order columns: compact</p></div></section>
+<section class="markdown-unknown-directive" data-directive="pagecard-grid"><div class="markdown-unknown-directive-body"><p>items: /lab-markdown-gallery columns: wide</p></div></section>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>4. 마크다운 박스</h2>
+<p>박스 타입, tone, collapsible, defaultOpen 상태를 확인합니다.</p>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: note title: 메모</p></div></section>
+<p>일반 메모 박스입니다. ::</p>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: tip title: Tip</p></div></section>
+<p>작은 사용 팁을 담는 박스입니다. ::</p>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: SSOT 기준</p></div></section>
+<p>상태 귀속 위치를 명시하는 박스입니다. ::</p>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: warning title: 조용한 보정 금지 collapsible: true defaultOpen: true</p></div></section>
+<p>불명확한 값은 예쁘게 메우지 않고 warning으로 남깁니다. ::</p>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: danger title: Danger</p></div></section>
+<p>실제 실패나 손실 가능성이 있는 상태를 강조합니다. ::</p>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: quote title: Quote</p></div></section>
+<p>인용이나 관찰 기록을 담는 박스입니다. ::</p>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: decision title: 접힌 결정 기록 collapsible: true defaultOpen: false</p></div></section>
+<p>이 박스는 기본적으로 닫힌 상태로 시작합니다. ::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>5. Image Card</h2>
+<p>이미지 카드가 captioned-image나 pagecard-grid와 섞이지 않고 독립 카드로 렌더되는지 확인합니다.</p>
+<section class="markdown-unknown-directive" data-directive="image-card"><div class="markdown-unknown-directive-body"><p>src: ./images/qa-card-c.svg alt: 이미지 카드 QA caption: 이미지 카드 설명 tag: QA href: /lab-markdown-gallery</p></div></section>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>6. Section Gap</h2>
+<p>Native section gap directive가 legacy token 없이 시각 간격을 만드는지 확인합니다.</p>
+<p>위 문단입니다.</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: lg</p></div></section>
+<p>아래 문단입니다.</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>7. Asset Registry Policy</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: warning title: Missing Asset QA 정책</p></div></section>
+<p>실제 missing asset 샘플은 fixture와 smoke에서만 검증합니다. 시각 QA 페이지는 validation-clean 상태를 유지합니다. ::</p>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: Asset SSOT</p></div></section>
+<p>콘텐츠 에셋 경로 판정은 Asset Registry 정책을 기준으로 합니다. Runtime과 validation이 서로 다른 방식으로 경로를 해석하지 않아야 합니다. ::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>8. 기존 문법 마이그레이션 미리보기</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: note title: 기존 문법 점검 명령</p></div></section>
+<p>이 프로젝트는 legacy 문법을 런타임에서 제한적으로 흡수하지만, 원본 정리는 CLI로 수행합니다.</p>
+<pre><code>npm run audit:legacy
+npm run codemod:legacy
+npm run codemod:legacy:write</code></pre>
+<p>::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>9. Boundary Rule</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: Nested Directive Boundary</p></div></section>
+<p><code>markdown-box</code> 내부에는 일반 Markdown만 넣습니다. <code>pagecard-grid</code>, <code>before-after</code>, <code>captioned-image</code> 같은 Vue directive는 top-level block으로 분리합니다. ::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>10. Mobile Density Check</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: tip title: 모바일 확인 항목</p></div></section>
+<ul><li>TOC floating button 위치</li><li>caption tooltip touch target</li><li>before-after slider handle</li><li>pagecard grid column collapse</li><li>collapsible box header height</li></ul>
+<p>::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>11. Accessibility Check</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: 접근성 확인 기준</p></div></section>
+<p>이 페이지는 마우스 없이도 주요 상호작용을 확인할 수 있어야 합니다.</p>
+<ul><li>Tab으로 TOC/카드/박스/이미지 설명 버튼 접근</li><li>Enter/Space로 접힘 박스 토글</li><li>Before/After slider 방향키 조작</li><li>Escape로 모바일 TOC/Lightbox 닫기</li><li>reduced motion 환경에서 과한 전환 감소</li></ul>
+<p>::</p>
+<h2>12. SEO Metadata Check</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: SEO SSOT</p></div></section>
+<p>페이지 제목, 설명, 대표 이미지는 Markdown frontmatter에서 가져옵니다. 사이트 공통 origin과 default OG 이미지는 <code>siteConfig</code>에서 가져옵니다. ::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>13. Video Player</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: Native Video Playback QA</p></div></section>
+<p>Commit 30은 스트리밍 인프라가 아니라 native video 재생 입구를 검수합니다. <code>preload: auto</code>, <code>playsInline</code>, native controls를 기준으로 준 실시간 재생감을 확인합니다. ::</p>
+<section class="markdown-unknown-directive" data-directive="video-player"><div class="markdown-unknown-directive-body"><p>src: ./videos/qa-video.webm poster: ./images/qa-video-poster.svg title: Video Player QA caption: Native video-player directive sample for progressive playback. controls: true autoplay: false loop: true muted: false playsInline: true preload: auto</p></div></section>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>14. 섹션 범위 라이트박스와 미니 갤러리</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: 미니 갤러리 계약</p></div></section>
+<p>이미지를 클릭하면 페이지 전체가 아니라, 현재 구분선 section 안의 이미지들만 라이트박스 갤러리로 묶입니다. 섹션 안 이미지가 2개 이상이면, 마지막 이미지 아래에 mini gallery strip이 자동 생성됩니다. 썸네일을 누르면 해당 section group만 라이트박스로 열립니다. ::</p>
+<p><img src="./images/qa-card-a.svg &quot;[필수] 첫 번째 섹션 이미지 A&quot;" alt="Gallery A-1"></p>
+<p><img src="./images/qa-card-b.svg &quot;[선택] 첫 번째 섹션 이미지 B&quot;" alt="Gallery A-2"></p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: sm</p></div></section>
+<p><img src="./images/qa-card-c.svg &quot;[기타] 두 번째 섹션 이미지 C&quot;" alt="Gallery B-1"></p>
+<p><img src="./images/qa-before.svg &quot;[선택] 두 번째 섹션 이미지 D&quot;" alt="Gallery B-2"></p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>15. 수동 갤러리 스트립</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: 수동 갤러리 계약</p></div></section>
+<p><code>gallery-strip</code>은 작성자가 직접 이미지 묶음을 선언하는 수동 갤러리입니다. 이 directive가 있는 section에서는 자동 mini gallery가 중복 생성되지 않습니다. ::</p>
+<section class="markdown-unknown-directive" data-directive="gallery-strip"><div class="markdown-unknown-directive-body"><p>title: 수동 스트립 갤러리 caption: strip layout sample. layout: strip lightbox: true</p></div></section>
+<ul><li>./images/qa-card-a.svg | Manual gallery A</li><li>./images/qa-card-b.svg | Manual gallery B</li><li>./images/qa-card-c.svg | Manual gallery C</li></ul>
+<p>::</p>
+<section class="markdown-unknown-directive" data-directive="gallery-strip"><div class="markdown-unknown-directive-body"><p>title: 수동 그리드 갤러리 caption: grid layout sample. layout: grid lightbox: true</p></div></section>
+<ul><li>./images/qa-before.svg | Grid gallery A</li><li>./images/qa-after.svg | Grid gallery B</li><li>./images/qa-before-tall.svg | Grid gallery C</li></ul>
+<p>::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>16. 갤러리 확대 보기</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: 갤러리 확대 보기 계약</p></div></section>
+<p>갤러리 썸네일에 마우스를 올리면 돋보기 박스가 나타납니다. 돋보기 박스 안의 확대 영역은 마우스 포인터 또는 드래그 좌표를 따라 실시간으로 바뀝니다.</p>
+<ul><li>클릭 1회: 해당 이미지의 돋보기 비활성화</li><li>같은 이미지에서 0.1초 안에 한 번 더 클릭: 돋보기 재활성화</li><li>느린 두 번 클릭: double click으로 판정하지 않음</li></ul>
+<p>::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>17. Lightbox Zoom Inspection</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: Lightbox Zoom Contract</p></div></section>
+<p>라이트박스 안의 큰 이미지는 확대/축소/드래그 이동이 가능합니다.</p>
+<ul><li><code>+</code> / <code>-</code> 버튼 또는 키보드로 확대/축소</li><li><code>0</code>으로 초기화</li><li>확대 상태에서 드래그 pan</li><li>이미지가 바뀌면 zoom/pan reset</li><li><code>Ctrl + wheel</code>로 stage 위에서 확대/축소</li></ul>
+<p>::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>18. 모바일 터치 갤러리</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: Mobile Touch Contract</p></div></section>
+<p>모바일 라이트박스에서는 손가락 입력을 기준으로 이미지를 조작합니다.</p>
+<ul><li>두 손가락 pinch: 확대/축소</li><li>확대 상태 한 손가락 drag: 이미지 pan</li><li>1x 상태 좌우 swipe: 이전/다음 이미지 이동</li><li>double tap: 2x 확대 또는 reset</li><li>thumbnail tray는 가로 스크롤을 유지합니다.</li></ul>
+<p>::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>19. Lightbox Pan Clamp</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: Lightbox Pan Boundary</p></div></section>
+<p>확대된 이미지는 stage 밖으로 과하게 벗어나지 않도록 이동 범위가 제한됩니다. <code>Ctrl + wheel</code>, pinch, double tap 확대는 입력 지점을 기준으로 focal zoom을 수행합니다. ::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>20. Lightbox Metadata</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: Lightbox Metadata Contract</p></div></section>
+<p>라이트박스는 현재 이미지의 제목, 캡션, 순번, 원본 경로, gallery group을 표시합니다. Copy 버튼은 현재 gallery/image index를 담은 공유 링크를 생성합니다. 라이트박스 닫기/이전/다음/액션 버튼은 밝은 이미지 위에서도 icon/text가 명확히 보여야 하며, 모든 액션 버튼 텍스트는 중앙 정렬되어야 합니다. ::</p>
+<section class="markdown-unknown-directive" data-directive="gallery-strip"><div class="markdown-unknown-directive-body"><p>title: 수동 메타데이터 갤러리 caption: metadata panel sample. layout: strip lightbox: true</p></div></section>
+<ul><li>./images/qa-card-a.svg | 첫 번째 메타 이미지 | ./images/qa-card-a.svg | title=초기 시안; tool=Figma; tag=draft</li><li>./images/qa-card-b.svg | 두 번째 메타 이미지 | ./images/qa-card-b.svg | title=보정안; tool=Photoshop; tag=final</li></ul>
+<p>::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>21. Authoring &amp; Filing</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: Content Filing Contract</p></div></section>
+<p>새 페이지는 <code>src/content/pages/{category}/{slug}/index.md</code> 구조로 생성합니다. 이미지와 영상은 해당 페이지 폴더 내부의 <code>images/</code>, <code>videos/</code>에 둡니다. 새 페이지 생성은 <code>npm run new:page -- works project-name</code> 명령을 사용합니다. ::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>CSV Authoring</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: CSV Authoring Contract</p></div></section>
+<p>복잡한 Markdown directive를 직접 외우지 않고, <code>page.csv</code>를 작성한 뒤 <code>npm run csv:page</code>로 <code>index.md</code>를 생성합니다. CSV 기반 페이지에서는 <code>page.csv</code>가 작성 원본이고 <code>index.md</code>는 generated output입니다. ::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>22. Responsive UI</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: Responsive UI Contract</p></div></section>
+<p>와이드 화면에서도 본문 타이포그래피와 카드 폭은 과하게 확대되지 않습니다. 텍스트 본문은 읽기 폭을 유지하고, 모바일에서는 터치 UI 밀도를 보정합니다. 반응형은 화면이 넓다고 모든 UI를 키우는 것이 아니라, 정보 밀도와 읽기 폭을 안정화하는 기준입니다. ::</p>
+<h2>스토어 준비 콘텐츠 모델</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: 상품 카탈로그 Contract</p></div></section>
+<p>스토어 확장을 위해 <code>products</code> category와 <code>product</code> frontmatter를 사용한다. Commit 48은 자체 결제 기능이 아니라 상품 카탈로그와 외부 구매 링크 기반 모델을 추가한다. 상품 결제 링크는 Toss Payments URL을 <code>product.checkoutUrl</code>에 연결하고, 디지털 상품 다운로드는 추후 Cloudflare URL을 <code>product.downloadUrl</code>에 연결한다. 상품 가격은 공개하며 <code>coming-soon</code>과 <code>sold-out</code> 상태도 <code>showWhenUnavailable: true</code> 기준으로 메인/목록 노출 후보에 포함한다. ::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>Homepage Index</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: Homepage Index Contract</p></div></section>
+<p>홈페이지는 works, products, tools, lab 데이터를 개별 페이지 frontmatter에서 수집해 섹션별 카드로 노출한다. 상품은 가격을 공개하며, 준비중/품절 상품도 설정에 따라 목록에 표시한다. ::</p>
+<h2>Seed Content Empty Section Contract</h2>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: Seed Content Empty Section Contract</p></div></section>
+<p>Commit 50-0 기준으로 홈/스토어 섹션은 항목이 없을 때 개발자용 <code>아직 표시할 항목이 없습니다.</code> 문구를 직접 노출하지 않습니다. <code>::home-section</code>은 <code>emptyMode: notice</code> 또는 <code>emptyMode: hide</code>를 통해 사용자용 안내 카드 또는 섹션 숨김을 선택합니다. 상품 seed는 실제 상품명, SKU, 가격, 구매 링크가 있을 때만 public content tree에 추가합니다. ::</p>
+<section class="markdown-unknown-directive" data-directive="section-gap"><div class="markdown-unknown-directive-body"><p>size: md</p></div></section>
+<h2>Media Breakout Contract</h2>
+<p>와이드 화면에서 본문 문단은 읽기 폭을 유지하고, 아래 미디어 컴포넌트들은 본문보다 넓은 rail로 펼쳐져야 한다.</p>
+<ul><li>captioned image</li><li>gallery strip</li><li>video player</li><li>before-after</li></ul>
+<p>markdown-box는 넓어지면 안 된다.</p>
+<section class="markdown-box" data-directive="markdown-box"><div class="markdown-box-body"><p>type: ssot title: Media Breakout Contract</p></div></section>
+<p>텍스트 rail은 <code>--vt-content-max</code>에 남고, 미디어 rail은 <code>--vt-media-max</code>, 홈 카드 rail은 <code>--vt-home-max</code>에 귀속됩니다.</p>
+<p><code>markdown-box</code>는 구조/주의/SSOT 설명 블록이므로 wide rail로 빠져나가지 않습니다. ::</p></section>
+</article>
+</main>
   </body>
 </html>
