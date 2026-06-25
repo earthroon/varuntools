@@ -18,7 +18,7 @@ function findGenericDirectiveEnd(state: any, startLine: number, endLine: number)
   return -1
 }
 
-const BODY_DIRECTIVES = new Set(['markdown-box', 'note', 'tip', 'warning', 'gallery-strip', 'editorial-columns', 'portfolio-hero', 'work-summary', 'role-stack', 'case-section', 'metric-card', 'tool-stack', 'quote-block', 'case-gallery', 'related-works', 'field-spec'])
+const BODY_DIRECTIVES = new Set(['markdown-box', 'pagecard-grid', 'note', 'tip', 'warning', 'gallery-strip', 'editorial-columns', 'portfolio-hero', 'work-summary', 'role-stack', 'case-section', 'metric-card', 'tool-stack', 'quote-block', 'case-gallery', 'related-works', 'field-spec'])
 
 function findMarkdownBoxEnd(state: any, startLine: number, endLine: number): number {
   const separatorLine = findGenericDirectiveEnd(state, startLine, endLine)

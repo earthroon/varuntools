@@ -50,10 +50,28 @@ function splitEditorialColumns(body: string): string[] {
   const normalized = body.replace(/\r\n/g, '\n').trim()
   if (!normalized) return []
 
-  return normalized
+  const canonical = normalized
     .split(/^---\s*$/m)
     .map((chunk) => chunk.trim())
     .filter(Boolean)
+
+  if (canonical.length >= 2) return canonical
+
+  const legacy: string[] = []
+  let current: string[] = []
+
+  for (const line of normalized.split('\n')) {
+    if (/^###\s+/.test(line) && current.some((item) => item.trim())) {
+      legacy.push(current.join('\n').trim())
+      current = []
+    }
+
+    current.push(line)
+  }
+
+  if (current.some((item) => item.trim())) legacy.push(current.join('\n').trim())
+
+  return legacy.length >= 2 ? legacy : canonical
 }
 
 export function renderEditorialTitleDirective(directive: ParsedDirective): string {

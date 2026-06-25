@@ -96,12 +96,45 @@ function parseItemsFromBody(body: string): PagecardItem[] {
   return items.filter((item) => item.href)
 }
 
+function normalizeLegacyHref(id: string, href: string): string {
+  const explicitHref = stripQuote(href || '')
+  if (explicitHref) return explicitHref
+
+  const cleanId = stripQuote(id || '')
+  if (!cleanId) return ''
+  if (/^(https?:\/\/|\/)/.test(cleanId)) return cleanId
+
+  return '/page/' + cleanId.replace(/^\/+/, '')
+}
+
+function parseLegacyPipeItem(value: string): PagecardItem | null {
+  const [id = '', title = '', description = '', href = '', tag = ''] = value
+    .split('|')
+    .map((part) => stripQuote(part))
+
+  const normalizedHref = normalizeLegacyHref(id, href)
+  if (!normalizedHref) return null
+
+  return {
+    href: normalizedHref,
+    title: title || undefined,
+    description: description || undefined,
+    tag: tag || undefined,
+  }
+}
+
 function parseItemsAttr(value: DirectiveFieldValue | undefined): PagecardItem[] {
   if (typeof value !== 'string' || !value.trim()) return []
+
   return value
     .split(',')
-    .map((href) => ({ href: stripQuote(href) }))
-    .filter((item) => item.href)
+    .map((raw) => {
+      const item = raw.trim()
+      if (!item) return null
+      if (item.includes('|')) return parseLegacyPipeItem(item)
+      return { href: stripQuote(item) }
+    })
+    .filter((item): item is PagecardItem => Boolean(item?.href))
 }
 
 function escapeJsonAttr(value: unknown): string {
