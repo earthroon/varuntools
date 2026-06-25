@@ -12,7 +12,7 @@ slug: "page/9999999999999999"
 source: "vacms"
 vacmsSlug: "9999999999999999"
 vacmsPageId: "page_3576763e4b3169f973471d57"
-vacmsRevisionId: "rev_d10b3c48025ce9bc0faecde2"
+vacmsRevisionId: "rev_71d76f7923a65aceb8e706b2"
 ---
 
 
@@ -28,8 +28,18 @@ vacmsRevisionId: "rev_d10b3c48025ce9bc0faecde2"
 
 
 
-::featured-works
-title: 뭐랄까
-items: ㅇㄹㅇ|ㄹㅇㄹㅇ|ㅇㄹㅇㄹㅇ|ㅇㄹㅇㄹㅇ
-layout: editorial
+
+
+::editorial-title
+title: 사는것이란 무엇인가
+subtitle: 그대여, 어떻게 살 것인가?
+::
+
+::gallery-strip
+title: Visual Experiments
+caption: 吏곸젒 怨좊Ⅸ ?대?吏 臾띠쓬
+layout: strip
+lightbox: true
+::
+- ./images/manual-image.webp | Manual image alt text |  | id=image-1; caption=Manual image
 ::
