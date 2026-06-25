@@ -153,7 +153,16 @@ function renderDirective(name, innerMarkdown, diagnostics) {
     case 'note':
     case 'warning':
     case 'tip':
-      return `<aside class="markdown-callout markdown-callout-${escapeHtmlAttr(name)}" data-directive="${escapeHtmlAttr(name)}"><div class="markdown-callout-label">${escapeHtml(title)}</div><div class="markdown-callout-body">${inner}</div></aside>`
+      return [
+        `<aside class="markdown-callout markdown-callout-${escapeHtmlAttr(name)}" data-directive="${escapeHtmlAttr(name)}">`,
+        `<div class="markdown-callout-header">`,
+        `<span class="markdown-callout-icon">✦</span>`,
+        `<div class="markdown-callout-label">${escapeHtml(title)}</div>`,
+        `</div>`,
+        `<div class="markdown-callout-divider"></div>`,
+        `<div class="markdown-callout-body">${inner}</div>`,
+        `</aside>`,
+      ].join('')
     case 'markdown-box':
       return `<section class="markdown-box" data-directive="markdown-box">${title ? `<div class="markdown-box-title">${escapeHtml(title)}</div>` : ''}<div class="markdown-box-body">${inner}</div></section>`
     default:
@@ -161,7 +170,6 @@ function renderDirective(name, innerMarkdown, diagnostics) {
       return `<section class="markdown-unknown-directive" data-directive="${escapeHtmlAttr(name)}"><div class="markdown-unknown-directive-body">${inner}</div></section>`
   }
 }
-
 export function renderMarkdownBody(markdown, diagnostics = { directiveCount: 0, unknownDirectives: [] }) {
   const lines = String(markdown || '').replace(/\r\n/g, '\n').split('\n')
   const out = []
