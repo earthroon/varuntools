@@ -15,6 +15,11 @@ const INCLUDE_CATEGORIES = ['post', 'work', 'case-study', 'lab', 'tool', 'doc']
 const BLOCKED_STATUSES = new Set(['draft', 'archived', 'trashed'])
 const BLOCKED_VISIBILITIES = new Set(['hidden', 'private', 'draft'])
 
+const HOME_EYEBROW = '\uCD5C\uADFC \uACF5\uAC1C'
+const HOME_TITLE = '\uCD5C\uADFC \uAE00\uACFC \uC791\uC5C5'
+const HOME_DESCRIPTION = '\uC0C8\uB85C \uACF5\uAC1C\uB41C \uAE00, \uC791\uC5C5, \uC2E4\uD5D8\uC744 \uD55C \uBC88\uC5D0 \uBD05\uB2C8\uB2E4.'
+const HOME_INDEX_LINK_LABEL = '\uC804\uCCB4 \uC778\uB371\uC2A4 \uBCF4\uAE30'
+
 const args = new Set(process.argv.slice(2))
 const workflowMode = args.has('--workflow')
 
@@ -274,7 +279,7 @@ function compareEntries(a, b) {
 function renderTags(tags) {
   const limited = tags.slice(0, 3)
   if (!limited.length) return ''
-  return `<ul class="vt-home-recent-public-content__tags" aria-label="태그">${limited.map((tag) => `<li>${escapeHtml(tag)}</li>`).join('')}</ul>`
+  return `<ul class="vt-home-recent-public-content__tags" aria-label="??볥젃">${limited.map((tag) => `<li>${escapeHtml(tag)}</li>`).join('')}</ul>`
 }
 
 function renderCards(entries) {
@@ -291,13 +296,13 @@ function renderHomeFeed(entries) {
   return `<main id="app" data-vacms-home-static-prerender="true">
     <section class="vt-home-recent-public-content" data-vacms-home-recent-feed="true" aria-labelledby="home-recent-public-content-title">
       <div class="vt-home-recent-public-content__header">
-        <p class="vt-home-recent-public-content__eyebrow">최근 공개</p>
+        <p class="vt-home-recent-public-content__eyebrow">筌ㅼ뮄???⑤벀而?/p>
         <div class="vt-home-recent-public-content__heading-row">
           <div>
-            <h2 id="home-recent-public-content-title">최근 글과 작업</h2>
-            <p class="vt-home-recent-public-content__description">새로 공개된 글, 작업, 실험을 한 번에 봅니다.</p>
+            <h2 id="home-recent-public-content-title">${HOME_TITLE}</h2>
+            <p class="vt-home-recent-public-content__description">${HOME_DESCRIPTION}</p>
           </div>
-          <a class="vt-home-recent-public-content__link" href="/index">전체 인덱스 보기</a>
+          <a class="vt-home-recent-public-content__link" href="/index">?袁⑷퍥 ?紐껊쑔??癰귣떯由?/a>
         </div>
       </div>
       <div class="vt-home-recent-public-content__grid">${renderCards(entries)}
@@ -342,13 +347,22 @@ function main() {
 
   if (!feedEntries.length) fail('CMS_207G_NO_HOME_FEED_ENTRIES', 'no eligible public content entries for homepage recent feed')
 
-  const expectedIncluded = expected
+  const expectedEntry = expected
+    ? allEntries.find((entry) => trimSlashes(entry.slug) === trimSlashes(expected.slug))
+    : null
+  const expectedRouteHomeFeedEligible = expectedEntry ? isEligible(expectedEntry, taxonomy) : false
+  const expectedIncluded = expectedRouteHomeFeedEligible
     ? feedEntries.some((entry) => trimSlashes(entry.slug) === trimSlashes(expected.slug))
     : false
   const vacmsPostIncluded = feedEntries.some((entry) => entry.category === 'post' && entry.source === 'vacms')
 
-  if (workflowMode && expected && !expectedIncluded) {
-    fail('CMS_207G_EXPECTED_VACMS_POST_NOT_IN_HOME_FEED', 'expected VACMS route is not in homepage recent feed: ' + expected.slug, { expected, feedEntries })
+  if (workflowMode && expected && expectedRouteHomeFeedEligible && !expectedIncluded) {
+    fail('CMS_207G_EXPECTED_HOME_ELIGIBLE_ROUTE_NOT_IN_HOME_FEED', 'expected home-eligible VACMS route is not in homepage recent feed: ' + expected.slug, {
+      expected,
+      expectedEntry,
+      expectedRouteHomeFeedEligible,
+      feedEntries,
+    })
   }
 
   const originalHtml = fs.readFileSync(DIST_HOME, 'utf8')
@@ -382,6 +396,8 @@ function main() {
     feedEntryCount: feedEntries.length,
     vacmsPostIncluded,
     expectedRouteIncluded: expectedIncluded,
+    expectedRouteHomeFeedEligible,
+    expectedRouteCategory: expectedEntry?.category ?? null,
     expected,
     includedEntries,
     generatedAt: new Date().toISOString(),
