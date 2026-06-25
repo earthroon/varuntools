@@ -12,7 +12,7 @@ slug: "page/9999999999999999"
 source: "vacms"
 vacmsSlug: "9999999999999999"
 vacmsPageId: "page_3576763e4b3169f973471d57"
-vacmsRevisionId: "rev_641608de9e944f84c454e7db"
+vacmsRevisionId: "rev_0d829870166b1b39a90bfe3c"
 ---
 
 
@@ -29,9 +29,9 @@ title: Warning
 ?댁슜???낅젰?섏꽭??
 ::
 
-::work-summary
-problem: ㅇㄹㅇㄹ
-solution: ㅇㄹㅇㄹ
-impact: ㅇㄹㅇㄹ
-summary: ㅇㄹㅇㄹㅇ
+
+::editorial-title
+eyebrow: 나는
+title: 나는
+subtitle: 나는
 ::
