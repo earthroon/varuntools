@@ -27,4 +27,15 @@ import './styles/themes/varuntools-showroom.css'
 import './styles/typography.css'
 import './styles/generated-content.css'
 
-createApp(App).use(router).mount('#app')
+const root = document.querySelector('#app')
+
+const hasStaticArticlePrerender =
+  document
+    .querySelector('meta[name="vacms-static-article-prerender"]')
+    ?.getAttribute('content') === 'true' &&
+  root?.getAttribute('data-vacms-static-prerender') === 'true' &&
+  Boolean(root.querySelector('[data-vacms-static-article="true"]'))
+
+if (!hasStaticArticlePrerender) {
+  createApp(App).use(router).mount('#app')
+}
