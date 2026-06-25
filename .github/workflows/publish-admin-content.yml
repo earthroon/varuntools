@@ -703,23 +703,42 @@ jobs:
             throw new Error('CMS-207L pages deployment strategy is invalid: ' + pagesDeployStrategy)
           }
 
-          const livePagesReadbackReceiptPath = 'vacms-live-pages-readback-receipt.json'
-          if (!fs.existsSync(livePagesReadbackReceiptPath)) {
-            throw new Error('CMS-207K live pages readback receipt is missing')
-          }
-          const livePagesReadbackReceipt = JSON.parse(fs.readFileSync(livePagesReadbackReceiptPath, 'utf8'))
-          if (
-            !livePagesReadbackReceipt ||
-            livePagesReadbackReceipt.ok !== true ||
-            livePagesReadbackReceipt.status !== 'PASS_CMS_207K_LIVE_PAGES_READBACK' ||
-            livePagesReadbackReceipt.finalizeAllowed !== true ||
-            livePagesReadbackReceipt.branchOnlySuccessBlocked !== true ||
-            !livePagesReadbackReceipt.live ||
-            livePagesReadbackReceipt.live.publicIndexJsonOk !== true ||
-            livePagesReadbackReceipt.live.routeHtmlOk !== true ||
-            livePagesReadbackReceipt.live.latestAssetOk !== true
-          ) {
-            throw new Error('CMS-207K live pages readback receipt is not sealed')
+          let livePagesReadbackReceiptPath = ''
+          let livePagesReadbackReceipt = null
+
+          if (pagesDeployStrategy === 'branch') {
+            livePagesReadbackReceiptPath = 'vacms-live-pages-readback-receipt.json'
+            if (!fs.existsSync(livePagesReadbackReceiptPath)) {
+              throw new Error('CMS-207K live pages readback receipt is missing')
+            }
+            livePagesReadbackReceipt = JSON.parse(fs.readFileSync(livePagesReadbackReceiptPath, 'utf8'))
+            if (
+              !livePagesReadbackReceipt ||
+              livePagesReadbackReceipt.ok !== true ||
+              livePagesReadbackReceipt.status !== 'PASS_CMS_207K_LIVE_PAGES_READBACK' ||
+              livePagesReadbackReceipt.finalizeAllowed !== true ||
+              livePagesReadbackReceipt.branchOnlySuccessBlocked !== true ||
+              !livePagesReadbackReceipt.live ||
+              livePagesReadbackReceipt.live.publicIndexJsonOk !== true ||
+              livePagesReadbackReceipt.live.routeHtmlOk !== true ||
+              livePagesReadbackReceipt.live.latestAssetOk !== true
+            ) {
+              throw new Error('CMS-207K live pages readback receipt is not sealed')
+            }
+          } else {
+            livePagesReadbackReceiptPath = livePublishedArtifactReceiptPath
+            livePagesReadbackReceipt = {
+              ok: true,
+              status: 'PASS_CMS_207L_LIVE_PUBLISHED_ARTIFACT_READBACK',
+              finalizeAllowed: true,
+              branchOnlySuccessBlocked: true,
+              liveOrigin: livePublishedArtifactReceipt.liveOrigin || process.env.LIVE_ORIGIN || 'https://www.varun.tools',
+              live: {
+                publicIndexJsonOk: livePublishedArtifactReceipt.live?.publicIndexJsonOk === true,
+                routeHtmlOk: livePublishedArtifactReceipt.live?.routeHtmlOk === true,
+                latestAssetOk: livePublishedArtifactReceipt.live?.latestAssetOk === true
+              }
+            }
           }
 
           const sourceCommitReceiptPath = 'vacms-source-commit-receipt.json'
