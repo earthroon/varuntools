@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "npm run validate:content && vue-tsc --noEmit && vite build && node scripts/create-spa-fallback.mjs && node scripts/materialize-static-shell-routes.mjs",
     "build:pages": "npm run build",
-    "preview": "vite preview",
+    "preview": "npm run build && wrangler dev",
     "typecheck": "vue-tsc --noEmit",
     "validate:content": "node scripts/validate-content.mjs",
     "audit:legacy": "node scripts/audit-legacy-markdown.mjs",
@@ -244,7 +244,8 @@
     "smoke:cms207l-live": "node scripts/cms207l-live-published-artifact-smoke.mjs",
     "smoke:cms207l-contract": "node scripts/cms207l-no-stale-pages-artifact-contract-smoke.mjs",
     "smoke:cms207m": "node scripts/cms207m-static-prerender-rehydrate-smoke.mjs && node scripts/cms207m-no-raw-static-markdown-freeze-smoke.mjs",
-    "smoke:cms207n": "node scripts/cms207n-observed-heading-navigation-smoke.mjs && node scripts/cms207n-works-page-toc-smoke.mjs && node scripts/cms207n-runtime-markdown-heading-observer-smoke.mjs"
+    "smoke:cms207n": "node scripts/cms207n-observed-heading-navigation-smoke.mjs && node scripts/cms207n-works-page-toc-smoke.mjs && node scripts/cms207n-runtime-markdown-heading-observer-smoke.mjs",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
@@ -254,10 +255,12 @@
     "vue-router": "latest"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.42.2",
     "@types/markdown-it": "latest",
     "playwright": "latest",
     "typescript": "5.9.3",
     "vite": "latest",
-    "vue-tsc": "latest"
+    "vue-tsc": "latest",
+    "wrangler": "^4.104.0"
   }
 }
