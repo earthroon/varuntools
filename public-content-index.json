@@ -1,7 +1,7 @@
 {
   "schemaVersion": "cms-public-content-index.v1",
   "patchId": "CMS-207H",
-  "generatedAt": "2026-06-25T08:16:20.260Z",
+  "generatedAt": "2026-06-25T08:39:09.830Z",
   "source": "gh-pages-publish-workflow",
   "entries": [
     {
@@ -217,6 +217,29 @@
       "time": 0,
       "source": "vacms",
       "sourcePath": "src/content/pages/page/2222222222222/index.md"
+    },
+    {
+      "slug": "page/33333333333",
+      "href": "/page/33333333333",
+      "title": "33333333",
+      "description": "3333333333",
+      "category": "page",
+      "categoryLabel": "page",
+      "kind": "page",
+      "collection": "page",
+      "tags": [
+        "3333333333333333"
+      ],
+      "order": 9999,
+      "featured": false,
+      "cover": "",
+      "thumbnail": "",
+      "contentDir": "page/33333333333",
+      "status": "active",
+      "visibility": "public",
+      "time": 0,
+      "source": "vacms",
+      "sourcePath": "src/content/pages/page/33333333333/index.md"
     },
     {
       "slug": "page/231325343",
