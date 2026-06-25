@@ -237,6 +237,10 @@ export function mountMarkdownComponents(
     const props = {
       title: stringAttr(el.dataset.title, '작업 개요'),
       html: templateHtml(el, 'template[data-portfolio-html]'),
+      problem: stringAttr(el.dataset.problem, ''),
+      solution: stringAttr(el.dataset.solution, ''),
+      impact: stringAttr(el.dataset.impact, ''),
+      summary: stringAttr(el.dataset.summary, ''),
       role: parseListAttr(el.dataset.roleJson || el.dataset.role),
       stack: parseListAttr(el.dataset.stackJson || el.dataset.stack),
       period: stringAttr(el.dataset.period, ''),

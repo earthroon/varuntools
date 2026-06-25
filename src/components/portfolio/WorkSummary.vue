@@ -3,6 +3,10 @@ const props = withDefaults(
   defineProps<{
     title?: string
     html?: string
+    problem?: string
+    solution?: string
+    impact?: string
+    summary?: string
     role?: string[]
     stack?: string[]
     period?: string
@@ -13,6 +17,10 @@ const props = withDefaults(
   {
     title: '작업 개요',
     html: '',
+    problem: '',
+    solution: '',
+    impact: '',
+    summary: '',
     role: () => [],
     stack: () => [],
     period: '',
@@ -21,6 +29,13 @@ const props = withDefaults(
     status: '',
   },
 )
+
+const summaryItems = [
+  ['Problem', props.problem],
+  ['Solution', props.solution],
+  ['Impact', props.impact],
+  ['Summary', props.summary],
+].filter(([, value]) => typeof value === 'string' && value.trim()) as [string, string][]
 
 const groups = [
   ['역할', props.role],
@@ -39,6 +54,14 @@ const groups = [
       </p>
     </header>
     <div v-if="html" class="vt-markdown vt-portfolio-panel__body" v-html="html" />
+
+    <dl v-if="summaryItems.length" class="vt-portfolio-meta-grid vt-work-summary__details">
+      <template v-for="[label, value] in summaryItems" :key="label">
+        <dt>{{ label }}</dt>
+        <dd>{{ value }}</dd>
+      </template>
+    </dl>
+
     <dl v-if="groups.length" class="vt-portfolio-meta-grid">
       <template v-for="[label, items] in groups" :key="label">
         <dt>{{ label }}</dt>
