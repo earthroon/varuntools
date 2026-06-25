@@ -549,6 +549,18 @@ jobs:
           node scripts/cms207h-public-content-index-readback-smoke.mjs --workflow
           echo "public_content_index_readback" > vacms-last-success-stage.txt
 
+      - name: Verify live GitHub Pages domain readback
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        env:
+          LIVE_ORIGIN: https://www.varun.tools
+          LIVE_READBACK_RETRY_COUNT: 12
+          LIVE_READBACK_RETRY_DELAY_MS: 10000
+        run: |
+          set -euo pipefail
+          node scripts/cms207k-live-pages-readback-smoke.mjs --workflow
+          echo "live_pages_readback" > vacms-last-success-stage.txt
+
       - name: Verify publish button remote commit deploy closure
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -592,6 +604,25 @@ jobs:
             throw new Error('CMS-207I publish button closure receipt is not sealed')
           }
 
+          const livePagesReadbackReceiptPath = 'vacms-live-pages-readback-receipt.json'
+          if (!fs.existsSync(livePagesReadbackReceiptPath)) {
+            throw new Error('CMS-207K live pages readback receipt is missing')
+          }
+          const livePagesReadbackReceipt = JSON.parse(fs.readFileSync(livePagesReadbackReceiptPath, 'utf8'))
+          if (
+            !livePagesReadbackReceipt ||
+            livePagesReadbackReceipt.ok !== true ||
+            livePagesReadbackReceipt.status !== 'PASS_CMS_207K_LIVE_PAGES_READBACK' ||
+            livePagesReadbackReceipt.finalizeAllowed !== true ||
+            livePagesReadbackReceipt.branchOnlySuccessBlocked !== true ||
+            !livePagesReadbackReceipt.live ||
+            livePagesReadbackReceipt.live.publicIndexJsonOk !== true ||
+            livePagesReadbackReceipt.live.routeHtmlOk !== true ||
+            livePagesReadbackReceipt.live.latestAssetOk !== true
+          ) {
+            throw new Error('CMS-207K live pages readback receipt is not sealed')
+          }
+
           const sourceCommitReceiptPath = 'vacms-source-commit-receipt.json'
           if (!fs.existsSync(sourceCommitReceiptPath)) {
             throw new Error('CMS-204AS source commit receipt is missing')
@@ -632,6 +663,11 @@ jobs:
             deploySha,
             deployPushed: deployEvidence.pushed === true,
             deployEvidence: deployEvidencePath,
+            livePagesReadbackReceipt: livePagesReadbackReceiptPath,
+            livePagesReadbackVerified: livePagesReadbackReceipt.finalizeAllowed === true,
+            liveOrigin: livePagesReadbackReceipt.liveOrigin || 'https://www.varun.tools',
+            liveReadbackStatus: livePagesReadbackReceipt.status,
+            branchOnlySuccessBlocked: livePagesReadbackReceipt.branchOnlySuccessBlocked === true,
             sourceCommitReceipt: sourceCommitReceiptPath,
             sourceCommitted: sourceCommitReceipt.sourceCommitted === true,
             sourceCommitSha: sourceCommitReceipt.sourceCommitSha,
@@ -662,7 +698,11 @@ jobs:
             deployPushed: deployEvidence.pushed === true,
             deployEvidence: deployEvidencePath,
             contentHash,
-            liveDeployReceipt: 'vacms-live-deploy-receipt.json'
+            liveDeployReceipt: 'vacms-live-deploy-receipt.json',
+            livePagesReadbackReceipt: livePagesReadbackReceiptPath,
+            liveOrigin: livePagesReadbackReceipt.liveOrigin || 'https://www.varun.tools',
+            liveHostReadback: true,
+            branchOnlySuccessBlocked: livePagesReadbackReceipt.branchOnlySuccessBlocked === true
           }
           fs.writeFileSync('vacms-live-finalize.json', JSON.stringify(finalize, null, 2))
           NODE
@@ -686,6 +726,9 @@ jobs:
           console.log('sourceCommitSha=' + receipt.sourceCommitSha)
           console.log('sourceCommitted=' + String(receipt.sourceCommitted))
           console.log('liveDeployReceipt=vacms-live-deploy-receipt.json')
+          console.log('livePagesReadbackReceipt=' + receipt.livePagesReadbackReceipt)
+          console.log('liveHostReadback=' + String(receipt.livePagesReadbackVerified))
+          console.log('liveOrigin=' + receipt.liveOrigin)
           NODE
 
       - name: Create branch and draft pull request
