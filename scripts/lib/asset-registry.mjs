@@ -1,4 +1,4 @@
-import { existsSync, readdirSync } from 'node:fs'
+﻿import { existsSync, readdirSync } from 'node:fs'
 import path from 'node:path'
 
 export function normalizeProjectPath(value) {
@@ -15,6 +15,10 @@ function isExternalUrl(value) {
 
 function isUnsupportedProtocol(value) {
   return /^[a-z][a-z0-9+.-]*:/i.test(value) && !/^https?:\/\//i.test(value) && !value.startsWith('data:')
+}
+
+function isRuntimeContentAssetPath(value) {
+  return /^\/assets\/content\/[A-Za-z0-9_-]+\/[A-Za-z0-9_-]+\/[^?#\s]+$/i.test(String(value || '').trim())
 }
 
 function isInside(parent, child) {
@@ -76,6 +80,19 @@ export function resolveFilesystemAsset(options) {
     return { source, url: '', kind: 'invalid', found: false, reason: 'unsupported_protocol', warning: 'unsupported_protocol' }
   }
 
+  if (isRuntimeContentAssetPath(source)) {
+    const relativePath = source.replace(/^\/+/, '')
+    return {
+      source,
+      url: source,
+      kind: 'runtime',
+      found: true,
+      reason: 'runtime_content_asset_proxy',
+      relativePath,
+      warning: 'runtime_content_asset_proxy',
+    }
+  }
+
   if (source.startsWith('/')) {
     const relativePath = source.replace(/^\/+/, '')
     const absolutePath = path.resolve(publicRoot, relativePath)
@@ -134,3 +151,4 @@ export function resolveFilesystemMediaAsset(options) {
     mediaWarning,
   }
 }
+

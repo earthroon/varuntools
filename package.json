@@ -250,7 +250,8 @@
     "smoke:lightbox-fit-contain": "node scripts/smoke-cms208i-lightbox-fit-contain.mjs",
     "smoke:dynamic-content-routes": "node scripts/smoke-dynamic-content-routes.mjs",
     "smoke:cms208t:bind": "node scripts/smoke-cms208t-bind-layout.mjs",
-    "smoke:cms208t": "node scripts/smoke-cms208t-adaptive-multipass.mjs"
+    "smoke:cms208t": "node scripts/smoke-cms208t-adaptive-multipass.mjs",
+    "smoke:cms209b:runtime-assets": "node scripts/smoke-cms209b-runtime-content-asset-path.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
