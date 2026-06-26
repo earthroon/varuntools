@@ -104,25 +104,30 @@ const ewaDebugEnabled = computed(() => isEwaDebugEnabled());
 const ewaCompareMode = computed(() => getEwaCompareMode());
 // Original-first contract: the source image remains visible until a successful EWA output exists.
 const displayImageSrc = computed(() => {
-  if (ewaDebugEnabled.value && ewaCompareMode.value === 'original') return props.item?.src || '';
-  return ewaOutputUrl.value || props.item?.src || '';
+  if (shouldDisplayEwaOutput.value) return ewaOutputUrl.value;
+  return props.item?.src || '';
 });
 const hasEwaOutput = computed(() => Boolean(ewaOutputUrl.value));
+const shouldDisplayEwaOutput = computed(() => {
+  if (!isZoomed.value) return false;
+  if (!hasEwaOutput.value) return false;
+  if (ewaDebugEnabled.value && ewaCompareMode.value === 'original') return false;
+  return true;
+});
 const showEwaCompareView = computed(() => (
   ewaDebugEnabled.value &&
   ewaCompareMode.value !== 'off' &&
   ewaCompareMode.value !== 'processed' &&
+  Boolean(ewaOutputUrl.value) &&
   Boolean(props.item?.src)
 ));
 const ewaStatusLabel = computed(() => {
-  if (isEwaProcessing.value) return 'EWA refining active image';
-  if (ewaState.value === 'ready' && hasEwaOutput.value) {
-    return ewaDebugEnabled.value ? `EWA refined ? ${ewaCompareMode.value}` : 'EWA refined';
+  if (!isZoomed.value) return '';
+  if (isEwaProcessing.value) return 'EWA refining zoom view';
+  if (ewaState.value === 'ready' && shouldDisplayEwaOutput.value) {
+    return ewaDebugEnabled.value ? `EWA zoom refined ? ${ewaCompareMode.value}` : 'EWA zoom refined';
   }
-  if (ewaState.value === 'ready' && !hasEwaOutput.value) {
-    return ewaDebugEnabled.value ? 'EWA ready ? output missing ? original kept' : '';
-  }
-  if (ewaState.value === 'timeout') return ewaDebugEnabled.value ? 'EWA timeout ? original kept' : '';
+  if (ewaState.value === 'timeout') return ewaDebugEnabled.value ? 'EWA timeout ? original zoom kept' : '';
   if (ewaState.value === 'unsupported') return '';
   if (ewaState.value === 'fallback' && ewaFallbackReason.value) return '';
   return '';
@@ -590,16 +595,24 @@ watch(
 );
 
 watch(
-  () => [props.open, props.index, props.item?.src || ''],
+  () => [props.open, props.index, props.item?.src || '', zoom.value],
   async ([open]) => {
     if (!open || !props.item) {
-      clearRuntimeResult(true);
+      clearRuntimeResult(false);
       return;
     }
+
+    if (!isZoomed.value) {
+      clearRuntimeResult(false);
+      return;
+    }
+
     await nextTick();
+
     if (ewaDebugEnabled.value) {
       try { ewaDeviceDiagnostics.value = await getEwaDeviceDiagnostics(); } catch { ewaDeviceDiagnostics.value = null; }
     }
+
     await processActiveItem(props.item);
   },
   { flush: 'post' },
