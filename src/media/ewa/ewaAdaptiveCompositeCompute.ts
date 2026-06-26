@@ -1,4 +1,4 @@
-import { EWA_ADAPTIVE_COMPOSITE_WGSL } from './ewaWgslSources'
+﻿import { EWA_ADAPTIVE_COMPOSITE_WGSL } from './ewaWgslSources'
 import type { EwaPresetConfig } from './ewaTypes'
 import type { EwaSourceTexture } from './ewaTextureUpload'
 import type { EwaFastDownscaleOutput } from './ewaFastDownscaleCompute'
@@ -150,6 +150,7 @@ export async function runEwaAdaptiveComposite(request: EwaAdaptiveCompositeReque
     device.queue.submit([encoder.finish()])
     await device.queue.onSubmittedWorkDone?.()
   }
-  try { params.destroy?.() } catch {}
-  return { texture: outputTexture, view: outputView, width: dstW, height: dstH, format: 'rgba16float', destroy: () => { try { outputTexture.destroy?.() } catch {} } }
+  if (ownsEncoder) { try { params.destroy?.() } catch {} }
+  return { texture: outputTexture, view: outputView, width: dstW, height: dstH, format: 'rgba16float', destroy: () => { try { outputTexture.destroy?.() } catch {}; try { params.destroy?.() } catch {} } }
 }
+

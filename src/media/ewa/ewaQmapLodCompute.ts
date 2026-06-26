@@ -1,4 +1,4 @@
-import { EWA_QMAP_LOD_MEANMAX_MIX_WGSL } from './ewaWgslSources'
+﻿import { EWA_QMAP_LOD_MEANMAX_MIX_WGSL } from './ewaWgslSources'
 import type { EwaSourceTexture } from './ewaTextureUpload'
 
 export type EwaQmapSource = Pick<EwaSourceTexture, 'texture' | 'view' | 'width' | 'height'>
@@ -112,6 +112,7 @@ export async function runEwaQmapLodCompute(request: EwaQmapLodRequest): Promise<
     device.queue.submit([encoder.finish()])
     await device.queue.onSubmittedWorkDone?.()
   }
-  try { params.destroy?.() } catch {}
-  return { texture: outputTexture, view: outputView, width: dstW, height: dstH, format: 'rgba16float', qLodMaxMix: mixK, destroy: () => { try { outputTexture.destroy?.() } catch {} } }
+  if (ownsEncoder) { try { params.destroy?.() } catch {} }
+  return { texture: outputTexture, view: outputView, width: dstW, height: dstH, format: 'rgba16float', qLodMaxMix: mixK, destroy: () => { try { outputTexture.destroy?.() } catch {}; try { params.destroy?.() } catch {} } }
 }
+

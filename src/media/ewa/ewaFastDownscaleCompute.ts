@@ -1,4 +1,4 @@
-import { EWA_FAST_DOWNSCALE_WGSL } from './ewaWgslSources'
+﻿import { EWA_FAST_DOWNSCALE_WGSL } from './ewaWgslSources'
 import type { EwaSourceTexture } from './ewaTextureUpload'
 
 export type EwaFastDownscaleMode = 'box' | 'bilinear'
@@ -119,14 +119,14 @@ export async function runEwaFastDownscale(request: EwaFastDownscaleRequest): Pro
     device.queue.submit([encoder.finish()])
     await device.queue.onSubmittedWorkDone?.()
   }
-  try { params.destroy?.() } catch {}
-
+  if (ownsEncoder) { try { params.destroy?.() } catch {} }
   return {
     texture: outputTexture,
     view: outputView,
     width: dstW,
     height: dstH,
     format: 'rgba16float',
-    destroy: () => { try { outputTexture.destroy?.() } catch {} },
+    destroy: () => { try { outputTexture.destroy?.() } catch {}; try { params.destroy?.() } catch {} },
   }
 }
+

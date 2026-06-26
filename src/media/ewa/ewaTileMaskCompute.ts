@@ -149,8 +149,7 @@ export async function runEwaTileMaskCompute(request: EwaTileMaskRequest): Promis
     device.queue.submit([encoder.finish()])
     await device.queue.onSubmittedWorkDone?.()
   }
-  try { params.destroy?.() } catch {}
-
+  if (ownsEncoder) { try { params.destroy?.() } catch {} }
   const diagnostics = estimateLevelDiagnostics({
     tilesW,
     tilesH,
@@ -161,6 +160,7 @@ export async function runEwaTileMaskCompute(request: EwaTileMaskRequest): Promis
     qmapSource: request.qmapSource,
     qLodMaxMix: request.qLodMaxMix,
   })
-  return { maskTexture, maskView, tilesW, tilesH, tilePx, diagnostics, destroy: () => { try { maskTexture.destroy?.() } catch {} } }
+  return { maskTexture, maskView, tilesW, tilesH, tilePx, diagnostics, destroy: () => { try { maskTexture.destroy?.() } catch {}; try { params.destroy?.() } catch {} } }
 }
+
 
