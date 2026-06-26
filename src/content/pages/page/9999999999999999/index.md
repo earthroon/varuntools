@@ -41,5 +41,5 @@ caption: 뭘꺼요
 layout: strip
 lightbox: true
 ::
-- /assets/content/page_3576763e4b3169f973471d57/asset_5fa1e212ec89d381e349611b/cde4c859-1996-43f7-8daa-363c2f87142c.png | ㄴㅇㄴㅇㄴㅇㄴㅇㄴㄴ |  | id=ㄴㄴㄴ; assetId=asset_5fa1e212ec89d381e349611b; caption=ㄴㅇㄴㅇㄴㄴ
+- https://varunasset.work/content/page_3576763e4b3169f973471d57/asset_5fa1e212ec89d381e349611b/cde4c859-1996-43f7-8daa-363c2f87142c.png | ㄴㅇㄴㅇㄴㅇㄴㅇㄴㄴ |  | id=ㄴㄴㄴ; assetId=asset_5fa1e212ec89d381e349611b; caption=ㄴㅇㄴㅇㄴㄴ
 ::
