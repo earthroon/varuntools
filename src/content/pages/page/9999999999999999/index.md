@@ -17,7 +17,7 @@ tags:
 category: "page"
 kind: "page"
 visibility: "public"
-status: "published"
+status: "active"
 exposure: "{}"
 noindex: "false"
 robots: "index,follow"
