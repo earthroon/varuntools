@@ -1,4 +1,4 @@
-import type { EwaPresetConfig } from './ewaTypes'
+﻿import type { EwaPresetConfig } from './ewaTypes'
 import type { EwaSourceTexture } from './ewaTextureUpload'
 import { EWA_ANISO_DOWNSCALE_WGSL } from './ewaWgslSources'
 
@@ -91,9 +91,7 @@ export async function runEwaAnisoDownscale(request: EwaComputeRequest): Promise<
   const bindGroup = device.createBindGroup({
     layout: pipeline.getBindGroupLayout(0),
     entries: [
-      { binding: 0, resource: source.view || source.texture.createView() },
-      { binding: 1, resource: sampler },
-      { binding: 2, resource: outputView },
+      { binding: 0, resource: source.view || source.texture.createView() },      { binding: 2, resource: outputView },
       { binding: 3, resource: { buffer: params } },
     ],
   })
@@ -120,3 +118,4 @@ export async function runEwaAnisoDownscale(request: EwaComputeRequest): Promise<
     },
   }
 }
+
