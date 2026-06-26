@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run validate:content && vue-tsc --noEmit && vite build && node scripts/create-spa-fallback.mjs && node scripts/materialize-static-shell-routes.mjs && node scripts/build-public-content-index.mjs",
+    "build": "npm run validate:content && vue-tsc --noEmit && vite build && node scripts/create-spa-fallback.mjs && node scripts/materialize-static-shell-routes.mjs && node scripts/build-public-content-index.mjs && node scripts/materialize-dynamic-content-routes.mjs",
     "build:pages": "npm run build",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
@@ -247,7 +247,8 @@
     "smoke:cms207n": "node scripts/cms207n-observed-heading-navigation-smoke.mjs && node scripts/cms207n-works-page-toc-smoke.mjs && node scripts/cms207n-runtime-markdown-heading-observer-smoke.mjs",
     "smoke:cms208e": "node scripts/cms208e-callout-body-directive-parser-alignment-smoke.mjs",
     "smoke:cms208g": "node scripts/cms208g-directive-gui-public-contract-alignment-smoke.mjs",
-    "smoke:lightbox-fit-contain": "node scripts/smoke-cms208i-lightbox-fit-contain.mjs"
+    "smoke:lightbox-fit-contain": "node scripts/smoke-cms208i-lightbox-fit-contain.mjs",
+    "smoke:dynamic-content-routes": "node scripts/smoke-dynamic-content-routes.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
