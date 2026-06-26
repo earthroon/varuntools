@@ -46,19 +46,59 @@ function getItemEwaMetadata(item: SectionLightboxItem | null): EwaImageAuthoring
   return Object.values(metadata).some((value) => value !== undefined && value !== '') ? metadata : undefined
 }
 
+function getContainedTargetSize(input: {
+  containerWidth: number
+  containerHeight: number
+  naturalWidth: number
+  naturalHeight: number
+  dpr: number
+}): { width: number; height: number } {
+  const containerWidth = Math.max(1, input.containerWidth)
+  const containerHeight = Math.max(1, input.containerHeight)
+  const naturalWidth = Math.max(1, input.naturalWidth)
+  const naturalHeight = Math.max(1, input.naturalHeight)
+  const dpr = Math.min(2, Math.max(1, input.dpr || 1))
+
+  const naturalRatio = naturalWidth / naturalHeight
+  const containerRatio = containerWidth / containerHeight
+
+  const cssSize = naturalRatio > containerRatio
+    ? {
+        width: containerWidth,
+        height: containerWidth / naturalRatio,
+      }
+    : {
+        width: containerHeight * naturalRatio,
+        height: containerHeight,
+      }
+
+  return {
+    width: Math.max(1, Math.round(cssSize.width * dpr)),
+    height: Math.max(1, Math.round(cssSize.height * dpr)),
+  }
+}
+
 function getTargetSize(stage: HTMLElement | null, item: SectionLightboxItem | null): { width: number; height: number } {
   const rect = stage?.getBoundingClientRect()
   const dpr = typeof window === 'undefined' ? 1 : Math.min(2, Math.max(1, window.devicePixelRatio || 1))
-  if (rect && rect.width > 0 && rect.height > 0) {
-    return {
-      width: Math.max(1, Math.round(rect.width * dpr)),
-      height: Math.max(1, Math.round(rect.height * dpr)),
-    }
-  }
   const img = item?.element
-  if (img && img.naturalWidth > 0 && img.naturalHeight > 0) {
-    return { width: img.naturalWidth, height: img.naturalHeight }
+  const naturalWidth = img?.naturalWidth || 0
+  const naturalHeight = img?.naturalHeight || 0
+
+  if (rect && rect.width > 0 && rect.height > 0 && naturalWidth > 0 && naturalHeight > 0) {
+    return getContainedTargetSize({
+      containerWidth: rect.width,
+      containerHeight: rect.height,
+      naturalWidth,
+      naturalHeight,
+      dpr,
+    })
   }
+
+  if (naturalWidth > 0 && naturalHeight > 0) {
+    return { width: naturalWidth, height: naturalHeight }
+  }
+
   return { width: 1280, height: 900 }
 }
 
