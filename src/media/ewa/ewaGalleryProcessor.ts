@@ -159,6 +159,32 @@ function shouldSkipUpscale(sourceWidth: number, sourceHeight: number, targetWidt
   return targetWidth >= sourceWidth && targetHeight >= sourceHeight
 }
 
+function getContainedEwaTargetSize(input: {
+  sourceWidth: number
+  sourceHeight: number
+  maxWidth: number
+  maxHeight: number
+}): { width: number; height: number } {
+  const sourceWidth = Math.max(1, Math.round(input.sourceWidth || 1))
+  const sourceHeight = Math.max(1, Math.round(input.sourceHeight || 1))
+  const maxWidth = Math.max(1, Math.round(input.maxWidth || sourceWidth))
+  const maxHeight = Math.max(1, Math.round(input.maxHeight || sourceHeight))
+  const sourceRatio = sourceWidth / sourceHeight
+  const maxRatio = maxWidth / maxHeight
+
+  if (sourceRatio > maxRatio) {
+    return {
+      width: maxWidth,
+      height: Math.max(1, Math.round(maxWidth / sourceRatio)),
+    }
+  }
+
+  return {
+    width: Math.max(1, Math.round(maxHeight * sourceRatio)),
+    height: maxHeight,
+  }
+}
+
 function isAdaptiveOutput(output: EwaComputeOutput | EwaAdaptiveTileComputeOutput): output is EwaAdaptiveTileComputeOutput {
   return Boolean((output as EwaAdaptiveTileComputeOutput).tileDiagnostics)
 }
@@ -166,9 +192,9 @@ function isAdaptiveOutput(output: EwaComputeOutput | EwaAdaptiveTileComputeOutpu
 function toEwaFallbackReason(error: unknown): EwaFallbackReason | string {
   if (error instanceof EwaPresentationError) return error.reason
   const message = error instanceof Error ? error.message : String(error || '')
-  if (/EWA source texture upload validation failed/.test(message)) return 'source-decode-failed'
   if (/quality-budget-original/.test(message)) return 'quality-budget-original'
   if (/upscale path skipped/.test(message)) return 'upscale-skipped'
+  if (/source texture upload validation failed/.test(message)) return 'source-decode-failed'
   if (/presentation-blob-failed/.test(message)) return 'presentation-blob-failed'
   if (/presentation-canvas-failed|webgpu canvas context/.test(message)) return 'presentation-canvas-failed'
   if (/presentation-color-policy-failed|canvas configure/.test(message)) return 'presentation-color-policy-failed'
@@ -362,19 +388,29 @@ export class EwaGalleryProcessor {
       const decodeStart = nowForEwaDiagnostics()
       bitmap = await loadImageBitmapForEwa(request.src)
       decodeMs = nowForEwaDiagnostics() - decodeStart
-      const originalTarget = {
+      const requestedBox = {
         width: Math.max(1, Math.round(request.targetWidth || bitmap.width)),
         height: Math.max(1, Math.round(request.targetHeight || bitmap.height)),
         dpr: getEwaDevicePixelRatio(),
       }
-      const target = clampEwaTargetToBudget(originalTarget, budget)
+      const aspectTarget = getContainedEwaTargetSize({
+        sourceWidth: bitmap.width,
+        sourceHeight: bitmap.height,
+        maxWidth: requestedBox.width,
+        maxHeight: requestedBox.height,
+      })
+      const target = clampEwaTargetToBudget({
+        width: aspectTarget.width,
+        height: aspectTarget.height,
+        dpr: requestedBox.dpr,
+      }, budget)
       const qualityBudget = createEwaQualityBudgetDiagnostics({
         budget,
         tierReason,
         requestedMode,
         resolvedMode,
-        originalTargetWidth: originalTarget.width,
-        originalTargetHeight: originalTarget.height,
+        originalTargetWidth: aspectTarget.width,
+        originalTargetHeight: aspectTarget.height,
         resolvedTargetWidth: target.width,
         resolvedTargetHeight: target.height,
         targetClamped: target.clamped,
@@ -461,6 +497,7 @@ export class EwaGalleryProcessor {
         presentation: presentation.diagnostics,
         authoring,
         qualityBudget,
+        rollout: rolloutDiagnostics,
         warnings: [...(presentation.diagnostics.warnings || [])],
       })
       return { presentation, diagnostics, destroy }

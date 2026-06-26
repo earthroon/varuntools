@@ -20,15 +20,6 @@ export function getGpuTextureUsage(): any {
   return (globalThis as any).GPUTextureUsage
 }
 
-async function popValidationErrorScope(device: any): Promise<any | null> {
-  if (typeof device?.popErrorScope !== 'function') return null
-  try {
-    return await device.popErrorScope()
-  } catch {
-    return null
-  }
-}
-
 export async function uploadImageBitmapToTexture(
   device: any,
   bitmap: ImageBitmap,
@@ -48,13 +39,12 @@ export async function uploadImageBitmapToTexture(
       textureUsage.RENDER_ATTACHMENT,
   })
 
-  const canUseErrorScope = typeof device?.pushErrorScope === 'function' && typeof device?.popErrorScope === 'function'
-  let errorScopePushed = false
+  let errorScopeOpen = false
 
   try {
-    if (canUseErrorScope) {
+    if (typeof device.pushErrorScope === 'function') {
       device.pushErrorScope('validation')
-      errorScopePushed = true
+      errorScopeOpen = true
     }
 
     device.queue.copyExternalImageToTexture(
@@ -63,9 +53,9 @@ export async function uploadImageBitmapToTexture(
       { width: bitmap.width, height: bitmap.height, depthOrArrayLayers: 1 },
     )
 
-    if (errorScopePushed) {
-      const validationError = await popValidationErrorScope(device)
-      errorScopePushed = false
+    if (errorScopeOpen && typeof device.popErrorScope === 'function') {
+      const validationError = await device.popErrorScope()
+      errorScopeOpen = false
       if (validationError) {
         throw new Error(
           `EWA source texture upload validation failed: ${validationError.message || validationError}`,
@@ -84,8 +74,10 @@ export async function uploadImageBitmapToTexture(
       },
     }
   } catch (error) {
+    if (errorScopeOpen && typeof device.popErrorScope === 'function') {
+      try { await device.popErrorScope() } catch {}
+    }
     try { texture.destroy?.() } catch {}
-    if (errorScopePushed) await popValidationErrorScope(device)
     throw error
   }
 }
