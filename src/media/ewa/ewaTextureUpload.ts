@@ -32,7 +32,10 @@ export function uploadImageBitmapToTexture(
     label,
     size: [bitmap.width, bitmap.height, 1],
     format: 'rgba8unorm',
-    usage: textureUsage.COPY_DST | textureUsage.TEXTURE_BINDING,
+    usage:
+      textureUsage.COPY_DST |
+      textureUsage.TEXTURE_BINDING |
+      textureUsage.RENDER_ATTACHMENT,
   })
 
   device.queue.copyExternalImageToTexture(
