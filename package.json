@@ -246,7 +246,8 @@
     "smoke:cms207m": "node scripts/cms207m-static-prerender-rehydrate-smoke.mjs && node scripts/cms207m-no-raw-static-markdown-freeze-smoke.mjs",
     "smoke:cms207n": "node scripts/cms207n-observed-heading-navigation-smoke.mjs && node scripts/cms207n-works-page-toc-smoke.mjs && node scripts/cms207n-runtime-markdown-heading-observer-smoke.mjs",
     "smoke:cms208e": "node scripts/cms208e-callout-body-directive-parser-alignment-smoke.mjs",
-    "smoke:cms208g": "node scripts/cms208g-directive-gui-public-contract-alignment-smoke.mjs"
+    "smoke:cms208g": "node scripts/cms208g-directive-gui-public-contract-alignment-smoke.mjs",
+    "smoke:lightbox-fit-contain": "node scripts/smoke-cms208i-lightbox-fit-contain.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

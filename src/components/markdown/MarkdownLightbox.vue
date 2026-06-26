@@ -60,6 +60,8 @@ const closeButton = ref<HTMLButtonElement | null>(null);
 const thumbsRef = ref<HTMLElement | null>(null);
 const stageRef = ref<HTMLElement | null>(null);
 const imageRef = ref<HTMLImageElement | null>(null);
+const stageSize = ref<Size>({ width: 1, height: 1 });
+let stageResizeObserver: ResizeObserver | null = null;
 const zoom = ref(1);
 const panX = ref(0);
 const panY = ref(0);
@@ -130,6 +132,17 @@ const zoomLabel = computed(() => `${zoom.value.toFixed(1)}×`);
 const imageTransform = computed(
   () => `translate3d(${panX.value}px, ${panY.value}px, 0) scale(${zoom.value})`,
 );
+const imageFitSize = computed(() =>
+  getContainedSize({
+    container: stageSize.value,
+    natural: imageNaturalSize.value,
+  }),
+);
+const imageRenderStyle = computed(() => ({
+  width: `${imageFitSize.value.width}px`,
+  height: `${imageFitSize.value.height}px`,
+  transform: imageTransform.value,
+}));
 const canResetZoom = computed(
   () => zoom.value !== 1 || panX.value !== 0 || panY.value !== 0,
 );
@@ -168,20 +181,43 @@ function resetGestureState() {
   lastTapY.value = 0;
 }
 
-function getStageSize(): Size {
+function measureStageSize() {
   const rect = stageRef.value?.getBoundingClientRect();
-
-  return {
-    width: rect?.width || 1,
-    height: rect?.height || 1,
+  stageSize.value = {
+    width: Math.max(1, rect?.width || 1),
+    height: Math.max(1, rect?.height || 1),
   };
 }
 
-function getImageBaseSize(): Size {
-  return getContainedSize({
-    container: getStageSize(),
-    natural: imageNaturalSize.value,
+function bindStageResizeObserver() {
+  stageResizeObserver?.disconnect();
+
+  if (!stageRef.value) {
+    measureStageSize();
+    return;
+  }
+
+  if (typeof ResizeObserver === 'undefined') {
+    measureStageSize();
+    clampCurrentPan();
+    return;
+  }
+
+  stageResizeObserver = new ResizeObserver(() => {
+    measureStageSize();
+    clampCurrentPan();
   });
+  stageResizeObserver.observe(stageRef.value);
+  measureStageSize();
+  clampCurrentPan();
+}
+
+function getStageSize(): Size {
+  return stageSize.value;
+}
+
+function getImageBaseSize(): Size {
+  return imageFitSize.value;
 }
 
 function setPan(nextPan: Pan) {
@@ -520,12 +556,14 @@ watch(
       resetGestureState();
       copyState.value = 'idle';
       await nextTick();
+      bindStageResizeObserver();
       closeButton.value?.focus();
       scrollActiveThumbIntoView();
       return;
     }
     resetZoom();
     resetGestureState();
+    stageResizeObserver?.disconnect();
     previousFocus?.focus?.();
     previousFocus = null;
   },
@@ -537,6 +575,8 @@ watch(
     resetGestureState();
     copyState.value = 'idle';
     await nextTick();
+    measureStageSize();
+    clampCurrentPan();
     scrollActiveThumbIntoView();
   },
 );
@@ -565,6 +605,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   window.removeEventListener("keydown", handleZoomKeydown);
   window.removeEventListener("resize", handleResize);
+  stageResizeObserver?.disconnect();
+  stageResizeObserver = null;
   clearRuntimeResult(true);
 });
 </script>
@@ -624,7 +666,7 @@ onBeforeUnmount(() => {
             :processed-src="ewaOutputUrl"
             :alt="item.alt || item.caption || ''"
             :mode="ewaCompareMode"
-            :image-style="{ transform: imageTransform }"
+            :image-style="imageRenderStyle"
           />
           <img
             v-else
@@ -632,7 +674,7 @@ onBeforeUnmount(() => {
             class="vt-lightbox__image"
             :src="displayImageSrc"
             :alt="item.alt || item.caption || ''"
-            :style="{ transform: imageTransform }"
+            :style="imageRenderStyle"
             :data-zoomed="isZoomed ? '1' : '0'"
             :data-ewa-state="ewaState"
             :data-ewa-preset="ewaDiagnostics?.preset || 'auto'"

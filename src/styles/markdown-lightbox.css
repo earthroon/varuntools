@@ -915,3 +915,38 @@ a.vt-lightbox__action {
 .vt-lightbox__stage[data-ewa-status='unsupported'] .vt-lightbox__image {
   image-rendering: auto;
 }
+
+/* CMS-208I - Lightbox Fit Contain Stage SSOT / No 1x Crop */
+.vt-lightbox__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  inline-size: 100%;
+  block-size: 100%;
+  min-inline-size: 0;
+  min-block-size: 0;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.vt-lightbox__image {
+  display: block;
+  inline-size: auto;
+  block-size: auto;
+  width: auto;
+  height: auto;
+  max-inline-size: none;
+  max-block-size: none;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  object-position: center center;
+  transform-origin: center center;
+  user-select: none;
+  will-change: transform;
+}
+
+.vt-lightbox__image[data-zoomed='0'] {
+  cursor: zoom-in;
+}
+
