@@ -10,6 +10,7 @@ import type { EwaComputeMode, EwaGalleryPresetId, EwaGalleryStatus, EwaImageAuth
 
 export type EwaGalleryProcessorOptions = {
   stageRef: Ref<HTMLElement | null>
+  zoomRef?: Ref<number>
 }
 
 function booleanFromMeta(value: unknown): boolean | undefined {
@@ -45,19 +46,51 @@ function getItemEwaMetadata(item: SectionLightboxItem | null): EwaImageAuthoring
   return Object.values(metadata).some((value) => value !== undefined && value !== '') ? metadata : undefined
 }
 
-function getTargetSize(stage: HTMLElement | null, item: SectionLightboxItem | null): { width: number; height: number } {
+function containedSize(input: {
+  containerWidth: number
+  containerHeight: number
+  naturalWidth: number
+  naturalHeight: number
+}): { width: number; height: number } {
+  const containerWidth = Math.max(1, input.containerWidth)
+  const containerHeight = Math.max(1, input.containerHeight)
+  const naturalWidth = Math.max(1, input.naturalWidth)
+  const naturalHeight = Math.max(1, input.naturalHeight)
+  const naturalRatio = naturalWidth / naturalHeight
+  const containerRatio = containerWidth / containerHeight
+  return naturalRatio > containerRatio
+    ? { width: containerWidth, height: containerWidth / naturalRatio }
+    : { width: containerHeight * naturalRatio, height: containerHeight }
+}
+
+function getTargetSize(stage: HTMLElement | null, item: SectionLightboxItem | null, zoom = 1): { width: number; height: number } {
   const rect = stage?.getBoundingClientRect()
   const dpr = typeof window === 'undefined' ? 1 : Math.min(2, Math.max(1, window.devicePixelRatio || 1))
-  if (rect && rect.width > 0 && rect.height > 0) {
+  const img = item?.element
+  const naturalWidth = Math.max(1, img?.naturalWidth || 0)
+  const naturalHeight = Math.max(1, img?.naturalHeight || 0)
+  const z = Math.max(1, zoom || 1)
+
+  if (rect && rect.width > 0 && rect.height > 0 && naturalWidth > 0 && naturalHeight > 0) {
+    const base = containedSize({
+      containerWidth: rect.width,
+      containerHeight: rect.height,
+      naturalWidth,
+      naturalHeight,
+    })
     return {
-      width: Math.max(1, Math.round(rect.width * dpr)),
-      height: Math.max(1, Math.round(rect.height * dpr)),
+      width: Math.max(1, Math.round(base.width * z * dpr)),
+      height: Math.max(1, Math.round(base.height * z * dpr)),
     }
   }
-  const img = item?.element
-  if (img && img.naturalWidth > 0 && img.naturalHeight > 0) {
-    return { width: img.naturalWidth, height: img.naturalHeight }
+
+  if (naturalWidth > 0 && naturalHeight > 0) {
+    return {
+      width: Math.max(1, Math.round(naturalWidth * Math.min(z, dpr * z))),
+      height: Math.max(1, Math.round(naturalHeight * Math.min(z, dpr * z))),
+    }
   }
+
   return { width: 1280, height: 900 }
 }
 
@@ -99,6 +132,7 @@ export function useEwaGalleryProcessor(options: EwaGalleryProcessorOptions) {
   const processor = getSharedEwaGalleryProcessor()
 
   const outputUrl = computed(() => result.value?.ok ? result.value.outputUrl || '' : '')
+  const canvas = computed(() => result.value?.ok ? result.value.canvas || null : null)
   const diagnostics = computed(() => result.value?.diagnostics || null)
   const fallbackReason = computed(() => result.value?.fallbackReason || '')
   const isProcessing = computed(() => state.value === 'loading-source' || state.value === 'processing' || state.value === 'initializing')
@@ -109,7 +143,7 @@ export function useEwaGalleryProcessor(options: EwaGalleryProcessorOptions) {
       return
     }
 
-    const target = getTargetSize(options.stageRef.value, item)
+    const target = getTargetSize(options.stageRef.value, item, options.zoomRef?.value || 1)
     const media = getItemEwaMetadata(item)
     const { preset: presetConfig } = resolveEwaPresetFromAuthoring({
       metadata: media || (preset ? { ewaPreset: String(preset) } : undefined),
@@ -165,6 +199,7 @@ export function useEwaGalleryProcessor(options: EwaGalleryProcessorOptions) {
         }
         return
       }
+
       result.value = next
       if (next.ok) state.value = 'ready'
       else if (next.fallbackReason === 'webgpu-unsupported') state.value = 'unsupported'
@@ -190,6 +225,7 @@ export function useEwaGalleryProcessor(options: EwaGalleryProcessorOptions) {
     state,
     result,
     outputUrl,
+    canvas,
     diagnostics,
     fallbackReason,
     isProcessing,

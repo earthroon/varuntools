@@ -6,7 +6,7 @@ import {
   type EwaPresentationFormat,
   type EwaPresentationPolicy,
 } from './ewaTypes'
-import { nowForEwaDiagnostics, roundEwaMs, type EwaPresentationDiagnostics } from './ewaDiagnostics'
+import { type EwaPresentationDiagnostics } from './ewaDiagnostics'
 
 export type EwaCanvasPresentation = {
   canvas: HTMLCanvasElement
@@ -36,46 +36,8 @@ export class EwaPresentationError extends Error {
   }
 }
 
-function mimeForFormat(format: EwaPresentationFormat): string {
-  return format === 'png' ? 'image/png' : 'image/webp'
-}
-
-async function canvasToBlob(canvas: HTMLCanvasElement, format: EwaPresentationFormat, quality: number): Promise<Blob | null> {
-  return await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, mimeForFormat(format), quality))
-}
-
-
 function getGpuTextureUsage(): any | null {
   return (globalThis as any).GPUTextureUsage || null
-}
-
-async function canvasToObjectUrl(
-  canvas: HTMLCanvasElement,
-  policy: EwaPresentationPolicy,
-): Promise<{ outputUrl: string; format: EwaPresentationFormat; blobBytes: number; blobMs: number; warnings: string[] }> {
-  const warnings: string[] = []
-  const started = nowForEwaDiagnostics()
-  let format = policy.outputFormat
-  let blob = await canvasToBlob(canvas, format, policy.outputQuality)
-
-  if (!blob && format !== 'png') {
-    warnings.push('EWA_DIAG_OUTPUT_FORMAT_FALLBACK')
-    format = 'png'
-    blob = await canvasToBlob(canvas, format, 1)
-  }
-
-  if (!blob) {
-    warnings.push('EWA_DIAG_BLOB_FAILED')
-    throw new EwaPresentationError('presentation-blob-failed', 'EWA presentation canvas.toBlob failed')
-  }
-
-  return {
-    outputUrl: URL.createObjectURL(blob),
-    format,
-    blobBytes: blob.size,
-    blobMs: roundEwaMs(nowForEwaDiagnostics() - started) || 0,
-    warnings,
-  }
 }
 
 export async function presentEwaTextureToCanvas(
@@ -113,15 +75,17 @@ export async function presentEwaTextureToCanvas(
     throw new EwaPresentationError('presentation-color-policy-failed', error instanceof Error ? error.message : 'canvas configure failed')
   }
 
+  // Final surface is the canvas itself. Do not encode to Blob and do not feed it back into <img>.
+  // Nearest avoids an extra presentation-time bilinear pass when the compute output already owns filtering.
   const sampler = device.createSampler({
-    magFilter: 'linear',
-    minFilter: 'linear',
+    magFilter: 'nearest',
+    minFilter: 'nearest',
     addressModeU: 'clamp-to-edge',
     addressModeV: 'clamp-to-edge',
   })
   const module = device.createShaderModule({ code: EWA_CANVAS_PRESENT_WGSL })
   const pipeline = device.createRenderPipeline({
-    label: options.label || 'vt_ewa_gallery_present_srgb8',
+    label: options.label || 'vt_ewa_gallery_present_canvas_primary',
     layout: 'auto',
     vertex: { module, entryPoint: 'vs_main' },
     fragment: { module, entryPoint: 'fs_main', targets: [{ format: policy.canvasFormat }] },
@@ -153,7 +117,6 @@ export async function presentEwaTextureToCanvas(
   device.queue.submit([encoder.finish()])
   await device.queue.onSubmittedWorkDone?.()
 
-  const encoded = await canvasToObjectUrl(canvas, policy)
   const diagnostics: EwaPresentationDiagnostics = {
     computeFormat: 'rgba16float',
     presentationFamily: 'rgba8unorm-srgb',
@@ -162,16 +125,14 @@ export async function presentEwaTextureToCanvas(
     bitDepth: 8,
     dynamicRange: 'sdr',
     alphaMode: policy.alphaMode,
-    outputFormat: encoded.format,
+    outputFormat: policy.outputFormat,
     outputQuality: policy.outputQuality,
-    blobBytes: encoded.blobBytes,
-    blobMs: encoded.blobMs,
-    objectUrlCreated: true,
+    objectUrlCreated: false,
+    warnings: ['EWA_CANVAS_PRIMARY_NO_BLOB'],
   }
-  const outputUrl = encoded.outputUrl
+
   return {
     canvas,
-    outputUrl,
     width: output.width,
     height: output.height,
     computeFormat: 'rgba16float',
@@ -180,12 +141,11 @@ export async function presentEwaTextureToCanvas(
     colorSpace: 'srgb',
     bitDepth: 8,
     dynamicRange: 'sdr',
-    outputFormat: encoded.format,
+    outputFormat: policy.outputFormat,
     outputQuality: policy.outputQuality,
     alphaMode: policy.alphaMode,
-    diagnostics: { ...diagnostics, warnings: encoded.warnings },
+    diagnostics,
     destroy: () => {
-      try { URL.revokeObjectURL(outputUrl) } catch {}
       try { canvas.width = 1; canvas.height = 1 } catch {}
     },
   }

@@ -11,6 +11,7 @@ import type { SectionLightboxItem } from "@/composables/useSectionLightbox";
 import { useEwaGalleryProcessor } from "@/composables/useEwaGalleryProcessor";
 import EwaDebugPanel from "@/components/markdown/EwaDebugPanel.vue";
 import EwaCompareView from "@/components/markdown/EwaCompareView.vue";
+import EwaCanvasSurface from "@/components/markdown/EwaCanvasSurface.vue";
 import { getEwaDeviceDiagnostics } from "@/media/ewa/ewaWebGpuRuntime";
 import type { EwaDeviceDiagnostics } from "@/media/ewa/ewaDiagnostics";
 import { getEwaCompareMode, isEwaDebugEnabled } from "@/media/ewa/ewaDebug";
@@ -87,12 +88,13 @@ const ewaDeviceDiagnostics = ref<EwaDeviceDiagnostics | null>(null);
 const {
   state: ewaState,
   outputUrl: ewaOutputUrl,
+  canvas: ewaCanvas,
   diagnostics: ewaDiagnostics,
   fallbackReason: ewaFallbackReason,
   isProcessing: isEwaProcessing,
   processActiveItem,
   clearRuntimeResult,
-} = useEwaGalleryProcessor({ stageRef });
+} = useEwaGalleryProcessor({ stageRef, zoomRef: zoom });
 
 const dialogLabel = computed(
   () => props.item?.caption || props.item?.alt || "이미지 확대 보기",
@@ -102,17 +104,17 @@ const currentCaption = computed(() => props.item?.caption || props.item?.alt || 
 const currentSource = computed(() => props.item?.source || props.item?.src || "");
 const ewaDebugEnabled = computed(() => isEwaDebugEnabled());
 const ewaCompareMode = computed(() => getEwaCompareMode());
-// Original-first contract: the source image remains visible until a successful EWA output exists.
-const displayImageSrc = computed(() => {
-  if (shouldDisplayEwaOutput.value) return ewaOutputUrl.value;
-  return props.item?.src || '';
-});
-const hasEwaOutput = computed(() => Boolean(ewaOutputUrl.value));
-const shouldDisplayEwaOutput = computed(() => {
+// Canvas-primary contract:
+// - 1x base view remains the original <img>.
+// - zoomed WebGPU result is displayed as a live canvas, never encoded to Blob then fed back into <img>.
+// - unsupported / failed WebGPU falls back to the original <img> path.
+const displayImageSrc = computed(() => props.item?.src || '');
+const hasEwaOutput = computed(() => Boolean(ewaOutputUrl.value || ewaCanvas.value));
+const shouldDisplayEwaCanvas = computed(() => {
   if (!isZoomed.value) return false;
-  if (!hasEwaOutput.value) return false;
+  if (!ewaCanvas.value) return false;
   if (ewaDebugEnabled.value && ewaCompareMode.value === 'original') return false;
-  return true;
+  return ewaState.value === 'ready';
 });
 const showEwaCompareView = computed(() => (
   ewaDebugEnabled.value &&
@@ -123,11 +125,11 @@ const showEwaCompareView = computed(() => (
 ));
 const ewaStatusLabel = computed(() => {
   if (!isZoomed.value) return '';
-  if (isEwaProcessing.value) return 'EWA refining zoom view';
-  if (ewaState.value === 'ready' && shouldDisplayEwaOutput.value) {
-    return ewaDebugEnabled.value ? `EWA zoom refined ? ${ewaCompareMode.value}` : 'EWA zoom refined';
+  if (isEwaProcessing.value) return 'EWA refining zoom canvas';
+  if (ewaState.value === 'ready' && shouldDisplayEwaCanvas.value) {
+    return ewaDebugEnabled.value ? `EWA canvas · ${ewaCompareMode.value}` : 'EWA canvas';
   }
-  if (ewaState.value === 'timeout') return ewaDebugEnabled.value ? 'EWA timeout ? original zoom kept' : '';
+  if (ewaState.value === 'timeout') return ewaDebugEnabled.value ? 'EWA timeout · original zoom kept' : '';
   if (ewaState.value === 'unsupported') return '';
   if (ewaState.value === 'fallback' && ewaFallbackReason.value) return '';
   return '';
@@ -689,6 +691,21 @@ onBeforeUnmount(() => {
             :mode="ewaCompareMode"
             :image-style="imageRenderStyle"
           />
+          <EwaCanvasSurface
+            v-else-if="shouldDisplayEwaCanvas"
+            :canvas="ewaCanvas"
+            class="vt-lightbox__canvas"
+            :style="imageRenderStyle"
+            :data-zoomed="isZoomed ? '1' : '0'"
+            :data-ewa-state="ewaState"
+            :data-ewa-has-output="hasEwaOutput ? '1' : '0'"
+            :data-ewa-display-active="shouldDisplayEwaCanvas ? '1' : '0'"
+            :data-ewa-preset="ewaDiagnostics?.preset || 'auto'"
+            @pointerdown="handleImagePointerDown"
+            @pointermove="handleImagePointerMove"
+            @pointerup="handleImagePointerUp"
+            @pointercancel="handleImagePointerUp"
+          />
           <img
             v-else
             ref="imageRef"
@@ -699,6 +716,7 @@ onBeforeUnmount(() => {
             :data-zoomed="isZoomed ? '1' : '0'"
             :data-ewa-state="ewaState"
             :data-ewa-has-output="hasEwaOutput ? '1' : '0'"
+            :data-ewa-display-active="shouldDisplayEwaCanvas ? '1' : '0'"
             :data-ewa-preset="ewaDiagnostics?.preset || 'auto'"
             draggable="false"
             @load="handleLightboxImageLoad"

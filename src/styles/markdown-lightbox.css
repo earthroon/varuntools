@@ -991,3 +991,47 @@ a.vt-lightbox__action {
     max-height: calc(100svh - 24px);
   }
 }
+
+
+/* CMS-208S - Canvas-primary EWA zoom surface */
+.vt-lightbox__canvas-host,
+.vt-lightbox__canvas-surface {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.vt-lightbox__canvas {
+  max-width: 100%;
+  max-height: calc(100vh - 220px);
+  width: auto;
+  height: auto;
+  transform-origin: center center;
+  transition:
+    transform 0.16s ease,
+    cursor 0.16s ease;
+  user-select: none;
+  will-change: transform;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.vt-lightbox__canvas[data-zoomed='1'] {
+  cursor: grab;
+  touch-action: none;
+}
+
+.vt-lightbox__canvas[data-zoomed='1']:active {
+  cursor: grabbing;
+}
+
+@media (max-width: 720px) {
+  .vt-lightbox__canvas {
+    max-height: calc(100vh - 190px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vt-lightbox__canvas {
+    transition: none !important;
+  }
+}
