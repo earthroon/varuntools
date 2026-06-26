@@ -1,4 +1,4 @@
-import { EWA_TILEMASK_FROM_QMAP_WGSL } from './ewaWgslSources'
+﻿import { EWA_TILEMASK_FROM_QMAP_WGSL } from './ewaWgslSources'
 import type { EwaTileDiagnostics } from './ewaTypes'
 import type { EwaQmapLodOutput } from './ewaQmapLodCompute'
 
@@ -29,7 +29,7 @@ export const EWA_TILEMASK_BINDING_CONTRACT = {
   kernel: 'textureLoad',
   bindings: [
     { binding: 0, name: 'qmapLodTex', type: 'texture_2d<f32>' },
-    { binding: 1, name: 'outMask', type: 'texture_storage_2d<r8uint, write>' },
+    { binding: 1, name: 'outMask', type: 'texture_storage_2d<rgba8uint, write>' },
     { binding: 2, name: 'params', type: 'uniform' },
   ],
 } as const
@@ -107,7 +107,7 @@ export async function runEwaTileMaskCompute(request: EwaTileMaskRequest): Promis
     label: 'vt_ewa_tilemask_bgl_texture_load',
     entries: [
       { binding: 0, visibility: shaderStage.COMPUTE, texture: { sampleType: 'unfilterable-float' } },
-      { binding: 1, visibility: shaderStage.COMPUTE, storageTexture: { access: 'write-only', format: 'r8uint' } },
+      { binding: 1, visibility: shaderStage.COMPUTE, storageTexture: { access: 'write-only', format: 'rgba8uint' } },
       { binding: 2, visibility: shaderStage.COMPUTE, buffer: { type: 'uniform' } },
     ],
   })
@@ -117,9 +117,9 @@ export async function runEwaTileMaskCompute(request: EwaTileMaskRequest): Promis
     compute: { module: device.createShaderModule({ code: EWA_TILEMASK_FROM_QMAP_WGSL }), entryPoint: 'main' },
   })
   const maskTexture = device.createTexture({
-    label: request.label || 'vt_ewa_tilemask_r8uint',
+    label: request.label || 'vt_ewa_tilemask_rgba8uint',
     size: [tilesW, tilesH, 1],
-    format: 'r8uint',
+    format: 'rgba8uint',
     usage:
       textureUsage.STORAGE_BINDING |
       textureUsage.TEXTURE_BINDING |
@@ -163,3 +163,4 @@ export async function runEwaTileMaskCompute(request: EwaTileMaskRequest): Promis
   })
   return { maskTexture, maskView, tilesW, tilesH, tilePx, diagnostics, destroy: () => { try { maskTexture.destroy?.() } catch {} } }
 }
+

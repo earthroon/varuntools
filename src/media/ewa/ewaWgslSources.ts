@@ -1,4 +1,4 @@
-// CMS-208S - Canvas-primary Lanczos/aniso EWA WGSL sources.
+﻿// CMS-208S - Canvas-primary Lanczos/aniso EWA WGSL sources.
 // Runtime shader sources, not generated asset SSOT.
 
 export const EWA_ANISO_DOWNSCALE_WGSL = /* wgsl */`
@@ -359,7 +359,7 @@ export const EWA_QMAP_LOD_MEANMAX_MIX_WGSL = /* wgsl */`
 //   mx   = max(s0..s3)
 //   q    = mix(mean, mx, mixK)
 //
-// Assumes source Qmap stores ΔK weight in .r.
+// Assumes source Qmap stores ?K weight in .r.
 
 struct Params {
   srcW : u32,
@@ -429,8 +429,8 @@ export const EWA_TILEMASK_FROM_QMAP_WGSL = /* wgsl */`
 //
 // Contract:
 // - Input texture is a LOD where each texel corresponds to one tile.
-// - Qmap core writes ΔK weight ("w") into the R channel.
-// - Output is r8uint texture where .x is 0/1/2 (cheap/medium/expensive).
+// - Qmap core writes ?K weight ("w") into the R channel.
+// - Output is rgba8uint texture where .x is 0/1/2 (cheap/medium/expensive).
 
 struct Params {
   tilesW: u32,
@@ -444,7 +444,7 @@ struct Params {
 };
 
 @group(0) @binding(0) var qmapLodTex: texture_2d<f32>;
-@group(0) @binding(1) var outMask: texture_storage_2d<r8uint, write>;
+@group(0) @binding(1) var outMask: texture_storage_2d<rgba8uint, write>;
 @group(0) @binding(2) var<uniform> P: Params;
 
 fn qWeight(c: vec4<f32>) -> f32 {
@@ -476,7 +476,7 @@ export const EWA_ADAPTIVE_COMPOSITE_WGSL = /* wgsl */`
 // app/core/compute/downscale_webgpu/adaptive_ewa_downscale_rgba16f.wgsl
 // Commit10: Adaptive EWA downscale.
 // If tileMask[tile]==0 -> output fastTex sample.
-// Else -> run EWA taps on srcTex (with optional ΔE gate).
+// Else -> run EWA taps on srcTex (with optional ?E gate).
 
 struct Params {
   srcW: u32,
@@ -499,7 +499,7 @@ struct Params {
   tilePx: u32,
   tilesW: u32,
   tilesH: u32,
-  // Commit23: optional weak ΔE gate for level1 (medium kernel).
+  // Commit23: optional weak ?E gate for level1 (medium kernel).
   // Stored in the previous padding slot (offset 64 bytes) to keep the uniform buffer size stable.
   deK1Scale: f32,
   // Commit24: level1 gate tuning (offset/softness) stored in padding slots.
@@ -522,7 +522,7 @@ fn srgbToLinear(c: vec3<f32>) -> vec3<f32> {
 
 fn linearToOklab(c: vec3<f32>) -> vec3<f32> {
   // Cheap-ish OKLab approximation (not exact, but stable enough for gating)
-  // Matrices from Björn Ottosson's OKLab (approx).
+  // Matrices from Bj철rn Ottosson's OKLab (approx).
   let lms = mat3x3<f32>(
     0.4122214708, 0.5363325363, 0.0514459929,
     0.2119034982, 0.6806995451, 0.1073969566,
@@ -587,7 +587,7 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
     return;
   }
   // level==1: medium kernel (8 taps, direction-aware)
-  // level>=2: expensive kernel (16 taps + optional ΔE gate)
+  // level>=2: expensive kernel (16 taps + optional ?E gate)
 
   // Map dst pixel center into src space
   let srcPos = (vec2<f32>(f32(x) + 0.5, f32(y) + 0.5)) * vec2<f32>(P.scaleX, P.scaleY) - vec2<f32>(0.5, 0.5);
@@ -608,7 +608,7 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
   let sy: i32 = select(-1, 1, ax.y >= 0.0);
   let dropCorner = vec2<i32>(-sx, -sy);
 
-  // Reference color for ΔE gate (bilinear at srcPos)
+  // Reference color for ?E gate (bilinear at srcPos)
   let uvRef = (clamp(srcPos, vec2<f32>(0.0), vec2<f32>(f32(P.srcW)-1.0, f32(P.srcH)-1.0)) + vec2<f32>(0.5)) / vec2<f32>(f32(P.srcW), f32(P.srcH));
   let refRgb = srgbToLinear(textureSampleLevel(srcTex, s0, uvRef, 0.0).rgb);
   let invSrc = vec2<f32>(1.0 / f32(P.srcW), 1.0 / f32(P.srcH));
@@ -647,7 +647,7 @@ var accAll = vec3<f32>(0.0);
       accAll = accAll + rgb * w;
       wAll = wAll + w;
 
-      // Commit23: ΔE gate for level2, and optional weak gate for level1.
+      // Commit23: ?E gate for level2, and optional weak gate for level1.
       // We keep energy by dual-accumulation (accAll vs accGood).
       let deKeff = select(P.deK * clamp(P.deK1Scale, 0.0, 1.0), P.deK, level >= 2u);
       if (P.deThresh > 0.0 && deKeff > 0.0) {
@@ -678,4 +678,5 @@ var accAll = vec3<f32>(0.0);
 `
 
 // CMS-208T-R1 WGSL CONSTANTS END
+
 
