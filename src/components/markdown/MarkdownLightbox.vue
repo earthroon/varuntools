@@ -107,6 +107,7 @@ const displayImageSrc = computed(() => {
   if (ewaDebugEnabled.value && ewaCompareMode.value === 'original') return props.item?.src || '';
   return ewaOutputUrl.value || props.item?.src || '';
 });
+const hasEwaOutput = computed(() => Boolean(ewaOutputUrl.value));
 const showEwaCompareView = computed(() => (
   ewaDebugEnabled.value &&
   ewaCompareMode.value !== 'off' &&
@@ -115,8 +116,13 @@ const showEwaCompareView = computed(() => (
 ));
 const ewaStatusLabel = computed(() => {
   if (isEwaProcessing.value) return 'EWA refining active image';
-  if (ewaState.value === 'ready') return ewaDebugEnabled.value ? `EWA refined · ${ewaCompareMode.value}` : 'EWA refined';
-  if (ewaState.value === 'timeout') return ewaDebugEnabled.value ? 'EWA timeout · original kept' : '';
+  if (ewaState.value === 'ready' && hasEwaOutput.value) {
+    return ewaDebugEnabled.value ? `EWA refined ? ${ewaCompareMode.value}` : 'EWA refined';
+  }
+  if (ewaState.value === 'ready' && !hasEwaOutput.value) {
+    return ewaDebugEnabled.value ? 'EWA ready ? output missing ? original kept' : '';
+  }
+  if (ewaState.value === 'timeout') return ewaDebugEnabled.value ? 'EWA timeout ? original kept' : '';
   if (ewaState.value === 'unsupported') return '';
   if (ewaState.value === 'fallback' && ewaFallbackReason.value) return '';
   return '';
@@ -277,8 +283,10 @@ function getStageFocalPoint(clientX: number, clientY: number): Point {
 
 function handleLightboxImageLoad(event: Event) {
   const img = event.currentTarget as HTMLImageElement;
+  const src = String(img.currentSrc || img.src || '');
+  const isEwaOutputImage = src.startsWith('blob:');
 
-  if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+  if (!isEwaOutputImage && img.naturalWidth > 0 && img.naturalHeight > 0) {
     imageNaturalSize.value = {
       width: img.naturalWidth,
       height: img.naturalHeight,
@@ -677,6 +685,7 @@ onBeforeUnmount(() => {
             :style="imageRenderStyle"
             :data-zoomed="isZoomed ? '1' : '0'"
             :data-ewa-state="ewaState"
+            :data-ewa-has-output="hasEwaOutput ? '1' : '0'"
             :data-ewa-preset="ewaDiagnostics?.preset || 'auto'"
             draggable="false"
             @load="handleLightboxImageLoad"
