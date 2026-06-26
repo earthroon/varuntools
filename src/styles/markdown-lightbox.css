@@ -950,3 +950,44 @@ a.vt-lightbox__action {
   cursor: zoom-in;
 }
 
+/* CMS-208I-R2 ? Definite Lightbox Stage Height / No Collapsed Fit Box */
+.vt-lightbox__panel {
+  block-size: min(920px, calc(100vh - 56px));
+  height: min(920px, calc(100vh - 56px));
+  max-block-size: calc(100vh - 56px);
+  max-height: calc(100vh - 56px);
+}
+
+.vt-lightbox__stage {
+  min-block-size: 0;
+  block-size: 100%;
+  height: 100%;
+  contain: layout paint;
+}
+
+.vt-lightbox__image {
+  max-inline-size: none;
+  max-block-size: none;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+}
+
+.vt-ewa-compare,
+.vt-ewa-compare__single,
+.vt-ewa-compare__pane img {
+  max-inline-size: none;
+  max-block-size: none;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+}
+
+@media (max-width: 720px) {
+  .vt-lightbox__panel {
+    block-size: calc(100svh - 24px);
+    height: calc(100svh - 24px);
+    max-block-size: calc(100svh - 24px);
+    max-height: calc(100svh - 24px);
+  }
+}
