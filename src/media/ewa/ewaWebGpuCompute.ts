@@ -61,7 +61,12 @@ export async function runEwaAnisoDownscale(request: EwaComputeRequest): Promise<
     label: request.label || 'vt_ewa_gallery_dst',
     size: [dstW, dstH, 1],
     format: 'rgba16float',
-    usage: textureUsage.STORAGE_BINDING | textureUsage.TEXTURE_BINDING,
+    usage:
+      textureUsage.STORAGE_BINDING |
+      textureUsage.TEXTURE_BINDING |
+      textureUsage.COPY_SRC |
+      textureUsage.COPY_DST |
+      textureUsage.RENDER_ATTACHMENT,
   })
   const outputView = outputTexture.createView()
 

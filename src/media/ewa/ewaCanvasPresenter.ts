@@ -44,6 +44,11 @@ async function canvasToBlob(canvas: HTMLCanvasElement, format: EwaPresentationFo
   return await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, mimeForFormat(format), quality))
 }
 
+
+function getGpuTextureUsage(): any | null {
+  return (globalThis as any).GPUTextureUsage || null
+}
+
 async function canvasToObjectUrl(
   canvas: HTMLCanvasElement,
   policy: EwaPresentationPolicy,
@@ -95,10 +100,14 @@ export async function presentEwaTextureToCanvas(
   const context = canvas.getContext('webgpu') as any
   if (!context) throw new EwaPresentationError('presentation-canvas-failed', 'webgpu canvas context unavailable')
   try {
+    const textureUsage = getGpuTextureUsage()
     context.configure({
       device,
       format: policy.canvasFormat,
       alphaMode: policy.alphaMode,
+      ...(textureUsage
+        ? { usage: textureUsage.RENDER_ATTACHMENT | textureUsage.COPY_DST | textureUsage.COPY_SRC }
+        : {}),
     })
   } catch (error) {
     throw new EwaPresentationError('presentation-color-policy-failed', error instanceof Error ? error.message : 'canvas configure failed')
