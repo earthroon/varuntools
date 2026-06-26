@@ -344,49 +344,6 @@ jobs:
 
           frontmatter.tags = normalizeStringArray(frontmatter.tags)
 
-          const CMS209F_PUBLIC_ASSET_URL_REWRITE = 'cms-209f-public-asset-url-rewrite@1'
-
-          const publicAssetBaseUrl = String(data.snapshot?.publicAssetBaseUrl || '').replace(/\/+$/g, '')
-          const runtimeAssetPathPattern = /(^|[^A-Za-z0-9:])\/assets\/content\//g
-          const runtimeAssetPathPresencePattern = /(^|[^A-Za-z0-9:])\/assets\/content\//
-
-          const hasRuntimeAssetPath = (value) => {
-            if (typeof value === 'string') return runtimeAssetPathPresencePattern.test(value)
-            if (Array.isArray(value)) return value.some(hasRuntimeAssetPath)
-            if (value && typeof value === 'object') return Object.values(value).some(hasRuntimeAssetPath)
-            return false
-          }
-
-          const rewriteRuntimeAssetString = (value) => {
-            if (!runtimeAssetPathPresencePattern.test(value)) return value
-            if (!publicAssetBaseUrl) {
-              throw new Error('CMS209F_PUBLIC_ASSET_BASE_URL_MISSING_FOR_RUNTIME_CONTENT_ASSET')
-            }
-            return value.replace(
-              runtimeAssetPathPattern,
-              (_match, prefix) => prefix + publicAssetBaseUrl + '/assets/content/',
-            )
-          }
-
-          const rewriteRuntimeAssetValue = (value) => {
-            if (typeof value === 'string') return rewriteRuntimeAssetString(value)
-            if (Array.isArray(value)) return value.map(rewriteRuntimeAssetValue)
-            if (value && typeof value === 'object') {
-              return Object.fromEntries(
-                Object.entries(value).map(([key, item]) => [key, rewriteRuntimeAssetValue(item)]),
-              )
-            }
-            return value
-          }
-
-          const requiresPublicAssetBaseUrl = hasRuntimeAssetPath(frontmatter) || hasRuntimeAssetPath(bodySource.value)
-          if (requiresPublicAssetBaseUrl && !publicAssetBaseUrl) {
-            throw new Error('CMS209F_PUBLIC_ASSET_BASE_URL_MISSING')
-          }
-
-          const materializedFrontmatter = rewriteRuntimeAssetValue(frontmatter)
-          const materializedBodyValue = rewriteRuntimeAssetString(bodySource.value)
-
           const yamlScalar = (value) => {
             if (value === null || value === undefined) return '""'
             if (typeof value === 'object') return JSON.stringify(JSON.stringify(value))
@@ -400,10 +357,10 @@ jobs:
 
             return key + ': ' + yamlScalar(value)
           }
-          const yaml = Object.entries(materializedFrontmatter)
+          const yaml = Object.entries(frontmatter)
             .map(yamlEntry)
             .join('\n')
-          const content = `---\n${yaml}\n---\n\n${materializedBodyValue.replace(/^---[\s\S]*?---\s*/, '')}`
+          const content = `---\n${yaml}\n---\n\n${bodySource.value.replace(/^---[\s\S]*?---\s*/, '')}`
           fs.mkdirSync(require('node:path').dirname(generatedPath), { recursive: true })
           fs.writeFileSync(generatedPath, content, 'utf8')
 
