@@ -166,6 +166,7 @@ function isAdaptiveOutput(output: EwaComputeOutput | EwaAdaptiveTileComputeOutpu
 function toEwaFallbackReason(error: unknown): EwaFallbackReason | string {
   if (error instanceof EwaPresentationError) return error.reason
   const message = error instanceof Error ? error.message : String(error || '')
+  if (/EWA source texture upload validation failed/.test(message)) return 'source-decode-failed'
   if (/quality-budget-original/.test(message)) return 'quality-budget-original'
   if (/upscale path skipped/.test(message)) return 'upscale-skipped'
   if (/presentation-blob-failed/.test(message)) return 'presentation-blob-failed'
@@ -383,7 +384,7 @@ export class EwaGalleryProcessor {
       }
 
       const uploadStart = nowForEwaDiagnostics()
-      source = uploadImageBitmapToTexture(runtime.device, bitmap, 'vt_ewa_gallery_src')
+      source = await uploadImageBitmapToTexture(runtime.device, bitmap, 'vt_ewa_gallery_src')
       uploadMs = nowForEwaDiagnostics() - uploadStart
 
       const computeStart = nowForEwaDiagnostics()
