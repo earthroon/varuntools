@@ -248,7 +248,9 @@
     "smoke:cms208e": "node scripts/cms208e-callout-body-directive-parser-alignment-smoke.mjs",
     "smoke:cms208g": "node scripts/cms208g-directive-gui-public-contract-alignment-smoke.mjs",
     "smoke:lightbox-fit-contain": "node scripts/smoke-cms208i-lightbox-fit-contain.mjs",
-    "smoke:dynamic-content-routes": "node scripts/smoke-dynamic-content-routes.mjs"
+    "smoke:dynamic-content-routes": "node scripts/smoke-dynamic-content-routes.mjs",
+    "smoke:cms208t:bind": "node scripts/smoke-cms208t-bind-layout.mjs",
+    "smoke:cms208t": "node scripts/smoke-cms208t-adaptive-multipass.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

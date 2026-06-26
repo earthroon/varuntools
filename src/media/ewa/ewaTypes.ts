@@ -89,6 +89,15 @@ export type EwaAdaptiveTileParams = {
   deThresh: number
   deSoft: number
   deK: number
+  qLodMaxMix?: number
+  qLodCurve?: 'scurve' | 'pow'
+  qLodCurveGamma?: number
+  qLevelBandStyle?: 'wideMid' | 'tightMid'
+  qLevelBandMin?: number
+  qLevelBandMax?: number
+  deK1Scale?: number
+  deThresh1Add?: number
+  deSoft1Mul?: number
 }
 
 export type EwaTileDiagnostics = {
@@ -96,9 +105,14 @@ export type EwaTileDiagnostics = {
   tilesW: number
   tilesH: number
   totalTiles: number
+  level0Count: number
+  level1Count: number
+  level2Count: number
   activeTileCount: number
   activeTileRatio: number
   qThresh: number
+  qmapSource: 'generated-from-source' | 'provided-qmap'
+  qLodMaxMix: number
 }
 
 export type EwaPresetConfig = {
