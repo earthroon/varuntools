@@ -1,8 +1,16 @@
-export type AssetKind = 'local' | 'public' | 'external' | 'data' | 'missing' | 'invalid'
+export type AssetKind =
+  | 'local'
+  | 'public'
+  | 'external'
+  | 'content_asset'
+  | 'data'
+  | 'missing'
+  | 'invalid'
 
 export type AssetResolutionReason =
   | 'empty_source'
   | 'external_url'
+  | 'content_asset_proxy'
   | 'data_url'
   | 'public_path'
   | 'local_asset_found'
@@ -152,9 +160,9 @@ export function resolveContentAsset(options: ResolveContentAssetOptions): AssetR
       return {
         source,
         url: resolveRuntimeContentAssetUrl(source),
-        kind: 'external',
+        kind: 'content_asset',
         found: true,
-        reason: 'external_url',
+        reason: 'content_asset_proxy',
         relativePath: source.replace(/^\/+/, ''),
       }
     }

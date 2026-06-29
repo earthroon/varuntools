@@ -1,0 +1,27 @@
+{
+  "patch_id": "PUBLIC-ASSET-SSOT-02",
+  "title": "Content Asset Proxy Reason Rebind",
+  "status": "BAKED",
+  "pass_token": "PASS_PUBLIC_ASSET_SSOT_02_CONTENT_ASSET_PROXY_REASON_REBIND",
+  "files": [
+    "src/content/assetRegistry.ts",
+    "scripts/smoke-public-asset-ssot-02-content-asset-proxy-reason-rebind.mjs",
+    "docs/PUBLIC_ASSET_SSOT_02_SPEC.md",
+    "PUBLIC_ASSET_SSOT_02_APPLY.md",
+    "PUBLIC_ASSET_SSOT_02_MANIFEST.json"
+  ],
+  "goals": [
+    "Classify /assets/content/... as content_asset",
+    "Classify /assets/content/... reason as content_asset_proxy",
+    "Do not emit external_url warning for valid VACMS content asset paths",
+    "Keep external http(s) URL behavior unchanged",
+    "Do not mutate D1, R2, Worker, or markdown content"
+  ],
+  "non_goals": [
+    "D1 metadata hydration",
+    "Poster auto-binding",
+    "HLS or manifest player pipeline",
+    "Content markdown mass rewrite",
+    "Worker route change"
+  ]
+}

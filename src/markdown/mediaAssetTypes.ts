@@ -1,6 +1,7 @@
-export type MediaAssetKind =
+﻿export type MediaAssetKind =
   | 'local'
   | 'external'
+  | 'content_asset'
   | 'public'
   | 'data'
   | 'missing'
@@ -15,3 +16,4 @@ export type MediaAssetResult = {
   contentDir?: string
   resolvedKey?: string
 }
+
