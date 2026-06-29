@@ -1,37 +1,26 @@
-# VT-CMS-03 CMS Image Sequence Layout Stability
+# VT-CMS-04 CMS Image Sequence E2E Static Contract
 
-Patch: VT-CMS-03
+Patch: VT-CMS-04
 
-Title: Image Sequence Reserved Slot / CLS Stable Frame / Caption Strip Polish / No Image Optimization
+Title: Published CMS Page Fixture / Image Sequence End To End Render Smoke / Static Route Materialization / No Runtime D1 Coupling
 
 Local SSOT path:
 D:\11124\dd\varuntools
 
 ## Scope
 
-This patch stabilizes the public ImageSequence component layout after VT-CMS-02.
-
-It uses the CMS-provided width and height fields to set a reserved frame ratio. It keeps the published item order intact and does not perform image optimization.
+This patch adds a published CMS sourceBody fixture and two smokes that validate the public image-sequence contract beyond the component layer.
 
 ## Changes
 
-- src/components/markdown/ImageSequence.vue
-- scripts/smoke-cms-image-sequence-layout-stability.mjs
-- package.json script smoke:cms-image-sequence-layout
+- scripts/fixtures/cms-image-sequence-page.md
+- scripts/smoke-cms-image-sequence-e2e-render.mjs
+- scripts/smoke-cms-image-sequence-static-build.mjs
+- package.json scripts:
+  - smoke:cms-image-sequence-e2e
+  - smoke:cms-image-sequence-static
 
-## Explicit non-goals
-
-- No srcset
-- No sizes
-- No picture/source pipeline
-- No thumbnail generation
-- No blur placeholder
-- No EWA line
-- No WebGPU line
-- No D1 lookup
-- No R2 list lookup
-
-## Verify
+## Verification flow
 
 Run from:
 D:\11124\dd\varuntools
@@ -41,9 +30,23 @@ Commands:
   npm run smoke:cms-image-sequence-directive
   npm run smoke:cms-image-sequence-renderer
   npm run smoke:cms-image-sequence-layout
+  npm run smoke:cms-image-sequence-e2e
   npm run typecheck
   npm run build
+  npm run smoke:cms-image-sequence-static
 
-## Pass token
+The static smoke must be run after build. The E2E smoke writes a local readback receipt under node_modules/.cache/varuntools/vt-cms-04, so it should be run before the static smoke.
 
-PASS_VARUNTOOLS_CMS_IMAGE_SEQUENCE_LAYOUT_STABILITY
+## Non-goals
+
+- No image optimization.
+- No srcset or sizes.
+- No picture/source pipeline.
+- No EWA or WebGPU processing.
+- No D1/R2 direct public runtime coupling.
+- No assetId based public re-query.
+
+## Pass tokens
+
+PASS_VARUNTOOLS_CMS_IMAGE_SEQUENCE_E2E_RENDER
+PASS_VARUNTOOLS_CMS_IMAGE_SEQUENCE_STATIC_BUILD
