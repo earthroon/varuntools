@@ -543,3 +543,46 @@
     grid-column: 1 / -1;
   }
 }
+
+/* PUBLIC-ASSET-SSOT-04M-U1 LATE CONTAINER RESERVE START */
+:root {
+  --vt-home-recent-min-height: clamp(360px, 92vw, 680px);
+  --vt-home-featured-min-height: clamp(420px, 100vw, 760px);
+}
+
+.vt-home-late-container {
+  width: min(1120px, calc(100% - (var(--vt-mobile-page-gutter, 24px) * 2)));
+  margin-inline: auto;
+}
+
+.vt-home-late-container--recent,
+.vt-home-recent-public-content {
+  min-height: var(--vt-home-recent-min-height);
+  contain-intrinsic-size: var(--vt-home-recent-min-height);
+}
+
+.vt-home-late-container--featured,
+.vt-home-featured-works {
+  min-height: var(--vt-home-featured-min-height);
+  contain-intrinsic-size: var(--vt-home-featured-min-height);
+}
+
+.vt-home-recent-public-content,
+.vt-home-featured-works {
+  content-visibility: auto;
+}
+
+@media (max-width: 720px) {
+  .vt-home-featured-works,
+  .vt-home-recent-public-content {
+    width: min(calc(100% - (var(--vt-mobile-page-gutter, 24px) * 2)), 1120px);
+  }
+}
+
+@media (max-width: 420px) {
+  :root {
+    --vt-home-recent-min-height: 420px;
+    --vt-home-featured-min-height: 520px;
+  }
+}
+/* PUBLIC-ASSET-SSOT-04M-U1 LATE CONTAINER RESERVE END */

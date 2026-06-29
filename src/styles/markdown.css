@@ -243,3 +243,22 @@
 .vt-markdown h3 {
   scroll-margin-top: 96px;
 }
+
+/* PUBLIC-ASSET-SSOT-04M-U1 MOBILE GUTTER START */
+@media (max-width: 900px) {
+  :root {
+    --vt-mobile-page-gutter: clamp(22px, 6vw, 32px);
+    --vt-page-padding-x: 24px;
+  }
+
+  .vt-markdown-page {
+    padding-inline: var(--vt-mobile-page-gutter);
+  }
+}
+
+@media (max-width: 420px) {
+  :root {
+    --vt-mobile-page-gutter: clamp(20px, 6.2vw, 28px);
+  }
+}
+/* PUBLIC-ASSET-SSOT-04M-U1 MOBILE GUTTER END */

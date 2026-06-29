@@ -16,7 +16,16 @@ const page = loadMarkdownPageFromSource(String(homeMarkdownRaw || ''), 'home')
     :pages="emptyPages"
     :show-related-footer="false"
   />
-
-  <HomeRecentPublicContent />
-  <HomeFeaturedWorks />
+  <div
+    class="vt-home-late-container vt-home-late-container--recent"
+    data-vacms-late-container="recent"
+  >
+    <HomeRecentPublicContent />
+  </div>
+  <div
+    class="vt-home-late-container vt-home-late-container--featured"
+    data-vacms-late-container="featured"
+  >
+    <HomeFeaturedWorks />
+  </div>
 </template>

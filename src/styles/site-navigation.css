@@ -253,3 +253,12 @@
     padding-inline: 0.64rem;
   }
 }
+
+/* PUBLIC-ASSET-SSOT-04M-U1 SITE GUTTER ALIGN START */
+@media (max-width: 560px) {
+  .vt-site-header,
+  .vt-site-footer {
+    width: min(calc(100% - (var(--vt-mobile-page-gutter, 24px) * 2)), 1120px);
+  }
+}
+/* PUBLIC-ASSET-SSOT-04M-U1 SITE GUTTER ALIGN END */

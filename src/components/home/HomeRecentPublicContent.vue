@@ -118,7 +118,7 @@ function categoryLabel(entry: HomeCollectionEntry): string {
 <style scoped>
 .vt-home-recent-public-content {
   margin: clamp(2rem, 5vw, 4rem) auto;
-  width: min(1120px, calc(100% - 2rem));
+  width: min(1120px, calc(100% - (var(--vt-mobile-page-gutter, 24px) * 2)));
 }
 
 .vt-home-recent-public-content__header {

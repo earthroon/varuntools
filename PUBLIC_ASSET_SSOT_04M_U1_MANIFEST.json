@@ -1,0 +1,28 @@
+{
+  "patch_id": "PUBLIC-ASSET-SSOT-04M-U1",
+  "title": "Mobile TOC Relocation / Floating Control Collision Guard / Mobile Page Gutter + Late Container Reserve Seal",
+  "status": "baked",
+  "pass_token": "PASS_PUBLIC_ASSET_SSOT_04M_U1_MOBILE_TOC_GUTTER_RESERVE",
+  "apply_token": "PASS_PUBLIC_ASSET_SSOT_04M_U1_APPLY_MOBILE_TOC_GUTTER_RESERVE",
+  "files": [
+    "scripts/apply-public-asset-ssot-04m-u1-mobile-toc-gutter-reserve.mjs",
+    "scripts/smoke-public-asset-ssot-04m-u1-mobile-toc-gutter-reserve.mjs",
+    "docs/PUBLIC_ASSET_SSOT_04M_U1_SPEC.md",
+    "PUBLIC_ASSET_SSOT_04M_U1_APPLY.md",
+    "PUBLIC_ASSET_SSOT_04M_U1_MANIFEST.json"
+  ],
+  "modifies": [
+    "src/styles/markdown-toc.css",
+    "src/styles/markdown.css",
+    "src/styles/site-navigation.css",
+    "src/styles/markdown-works.css",
+    "src/pages/HomePage.vue",
+    "src/components/home/HomeRecentPublicContent.vue"
+  ],
+  "policy": {
+    "command_palette_zone": "right-bottom unchanged",
+    "toc_zone": "mobile left-top safe-area",
+    "mobile_gutter": "--vt-mobile-page-gutter",
+    "late_container_reserve": true
+  }
+}
