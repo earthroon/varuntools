@@ -1,0 +1,25 @@
+{
+  "patch_id": "PUBLIC-ASSET-SSOT-03",
+  "title": "Video Directive Policy Rebind",
+  "status": "baked",
+  "pass_token": "PASS_PUBLIC_ASSET_SSOT_03_VIDEO_DIRECTIVE_POLICY_REBIND",
+  "files": [
+    "src/markdown/directives/videoPlayerDirective.ts",
+    "src/markdown/mediaAssetTypes.ts",
+    "scripts/smoke-public-asset-ssot-03-video-directive-policy-rebind.mjs",
+    "docs/PUBLIC_ASSET_SSOT_03_SPEC.md",
+    "PUBLIC_ASSET_SSOT_03_APPLY.md",
+    "PUBLIC_ASSET_SSOT_03_MANIFEST.json"
+  ],
+  "carry_forward": [
+    "src/markdown/mediaAssetTypes.ts includes content_asset from PUBLIC-ASSET-SSOT-02 type propagation"
+  ],
+  "policy": {
+    "poster_optional": true,
+    "ghost_poster_removed_at_directive_render": true,
+    "autoplay_requires_muted": true,
+    "force_muted": false,
+    "rewrite_markdown_asset_paths": false,
+    "d1_r2_worker_write": false
+  }
+}

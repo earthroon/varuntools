@@ -1,4 +1,4 @@
-﻿export type MediaAssetKind =
+export type MediaAssetKind =
   | 'local'
   | 'external'
   | 'content_asset'
@@ -16,4 +16,3 @@ export type MediaAssetResult = {
   contentDir?: string
   resolvedKey?: string
 }
-
