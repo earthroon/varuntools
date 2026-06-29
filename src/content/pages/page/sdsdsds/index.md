@@ -33,9 +33,10 @@ vacmsRevisionId: "rev_66f6e2846ed3c9a24f6a220d"
 sourceMode: asset
 videoAssetId: asset_e6911c9cd7b94d68a2dc54ef
 src: /assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_e6911c9cd7b94d68a2dc54ef/out.webm
+poster: /media/example-poster.jpg
 title: Video title
 controls: true
-autoplay: false
+autoplay: true
 muted: false
 loop: true
 playsInline: true
@@ -54,6 +55,5 @@ label: 12121
 delta: 121
 caption: 12121
 ::
-?담뀋?담뀋?곥꽩?뉎꽫?밤뀋??뚣뀋?밤뀍?담꽩?밤꽩?뉎꽮?담뀋
+ㄴㅇㄴㅇㅁㄴㅇㄶㄹㅇㅀㅌㅇㄹㅈㄴㄴㄹㄴㅇㄹㄴㅇ
 ::
-
