@@ -1,0 +1,32 @@
+{
+  "patch_id": "PUBLIC-ASSET-SSOT-01",
+  "title": "Public Content Asset Base Rebind / VACMS Worker R2 Delivery Origin Seal / No Ghost Poster No D1 Mutation",
+  "status": "BAKED",
+  "pass_token": "PASS_PUBLIC_ASSET_SSOT_01_WORKER_R2_DELIVERY_BASE_REBIND",
+  "ssot": {
+    "semantic_path": "/assets/content/...",
+    "fallback_public_base": "https://varuntools-admin-api.ragoon703.workers.dev",
+    "physical_blob_owner": "R2",
+    "semantic_ledger_owner": "VACMS D1",
+    "delivery_owner": "Worker asset proxy",
+    "public_renderer_owner": "src/content/assetRegistry.ts"
+  },
+  "modified_files": [
+    "src/content/assetRegistry.ts"
+  ],
+  "added_files": [
+    "scripts/smoke-public-asset-ssot-01-worker-r2-delivery-base-rebind.mjs",
+    "docs/PUBLIC_ASSET_SSOT_01_SPEC.md",
+    "PUBLIC_ASSET_SSOT_01_APPLY.md",
+    "PUBLIC_ASSET_SSOT_01_MANIFEST.json"
+  ],
+  "non_goals": [
+    "No D1 migration",
+    "No R2 mutation",
+    "No Worker deploy",
+    "No markdown mass rewrite",
+    "No video metadata hydration",
+    "No poster binding implementation",
+    "No content_asset_proxy reason rebind yet"
+  ]
+}

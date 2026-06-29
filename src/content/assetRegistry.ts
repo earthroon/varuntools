@@ -1,4 +1,4 @@
-﻿export type AssetKind = 'local' | 'public' | 'external' | 'data' | 'missing' | 'invalid'
+export type AssetKind = 'local' | 'public' | 'external' | 'data' | 'missing' | 'invalid'
 
 export type AssetResolutionReason =
   | 'empty_source'
@@ -45,7 +45,7 @@ const assetMap = new Map<string, string>(
 const CONTENT_ASSET_PUBLIC_BASE_URL = String(
   import.meta.env.VITE_ASSET_PUBLIC_BASE_URL ||
   import.meta.env.VITE_CONTENT_ASSET_PUBLIC_BASE_URL ||
-  'https://varunasset.work',
+  'https://varuntools-admin-api.ragoon703.workers.dev',
 ).replace(/\/+$/, '')
 
 function normalizeSlash(value: string): string {
