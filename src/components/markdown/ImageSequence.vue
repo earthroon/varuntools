@@ -1,4 +1,6 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
+type ImageSequenceLayout = 'crop-strip'
+
 type ImageSequenceItem = {
   assetId?: string
   src: string
@@ -15,7 +17,7 @@ type ImageSequenceItem = {
 
 const props = withDefaults(
   defineProps<{
-    layout?: 'crop-strip'
+    layout?: ImageSequenceLayout
     reserved?: boolean
     lazy?: boolean
     fade?: boolean
@@ -36,8 +38,7 @@ function loadingMode(): 'lazy' | 'eager' {
 }
 
 function positiveNumber(value: number | undefined): number | undefined {
-  const parsed = Number(value)
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined
+  return Number.isFinite(value) && Number(value) > 0 ? Number(value) : undefined
 }
 
 function ratioForItem(item: ImageSequenceItem): string {
@@ -57,19 +58,25 @@ function itemStyle(item: ImageSequenceItem): Record<string, string> {
 
 <template>
   <figure
-    class="vt-image-sequence vt-media-breakout"
-    :data-layout="layout"
-    :data-reserved="reserved ? '1' : '0'"
-    :data-fade="fade ? '1' : '0'"
+    class="vt-image-sequence"
+    :data-layout="props.layout"
+    :data-reserved="props.reserved ? '1' : '0'"
+    :data-fade="props.fade ? '1' : '0'"
     aria-label="Image sequence"
   >
     <div class="vt-image-sequence__track" role="list">
       <article
-        v-for="(item, index) in items"
+        v-for="(item, index) in props.items"
         :key="item.assetId || item.source || index"
         class="vt-image-sequence__item"
         role="listitem"
         :style="itemStyle(item)"
+        :data-asset-id="item.assetId || undefined"
+        :data-source="item.source"
+        :data-src-found="item.srcFound ? '1' : '0'"
+        :data-src-reason="item.srcReason"
+        :data-filename="item.filename || undefined"
+        :data-mime-type="item.mimeType || undefined"
       >
         <div class="vt-image-sequence__frame">
           <img
@@ -82,12 +89,20 @@ function itemStyle(item: ImageSequenceItem): Record<string, string> {
             :loading="loadingMode()"
             decoding="async"
             draggable="false"
-            :data-vt-source="item.source || undefined"
-          />
+            :data-source="item.source"
+            :data-src-reason="item.srcReason"
+          >
 
-          <div v-else class="vt-media-missing vt-image-sequence__missing" role="status">
+          <div
+            v-else
+            class="vt-media-missing vt-image-sequence__missing"
+            role="status"
+            :data-source="item.source"
+            :data-src-reason="item.srcReason"
+          >
             <strong>Image asset missing</strong>
-            <span>{{ item.srcReason || item.source }}</span>
+            <span>{{ item.srcReason || 'unresolved_content_asset' }}</span>
+            <code v-if="item.source">{{ item.source }}</code>
           </div>
         </div>
 
@@ -111,8 +126,8 @@ function itemStyle(item: ImageSequenceItem): Record<string, string> {
   gap: 12px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
-  scroll-snap-type: x proximity;
   padding-bottom: 4px;
+  scroll-snap-type: x proximity;
 }
 
 .vt-image-sequence__item {
@@ -125,7 +140,7 @@ function itemStyle(item: ImageSequenceItem): Record<string, string> {
   position: relative;
   overflow: hidden;
   border-radius: 18px;
-  background: rgba(36, 31, 26, .06);
+  background: rgba(36, 31, 26, 0.06);
   aspect-ratio: var(--vt-image-sequence-ratio, 16 / 9);
 }
 
@@ -136,29 +151,32 @@ function itemStyle(item: ImageSequenceItem): Record<string, string> {
   object-fit: cover;
 }
 
+.vt-image-sequence[data-fade="1"] .vt-image-sequence__image {
+  transition: opacity 0.18s ease;
+}
+
+.vt-image-sequence__caption {
+  margin-top: 7px;
+  color: rgba(36, 31, 26, 0.66);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
 .vt-image-sequence__missing {
   display: grid;
   min-height: 100%;
   place-content: center;
   gap: 6px;
-  padding: 18px;
+  padding: 16px;
   text-align: center;
 }
 
-.vt-image-sequence__caption {
-  margin-top: 7px;
-  color: rgba(36, 31, 26, .66);
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.vt-image-sequence[data-fade="1"] .vt-image-sequence__image {
-  transition: opacity .18s ease;
-}
-
-@media (max-width: 720px) {
-  .vt-image-sequence__item {
-    flex-basis: 86vw;
-  }
+.vt-image-sequence__missing code {
+  max-width: 100%;
+  overflow: hidden;
+  color: inherit;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

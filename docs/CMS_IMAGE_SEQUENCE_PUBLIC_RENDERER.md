@@ -50,3 +50,19 @@ The static smoke must be run after build. The E2E smoke writes a local readback 
 
 PASS_VARUNTOOLS_CMS_IMAGE_SEQUENCE_E2E_RENDER
 PASS_VARUNTOOLS_CMS_IMAGE_SEQUENCE_STATIC_BUILD
+
+<!-- VT-CMS-05-ASSET-DIAGNOSTICS -->
+
+## VT-CMS-05 Asset Diagnostics
+
+Image sequence rendering keeps the CMS source path as the public resolve SSOT. Each rendered item exposes a minimal diagnostic receipt through DOM data attributes:
+
+- data-asset-id
+- data-source
+- data-src-found
+- data-src-reason
+- data-filename
+- data-mime-type
+
+The public renderer does not query D1 or R2 directly. It does not create srcset, sizes, optimizer URLs, thumbnails, canvas placeholders, or WebGPU/EWA image processing paths.
+
