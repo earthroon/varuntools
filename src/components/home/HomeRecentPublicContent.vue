@@ -62,6 +62,7 @@ function categoryLabel(entry: HomeCollectionEntry): string {
     class="vt-home-recent-public-content"
     data-vacms-home-recent-feed="true"
     data-vacms-home-recent-source="generated-home-collections"
+    data-vacms-late-container-reserve="true"
     aria-labelledby="home-recent-public-content-title"
   >
     <div class="vt-home-recent-public-content__header">
@@ -119,6 +120,9 @@ function categoryLabel(entry: HomeCollectionEntry): string {
 .vt-home-recent-public-content {
   margin: clamp(2rem, 5vw, 4rem) auto;
   width: min(1120px, calc(100% - (var(--vt-mobile-page-gutter, 24px) * 2)));
+  min-height: clamp(260px, 42vh, 520px);
+  content-visibility: auto;
+  contain-intrinsic-size: 420px;
 }
 
 .vt-home-recent-public-content__header {
@@ -202,5 +206,17 @@ function categoryLabel(entry: HomeCollectionEntry): string {
   color: var(--vt-color-muted, #66756f);
   font-size: 0.78rem;
   padding: 0.2rem 0.55rem;
+}
+
+@media (max-width: 720px) {
+  .vt-home-recent-public-content {
+    min-height: clamp(300px, 58vh, 560px);
+    contain-intrinsic-size: 520px;
+  }
+
+  .vt-home-recent-public-content__heading-row {
+    align-items: start;
+    flex-direction: column;
+  }
 }
 </style>

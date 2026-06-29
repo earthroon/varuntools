@@ -1,0 +1,21 @@
+{
+  "patch_id": "PUBLIC-ASSET-SSOT-04M-U1-R2",
+  "title": "Header-Zone TOC Dock / Vue-Owned Scroll-Idle Visibility Gate / Late Container Min-Height Reserve Seal",
+  "status": "baked",
+  "files": [
+    "src/components/markdown/MarkdownToc.vue",
+    "src/components/home/HomeRecentPublicContent.vue",
+    "scripts/apply-public-asset-ssot-04m-u1-r2-vue-owned-mobile-toc.mjs",
+    "scripts/smoke-public-asset-ssot-04m-u1-r2-vue-owned-mobile-toc.mjs",
+    "docs/PUBLIC_ASSET_SSOT_04M_U1_R2_SPEC.md",
+    "PUBLIC_ASSET_SSOT_04M_U1_R2_APPLY.md",
+    "PUBLIC_ASSET_SSOT_04M_U1_R2_MANIFEST.json"
+  ],
+  "ssot": {
+    "toc_position_owner": "src/components/markdown/MarkdownToc.vue",
+    "toc_visual_css_role": "chrome only",
+    "home_recent_reserve_owner": "src/components/home/HomeRecentPublicContent.vue",
+    "home_featured_reserve_owner": "src/styles/markdown-works.css"
+  },
+  "pass_token": "PASS_PUBLIC_ASSET_SSOT_04M_U1_R2_VUE_OWNED_MOBILE_TOC"
+}
