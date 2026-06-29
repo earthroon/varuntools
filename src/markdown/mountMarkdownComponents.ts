@@ -11,6 +11,7 @@ import WorkCard from '@/components/markdown/WorkCard.vue'
 import PagecardGrid from '@/components/markdown/PagecardGrid.vue'
 import MarkdownBox from '@/components/markdown/MarkdownBox.vue'
 import GalleryStrip from '@/components/markdown/GalleryStrip.vue'
+import ImageSequence from '@/components/markdown/ImageSequence.vue'
 import HomeSection from '@/components/markdown/HomeSection.vue'
 import ProductDetailCta from '@/components/markdown/ProductDetailCta.vue'
 import ProductTrustBlocks from '@/components/markdown/ProductTrustBlocks.vue'
@@ -36,6 +37,7 @@ import DemoFrame from '@/components/demo/DemoFrame.vue'
 import { resolveContentAssetMeta } from './resolveContentAssets'
 import { resolveMediaAsset } from '@/content/assetRegistry'
 import { parseGalleryStripItems } from './galleryStripItems'
+import { parseImageSequenceTemplateItems } from './imageSequenceItems'
 import type { LoadedMarkdownPage } from './types'
 
 export type MarkdownMountOptions = {
@@ -178,6 +180,43 @@ export function mountMarkdownComponents(
   options: MarkdownMountOptions,
 ): () => void {
   const mounted: MountedApp[] = []
+
+  root.querySelectorAll('image-sequence').forEach((element) => {
+    const el = element as HTMLElement
+    const itemsTemplate = el.querySelector('template[data-image-sequence-items]') as HTMLTemplateElement | null
+    const rawItems = parseImageSequenceTemplateItems(itemsTemplate?.textContent || '')
+
+    const items = rawItems.map((item) => {
+      const srcAsset = resolveContentAssetMeta(options.contentDir, item.src)
+
+      return {
+        assetId: item.assetId,
+        src: srcAsset.url,
+        srcFound: srcAsset.found,
+        srcReason: srcAsset.reason || '',
+        source: item.src || '',
+        alt: item.alt || '',
+        caption: item.caption,
+        width: item.width,
+        height: item.height,
+        filename: item.filename,
+        mimeType: item.mimeType,
+      }
+    })
+
+    const props = {
+      layout: el.dataset.layout === 'crop-strip' ? 'crop-strip' : 'crop-strip',
+      reserved: boolAttr(el.dataset.reserved, true),
+      lazy: boolAttr(el.dataset.lazy, true),
+      fade: boolAttr(el.dataset.fade, true),
+      width: numberAttr(el.dataset.width, 0) || undefined,
+      height: numberAttr(el.dataset.height, 0) || undefined,
+      items,
+    }
+
+    const mountedApp = mountOne(element, ImageSequence, props)
+    if (mountedApp) mounted.push(mountedApp)
+  })
 
 
   root.querySelectorAll('editorial-title').forEach((element) => {
