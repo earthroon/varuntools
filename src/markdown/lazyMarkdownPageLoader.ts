@@ -1,0 +1,106 @@
+import { markdownRouteIndexEntries, type MarkdownRouteIndexEntry } from './markdownRouteIndex.generated'
+import { loadMarkdownPageFromSource } from './loadMarkdownPageFromSource'
+import { normalizeSlugString } from './pageLookup'
+import type { LoadedMarkdownPage } from './types'
+import { vacmsLiveMarkdownPageSources } from './vacmsLivePages.generated'
+
+const markdownModules = import.meta.glob<string>('../content/pages/**/index.md', {
+  query: '?raw',
+  import: 'default',
+})
+
+function contentPathFor(contentDir: string): string {
+  return `../content/pages/${contentDir}/index.md`
+}
+
+function findRouteIndexEntry(rawSlug: string): MarkdownRouteIndexEntry | null {
+  const slug = normalizeSlugString(rawSlug)
+  if (!slug) return null
+
+  const direct = markdownRouteIndexEntries.find((entry) => entry.slug === slug)
+  if (direct) return direct
+
+  const byContentDir = markdownRouteIndexEntries.find((entry) => entry.contentDir === slug)
+  return byContentDir || null
+}
+
+function readLiveEntrySlug(entry: Record<string, unknown>): string {
+  const contentDir = String(entry.contentDir || '').trim()
+  const materializedSlug = String(entry.materializedSlug || '').trim()
+  const raw = String(entry.raw || '')
+  const normalized = raw.replace(/^\uFEFF/, '')
+
+  if (normalized.startsWith('---')) {
+    const end = normalized.indexOf('\n---', 3)
+    const frontmatter = end >= 0 ? normalized.slice(3, end) : ''
+    const match = frontmatter.match(/^slug:\s*['"]?([^'"\r\n#]+)['"]?\s*$/m)
+    const slug = normalizeSlugString(match?.[1] || '')
+    if (slug) return slug
+  }
+
+  return normalizeSlugString(materializedSlug || contentDir)
+}
+
+function findLiveSource(rawSlug: string, contentDir = ''): Record<string, unknown> | null {
+  const slug = normalizeSlugString(rawSlug)
+  const normalizedContentDir = normalizeSlugString(contentDir)
+
+  for (const entry of vacmsLiveMarkdownPageSources as unknown as Record<string, unknown>[]) {
+    const entryContentDir = normalizeSlugString(String(entry.contentDir || ''))
+    const materializedSlug = normalizeSlugString(String(entry.materializedSlug || ''))
+    const entrySlug = readLiveEntrySlug(entry)
+
+    if (
+      entrySlug === slug ||
+      entryContentDir === slug ||
+      materializedSlug === slug ||
+      (normalizedContentDir && entryContentDir === normalizedContentDir) ||
+      (normalizedContentDir && materializedSlug === normalizedContentDir)
+    ) {
+      return entry
+    }
+  }
+
+  return null
+}
+
+function loadLivePage(entry: Record<string, unknown>): LoadedMarkdownPage | null {
+  const raw = String(entry.raw || '')
+  if (!raw.trim()) return null
+
+  const contentDir = String(entry.contentDir || entry.materializedSlug || '').trim()
+  if (!contentDir) return null
+
+  return loadMarkdownPageFromSource(raw, contentDir)
+}
+
+async function loadContentPage(contentDir: string): Promise<LoadedMarkdownPage | null> {
+  const loader = markdownModules[contentPathFor(contentDir)]
+  if (!loader) return null
+
+  const raw = await loader()
+  return loadMarkdownPageFromSource(String(raw || ''), contentDir)
+}
+
+export async function loadMarkdownPageBySlug(rawSlug: string): Promise<LoadedMarkdownPage | null> {
+  const slug = normalizeSlugString(rawSlug)
+  if (!slug) return null
+
+  const liveEntry = findLiveSource(slug)
+  if (liveEntry) {
+    const livePage = loadLivePage(liveEntry)
+    if (livePage) return livePage
+  }
+
+  const routeEntry = findRouteIndexEntry(slug)
+  if (!routeEntry) {
+    return loadContentPage(slug)
+  }
+
+  if (routeEntry.source === 'vacms-live') {
+    const live = findLiveSource(routeEntry.slug, routeEntry.contentDir)
+    if (live) return loadLivePage(live)
+  }
+
+  return loadContentPage(routeEntry.contentDir)
+}

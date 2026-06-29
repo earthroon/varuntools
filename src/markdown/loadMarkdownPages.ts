@@ -1,6 +1,4 @@
-import { applyLegacyMarkdownAdapters } from './legacy'
-import { parseFrontmatter } from './parseFrontmatter'
-import { renderMarkdownPage } from './renderMarkdownPage'
+import { loadMarkdownPageFromSource } from './loadMarkdownPageFromSource'
 import type { LoadedMarkdownPage } from './types'
 import { vacmsLiveMarkdownPageSources } from './vacmsLivePages.generated'
 
@@ -14,23 +12,6 @@ function contentDirFromPath(path: string): string {
   return path
     .replace('../content/pages/', '')
     .replace('/index.md', '')
-}
-
-function loadMarkdownPageFromSource(source: string, contentDir: string): LoadedMarkdownPage {
-  const parsed = parseFrontmatter(source)
-  const slug = parsed.frontmatter.slug || contentDir
-  const legacy = applyLegacyMarkdownAdapters(parsed.content)
-  const rendered = renderMarkdownPage(legacy.content, contentDir)
-
-  return {
-    slug,
-    contentDir,
-    raw: source,
-    frontmatter: parsed.frontmatter,
-    html: rendered.html,
-    headings: rendered.headings,
-    legacyTransforms: legacy.report,
-  }
 }
 
 export function loadMarkdownPages(): LoadedMarkdownPage[] {

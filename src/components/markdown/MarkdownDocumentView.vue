@@ -18,13 +18,14 @@ import type { LoadedMarkdownPage } from '@/markdown/types'
 const props = withDefaults(
   defineProps<{
     page: LoadedMarkdownPage | null
-    pages: LoadedMarkdownPage[]
+    pages?: LoadedMarkdownPage[]
     showToc?: boolean
     showRelatedFooter?: boolean
     notFoundTitle?: string
     notFoundMessage?: string
   }>(),
   {
+    pages: () => [],
     showToc: true,
     showRelatedFooter: true,
     notFoundTitle: '페이지를 찾을 수 없습니다',
@@ -37,7 +38,7 @@ useMarkdownInternalLinks(markdownRoot)
 let cleanupImageMagnifier: (() => void) | null = null
 
 const pageRef = computed(() => props.page)
-const pagesRef = computed(() => props.pages)
+const pagesRef = computed(() => props.pages || [])
 const compiledHeadings = computed(() => props.page?.headings || [])
 const { observedHeadings, refreshObservedHeadings } = useObservedHeadings(markdownRoot)
 const headings = computed(() =>
@@ -87,7 +88,7 @@ const pageMeta = computed(() => {
 usePageMeta(pageMeta)
 
 const shouldUseWorkDetailFooter = computed(() => {
-  if (!props.showRelatedFooter || !props.page) return false
+  if (!props.showRelatedFooter || !props.page || !pagesRef.value.length) return false
   const exposure = resolvePublicExposure(props.page)
   return (
     exposure.category === 'work' ||
@@ -100,7 +101,7 @@ const shouldUseWorkDetailFooter = computed(() => {
 
 const workDetailContext = computed(() => {
   if (!shouldUseWorkDetailFooter.value || !props.page) return null
-  return getWorkDetailContext(props.pages, props.page.slug)
+  return getWorkDetailContext(pagesRef.value, props.page.slug)
 })
 
 onBeforeUnmount(() => {

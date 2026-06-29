@@ -1,0 +1,23 @@
+{
+  "patch_id": "PUBLIC-ASSET-SSOT-04M-B2",
+  "title": "Current Route Lazy Markdown Loader / No Full Markdown Manifest On Detail Entry / Stale Route Guard Seal",
+  "status": "baked",
+  "pass_token": "PASS_PUBLIC_ASSET_SSOT_04M_B2_CURRENT_ROUTE_LAZY_MARKDOWN",
+  "files": [
+    "src/markdown/loadMarkdownPageFromSource.ts",
+    "src/markdown/lazyMarkdownPageLoader.ts",
+    "src/markdown/markdownRouteIndex.generated.ts",
+    "src/markdown/loadMarkdownPages.ts",
+    "src/pages/MarkdownPage.vue",
+    "src/components/markdown/MarkdownDocumentView.vue",
+    "scripts/build-markdown-route-index.mjs",
+    "scripts/smoke-public-asset-ssot-04m-b2-current-route-lazy-markdown.mjs",
+    "docs/PUBLIC_ASSET_SSOT_04M_B2_SPEC.md"
+  ],
+  "non_goals": [
+    "HomePage full fast path",
+    "Recent/Featured lightweight index migration",
+    "markdown island async registry",
+    "CSS chunk split"
+  ]
+}
