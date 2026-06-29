@@ -258,7 +258,16 @@
     "smoke:cms-image-sequence-e2e": "node scripts/smoke-cms-image-sequence-e2e-render.mjs",
     "smoke:cms-image-sequence-static": "node scripts/smoke-cms-image-sequence-static-build.mjs",
     "smoke:cms-image-sequence-diagnostics": "node scripts/smoke-cms-image-sequence-asset-diagnostics.mjs",
-    "smoke:cms-no-public-d1-r2-coupling": "node scripts/smoke-cms-no-public-d1-r2-coupling.mjs"
+    "smoke:cms-no-public-d1-r2-coupling": "node scripts/smoke-cms-no-public-d1-r2-coupling.mjs",
+    "smoke:cms-image-sequence-matrix": "node scripts/smoke-cms-image-sequence-fixture-matrix.mjs",
+    "smoke:cms-image-sequence-invalid": "node scripts/smoke-cms-image-sequence-invalid-recovery.mjs",
+    "smoke:cms-image-sequence-cls": "node scripts/smoke-cms-image-sequence-cls-safe-reveal.mjs",
+    "smoke:cms-image-sequence-all": "node scripts/run-cms-image-sequence-smokes.mjs",
+    "preflight:cms-image-sequence": "node scripts/preflight-cms-image-sequence-public-build.mjs",
+    "smoke:cms-image-sequence-aggregate": "node scripts/smoke-cms-image-sequence-aggregate-runner.mjs",
+    "smoke:cms-image-sequence-authoring": "node scripts/smoke-cms-image-sequence-authoring-guide.mjs",
+    "smoke:cms-markdown-text-block-public-ssot": "node scripts/smoke-cms-markdown-text-block-public-ssot.mjs",
+    "smoke:cms-markdown-text-placeholder-public-guard": "node scripts/smoke-cms-markdown-text-placeholder-public-guard.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
