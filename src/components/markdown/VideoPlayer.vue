@@ -139,8 +139,10 @@ const stageStyle = computed<Record<string, string>>(() => {
 })
 
 const videoStyle = computed<Record<string, string>>(() => ({
+  display: 'block',
   width: '100%',
   height: '100%',
+  maxHeight: 'none',
   objectFit: 'contain',
   objectPosition: 'center center',
 }))
