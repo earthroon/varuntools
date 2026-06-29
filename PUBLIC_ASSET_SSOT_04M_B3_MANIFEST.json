@@ -1,0 +1,30 @@
+{
+  "patch_id": "PUBLIC-ASSET-SSOT-04M-B3",
+  "title": "Home Fast Path / Home Document Only / Lightweight Home Collections / No Full Markdown Manifest On Home Entry Seal",
+  "pass_token": "PASS_PUBLIC_ASSET_SSOT_04M_B3_HOME_FAST_PATH",
+  "files": [
+    "src/content/generated/homeCollections.generated.json",
+    "src/composables/useHomeCollections.ts",
+    "src/pages/HomePage.vue",
+    "src/components/home/HomeRecentPublicContent.vue",
+    "src/components/home/HomeFeaturedWorks.vue",
+    "scripts/build-home-collections.mjs",
+    "scripts/smoke-public-asset-ssot-04m-b3-home-fast-path.mjs",
+    "docs/PUBLIC_ASSET_SSOT_04M_B3_SPEC.md",
+    "PUBLIC_ASSET_SSOT_04M_B3_APPLY.md",
+    "PUBLIC_ASSET_SSOT_04M_B3_MANIFEST.json"
+  ],
+  "ssot": {
+    "home_document": "HomePage.vue uses loadMarkdownPageBySlug('home')",
+    "home_collections": "src/content/generated/homeCollections.generated.json",
+    "builder": "scripts/build-home-collections.mjs",
+    "defer_gate": "afterFirstPaint"
+  },
+  "non_goals": [
+    "WorksPage optimization",
+    "SearchPage optimization",
+    "PublicContentIndexPage optimization",
+    "Markdown island async registry",
+    "Worker/D1/R2 changes"
+  ]
+}

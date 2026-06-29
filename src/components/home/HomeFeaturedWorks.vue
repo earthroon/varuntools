@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import WorkCard from '@/components/markdown/WorkCard.vue'
-import type { LoadedMarkdownPage } from '@/markdown/types'
-import { getWorkCollectionEntries } from '@/markdown/pageRegistry'
+import { useHomeCollections } from '@/composables/useHomeCollections'
 
 const props = withDefaults(
   defineProps<{
-    pages: LoadedMarkdownPage[]
     limit?: number
     title?: string
     description?: string
@@ -20,18 +18,13 @@ const props = withDefaults(
   },
 )
 
-const featuredWorks = computed(() => {
-  return getWorkCollectionEntries(props.pages)
-    .filter((entry) => entry.featured)
-    .filter((entry) => entry.hasWorkMetadata)
-    .filter((entry) => entry.workStatus !== 'private' && entry.workStatus !== 'draft')
-    .slice(0, props.limit)
-})
+const { featuredWorks } = useHomeCollections()
+const visibleWorks = computed(() => featuredWorks.value.slice(0, props.limit))
 </script>
 
 <template>
   <section
-    v-if="featuredWorks.length"
+    v-if="visibleWorks.length"
     class="vt-home-featured-works"
     aria-labelledby="home-featured-works-title"
   >
@@ -53,22 +46,22 @@ const featuredWorks = computed(() => {
 
     <div class="vt-home-featured-works__grid">
       <WorkCard
-        v-for="entry in featuredWorks"
+        v-for="entry in visibleWorks"
         :key="entry.slug"
         :slug="entry.slug"
         :title="entry.title"
-        :description="entry.summary || entry.description"
+        :description="entry.description"
         :cover="entry.cover"
         :href="entry.href"
-        :tag="entry.type || entry.kind"
+        :tag="entry.work.type || entry.kind"
         :content-dir="entry.contentDir"
-        :role="entry.role.slice(0, 2)"
-        :stack="entry.stack.slice(0, 3)"
+        :role="entry.work.role.slice(0, 2)"
+        :stack="entry.work.stack.slice(0, 3)"
         :tags="entry.tags.slice(0, 3)"
         :year="entry.year"
-        :period="entry.period"
+        :period="entry.work.period"
         :featured="entry.featured"
-        :status="entry.workStatus"
+        :status="entry.work.status"
       />
     </div>
   </section>

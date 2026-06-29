@@ -1,18 +1,15 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRouteManifest } from '@/composables/useRouteManifest'
-import {
-  usePublicContentCollection,
-  type PublicContentCardEntry,
-} from '@/composables/usePublicContentCollection'
 import {
   useRuntimePublicContentIndex,
   type RuntimePublicContentIndexEntry,
 } from '@/composables/useRuntimePublicContentIndex'
+import {
+  normalizeRuntimeHomeCollectionEntry,
+  useHomeCollections,
+  type HomeCollectionEntry,
+} from '@/composables/useHomeCollections'
 import { getPublicContentCategoryLabel } from '@/content/publicContentCategoryLabels'
-
-type SourceFrontmatter = Record<string, unknown>
-type HomeRecentEntry = PublicContentCardEntry | RuntimePublicContentIndexEntry
 
 const props = withDefaults(
   defineProps<{
@@ -31,50 +28,19 @@ const props = withDefaults(
   },
 )
 
-const { pages } = useRouteManifest()
-const { allEntries } = usePublicContentCollection(pages, { scope: 'index' })
+const { recentEntries } = useHomeCollections()
 const { runtimeEntries, runtimeStatus } = useRuntimePublicContentIndex()
 
-const sourceByEntryKey = computed(() => {
-  const out = new Map<string, SourceFrontmatter>()
-  for (const page of pages) {
-    const fm = page.frontmatter as SourceFrontmatter
-    out.set(page.slug, fm)
-    out.set(page.contentDir, fm)
+function readComparableTime(entry: HomeCollectionEntry): number {
+  if (typeof entry.time === 'number' && Number.isFinite(entry.time) && entry.time > 0) return entry.time
+  if (typeof entry.year === 'number' && Number.isFinite(entry.year)) {
+    const fallback = Date.parse(`${entry.year}-01-01`)
+    if (Number.isFinite(fallback)) return fallback
   }
-  return out
-})
-
-function readComparableTime(entry: HomeRecentEntry): number {
-  const runtimeTime = Number((entry as RuntimePublicContentIndexEntry).time)
-  if (Number.isFinite(runtimeTime) && runtimeTime > 0) return runtimeTime
-
-  const frontmatter = sourceByEntryKey.value.get(entry.slug) || sourceByEntryKey.value.get(entry.contentDir)
-  const candidates = [
-    frontmatter?.publishedDate,
-    frontmatter?.date,
-    frontmatter?.updated,
-    frontmatter?.created,
-    entry.year ? `${entry.year}-01-01` : '',
-    entry.slug,
-  ]
-
-  for (const value of candidates) {
-    const text = String(value || '').trim()
-    if (!text) continue
-    const direct = Date.parse(text)
-    if (Number.isFinite(direct)) return direct
-    const year = text.match(/(?:19|20)\d{2}/)?.[0]
-    if (year) {
-      const fallback = Date.parse(`${year}-01-01`)
-      if (Number.isFinite(fallback)) return fallback
-    }
-  }
-
   return 0
 }
 
-function compareRecent(a: HomeRecentEntry, b: HomeRecentEntry): number {
+function compareRecent(a: HomeCollectionEntry, b: HomeCollectionEntry): number {
   return (
     readComparableTime(b) - readComparableTime(a) ||
     Number(b.featured) - Number(a.featured) ||
@@ -83,14 +49,16 @@ function compareRecent(a: HomeRecentEntry, b: HomeRecentEntry): number {
   )
 }
 
-const sourceEntries = computed<HomeRecentEntry[]>(() => {
-  if (runtimeStatus.value === 'ready' && runtimeEntries.value.length) {
-    return runtimeEntries.value
-  }
-  return allEntries.value as HomeRecentEntry[]
+const runtimeHomeEntries = computed(() => (runtimeEntries.value as RuntimePublicContentIndexEntry[])
+  .map((entry) => normalizeRuntimeHomeCollectionEntry(entry))
+  .filter((entry): entry is HomeCollectionEntry => Boolean(entry)))
+
+const sourceEntries = computed(() => {
+  if (runtimeStatus.value === 'ready' && runtimeHomeEntries.value.length) return runtimeHomeEntries.value
+  return recentEntries.value
 })
 
-const recentEntries = computed(() => {
+const visibleEntries = computed(() => {
   const allowed = new Set(props.includeCategories.map((category) => category.trim()).filter(Boolean))
   return [...sourceEntries.value]
     .filter((entry) => allowed.has(entry.category))
@@ -98,18 +66,17 @@ const recentEntries = computed(() => {
     .slice(0, props.limit)
 })
 
-function categoryLabel(entry: HomeRecentEntry): string {
-  const runtimeLabel = (entry as RuntimePublicContentIndexEntry).categoryLabel
-  return runtimeLabel || getPublicContentCategoryLabel(entry.category)
+function categoryLabel(entry: HomeCollectionEntry): string {
+  return entry.categoryLabel || getPublicContentCategoryLabel(entry.category)
 }
 </script>
 
 <template>
   <section
-    v-if="recentEntries.length"
+    v-if="visibleEntries.length"
     class="vt-home-recent-public-content"
     data-vacms-home-recent-feed="true"
-    :data-vacms-home-recent-source="runtimeStatus === 'ready' ? 'runtime-public-index' : 'bundled-route-manifest'"
+    :data-vacms-home-recent-source="runtimeStatus === 'ready' ? 'runtime-public-index' : 'generated-home-collections'"
     aria-labelledby="home-recent-public-content-title"
   >
     <div class="vt-home-recent-public-content__header">
@@ -134,7 +101,7 @@ function categoryLabel(entry: HomeRecentEntry): string {
 
     <div class="vt-home-recent-public-content__grid">
       <article
-        v-for="entry in recentEntries"
+        v-for="entry in visibleEntries"
         :key="entry.slug"
         class="vt-home-recent-public-content__card"
         data-vacms-home-recent-card="true"
@@ -240,15 +207,22 @@ function categoryLabel(entry: HomeRecentEntry): string {
   flex-wrap: wrap;
   gap: 0.35rem;
   list-style: none;
-  margin: 0.75rem 0 0;
+  margin: 0.8rem 0 0;
   padding: 0;
 }
 
 .vt-home-recent-public-content__tags li {
-  background: var(--vt-surface-muted, rgba(26, 58, 50, 0.08));
+  background: var(--vt-chip-bg, rgba(26, 58, 50, 0.08));
   border-radius: 999px;
   color: var(--vt-color-muted, #66756f);
-  font-size: 0.76rem;
-  padding: 0.2rem 0.5rem;
+  font-size: 0.78rem;
+  padding: 0.2rem 0.55rem;
+}
+
+@media (max-width: 680px) {
+  .vt-home-recent-public-content__heading-row {
+    align-items: start;
+    flex-direction: column;
+  }
 }
 </style>
