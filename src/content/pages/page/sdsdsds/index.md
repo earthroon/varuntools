@@ -1,4 +1,4 @@
-﻿---
+---
 schema: "{\"packId\":\"page\",\"packVersion\":\"cms-schema-pack-v1\"}"
 kind: "page"
 visibility: "public"
@@ -35,7 +35,7 @@ videoAssetId: asset_e6911c9cd7b94d68a2dc54ef
 src: /assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_e6911c9cd7b94d68a2dc54ef/out.webm
 title: Video title
 controls: true
-autoplay: true
+autoplay: false
 muted: false
 loop: true
 playsInline: true

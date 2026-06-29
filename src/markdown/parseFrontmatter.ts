@@ -1,4 +1,4 @@
-import type { MarkdownFrontmatter } from '@/types/content'
+﻿import type { MarkdownFrontmatter } from '@/types/content'
 import type { ParsedMarkdownPage } from './types'
 
 function unquote(value: string): string {
@@ -102,7 +102,7 @@ function parseFrontmatterBlock(block: string): MarkdownFrontmatter {
 }
 
 export function parseFrontmatter(raw: string): ParsedMarkdownPage {
-  const normalized = String(raw || '')
+  const normalized = String(raw || '').replace(/^\uFEFF/, '')
   const match = normalized.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/)
 
   if (!match) {
@@ -117,3 +117,4 @@ export function parseFrontmatter(raw: string): ParsedMarkdownPage {
     content: match[2],
   }
 }
+
