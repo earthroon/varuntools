@@ -1,0 +1,22 @@
+{
+  "patch_id": "PUBLIC-ASSET-SSOT-04M-B1",
+  "title": "Mobile Entry Fast Path B1",
+  "status": "baked",
+  "files": [
+    "src/utils/afterFirstPaint.ts",
+    "src/components/CommandPaletteShell.vue",
+    "src/App.vue",
+    "src/composables/useRuntimePublicContentIndex.ts",
+    "scripts/smoke-public-asset-ssot-04m-b1-mobile-entry-fast-path.mjs",
+    "docs/PUBLIC_ASSET_SSOT_04M_B1_SPEC.md",
+    "PUBLIC_ASSET_SSOT_04M_B1_APPLY.md",
+    "PUBLIC_ASSET_SSOT_04M_B1_MANIFEST.json"
+  ],
+  "pass_token": "PASS_PUBLIC_ASSET_SSOT_04M_B1_MOBILE_ENTRY_FAST_PATH",
+  "non_goals": [
+    "no markdown lazy loader in B1",
+    "no router rewrite",
+    "no D1 or R2 write",
+    "no SSR"
+  ]
+}

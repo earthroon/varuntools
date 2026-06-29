@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CommandPalette from '@/components/CommandPalette.vue'
+import CommandPaletteShell from '@/components/CommandPaletteShell.vue'
 import SiteHeader from '@/components/layout/SiteHeader.vue'
 import SiteFooter from '@/components/layout/SiteFooter.vue'
 </script>
@@ -15,5 +15,5 @@ import SiteFooter from '@/components/layout/SiteFooter.vue'
     <SiteFooter />
   </div>
 
-  <CommandPalette />
+  <CommandPaletteShell />
 </template>

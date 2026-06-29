@@ -1,5 +1,6 @@
 import { computed, onMounted, ref } from 'vue'
 import type { PublicContentCardEntry } from '@/composables/usePublicContentCollection'
+import { afterFirstPaintAsync } from '@/utils/afterFirstPaint'
 
 export type RuntimePublicContentIndexEntry = PublicContentCardEntry & {
   categoryLabel?: string
@@ -23,6 +24,7 @@ const runtimeStatus = ref<RuntimePublicContentIndexStatus>('idle')
 const runtimeError = ref('')
 const runtimeGeneratedAt = ref('')
 let inflight: Promise<void> | null = null
+let cleanupDeferredFetch: (() => void) | null = null
 
 function readString(value: unknown): string {
   return typeof value === 'string' ? value : ''
@@ -41,6 +43,12 @@ function readNumber(value: unknown, fallback: number): number {
 
 function readTags(value: unknown): string[] {
   return Array.isArray(value) ? value.map((item) => String(item || '').trim()).filter(Boolean) : []
+}
+
+function shouldSkipRuntimePublicContentIndexFetch(): boolean {
+  if (typeof navigator === 'undefined') return false
+  const nav = navigator as Navigator & { connection?: { saveData?: boolean } }
+  return Boolean(nav.connection?.saveData)
 }
 
 function normalizeEntry(raw: Record<string, unknown>): RuntimePublicContentIndexEntry {
@@ -75,12 +83,18 @@ function normalizeEntry(raw: Record<string, unknown>): RuntimePublicContentIndex
 }
 
 async function fetchRuntimePublicContentIndex(): Promise<void> {
+  if (shouldSkipRuntimePublicContentIndexFetch()) {
+    runtimeStatus.value = 'fallback'
+    runtimeError.value = 'runtime public content index skipped because Save-Data is enabled'
+    return
+  }
+
   runtimeStatus.value = 'loading'
   runtimeError.value = ''
 
   try {
-    const response = await fetch(`/public-content-index.json?v=${Date.now()}`, {
-      cache: 'no-store',
+    const response = await fetch('/public-content-index.json', {
+      cache: 'force-cache',
       headers: {
         Accept: 'application/json',
       },
@@ -106,12 +120,27 @@ async function fetchRuntimePublicContentIndex(): Promise<void> {
     runtimeEntries.value = []
     runtimeError.value = error instanceof Error ? error.message : String(error)
     runtimeStatus.value = 'fallback'
-    console.warn('[VARUNTOOLS][CMS-207H] runtime public content index fallback:', runtimeError.value)
+    console.warn('[VARUNTOOLS][04M-B1] runtime public content index fallback:', runtimeError.value)
   }
+}
+
+function queueRuntimePublicContentIndexFetch(): void {
+  if (runtimeStatus.value !== 'idle' || inflight) return
+
+  cleanupDeferredFetch?.()
+  cleanupDeferredFetch = afterFirstPaintAsync(async () => {
+    if (runtimeStatus.value !== 'idle' || inflight) return
+    inflight = fetchRuntimePublicContentIndex().finally(() => {
+      inflight = null
+    })
+    await inflight
+  }, 1200)
 }
 
 export function useRuntimePublicContentIndex() {
   async function reloadRuntimePublicContentIndex(): Promise<void> {
+    cleanupDeferredFetch?.()
+    cleanupDeferredFetch = null
     inflight = fetchRuntimePublicContentIndex().finally(() => {
       inflight = null
     })
@@ -119,11 +148,7 @@ export function useRuntimePublicContentIndex() {
   }
 
   onMounted(() => {
-    if (runtimeStatus.value === 'idle' && !inflight) {
-      inflight = fetchRuntimePublicContentIndex().finally(() => {
-        inflight = null
-      })
-    }
+    queueRuntimePublicContentIndexFetch()
   })
 
   return {
