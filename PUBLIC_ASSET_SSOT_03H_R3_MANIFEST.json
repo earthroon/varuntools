@@ -1,0 +1,28 @@
+{
+  "patch_id": "PUBLIC-ASSET-SSOT-03H-R3",
+  "title": "Vue-owned video preview layout and keyboard playback seal",
+  "status": "baked",
+  "files": [
+    "src/components/markdown/VideoPlayer.vue",
+    "patches/markdown-components-video-player-03h-r3.css",
+    "scripts/apply-public-asset-ssot-03h-r3-video-js-measured-preview.mjs",
+    "scripts/smoke-public-asset-ssot-03h-r3-video-js-measured-preview.mjs",
+    "docs/PUBLIC_ASSET_SSOT_03H_R3_SPEC.md",
+    "PUBLIC_ASSET_SSOT_03H_R3_APPLY.md",
+    "PUBLIC_ASSET_SSOT_03H_R3_MANIFEST.json"
+  ],
+  "pass_token": "PASS_PUBLIC_ASSET_SSOT_03H_R3_VIDEO_JS_MEASURED_PREVIEW",
+  "ssot": {
+    "layout_owner": "src/components/markdown/VideoPlayer.vue",
+    "intrinsic_size": "HTMLVideoElement.videoWidth/videoHeight",
+    "container_width": "frameElement.getBoundingClientRect().width via ResizeObserver",
+    "viewport_height": "window.innerHeight",
+    "css_role": "visual chrome only"
+  },
+  "non_goals": [
+    "No D1/R2 writes",
+    "No CSS aspect-ratio ownership",
+    "No global keydown playback listener",
+    "No object-fit cover default"
+  ]
+}
