@@ -1,4 +1,4 @@
-﻿import fs from 'node:fs'
+import fs from 'node:fs'
 import path from 'node:path'
 
 const root = process.cwd()
@@ -59,9 +59,6 @@ assertIncludes(assetRegistry, 'content_asset', 'assetRegistry.ts')
 assertIncludes(videoPlayer, 'resolvedPoster || undefined', 'VideoPlayer.vue')
 assertIncludes(videoPlayer, 'safeAutoplay', 'VideoPlayer.vue')
 
-// Forbidden authoring tokens are checked only in authored content.
-// Do not scan policy code, smoke scripts, docs, or APPLY reports.
-// Policy code is allowed to mention forbidden tokens because it must detect them.
 const authoredContentRoot = path.join(root, 'src/content/pages')
 const authoredExtensions = new Set(['.md', '.mdx', '.json', '.yml', '.yaml'])
 const forbiddenAuthoringTokens = [
@@ -84,9 +81,6 @@ for (const fullPath of walkFiles(authoredContentRoot)) {
   }
 }
 
-// Optional dist check.
-// If dist exists, only check built content-facing artifacts for legacy delivery origin.
-// Do not fail on policy-code literals bundled from sanitizer logic.
 const distRoot = path.join(root, 'dist')
 if (fs.existsSync(distRoot)) {
   for (const fullPath of walkFiles(distRoot)) {

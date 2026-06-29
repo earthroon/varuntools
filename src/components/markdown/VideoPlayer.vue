@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 type VideoTrack = {
   src: string
@@ -50,6 +50,9 @@ const props = withDefaults(defineProps<{
 })
 
 const readyState = ref<'idle' | 'metadata' | 'canplay' | 'playing' | 'error'>('idle')
+const videoElement = ref<HTMLVideoElement | null>(null)
+const intrinsicWidth = ref(16)
+const intrinsicHeight = ref(9)
 
 const isStreamOnly = computed(() => Boolean(props.stream) && !props.src)
 const canRenderVideo = computed(() => Boolean(props.srcFound && props.src && !isStreamOnly.value))
@@ -58,11 +61,47 @@ const resolvedPoster = computed(() => (props.posterFound && props.poster ? props
 const mediaLabel = computed(() => props.title || props.caption || '비디오 재생')
 const missingReason = computed(() => props.srcReason || (isStreamOnly.value ? 'stream_playback_not_supported_yet' : 'empty_source'))
 
-function handleLoadedMetadata() {
+const intrinsicAspectRatio = computed(() => {
+  const width = intrinsicWidth.value
+  const height = intrinsicHeight.value
+
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+    return '16 / 9'
+  }
+
+  return `${width} / ${height}`
+})
+
+const stageStyle = computed<Record<string, string>>(() => ({
+  '--vt-video-aspect-ratio': intrinsicAspectRatio.value,
+}))
+
+watch(
+  () => [props.src, props.stream],
+  () => {
+    intrinsicWidth.value = 16
+    intrinsicHeight.value = 9
+    readyState.value = 'idle'
+  },
+)
+
+function readIntrinsicVideoSize(target: HTMLVideoElement | null) {
+  const width = target?.videoWidth || 0
+  const height = target?.videoHeight || 0
+
+  if (width > 0 && height > 0) {
+    intrinsicWidth.value = width
+    intrinsicHeight.value = height
+  }
+}
+
+function handleLoadedMetadata(event: Event) {
+  readIntrinsicVideoSize(event.currentTarget as HTMLVideoElement | null)
   readyState.value = 'metadata'
 }
 
-function handleCanPlay() {
+function handleCanPlay(event: Event) {
+  readIntrinsicVideoSize(event.currentTarget as HTMLVideoElement | null)
   readyState.value = 'canplay'
 }
 
@@ -70,15 +109,57 @@ function handlePlaying() {
   readyState.value = 'playing'
 }
 
+function handlePause() {
+  if (readyState.value !== 'error') {
+    readyState.value = 'canplay'
+  }
+}
+
+function handleEnded() {
+  if (readyState.value !== 'error') {
+    readyState.value = 'canplay'
+  }
+}
+
 function handleError() {
   readyState.value = 'error'
+}
+
+function handleTogglePlayback(event?: Event) {
+  event?.preventDefault()
+
+  const video = videoElement.value
+  if (!video || !canRenderVideo.value) return
+
+  if (video.paused || video.ended) {
+    const playResult = video.play()
+
+    if (playResult && typeof playResult.catch === 'function') {
+      playResult.catch(() => {
+        // Native media events remain the source of truth for playback failure state.
+      })
+    }
+
+    return
+  }
+
+  video.pause()
 }
 </script>
 
 <template>
   <figure class="vt-video-player vt-media-breakout" :data-ready="canRenderVideo ? '1' : '0'" :data-state="readyState">
-    <div v-if="canRenderVideo" class="vt-video-player__stage">
+    <div
+      v-if="canRenderVideo"
+      class="vt-video-player__stage"
+      :style="stageStyle"
+      tabindex="0"
+      role="group"
+      :aria-label="`${mediaLabel} 플레이어`"
+      @keydown.self.space.prevent="handleTogglePlayback"
+    >
       <video
+        ref="videoElement"
         class="vt-video-player__video"
         :src="src"
         :poster="resolvedPoster || undefined"
@@ -92,7 +173,10 @@ function handleError() {
         @loadedmetadata="handleLoadedMetadata"
         @canplay="handleCanPlay"
         @playing="handlePlaying"
+        @pause="handlePause"
+        @ended="handleEnded"
         @error="handleError"
+        @keydown.space.prevent="handleTogglePlayback"
       >
         <track
           v-for="track in tracks"

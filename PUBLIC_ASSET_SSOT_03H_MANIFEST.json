@@ -1,0 +1,21 @@
+{
+  "patchId": "PUBLIC-ASSET-SSOT-03H",
+  "title": "Intrinsic Video Aspect Preview + Space Toggle Playback",
+  "status": "baked",
+  "passToken": "PASS_PUBLIC_ASSET_SSOT_03H_VIDEO_INTRINSIC_ASPECT_KEYBOARD_TOGGLE",
+  "files": [
+    "src/components/markdown/VideoPlayer.vue",
+    "patches/markdown-components-video-player-03h.css",
+    "scripts/apply-public-asset-ssot-03h-video-preview.mjs",
+    "scripts/smoke-public-asset-ssot-03h-video-intrinsic-aspect-keyboard-toggle.mjs",
+    "scripts/smoke-public-asset-ssot-03-video-directive-policy-rebind.mjs",
+    "docs/PUBLIC_ASSET_SSOT_03H_SPEC.md",
+    "PUBLIC_ASSET_SSOT_03H_APPLY.md",
+    "PUBLIC_ASSET_SSOT_03H_MANIFEST.json"
+  ],
+  "notes": [
+    "VideoPlayer.vue is a direct overwrite file.",
+    "markdown-components.css is updated through the apply script to avoid overwriting unrelated CSS.",
+    "03 smoke is included as scope-correct carry-forward repair."
+  ]
+}
