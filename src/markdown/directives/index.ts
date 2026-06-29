@@ -15,6 +15,7 @@ import { renderMarkdownBoxDirective } from './markdownBoxDirective'
 import { renderFieldSpecDirective } from './fieldSpecDirective'
 import { renderDemoFrameDirective } from './demoFrameDirective'
 import { renderGalleryStripDirective } from './galleryStripDirective'
+import { renderImageSequenceDirective } from './imageSequenceDirective'
 import { renderHomeSectionDirective } from './homeSectionDirective'
 import { renderProductCtaDirective } from './productCtaDirective'
 import { renderProductTrustDirective } from './productTrustDirective'
@@ -84,6 +85,9 @@ export function renderDirective(directive: ParsedDirective): string {
 
     case 'gallery-strip':
       return renderGalleryStripDirective(directive)
+
+    case 'image-sequence':
+      return renderImageSequenceDirective(directive)
 
     case 'home-section':
       return renderHomeSectionDirective(directive)

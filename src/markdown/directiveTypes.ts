@@ -38,6 +38,7 @@ export type DirectiveName =
   | 'editorial-columns'
   | 'field-spec'
   | 'demo-frame'
+  | 'image-sequence'
 
 export type DirectiveFieldValue = string | boolean | number
 
@@ -100,4 +101,5 @@ export const KNOWN_DIRECTIVES: readonly DirectiveName[] = [
   'editorial-columns',
   'field-spec',
   'demo-frame',
+  'image-sequence',
 ]

@@ -251,7 +251,8 @@
     "smoke:dynamic-content-routes": "node scripts/smoke-dynamic-content-routes.mjs",
     "smoke:cms208t:bind": "node scripts/smoke-cms208t-bind-layout.mjs",
     "smoke:cms208t": "node scripts/smoke-cms208t-adaptive-multipass.mjs",
-    "smoke:cms209b:runtime-assets": "node scripts/smoke-cms209b-runtime-content-asset-path.mjs"
+    "smoke:cms209b:runtime-assets": "node scripts/smoke-cms209b-runtime-content-asset-path.mjs",
+    "smoke:cms-image-sequence-directive": "node scripts/smoke-cms-image-sequence-directive-contract.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
