@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import {
-  useRuntimePublicContentIndex,
-  type RuntimePublicContentIndexEntry,
-} from '@/composables/useRuntimePublicContentIndex'
-import {
-  normalizeRuntimeHomeCollectionEntry,
   useHomeCollections,
   type HomeCollectionEntry,
 } from '@/composables/useHomeCollections'
@@ -29,7 +24,6 @@ const props = withDefaults(
 )
 
 const { recentEntries } = useHomeCollections()
-const { runtimeEntries, runtimeStatus } = useRuntimePublicContentIndex()
 
 function readComparableTime(entry: HomeCollectionEntry): number {
   if (typeof entry.time === 'number' && Number.isFinite(entry.time) && entry.time > 0) return entry.time
@@ -49,18 +43,9 @@ function compareRecent(a: HomeCollectionEntry, b: HomeCollectionEntry): number {
   )
 }
 
-const runtimeHomeEntries = computed(() => (runtimeEntries.value as RuntimePublicContentIndexEntry[])
-  .map((entry) => normalizeRuntimeHomeCollectionEntry(entry))
-  .filter((entry): entry is HomeCollectionEntry => Boolean(entry)))
-
-const sourceEntries = computed(() => {
-  if (runtimeStatus.value === 'ready' && runtimeHomeEntries.value.length) return runtimeHomeEntries.value
-  return recentEntries.value
-})
-
 const visibleEntries = computed(() => {
   const allowed = new Set(props.includeCategories.map((category) => category.trim()).filter(Boolean))
-  return [...sourceEntries.value]
+  return [...recentEntries.value]
     .filter((entry) => allowed.has(entry.category))
     .sort(compareRecent)
     .slice(0, props.limit)
@@ -76,7 +61,7 @@ function categoryLabel(entry: HomeCollectionEntry): string {
     v-if="visibleEntries.length"
     class="vt-home-recent-public-content"
     data-vacms-home-recent-feed="true"
-    :data-vacms-home-recent-source="runtimeStatus === 'ready' ? 'runtime-public-index' : 'generated-home-collections'"
+    data-vacms-home-recent-source="generated-home-collections"
     aria-labelledby="home-recent-public-content-title"
   >
     <div class="vt-home-recent-public-content__header">
@@ -217,12 +202,5 @@ function categoryLabel(entry: HomeCollectionEntry): string {
   color: var(--vt-color-muted, #66756f);
   font-size: 0.78rem;
   padding: 0.2rem 0.55rem;
-}
-
-@media (max-width: 680px) {
-  .vt-home-recent-public-content__heading-row {
-    align-items: start;
-    flex-direction: column;
-  }
 }
 </style>

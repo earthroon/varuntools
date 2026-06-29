@@ -1,0 +1,33 @@
+{
+  "patch_id": "PUBLIC-ASSET-SSOT-04M-B3-R2",
+  "title": "Home Critical Render Stability / Sync Home Document / No Deferred Collection Mount / No Runtime Home Swap Seal",
+  "status": "baked",
+  "pass_token": "PASS_PUBLIC_ASSET_SSOT_04M_B3_R2_HOME_CRITICAL_RENDER_STABILITY",
+  "depends_on": [
+    "PUBLIC-ASSET-SSOT-04M-B1",
+    "PUBLIC-ASSET-SSOT-04M-B2",
+    "PUBLIC-ASSET-SSOT-04M-B3"
+  ],
+  "files": [
+    "src/content/generated/homeCollections.generated.json",
+    "src/composables/useHomeCollections.ts",
+    "src/pages/HomePage.vue",
+    "src/components/home/HomeRecentPublicContent.vue",
+    "src/components/home/HomeFeaturedWorks.vue",
+    "scripts/build-home-collections.mjs",
+    "scripts/smoke-public-asset-ssot-04m-b3-r2-home-critical-render-stability.mjs",
+    "docs/PUBLIC_ASSET_SSOT_04M_B3_R2_SPEC.md",
+    "PUBLIC_ASSET_SSOT_04M_B3_R2_APPLY.md",
+    "PUBLIC_ASSET_SSOT_04M_B3_R2_MANIFEST.json"
+  ],
+  "policy": {
+    "home_document": "sync raw import of src/content/pages/home/index.md only",
+    "home_collections": "generated index immediate render",
+    "forbidden": [
+      "HomePage useRouteManifest",
+      "HomePage loadMarkdownPageBySlug",
+      "HomePage afterFirstPaint collection gate",
+      "HomeRecent runtime public index visual swap"
+    ]
+  }
+}
