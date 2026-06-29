@@ -21,6 +21,7 @@ const props = withDefaults(
     pages?: LoadedMarkdownPage[]
     showToc?: boolean
     showRelatedFooter?: boolean
+    pageShell?: 'default' | 'compact'
     notFoundTitle?: string
     notFoundMessage?: string
   }>(),
@@ -28,6 +29,7 @@ const props = withDefaults(
     pages: () => [],
     showToc: true,
     showRelatedFooter: true,
+    pageShell: 'default',
     notFoundTitle: '페이지를 찾을 수 없습니다',
     notFoundMessage: '요청한 문서가 아직 등록되지 않았습니다.',
   },
@@ -110,10 +112,16 @@ onBeforeUnmount(() => {
 })
 
 const shouldShowToc = computed(() => props.showToc && headings.value.length > 0)
+
+const articleClass = computed(() => [
+  'vt-markdown-page',
+  'theme-showroom',
+  props.pageShell === 'compact' ? 'vt-markdown-page--compact' : '',
+])
 </script>
 
 <template>
-  <article class="vt-markdown-page theme-showroom">
+  <article :class="articleClass">
     <MarkdownToc
       v-if="page && shouldShowToc"
       :headings="headings"

@@ -12,6 +12,7 @@ const page = loadMarkdownPageFromSource(String(homeMarkdownRaw || ''), 'home')
 
 <template>
   <MarkdownDocumentView
+      page-shell="compact"
     :page="page"
     :pages="emptyPages"
     :show-related-footer="false"

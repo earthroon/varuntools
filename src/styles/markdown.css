@@ -262,3 +262,25 @@
   }
 }
 /* PUBLIC-ASSET-SSOT-04M-U1 MOBILE GUTTER END */
+
+/* PUBLIC-ASSET-SSOT-04M-H2 home rhythm reclaim:start */
+.vt-markdown-page--compact {
+  min-height: 0;
+}
+
+.vt-markdown-page--compact .vt-markdown {
+  margin-bottom: 0;
+}
+
+@media (min-width: 901px) {
+  .vt-markdown-page--compact {
+    padding-bottom: clamp(24px, 4vw, 52px);
+  }
+}
+
+@media (max-width: 900px) {
+  .vt-markdown-page--compact {
+    padding-bottom: clamp(18px, 5vw, 32px);
+  }
+}
+/* PUBLIC-ASSET-SSOT-04M-H2 home rhythm reclaim:end */

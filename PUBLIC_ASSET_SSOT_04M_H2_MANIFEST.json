@@ -1,0 +1,12 @@
+{
+  "patch_id": "PUBLIC-ASSET-SSOT-04M-H2",
+  "title": "Home Vertical Rhythm Reclaim",
+  "status": "baked",
+  "pass_token": "PASS_PUBLIC_ASSET_SSOT_04M_H2_HOME_RHYTHM_RECLAIM",
+  "files": [
+    "scripts/apply-public-asset-ssot-04m-h2-home-rhythm-reclaim.mjs",
+    "scripts/smoke-public-asset-ssot-04m-h2-home-rhythm-reclaim.mjs",
+    "docs/PUBLIC_ASSET_SSOT_04M_H2_SPEC.md",
+    "PUBLIC_ASSET_SSOT_04M_H2_APPLY.md"
+  ]
+}
