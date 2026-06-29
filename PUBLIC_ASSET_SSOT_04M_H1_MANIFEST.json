@@ -1,0 +1,21 @@
+{
+  "patch_id": "PUBLIC-ASSET-SSOT-04M-H1",
+  "status": "baked",
+  "title": "Home Hero Copy Rebind / Product + Featured Work Section Prune / No Empty Home Placeholder Seal",
+  "ssot": [
+    "src/content/pages/home/index.md"
+  ],
+  "files": [
+    "src/content/pages/home/index.md",
+    "scripts/smoke-public-asset-ssot-04m-h1-home-section-prune.mjs",
+    "docs/PUBLIC_ASSET_SSOT_04M_H1_SPEC.md",
+    "PUBLIC_ASSET_SSOT_04M_H1_APPLY.md",
+    "PUBLIC_ASSET_SSOT_04M_H1_MANIFEST.json"
+  ],
+  "pass_token": "PASS_PUBLIC_ASSET_SSOT_04M_H1_HOME_SECTION_PRUNE",
+  "notes": [
+    "Content SSOT change only.",
+    "No CSS hide fallback.",
+    "No Vue component exception branch."
+  ]
+}
