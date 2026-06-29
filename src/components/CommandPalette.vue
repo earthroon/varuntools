@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '@/styles/command-palette.css'
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import {

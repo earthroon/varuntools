@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '@/styles/page-search.css'
 import { computed } from 'vue'
 import PageSearchPanel from '@/components/search/PageSearchPanel.vue'
 import PageSearchResults from '@/components/search/PageSearchResults.vue'

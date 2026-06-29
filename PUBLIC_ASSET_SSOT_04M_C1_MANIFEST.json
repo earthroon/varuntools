@@ -1,0 +1,18 @@
+{
+  "patchId": "PUBLIC-ASSET-SSOT-04M-C1",
+  "title": "Critical Render Path CSS Split",
+  "token": "PASS_PUBLIC_ASSET_SSOT_04M_C1_CRITICAL_RENDER_CSS_SPLIT",
+  "files": [
+    "src/styles/typography.css",
+    "src/main.ts",
+    "src/components/CommandPalette.vue",
+    "src/pages/SearchPage.vue",
+    "scripts/apply-public-asset-ssot-04m-c1-critical-render-css-split.mjs",
+    "scripts/smoke-public-asset-ssot-04m-c1-critical-render-css-split.mjs",
+    "docs/PUBLIC_ASSET_SSOT_04M_C1_SPEC.md"
+  ],
+  "notes": [
+    "MarkdownLightbox.vue should be patched by the apply script to avoid replacing the long component file.",
+    "The external Pretendard CSS import is removed from critical typography."
+  ]
+}

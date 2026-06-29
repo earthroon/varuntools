@@ -1,7 +1,6 @@
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css');
-
 :root {
-  --vt-font-sans: 'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --vt-font-sans: -apple-system, BlinkMacSystemFont, system-ui, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --vt-font-brand: 'Pretendard Variable', 'Pretendard', var(--vt-font-sans);
   --vt-font-weight-heading-1: 900;
   --vt-font-weight-heading-2: 700;
   --vt-font-weight-heading-3: 600;
