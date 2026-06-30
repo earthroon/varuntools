@@ -6,7 +6,7 @@ export const pageIndex = [
     label: '홈',
     href: '/',
     section: 'home',
-    surface: ['header', 'footer'],
+    surface: ['hidden'],
     order: 0,
     description: '바룬툴즈 홈.',
   },
