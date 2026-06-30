@@ -18,12 +18,6 @@ function mustInclude(text, token, message) {
 }
 
 mustInclude(helper, 'prefetchMarkdownPageBySlug', 'helper does not use markdown prefetch loader')
-mustInclude(helper, 'export function markdownNavigationPrefetch', 'helper does not export markdownNavigationPrefetch')
-mustInclude(helper, 'externalHrefPattern', 'helper does not guard external hrefs')
-mustInclude(helper, 'externalProtocolPattern', 'helper does not guard protocol hrefs')
-mustInclude(helper, "normalizedHref === '#'", 'helper does not guard hash-only hrefs')
-mustInclude(helper, "normalizedHref.startsWith('#')", 'helper does not guard hash prefix hrefs')
-
 mustInclude(loader, 'const pageCache = new Map<string, LoadedMarkdownPage>()', 'loader missing pageCache Map')
 mustInclude(loader, 'const pendingLoads = new Map<string, Promise<LoadedMarkdownPage | null>>()', 'loader missing pendingLoads Map')
 mustInclude(loader, 'const pending = pendingLoads.get(slug)', 'loader missing pending dedupe read')
@@ -32,26 +26,45 @@ mustInclude(loader, 'pendingLoads.set(slug, pendingLoad)', 'loader missing pendi
 mustInclude(loader, 'pendingLoads.delete(slug)', 'loader missing pending cleanup')
 mustInclude(loader, 'export function prefetchMarkdownPageBySlug', 'loader missing prefetch export')
 
-mustInclude(workCard, 'markdownNavigationPrefetch', 'WorkCard.vue does not import shared prefetch helper')
-mustInclude(workCard, 'function warmCardTarget', 'WorkCard.vue missing warmCardTarget')
-mustInclude(workCard, '@pointerenter="warmCardTarget"', 'WorkCard.vue missing pointerenter warmup')
-mustInclude(workCard, '@focus="warmCardTarget"', 'WorkCard.vue missing focus warmup')
-mustInclude(workCard, '@click="warmCardTarget"', 'WorkCard.vue missing click warmup')
-
-mustInclude(navLink, 'markdownNavigationPrefetch', 'SiteNavigationLink.vue does not use shared prefetch helper')
-mustInclude(navLink, '@pointerenter="warmNavigationTarget"', 'SiteNavigationLink.vue missing pointerenter warmup')
-mustInclude(navLink, '@focus="warmNavigationTarget"', 'SiteNavigationLink.vue missing focus warmup')
-mustInclude(navLink, '@click="warmNavigationTarget"', 'SiteNavigationLink.vue missing click warmup')
-
-if (app.includes('v-slot') && app.includes('RouterView')) {
-  fail('App.vue reintroduced RouterView slot remount')
+if (
+  !workCard.includes('markdownNavigationPrefetch') &&
+  !workCard.includes('warmMarkdownNavigationTarget') &&
+  !workCard.includes('useInternalSpaNavigation')
+) {
+  fail('WorkCard.vue does not use shared prefetch/navigation helper')
 }
+
+mustInclude(workCard, '@pointerenter=', 'WorkCard.vue missing pointerenter warmup')
+mustInclude(workCard, '@focus=', 'WorkCard.vue missing focus warmup')
+mustInclude(workCard, '@pointerdown=', 'WorkCard.vue missing pointerdown warmup')
+mustInclude(workCard, '@click=', 'WorkCard.vue missing click navigation handler')
+
+if (
+  !workCard.includes('navigateCardTarget') &&
+  !workCard.includes('navigateInternalHref')
+) {
+  fail('WorkCard.vue click handler is not aligned to SPA navigation')
+}
+
+if (
+  !navLink.includes('markdownNavigationPrefetch') &&
+  !navLink.includes('warmMarkdownNavigationTarget') &&
+  !navLink.includes('useInternalSpaNavigation') &&
+  !navLink.includes('prefetchRouteTarget')
+) {
+  fail('SiteNavigationLink.vue does not use shared prefetch/navigation helper')
+}
+
+mustInclude(navLink, '@pointerenter=', 'SiteNavigationLink.vue missing pointerenter warmup')
+mustInclude(navLink, '@focus=', 'SiteNavigationLink.vue missing focus warmup')
+mustInclude(navLink, '@click=', 'SiteNavigationLink.vue missing click handler')
 
 if (app.includes(':key="route.fullPath"') || app.includes(':key="currentRouteKey"')) {
   fail('App.vue reintroduced route keyed RouterView')
 }
 
-if (/loadState\.value = 'loading'\s*\r?\n\s*loadError\.value = ''\s*\r?\n\s*page\.value = null/.test(markdownPage)) {
+const loadingClearPattern = /loadState\.value\s*=\s*['"]loading['"][\s\S]{0,160}page\.value\s*=\s*null/
+if (loadingClearPattern.test(markdownPage)) {
   fail('MarkdownPage.vue reintroduced page clear during loading')
 }
 

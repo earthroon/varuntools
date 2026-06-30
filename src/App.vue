@@ -9,7 +9,18 @@ import SiteFooter from '@/components/layout/SiteFooter.vue'
     <SiteHeader />
 
     <main class="vt-app-main">
-      <RouterView />
+      <RouterView v-slot="{ Component }">
+        <Suspense :timeout="1200">
+          <component :is="Component" />
+          <template #fallback>
+            <div
+              class="vt-route-suspense-pane-hold"
+              data-vt-ui14f-suspense-pane-hold
+              aria-hidden="true"
+            ></div>
+          </template>
+        </Suspense>
+      </RouterView>
     </main>
 
     <SiteFooter />

@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import {
   useHomeCollections,
   type HomeCollectionEntry,
 } from '@/composables/useHomeCollections'
 import { getPublicContentCategoryLabel } from '@/content/publicContentCategoryLabels'
+import { useInternalSpaNavigation } from '@/composables/useInternalSpaNavigation'
+import { useViewportInternalLinkPrefetch } from '@/composables/useViewportInternalLinkPrefetch'
 
 const props = withDefaults(
   defineProps<{
@@ -24,6 +26,9 @@ const props = withDefaults(
 )
 
 const { recentEntries } = useHomeCollections()
+const recentSectionRef = ref<HTMLElement | null>(null)
+const { warmInternalHref, navigateInternalHref } = useInternalSpaNavigation()
+useViewportInternalLinkPrefetch(recentSectionRef, { limit: 10 })
 
 function readComparableTime(entry: HomeCollectionEntry): number {
   if (typeof entry.time === 'number' && Number.isFinite(entry.time) && entry.time > 0) return entry.time
@@ -59,6 +64,7 @@ function categoryLabel(entry: HomeCollectionEntry): string {
 <template>
   <section
     v-if="visibleEntries.length"
+    ref="recentSectionRef"
     class="vt-home-recent-public-content"
     data-vacms-home-recent-feed="true"
     data-vacms-home-recent-source="generated-home-collections"
@@ -79,6 +85,10 @@ function categoryLabel(entry: HomeCollectionEntry): string {
           v-if="showViewAll"
           class="vt-home-recent-public-content__link"
           href="/index"
+          @pointerenter="warmInternalHref('/index')"
+          @pointerdown="warmInternalHref('/index')"
+          @focus="warmInternalHref('/index')"
+          @click="navigateInternalHref($event, '/index')"
         >
           전체 인덱스 보기
         </a>
@@ -99,7 +109,13 @@ function categoryLabel(entry: HomeCollectionEntry): string {
         </p>
 
         <h3 class="vt-home-recent-public-content__title">
-          <a :href="entry.href">{{ entry.title }}</a>
+          <a
+            :href="entry.href"
+            @pointerenter="warmInternalHref(entry.href)"
+            @pointerdown="warmInternalHref(entry.href)"
+            @focus="warmInternalHref(entry.href)"
+            @click="navigateInternalHref($event, entry.href)"
+          >{{ entry.title }}</a>
         </h3>
 
         <p v-if="entry.description" class="vt-home-recent-public-content__summary">

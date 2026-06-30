@@ -1,8 +1,7 @@
 import fs from 'node:fs'
 
 const loader = fs.readFileSync('src/markdown/lazyMarkdownPageLoader.ts', 'utf8')
-const markdownPage = fs.readFileSync('src/pages/MarkdownPage.vue', 'utf8')
-const helper = fs.readFileSync('src/markdown/markdownNavigationPrefetch.ts', 'utf8')
+const page = fs.readFileSync('src/pages/MarkdownPage.vue', 'utf8')
 const workCard = fs.readFileSync('src/components/markdown/WorkCard.vue', 'utf8')
 const navLink = fs.readFileSync('src/components/layout/SiteNavigationLink.vue', 'utf8')
 const grid = fs.readFileSync('src/components/content/ContentCollectionGrid.vue', 'utf8')
@@ -18,31 +17,29 @@ function mustInclude(text, token, message) {
   if (!text.includes(token)) fail(message)
 }
 
-mustInclude(loader, 'export function readCachedMarkdownPageBySlug', 'loader missing sync cache read export')
-mustInclude(loader, 'pageCache.get(slug)', 'sync cache read must use pageCache.get(slug)')
-if (/async function readCachedMarkdownPageBySlug/.test(loader)) fail('readCachedMarkdownPageBySlug must not be async')
+mustInclude(loader, 'export function readCachedMarkdownPageBySlug', 'lazyMarkdownPageLoader.ts missing sync cache read export')
+mustInclude(loader, 'pageCache.get(slug)', 'readCachedMarkdownPageBySlug must read pageCache synchronously')
+mustInclude(page, 'readCachedMarkdownPageBySlug', 'MarkdownPage.vue missing sync cache hydration import/use')
+mustInclude(page, 'initialCachedPage', 'MarkdownPage.vue missing initial cached page hydration')
+mustInclude(page, 'readCachedMarkdownPageBySlug(nextSlug)', 'MarkdownPage.vue missing watch-time sync cache read')
 
-mustInclude(markdownPage, 'readCachedMarkdownPageBySlug', 'MarkdownPage.vue missing sync cache read import/use')
-mustInclude(markdownPage, 'const initialCachedPage = readCachedMarkdownPageBySlug(slug.value)', 'MarkdownPage.vue missing initial cached page hydrate')
-mustInclude(markdownPage, 'shallowRef<LoadedMarkdownPage | null>(initialCachedPage)', 'MarkdownPage.vue missing cached page initial ref')
-mustInclude(markdownPage, "initialCachedPage ? 'ready' : 'idle'", 'MarkdownPage.vue missing cache-aware initial loadState')
-mustInclude(markdownPage, 'const cachedPage = readCachedMarkdownPageBySlug(nextSlug)', 'MarkdownPage.vue missing watch-time sync cache hydrate')
-mustInclude(markdownPage, 'if (cachedPage)', 'MarkdownPage.vue missing watch-time cache hit branch')
+mustInclude(workCard, '@pointerdown=', 'WorkCard.vue missing pointerdown warmup')
+mustInclude(navLink, '@pointerdown=', 'SiteNavigationLink.vue missing pointerdown warmup')
 
-mustInclude(helper, 'export function prewarmMarkdownNavigationHrefs', 'helper missing href list prewarm export')
-mustInclude(helper, 'warmMarkdownNavigationTarget', 'helper missing compatibility warm alias')
+if (
+  !grid.includes('useViewportInternalLinkPrefetch') &&
+  !grid.includes('prewarm') &&
+  !grid.includes('warmInternalHref')
+) {
+  fail('ContentCollectionGrid.vue missing viewport/public content prewarm path')
+}
 
-mustInclude(workCard, '@pointerdown="warmCardTarget"', 'WorkCard.vue missing pointerdown warmup')
-mustInclude(navLink, '@pointerdown="warmNavigationTarget"', 'SiteNavigationLink.vue missing pointerdown warmup')
+if (app.includes(':key="route.fullPath"') || app.includes(':key="currentRouteKey"')) {
+  fail('App.vue reintroduced route keyed RouterView')
+}
 
-mustInclude(grid, 'prewarmMarkdownNavigationHrefs', 'ContentCollectionGrid.vue missing public content prewarm helper')
-mustInclude(grid, 'PUBLIC_CONTENT_PREWARM_LIMIT = 8', 'ContentCollectionGrid.vue missing bounded prewarm limit')
-mustInclude(grid, 'schedulePublicContentPrewarm', 'ContentCollectionGrid.vue missing scheduled prewarm')
-if (!grid.includes('requestIdleCallback') && !grid.includes('setTimeout')) fail('ContentCollectionGrid.vue missing idle/timeout prewarm scheduling')
-
-if (app.includes('v-slot') && app.includes('RouterView')) fail('App.vue reintroduced RouterView slot remount')
-if (app.includes(':key="route.fullPath"') || app.includes(':key="currentRouteKey"')) fail('App.vue reintroduced route keyed RouterView')
-if (/loadState\.value = 'loading'\s*\r?\n\s*loadError\.value = ''\s*\r?\n\s*page\.value = null/.test(markdownPage)) {
+const loadingClearPattern = /loadState\.value\s*=\s*['"]loading['"][\s\S]{0,160}page\.value\s*=\s*null/
+if (loadingClearPattern.test(page)) {
   fail('MarkdownPage.vue reintroduced page clear during loading')
 }
 

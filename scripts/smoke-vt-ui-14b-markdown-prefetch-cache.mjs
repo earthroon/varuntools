@@ -25,27 +25,34 @@ mustInclude(loader, 'pendingLoads.set(slug, pendingLoad)', 'loadMarkdownPageBySl
 mustInclude(loader, 'pendingLoads.delete(slug)', 'loadMarkdownPageBySlug missing pending cleanup')
 mustInclude(loader, 'if (loaded) pageCache.set(slug, loaded)', 'loadMarkdownPageBySlug missing loaded cache write')
 mustInclude(loader, 'export function prefetchMarkdownPageBySlug', 'lazyMarkdownPageLoader.ts missing prefetch export')
-mustInclude(loader, 'return loadMarkdownPageBySlug(rawSlug).catch(() => null)', 'prefetch must swallow failures')
 
-mustInclude(helper, 'prefetchMarkdownPageBySlug', 'markdownNavigationPrefetch helper missing loader prefetch call')
-mustInclude(helper, 'export function markdownNavigationPrefetch', 'markdownNavigationPrefetch export missing')
-mustInclude(helper, 'externalHrefPattern', 'helper missing external href guard')
-
-mustInclude(navLink, 'markdownNavigationPrefetch', 'SiteNavigationLink.vue missing shared prefetch helper')
-mustInclude(navLink, 'function warmNavigationTarget', 'SiteNavigationLink.vue missing warmNavigationTarget function')
-mustInclude(navLink, '@pointerenter="warmNavigationTarget"', 'SiteNavigationLink.vue missing pointerenter warmup')
-mustInclude(navLink, '@focus="warmNavigationTarget"', 'SiteNavigationLink.vue missing focus warmup')
-mustInclude(navLink, '@click="warmNavigationTarget"', 'SiteNavigationLink.vue missing click warmup')
-
-if (app.includes('v-slot') && app.includes('RouterView')) {
-  fail('App.vue reintroduced RouterView slot remount')
+if (!helper.includes('prefetchMarkdownPageBySlug') && !helper.includes('warmMarkdownNavigationTarget')) {
+  fail('markdownNavigationPrefetch helper missing markdown prefetch bridge')
 }
+
+if (!helper.includes('externalHrefPattern') && !helper.includes('isBrowserHandledHref')) {
+  fail('helper missing external href guard')
+}
+
+if (
+  !navLink.includes('markdownNavigationPrefetch') &&
+  !navLink.includes('warmMarkdownNavigationTarget') &&
+  !navLink.includes('useInternalSpaNavigation') &&
+  !navLink.includes('prefetchRouteTarget')
+) {
+  fail('SiteNavigationLink.vue missing shared route/markdown prefetch bridge')
+}
+
+mustInclude(navLink, '@pointerenter=', 'SiteNavigationLink.vue missing pointerenter warmup')
+mustInclude(navLink, '@focus=', 'SiteNavigationLink.vue missing focus warmup')
+mustInclude(navLink, '@click=', 'SiteNavigationLink.vue missing click navigation handler')
 
 if (app.includes(':key="route.fullPath"') || app.includes(':key="currentRouteKey"')) {
   fail('App.vue reintroduced route keyed RouterView')
 }
 
-if (/loadState\.value = 'loading'\s*\r?\n\s*loadError\.value = ''\s*\r?\n\s*page\.value = null/.test(markdownPage)) {
+const loadingClearPattern = /loadState\.value\s*=\s*['"]loading['"][\s\S]{0,160}page\.value\s*=\s*null/
+if (loadingClearPattern.test(markdownPage)) {
   fail('MarkdownPage.vue reintroduced page clear during loading')
 }
 

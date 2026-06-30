@@ -5,6 +5,7 @@ import type { LoadedMarkdownPage } from '@/markdown/types'
 import { toWorkCardEntry } from '@/markdown/pageRegistry'
 import { resolveContentAssetMeta } from '@/markdown/resolveContentAssets'
 import { warmMarkdownNavigationTarget } from '@/markdown/markdownNavigationPrefetch'
+import { prefetchRouteTarget } from '@/router/routePrefetch'
 
 const props = withDefaults(
   defineProps<{

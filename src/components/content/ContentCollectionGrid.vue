@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { onMounted, watch } from 'vue'
 import WorkCard from '@/components/markdown/WorkCard.vue'
+import { useViewportInternalLinkPrefetch } from '@/composables/useViewportInternalLinkPrefetch'
 import { prewarmMarkdownNavigationHrefs } from '@/markdown/markdownNavigationPrefetch'
 import { getPublicContentCategoryLabel } from '@/content/publicContentCategoryLabels'
 import type { PublicContentCardEntry } from '@/composables/usePublicContentCollection'
@@ -8,6 +10,9 @@ import type { PublicContentCardEntry } from '@/composables/usePublicContentColle
 const props = defineProps<{
   entries: PublicContentCardEntry[]
 }>()
+
+const collectionSectionRef = ref<HTMLElement | null>(null)
+useViewportInternalLinkPrefetch(collectionSectionRef, { limit: 12 })
 
 const PUBLIC_CONTENT_PREWARM_LIMIT = 8
 const prewarmedPublicContentHrefs = new Set<string>()
@@ -46,7 +51,7 @@ watch(() => props.entries, schedulePublicContentPrewarm, { deep: false })
 </script>
 
 <template>
-  <section class="vt-works-collection" aria-label="콘텐츠 목록">
+  <section ref="collectionSectionRef" class="vt-works-collection" aria-label="콘텐츠 목록">
     <div v-if="entries.length" class="vt-works-collection__grid">
       <WorkCard
         v-for="entry in entries"

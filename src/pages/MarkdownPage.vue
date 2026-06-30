@@ -32,6 +32,14 @@ watch(
     loadState.value = 'loading'
     loadError.value = ''
 
+    const cached = readCachedMarkdownPageBySlug(nextSlug)
+    if (cached) {
+      page.value = cached
+      loadState.value = 'ready'
+      return
+    }
+
+
     try {
       const loaded = await loadMarkdownPageBySlug(nextSlug)
       if (currentRequestId !== requestId) return

@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import WorkCard from '@/components/markdown/WorkCard.vue'
 import { useHomeCollections } from '@/composables/useHomeCollections'
+import { useInternalSpaNavigation } from '@/composables/useInternalSpaNavigation'
+import { useViewportInternalLinkPrefetch } from '@/composables/useViewportInternalLinkPrefetch'
 
 const props = withDefaults(
   defineProps<{
@@ -20,11 +22,15 @@ const props = withDefaults(
 
 const { featuredWorks } = useHomeCollections()
 const visibleWorks = computed(() => featuredWorks.value.slice(0, props.limit))
+const featuredWorksSectionRef = ref<HTMLElement | null>(null)
+const { warmInternalHref, navigateInternalHref } = useInternalSpaNavigation()
+useViewportInternalLinkPrefetch(featuredWorksSectionRef, { limit: 8 })
 </script>
 
 <template>
   <section
     v-if="visibleWorks.length"
+    ref="featuredWorksSectionRef"
     class="vt-home-featured-works"
     aria-labelledby="home-featured-works-title"
   >
@@ -38,7 +44,15 @@ const visibleWorks = computed(() => featuredWorks.value.slice(0, props.limit))
           </p>
         </div>
 
-        <a v-if="showViewAll" class="vt-home-featured-works__link" href="/works">
+        <a
+          v-if="showViewAll"
+          class="vt-home-featured-works__link"
+          href="/works"
+          @pointerenter="warmInternalHref('/works')"
+          @pointerdown="warmInternalHref('/works')"
+          @focus="warmInternalHref('/works')"
+          @click="navigateInternalHref($event, '/works')"
+        >
           작업 전체 보기
         </a>
       </div>

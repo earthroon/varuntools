@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 import type { NavigationItem } from '@/navigation/navigationTypes'
 import { isNavigationItemActive } from '@/navigation/navigationActive'
 import { warmMarkdownNavigationTarget } from '@/markdown/markdownNavigationPrefetch'
+import { prefetchRouteTarget } from '@/router/routePrefetch'
 
 const props = defineProps<{
   item: NavigationItem
