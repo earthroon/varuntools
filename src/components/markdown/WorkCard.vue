@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 import { toWorkCardEntry } from '@/markdown/pageRegistry'
 import { resolveContentAssetMeta } from '@/markdown/resolveContentAssets'
@@ -41,6 +42,8 @@ const props = withDefaults(
     status: '',
   },
 )
+
+const router = useRouter()
 
 const registryEntry = computed(() => {
   if (!props.slug) return null
@@ -89,6 +92,18 @@ function warmCardTarget() {
   if (browserHandled.value) return
   warmMarkdownNavigationTarget(safeHref.value)
 }
+function navigateCardTarget(event: MouseEvent): void {
+  warmCardTarget()
+
+  if (browserHandled.value) return
+  if (event.defaultPrevented) return
+  if (event.button !== 0) return
+  if (event.metaKey || event.altKey || event.ctrlKey || event.shiftKey) return
+
+  event.preventDefault()
+  void router.push(safeHref.value)
+}
+
 </script>
 
 <template>
@@ -100,7 +115,7 @@ function warmCardTarget() {
   
     @pointerenter="warmCardTarget"
     @focus="warmCardTarget"
-    @click="warmCardTarget"
+    @click="navigateCardTarget"
     @pointerdown="warmCardTarget"
   >
     <div class="vt-work-card__media">
