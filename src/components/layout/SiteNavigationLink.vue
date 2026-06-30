@@ -61,6 +61,7 @@ function warmNavigationTarget() {
     @pointerenter="warmNavigationTarget"
     @focus="warmNavigationTarget"
     @click="warmNavigationTarget"
+    @pointerdown="warmNavigationTarget"
   >
     <span class="vt-site-nav-link__label">{{ item.label }}</span>
     <span v-if="item.description && variant === 'footer'" class="vt-site-nav-link__description">

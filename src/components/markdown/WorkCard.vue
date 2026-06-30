@@ -101,6 +101,7 @@ function warmCardTarget() {
     @pointerenter="warmCardTarget"
     @focus="warmCardTarget"
     @click="warmCardTarget"
+    @pointerdown="warmCardTarget"
   >
     <div class="vt-work-card__media">
       <img

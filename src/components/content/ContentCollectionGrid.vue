@@ -1,11 +1,48 @@
 <script setup lang="ts">
+import { onMounted, watch } from 'vue'
 import WorkCard from '@/components/markdown/WorkCard.vue'
+import { prewarmMarkdownNavigationHrefs } from '@/markdown/markdownNavigationPrefetch'
 import { getPublicContentCategoryLabel } from '@/content/publicContentCategoryLabels'
 import type { PublicContentCardEntry } from '@/composables/usePublicContentCollection'
 
-defineProps<{
+const props = defineProps<{
   entries: PublicContentCardEntry[]
 }>()
+
+const PUBLIC_CONTENT_PREWARM_LIMIT = 8
+const prewarmedPublicContentHrefs = new Set<string>()
+
+function runPublicContentPrewarmWhenIdle(callback: () => void): void {
+  const windowWithIdle = window as Window & {
+    requestIdleCallback?: (callback: () => void, options?: { timeout?: number }) => number
+  }
+
+  if (typeof windowWithIdle.requestIdleCallback === 'function') {
+    windowWithIdle.requestIdleCallback(callback, { timeout: 500 })
+    return
+  }
+
+  window.setTimeout(callback, 0)
+}
+
+function schedulePublicContentPrewarm(): void {
+  const hrefs = props.entries
+    .map((entry) => entry.href)
+    .filter((href): href is string => Boolean(href && !prewarmedPublicContentHrefs.has(href)))
+    .slice(0, PUBLIC_CONTENT_PREWARM_LIMIT)
+
+  if (!hrefs.length) return
+
+  for (const href of hrefs) prewarmedPublicContentHrefs.add(href)
+
+  runPublicContentPrewarmWhenIdle(() => {
+    prewarmMarkdownNavigationHrefs(hrefs, PUBLIC_CONTENT_PREWARM_LIMIT)
+  })
+}
+
+onMounted(schedulePublicContentPrewarm)
+watch(() => props.entries, schedulePublicContentPrewarm, { deep: false })
+
 </script>
 
 <template>

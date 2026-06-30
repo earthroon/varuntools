@@ -2,7 +2,7 @@
 import { computed, ref, shallowRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import MarkdownDocumentView from '@/components/markdown/MarkdownDocumentView.vue'
-import { loadMarkdownPageBySlug } from '@/markdown/lazyMarkdownPageLoader'
+import { loadMarkdownPageBySlug, readCachedMarkdownPageBySlug } from '@/markdown/lazyMarkdownPageLoader'
 import { normalizePageSlug } from '@/markdown/pageLookup'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 
@@ -10,9 +10,10 @@ type MarkdownRouteLoadState = 'idle' | 'loading' | 'ready' | 'not_found' | 'erro
 
 const route = useRoute()
 const slug = computed(() => normalizePageSlug(route.params.slug, 'home'))
+const initialCachedPage = readCachedMarkdownPageBySlug(slug.value)
 
-const page = shallowRef<LoadedMarkdownPage | null>(null)
-const loadState = ref<MarkdownRouteLoadState>('idle')
+const page = shallowRef<LoadedMarkdownPage | null>(initialCachedPage)
+const loadState = ref<MarkdownRouteLoadState>(initialCachedPage ? 'ready' : 'idle')
 const loadError = ref('')
 let requestId = 0
 
@@ -20,6 +21,14 @@ watch(
   slug,
   async (nextSlug) => {
     const currentRequestId = ++requestId
+    const cachedPage = readCachedMarkdownPageBySlug(nextSlug)
+    if (cachedPage) {
+      page.value = cachedPage
+      loadState.value = 'ready'
+      loadError.value = ''
+      return
+    }
+
     loadState.value = 'loading'
     loadError.value = ''
 

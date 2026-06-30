@@ -271,7 +271,8 @@
     "smoke:vt-ui-14-tab-flicker-guard": "node scripts/smoke-vt-ui-14-tab-flicker-guard.mjs",
     "smoke:vt-ui-14a-markdown-route-loading-flicker-guard": "node scripts/smoke-vt-ui-14a-markdown-route-loading-flicker-guard.mjs",
     "smoke:vt-ui-14b-markdown-prefetch-cache": "node scripts/smoke-vt-ui-14b-markdown-prefetch-cache.mjs",
-    "smoke:vt-ui-14c-public-content-card-prefetch": "node scripts/smoke-vt-ui-14c-public-content-card-prefetch.mjs"
+    "smoke:vt-ui-14c-public-content-card-prefetch": "node scripts/smoke-vt-ui-14c-public-content-card-prefetch.mjs",
+    "smoke:vt-ui-14d-sync-cache-hydration": "node scripts/smoke-vt-ui-14d-sync-cache-hydration.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

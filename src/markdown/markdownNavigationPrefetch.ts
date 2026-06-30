@@ -36,3 +36,18 @@ export function markdownNavigationPrefetch(href: string): Promise<unknown> | nul
 export function warmMarkdownNavigationTarget(href: string): Promise<unknown> | null {
   return markdownNavigationPrefetch(href)
 }
+
+
+export function prewarmMarkdownNavigationHrefs(hrefs: string[], limit = 8): void {
+  const warmed = new Set<string>()
+
+  for (const href of hrefs) {
+    const slug = markdownNavigationHrefToSlug(href)
+    if (!slug || warmed.has(slug)) continue
+
+    warmed.add(slug)
+    void prefetchMarkdownPageBySlug(slug)
+
+    if (warmed.size >= limit) return
+  }
+}

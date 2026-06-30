@@ -140,6 +140,12 @@ export async function loadMarkdownPageBySlug(rawSlug: string): Promise<LoadedMar
   return pendingLoad
 }
 
+export function readCachedMarkdownPageBySlug(rawSlug: string): LoadedMarkdownPage | null {
+  const slug = normalizeSlugString(rawSlug)
+  if (!slug) return null
+  return pageCache.get(slug) || null
+}
+
 export function prefetchMarkdownPageBySlug(rawSlug: string): Promise<LoadedMarkdownPage | null> {
   return loadMarkdownPageBySlug(rawSlug).catch(() => null)
 }
