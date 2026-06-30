@@ -9,7 +9,13 @@ import SiteFooter from '@/components/layout/SiteFooter.vue'
     <SiteHeader />
 
     <main class="vt-app-main">
-      <RouterView />
+      <RouterView v-slot="{ Component, route }">
+        <component
+          :is="Component"
+          :key="route.fullPath"
+          data-vt-ui14-route-view
+        />
+      </RouterView>
     </main>
 
     <SiteFooter />

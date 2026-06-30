@@ -267,7 +267,8 @@
     "smoke:cms-image-sequence-aggregate": "node scripts/smoke-cms-image-sequence-aggregate-runner.mjs",
     "smoke:cms-image-sequence-authoring": "node scripts/smoke-cms-image-sequence-authoring-guide.mjs",
     "smoke:cms-markdown-text-block-public-ssot": "node scripts/smoke-cms-markdown-text-block-public-ssot.mjs",
-    "smoke:cms-markdown-text-placeholder-public-guard": "node scripts/smoke-cms-markdown-text-placeholder-public-guard.mjs"
+    "smoke:cms-markdown-text-placeholder-public-guard": "node scripts/smoke-cms-markdown-text-placeholder-public-guard.mjs",
+    "smoke:vt-ui-14-tab-flicker-guard": "node scripts/smoke-vt-ui-14-tab-flicker-guard.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

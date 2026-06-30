@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { generatedRoutes } from '@/lib/generated-content/generatedRoutes'
+import MarkdownPage from '@/pages/MarkdownPage.vue'
+import WorksPage from '@/pages/WorksPage.vue'
+import HomePage from '@/pages/HomePage.vue'
 
 export const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,12 +10,12 @@ export const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('@/pages/HomePage.vue'),
+      component: HomePage,
     },
     {
       path: '/works',
       name: 'works',
-      component: () => import('@/pages/WorksPage.vue'),
+      component: WorksPage,
     },
     {
       path: '/index',
@@ -38,7 +41,7 @@ export const router = createRouter({
     {
       path: '/:slug+',
       name: 'markdown-page',
-      component: () => import('@/pages/MarkdownPage.vue'),
+      component: MarkdownPage,
     },
   ],
 })
