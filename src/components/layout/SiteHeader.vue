@@ -6,6 +6,7 @@ import { headerNavigation, utilityNavigation } from '@/navigation/sectionNavigat
 
 const route = useRoute()
 const currentPath = computed(() => route.path)
+const hasUtilityNavigation = computed(() => utilityNavigation.length > 0)
 </script>
 
 <template>
@@ -27,7 +28,12 @@ const currentPath = computed(() => route.path)
       />
     </nav>
 
-    <nav class="vt-site-header__utility" aria-label="Utility navigation">
+    <nav
+      v-if="hasUtilityNavigation"
+      class="vt-site-header__utility"
+      aria-label="Utility navigation"
+      data-vt-nav-02-utility-nav-guard="non-empty-only"
+    >
       <SiteNavigationLink
         v-for="item in utilityNavigation"
         :key="item.id"

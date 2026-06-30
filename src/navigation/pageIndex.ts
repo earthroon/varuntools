@@ -81,7 +81,7 @@ export const pageIndex = [
     label: '문의',
     href: '/inquiry',
     section: 'inquiry',
-    surface: ['header', 'footer', 'utility'],
+    surface: ['header', 'footer'],
     order: 90,
     description: '문의 접수 폼.',
   },
