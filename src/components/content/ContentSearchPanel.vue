@@ -5,11 +5,12 @@ type CategoryOption = { value: string; label: string; count: number }
 type FacetOption = { value: string; count: number }
 
 const props = defineProps<{
-  categoryOptions: CategoryOption[]
-  tagOptions: FacetOption[]
-  yearOptions: FacetOption[]
+  categoryOptions: readonly CategoryOption[]
+  tagOptions: readonly FacetOption[]
+  yearOptions: readonly FacetOption[]
   resultCount: number
   totalCount: number
+  surface?: 'inline' | 'desktop-stitch'
 }>()
 
 const query = defineModel<string>('query', { required: true })
@@ -25,19 +26,66 @@ const emit = defineEmits<{
 
 const activeChips = computed(() => {
   const chips: { key: string; label: string; value: string; clear: () => void }[] = []
+  const trimmedQuery = query.value.trim()
+
+  if (trimmedQuery) {
+    chips.push({
+      key: 'query',
+      label: '검색',
+      value: trimmedQuery,
+      clear: () => { query.value = '' },
+    })
+  }
+
   if (selectedCategory.value) {
     const option = props.categoryOptions.find((item) => item.value === selectedCategory.value)
-    chips.push({ key: 'category', label: '작업 유형', value: option?.label || selectedCategory.value, clear: () => { selectedCategory.value = '' } })
+    chips.push({
+      key: 'category',
+      label: '작업 유형',
+      value: option?.label || selectedCategory.value,
+      clear: () => { selectedCategory.value = '' },
+    })
   }
-  if (selectedTag.value) chips.push({ key: 'tag', label: '태그', value: selectedTag.value, clear: () => { selectedTag.value = '' } })
-  if (selectedYear.value) chips.push({ key: 'year', label: '연도', value: selectedYear.value, clear: () => { selectedYear.value = '' } })
-  if (featuredOnly.value) chips.push({ key: 'featured', label: '대표', value: '콘텐츠만', clear: () => { featuredOnly.value = false } })
+
+  if (selectedTag.value) {
+    chips.push({
+      key: 'tag',
+      label: '태그',
+      value: selectedTag.value,
+      clear: () => { selectedTag.value = '' },
+    })
+  }
+
+  if (selectedYear.value) {
+    chips.push({
+      key: 'year',
+      label: '연도',
+      value: selectedYear.value,
+      clear: () => { selectedYear.value = '' },
+    })
+  }
+
+  if (featuredOnly.value) {
+    chips.push({
+      key: 'featured',
+      label: '대표',
+      value: '콘텐츠만',
+      clear: () => { featuredOnly.value = false },
+    })
+  }
+
   return chips
 })
 </script>
 
 <template>
-  <section class="vt-works-search vt-works-search--contained" aria-labelledby="content-search-title">
+  <section
+    class="vt-works-search vt-works-search--contained"
+    :class="{
+      'vt-works-search--desktop-stitch': props.surface === 'desktop-stitch',
+    }"
+    aria-labelledby="content-search-title"
+  >
     <header class="vt-works-search__header">
       <div class="vt-works-search__summary" aria-live="polite" id="content-search-summary">
         <strong id="content-search-title">{{ resultCount }}</strong>
@@ -111,6 +159,7 @@ const activeChips = computed(() => {
         :key="chip.key"
         type="button"
         class="vt-work-filter-chip"
+        :aria-label="chip.label + ' ' + chip.value + ' 필터 해제'"
         @click="chip.clear"
       >
         <span>{{ chip.label }}</span>
@@ -120,3 +169,24 @@ const activeChips = computed(() => {
     </div>
   </section>
 </template>
+
+<style scoped>
+.vt-works-search--desktop-stitch {
+  position: relative;
+  z-index: 1;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.vt-works-search--desktop-stitch .vt-works-search__controls {
+  grid-template-columns: 1fr;
+}
+
+.vt-works-search--desktop-stitch input,
+.vt-works-search--desktop-stitch select {
+  min-width: 0;
+  width: 100%;
+}
+</style>

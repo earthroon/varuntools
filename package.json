@@ -274,7 +274,8 @@
     "smoke:vt-ui-14c-public-content-card-prefetch": "node scripts/smoke-vt-ui-14c-public-content-card-prefetch.mjs",
     "smoke:vt-ui-14d-sync-cache-hydration": "node scripts/smoke-vt-ui-14d-sync-cache-hydration.mjs",
     "smoke:vt-ui-14e-workcard-spa-navigation": "node scripts/smoke-vt-ui-14e-workcard-spa-navigation.mjs",
-    "smoke:vt-ui-14f-route-prefetch-suspense-pane-hold": "node scripts/smoke-vt-ui-14f-route-prefetch-suspense-pane-hold.mjs"
+    "smoke:vt-ui-14f-route-prefetch-suspense-pane-hold": "node scripts/smoke-vt-ui-14f-route-prefetch-suspense-pane-hold.mjs",
+    "smoke:vt-ui-21a-work-index-desktop-stitch-explore-rail": "node scripts/smoke-vt-ui-21a-work-index-desktop-stitch-explore-rail.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
