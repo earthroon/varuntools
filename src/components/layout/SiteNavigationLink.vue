@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { NavigationItem } from '@/navigation/navigationTypes'
 import { isNavigationItemActive } from '@/navigation/navigationActive'
-import { prefetchMarkdownPageBySlug } from '@/markdown/lazyMarkdownPageLoader'
+import { warmMarkdownNavigationTarget } from '@/markdown/markdownNavigationPrefetch'
 
 const props = defineProps<{
   item: NavigationItem
@@ -32,9 +32,7 @@ function hrefToMarkdownSlug(href: string): string {
 
 function warmNavigationTarget() {
   if (props.item.external) return
-  const slug = hrefToMarkdownSlug(props.item.href)
-  if (!slug) return
-  void prefetchMarkdownPageBySlug(slug)
+  warmMarkdownNavigationTarget(props.item.href)
 }
 </script>
 

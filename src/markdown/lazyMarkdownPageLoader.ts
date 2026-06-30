@@ -1,4 +1,4 @@
-import { markdownRouteIndexEntries, type MarkdownRouteIndexEntry } from './markdownRouteIndex.generated'
+﻿import { markdownRouteIndexEntries, type MarkdownRouteIndexEntry } from './markdownRouteIndex.generated'
 import { loadMarkdownPageFromSource } from './loadMarkdownPageFromSource'
 import { normalizeSlugString } from './pageLookup'
 import type { LoadedMarkdownPage } from './types'
@@ -85,7 +85,10 @@ async function loadContentPage(contentDir: string): Promise<LoadedMarkdownPage |
   return loadMarkdownPageFromSource(String(raw || ''), contentDir)
 }
 
-async function resolveMarkdownPageBySlug(slug: string): Promise<LoadedMarkdownPage | null> {
+async function resolveMarkdownPageBySlug(rawSlug: string): Promise<LoadedMarkdownPage | null> {
+  const slug = normalizeSlugString(rawSlug)
+  if (!slug) return null
+
   const liveEntry = findLiveSource(slug)
   if (liveEntry) {
     const livePage = loadLivePage(liveEntry)
@@ -105,6 +108,14 @@ async function resolveMarkdownPageBySlug(slug: string): Promise<LoadedMarkdownPa
   return loadContentPage(routeEntry.contentDir)
 }
 
+function rememberPageAliases(slug: string, loaded: LoadedMarkdownPage): void {
+  const pageSlug = normalizeSlugString(loaded.slug)
+  if (pageSlug && pageSlug !== slug) pageCache.set(pageSlug, loaded)
+
+  const contentDir = normalizeSlugString(loaded.contentDir)
+  if (contentDir && contentDir !== slug) pageCache.set(contentDir, loaded)
+}
+
 export async function loadMarkdownPageBySlug(rawSlug: string): Promise<LoadedMarkdownPage | null> {
   const slug = normalizeSlugString(rawSlug)
   if (!slug) return null
@@ -118,6 +129,7 @@ export async function loadMarkdownPageBySlug(rawSlug: string): Promise<LoadedMar
   const pendingLoad = resolveMarkdownPageBySlug(slug)
     .then((loaded) => {
       if (loaded) pageCache.set(slug, loaded)
+      if (loaded) rememberPageAliases(slug, loaded)
       return loaded
     })
     .finally(() => {
@@ -130,4 +142,16 @@ export async function loadMarkdownPageBySlug(rawSlug: string): Promise<LoadedMar
 
 export function prefetchMarkdownPageBySlug(rawSlug: string): Promise<LoadedMarkdownPage | null> {
   return loadMarkdownPageBySlug(rawSlug).catch(() => null)
+}
+
+export function clearMarkdownPageLoaderCache(): void {
+  pageCache.clear()
+  pendingLoads.clear()
+}
+
+export function readMarkdownPageLoaderCacheStats(): { cached: number; pending: number } {
+  return {
+    cached: pageCache.size,
+    pending: pendingLoads.size,
+  }
 }

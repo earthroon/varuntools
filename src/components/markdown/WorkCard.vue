@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 import { toWorkCardEntry } from '@/markdown/pageRegistry'
 import { resolveContentAssetMeta } from '@/markdown/resolveContentAssets'
+import { warmMarkdownNavigationTarget } from '@/markdown/markdownNavigationPrefetch'
 
 const props = withDefaults(
   defineProps<{
@@ -83,6 +84,11 @@ const roleChips = computed(() => firstItems(card.value.role, 3))
 const stackChips = computed(() => firstItems(card.value.stack, 4))
 const tagChips = computed(() => firstItems(card.value.tags, 4))
 const metaLine = computed(() => card.value.period || (card.value.year ? String(card.value.year) : ''))
+
+function warmCardTarget() {
+  if (browserHandled.value) return
+  warmMarkdownNavigationTarget(safeHref.value)
+}
 </script>
 
 <template>
@@ -91,6 +97,10 @@ const metaLine = computed(() => card.value.period || (card.value.year ? String(c
     :href="safeHref"
     :target="opensNewTab ? '_blank' : undefined"
     :rel="opensNewTab ? 'noopener noreferrer' : undefined"
+  
+    @pointerenter="warmCardTarget"
+    @focus="warmCardTarget"
+    @click="warmCardTarget"
   >
     <div class="vt-work-card__media">
       <img
