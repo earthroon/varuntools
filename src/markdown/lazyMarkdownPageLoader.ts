@@ -9,6 +9,9 @@ const markdownModules = import.meta.glob<string>('../content/pages/**/index.md',
   import: 'default',
 })
 
+const pageCache = new Map<string, LoadedMarkdownPage>()
+const pendingLoads = new Map<string, Promise<LoadedMarkdownPage | null>>()
+
 function contentPathFor(contentDir: string): string {
   return `../content/pages/${contentDir}/index.md`
 }
@@ -82,10 +85,7 @@ async function loadContentPage(contentDir: string): Promise<LoadedMarkdownPage |
   return loadMarkdownPageFromSource(String(raw || ''), contentDir)
 }
 
-export async function loadMarkdownPageBySlug(rawSlug: string): Promise<LoadedMarkdownPage | null> {
-  const slug = normalizeSlugString(rawSlug)
-  if (!slug) return null
-
+async function resolveMarkdownPageBySlug(slug: string): Promise<LoadedMarkdownPage | null> {
   const liveEntry = findLiveSource(slug)
   if (liveEntry) {
     const livePage = loadLivePage(liveEntry)
@@ -103,4 +103,31 @@ export async function loadMarkdownPageBySlug(rawSlug: string): Promise<LoadedMar
   }
 
   return loadContentPage(routeEntry.contentDir)
+}
+
+export async function loadMarkdownPageBySlug(rawSlug: string): Promise<LoadedMarkdownPage | null> {
+  const slug = normalizeSlugString(rawSlug)
+  if (!slug) return null
+
+  const cached = pageCache.get(slug)
+  if (cached) return cached
+
+  const pending = pendingLoads.get(slug)
+  if (pending) return pending
+
+  const pendingLoad = resolveMarkdownPageBySlug(slug)
+    .then((loaded) => {
+      if (loaded) pageCache.set(slug, loaded)
+      return loaded
+    })
+    .finally(() => {
+      pendingLoads.delete(slug)
+    })
+
+  pendingLoads.set(slug, pendingLoad)
+  return pendingLoad
+}
+
+export function prefetchMarkdownPageBySlug(rawSlug: string): Promise<LoadedMarkdownPage | null> {
+  return loadMarkdownPageBySlug(rawSlug).catch(() => null)
 }

@@ -269,7 +269,8 @@
     "smoke:cms-markdown-text-block-public-ssot": "node scripts/smoke-cms-markdown-text-block-public-ssot.mjs",
     "smoke:cms-markdown-text-placeholder-public-guard": "node scripts/smoke-cms-markdown-text-placeholder-public-guard.mjs",
     "smoke:vt-ui-14-tab-flicker-guard": "node scripts/smoke-vt-ui-14-tab-flicker-guard.mjs",
-    "smoke:vt-ui-14a-markdown-route-loading-flicker-guard": "node scripts/smoke-vt-ui-14a-markdown-route-loading-flicker-guard.mjs"
+    "smoke:vt-ui-14a-markdown-route-loading-flicker-guard": "node scripts/smoke-vt-ui-14a-markdown-route-loading-flicker-guard.mjs",
+    "smoke:vt-ui-14b-markdown-prefetch-cache": "node scripts/smoke-vt-ui-14b-markdown-prefetch-cache.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

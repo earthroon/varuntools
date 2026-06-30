@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 import type { NavigationItem } from '@/navigation/navigationTypes'
 import { isNavigationItemActive } from '@/navigation/navigationActive'
+import { prefetchMarkdownPageBySlug } from '@/markdown/lazyMarkdownPageLoader'
 
 const props = defineProps<{
   item: NavigationItem
@@ -13,6 +14,28 @@ const props = defineProps<{
 const isActive = computed(() => isNavigationItemActive(props.currentPath, props.item.href))
 const rel = computed(() => (props.item.external ? 'noreferrer' : undefined))
 const target = computed(() => (props.item.external ? '_blank' : undefined))
+
+const markdownPrefetchSkipHrefs = new Set(['', '/', '/works', '/index', '/search', '/404'])
+
+function hrefToMarkdownSlug(href: string): string {
+  const normalized = String(href || '').trim()
+  if (!normalized || normalized.startsWith('#') || normalized.startsWith('mailto:') || normalized.startsWith('tel:')) return ''
+  if (/^https?:\/\//i.test(normalized)) return ''
+
+  const withoutHash = normalized.split('#')[0]?.split('?')[0] || ''
+  const slug = withoutHash.replace(/^\/+|\/+$/g, '').replace(/\/+/g, '/')
+  if (!slug) return ''
+
+  const pathKey = `/${slug}`
+  return markdownPrefetchSkipHrefs.has(pathKey) ? '' : slug
+}
+
+function warmNavigationTarget() {
+  if (props.item.external) return
+  const slug = hrefToMarkdownSlug(props.item.href)
+  if (!slug) return
+  void prefetchMarkdownPageBySlug(slug)
+}
 </script>
 
 <template>
@@ -37,6 +60,9 @@ const target = computed(() => (props.item.external ? '_blank' : undefined))
     :class="[`vt-site-nav-link--${variant || 'header'}`, { 'is-active': isActive }]"
     :to="item.href"
     :aria-current="isActive ? 'page' : undefined"
+    @pointerenter="warmNavigationTarget"
+    @focus="warmNavigationTarget"
+    @click="warmNavigationTarget"
   >
     <span class="vt-site-nav-link__label">{{ item.label }}</span>
     <span v-if="item.description && variant === 'footer'" class="vt-site-nav-link__description">
