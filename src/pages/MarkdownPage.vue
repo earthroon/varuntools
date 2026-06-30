@@ -22,14 +22,30 @@ watch(
     const currentRequestId = ++requestId
     loadState.value = 'loading'
     loadError.value = ''
-    page.value = null
 
     try {
       const loaded = await loadMarkdownPageBySlug(nextSlug)
       if (currentRequestId !== requestId) return
 
-      page.value = loaded
-      loadState.value = loaded ? 'ready' : 'not_found'
+      if (loaded) {
+
+
+        page.value = loaded
+
+
+        loadState.value = 'ready'
+
+
+      } else {
+
+
+        page.value = null
+
+
+        loadState.value = 'not_found'
+
+
+      }
     } catch (error) {
       if (currentRequestId !== requestId) return
 
