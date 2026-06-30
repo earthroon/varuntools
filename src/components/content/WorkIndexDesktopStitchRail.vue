@@ -1,16 +1,23 @@
 <script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import ContentSearchPanel from '@/components/content/ContentSearchPanel.vue'
 
 type CategoryOption = { value: string; label: string; count: number }
 type FacetOption = { value: string; count: number }
 
-const props = defineProps<{
-  categoryOptions: readonly CategoryOption[]
-  tagOptions: readonly FacetOption[]
-  yearOptions: readonly FacetOption[]
-  resultCount: number
-  totalCount: number
-}>()
+const props = withDefaults(
+  defineProps<{
+    categoryOptions: readonly CategoryOption[]
+    tagOptions: readonly FacetOption[]
+    yearOptions: readonly FacetOption[]
+    resultCount: number
+    totalCount: number
+    anchorSelector?: string
+  }>(),
+  {
+    anchorSelector: '.vt-work-index-main',
+  },
+)
 
 const query = defineModel<string>('query', { required: true })
 const selectedCategory = defineModel<string>('selectedCategory', { required: true })
@@ -22,12 +29,129 @@ const sort = defineModel<string>('sort', { required: true })
 const emit = defineEmits<{
   reset: []
 }>()
+
+const DESKTOP_QUERY = '(min-width: 1120px)'
+const RAIL_WIDTH_PX = 224
+const RAIL_GAP_PX = 24
+const RAIL_MIN_GUTTER_PX = 24
+const RAIL_BOTTOM_GUTTER_PX = 24
+const HEADER_FALLBACK_PX = 72
+const HEADER_GAP_PX = 20
+
+const railStyle = ref<Record<string, string>>({})
+const isRailPositioned = ref(false)
+const railPlacementReceipt = computed(() => (
+  isRailPositioned.value ? 'page-side-scroll-anchor' : 'hidden-no-side-room'
+))
+
+let mediaQuery: MediaQueryList | null = null
+let cleanupMediaQuery: (() => void) | null = null
+let frameId: number | null = null
+let resizeObserver: ResizeObserver | null = null
+
+function readHeaderHeightPx() {
+  const raw = window
+    .getComputedStyle(document.documentElement)
+    .getPropertyValue('--vt-header-height')
+    .trim()
+  const parsed = Number.parseFloat(raw)
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : HEADER_FALLBACK_PX
+}
+
+function syncRailPosition() {
+  const isDesktop = mediaQuery?.matches ?? window.matchMedia(DESKTOP_QUERY).matches
+
+  if (!isDesktop) {
+    isRailPositioned.value = false
+    railStyle.value = {}
+    return
+  }
+
+  const anchor = document.querySelector<HTMLElement>(props.anchorSelector)
+  if (!anchor) {
+    isRailPositioned.value = false
+    railStyle.value = {}
+    return
+  }
+
+  const anchorRect = anchor.getBoundingClientRect()
+  const headerTop = Math.round(readHeaderHeightPx() + HEADER_GAP_PX)
+  const left = Math.round(anchorRect.left - RAIL_WIDTH_PX - RAIL_GAP_PX)
+
+  if (left < RAIL_MIN_GUTTER_PX) {
+    isRailPositioned.value = false
+    railStyle.value = {}
+    return
+  }
+
+  isRailPositioned.value = true
+  railStyle.value = {
+    position: 'fixed',
+    top: `${headerTop}px`,
+    left: `${left}px`,
+    width: `${RAIL_WIDTH_PX}px`,
+    maxHeight: `calc(100vh - ${headerTop + RAIL_BOTTOM_GUTTER_PX}px)`,
+  }
+}
+
+function scheduleRailSync() {
+  if (frameId !== null) return
+
+  frameId = window.requestAnimationFrame(() => {
+    frameId = null
+    syncRailPosition()
+  })
+}
+
+function attachAnchorResizeObserver() {
+  if (!('ResizeObserver' in window)) return
+
+  const anchor = document.querySelector<HTMLElement>(props.anchorSelector)
+  if (!anchor) return
+
+  resizeObserver = new ResizeObserver(() => scheduleRailSync())
+  resizeObserver.observe(anchor)
+}
+
+onMounted(() => {
+  mediaQuery = window.matchMedia(DESKTOP_QUERY)
+
+  const handleMediaQueryChange = () => scheduleRailSync()
+  if (mediaQuery.addEventListener) {
+    mediaQuery.addEventListener('change', handleMediaQueryChange)
+    cleanupMediaQuery = () => mediaQuery?.removeEventListener('change', handleMediaQueryChange)
+  } else {
+    mediaQuery.addListener(handleMediaQueryChange)
+    cleanupMediaQuery = () => mediaQuery?.removeListener(handleMediaQueryChange)
+  }
+
+  window.addEventListener('scroll', scheduleRailSync, { passive: true })
+  window.addEventListener('resize', scheduleRailSync, { passive: true })
+  attachAnchorResizeObserver()
+  scheduleRailSync()
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', scheduleRailSync)
+  window.removeEventListener('resize', scheduleRailSync)
+  cleanupMediaQuery?.()
+  cleanupMediaQuery = null
+  resizeObserver?.disconnect()
+  resizeObserver = null
+
+  if (frameId !== null) {
+    window.cancelAnimationFrame(frameId)
+    frameId = null
+  }
+})
 </script>
 
 <template>
   <aside
+    v-show="isRailPositioned"
     class="vt-work-index-desktop-stitch-rail"
-    data-vt-ui21a-work-index-desktop-stitch-rail="true"
+    :style="railStyle"
+    :data-vt-ui21a-work-index-desktop-stitch-rail="railPlacementReceipt"
     aria-labelledby="work-index-desktop-stitch-rail-heading"
   >
     <header class="vt-work-index-desktop-stitch-rail__header">
@@ -61,11 +185,9 @@ const emit = defineEmits<{
 @media (min-width: 1120px) {
   .vt-work-index-desktop-stitch-rail {
     display: block;
-    position: sticky;
-    top: calc(var(--vt-header-height, 72px) + 1.25rem);
-    align-self: start;
-    max-height: calc(100vh - 6rem);
+    z-index: 18;
     overflow-y: auto;
+    box-sizing: border-box;
     padding: 0.95rem;
     border-radius: 1.2rem;
     border: 1px dashed color-mix(in srgb, currentColor 18%, transparent);
