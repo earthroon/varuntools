@@ -280,7 +280,8 @@
     "smoke:vt-nav-01-hide-home-tab-logo-home-entry": "node scripts/smoke-vt-nav-01-hide-home-tab-logo-home-entry.mjs",
     "smoke:vt-nav-02-remove-duplicate-inquiry-utility": "node scripts/smoke-vt-nav-02-remove-duplicate-inquiry-utility.mjs",
     "smoke:vt-ui-21-route-scroll-top-policy": "node scripts/smoke-vt-ui-21-route-scroll-top-policy.mjs",
-    "smoke:vt-ui-22-mobile-video-frame-stability": "node scripts/smoke-vt-ui-22-mobile-video-frame-stability.mjs"
+    "smoke:vt-ui-22-mobile-video-frame-stability": "node scripts/smoke-vt-ui-22-mobile-video-frame-stability.mjs",
+    "smoke:vt-ui-22r1-video-frame-centering-dynamic-ratio": "node scripts/smoke-vt-ui-22r1-video-frame-centering-dynamic-ratio.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

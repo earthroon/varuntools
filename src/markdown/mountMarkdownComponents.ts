@@ -109,6 +109,16 @@ function normalizeVideoPreload(value: string | undefined): 'none' | 'metadata' |
   return value === 'none' || value === 'auto' ? value : 'metadata'
 }
 
+function normalizeVideoRatio(value: string | undefined): 'auto' | '16/9' | '4/3' | '1/1' | '9/16' {
+  return value === '16/9' || value === '4/3' || value === '1/1' || value === '9/16'
+    ? value
+    : 'auto'
+}
+
+function normalizeVideoFit(value: string | undefined): 'contain' | 'cover' {
+  return value === 'cover' ? 'cover' : 'contain'
+}
+
 
 function parseListAttr(value: string | undefined): string[] {
   if (!value) return []
@@ -465,6 +475,9 @@ export function mountMarkdownComponents(
       controls: boolAttr(el.dataset.controls, true),
       preload: normalizeVideoPreload(el.dataset.preload),
       tracks: parseJsonAttr(el.dataset.tracks, []),
+      ratio: normalizeVideoRatio(el.dataset.ratio),
+      fit: normalizeVideoFit(el.dataset.fit),
+      breakout: boolAttr(el.dataset.breakout, false),
     }
 
     const mountedApp = mountOne(element, VideoPlayer, props)

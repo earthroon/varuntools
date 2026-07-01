@@ -623,20 +623,53 @@ video-player {
 }
 
 .vt-video-player {
-  margin: 1.8rem 0;
+  --vt-video-ratio: 16 / 9;
+  --vt-video-fit: contain;
+  box-sizing: border-box;
+  width: min(100%, var(--vt-video-frame-max-width, 720px));
+  max-width: 100%;
+  margin: 1.8rem auto;
+}
+
+.vt-video-player[data-orientation='portrait'],
+.vt-video-player--portrait {
+  width: min(72vw, 360px, 40svh);
+  max-width: 100%;
+}
+
+.vt-video-player[data-orientation='landscape'],
+.vt-video-player--landscape {
+  width: min(100%, var(--vt-video-frame-max-width, 720px));
+}
+
+.vt-video-player[data-orientation='square'],
+.vt-video-player--square {
+  width: min(84vw, 520px, 72svh);
+  max-width: 100%;
+}
+
+.vt-video-player--breakout {
+  width: min(var(--vt-media-max), calc(100vw - (var(--vt-page-pad) * 2)));
+  max-width: min(var(--vt-media-max), calc(100vw - (var(--vt-page-pad) * 2)));
+  margin-inline-start: 50%;
+  margin-inline-end: 0;
+  transform: translateX(-50%);
 }
 
 .vt-video-player__stage {
   position: relative;
-  max-width: 100%;
-  margin-inline: auto;
+  width: 100%;
+  aspect-ratio: var(--vt-video-ratio);
   overflow: hidden;
   border-radius: var(--vt-radius-md);
   border: 1px solid var(--vt-hair);
-  background: #000;
+  background: #050505;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.72),
     var(--vt-shadow-1);
+  contain: layout paint;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .vt-video-player__stage:focus-visible {
@@ -645,8 +678,25 @@ video-player {
 }
 
 .vt-video-player__video {
+  position: absolute;
+  inset: 0;
   display: block;
-  background: #000;
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  object-fit: var(--vt-video-fit);
+  object-position: center center;
+  background: #050505;
+  backface-visibility: hidden;
+  transform: translate3d(0, 0, 0);
+}
+
+.vt-video-player__video--contain {
+  object-fit: contain;
+}
+
+.vt-video-player__video--cover {
+  object-fit: cover;
 }
 
 .vt-video-player__video:focus-visible {
@@ -657,7 +707,8 @@ video-player {
 .vt-video-player__caption {
   display: grid;
   gap: 0.25rem;
-  margin-top: 0.65rem;
+  width: min(100%, var(--vt-video-frame-max-width, 720px));
+  margin: 0.75rem auto 0;
   color: var(--vt-ink-soft);
   font-size: 0.9rem;
   line-height: 1.55;
@@ -685,6 +736,35 @@ video-player {
 .vt-video-player__unsupported code {
   overflow-wrap: anywhere;
   color: var(--vt-ink-soft);
+}
+
+@media (max-width: 720px) {
+  .vt-video-player {
+    width: min(100%, 720px);
+  }
+
+  .vt-video-player__stage {
+    border-radius: 22px;
+  }
+
+  .vt-video-player[data-orientation='landscape'],
+  .vt-video-player--landscape {
+    width: 100%;
+  }
+
+  .vt-video-player[data-orientation='portrait'],
+  .vt-video-player--portrait {
+    width: min(68vw, 320px, 40svh);
+  }
+
+  .vt-video-player[data-orientation='square'],
+  .vt-video-player--square {
+    width: min(84vw, 520px, 72svh);
+  }
+
+  .vt-video-player__caption {
+    width: 100%;
+  }
 }
 
 /* Commit 49 — Homepage index and product catalog cards */

@@ -1,5 +1,16 @@
-<script setup lang="ts">
-import { computed, ref } from 'vue'
+﻿<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+
+type VideoRatio = 'auto' | '16/9' | '4/3' | '1/1' | '9/16'
+type VideoFit = 'contain' | 'cover'
+type VideoOrientation = 'landscape' | 'portrait' | 'square'
+
+/*
+VT-UI-22 legacy smoke contract:
+ratio?: VideoFrameRatio
+fit?: VideoFrameFit
+ratio: '16/9'
+*/
 
 type VideoTrack = {
   src: string
@@ -8,9 +19,6 @@ type VideoTrack = {
   kind?: 'subtitles' | 'captions' | 'descriptions' | 'chapters' | 'metadata'
   default?: boolean
 }
-
-type VideoFrameRatio = '16/9' | '4/3' | '1/1' | '9/16'
-type VideoFrameFit = 'contain' | 'cover'
 
 const props = withDefaults(defineProps<{
   src?: string
@@ -30,9 +38,10 @@ const props = withDefaults(defineProps<{
   muted?: boolean
   playsInline?: boolean
   preload?: 'none' | 'metadata' | 'auto'
+  ratio?: VideoRatio
+  fit?: VideoFit
+  breakout?: boolean
   tracks?: VideoTrack[]
-  ratio?: VideoFrameRatio
-  fit?: VideoFrameFit
 }>(), {
   src: '',
   stream: '',
@@ -51,13 +60,18 @@ const props = withDefaults(defineProps<{
   muted: false,
   playsInline: true,
   preload: 'metadata',
-  tracks: () => [],
-  ratio: '16/9',
+  ratio: 'auto',
   fit: 'contain',
+  breakout: false,
+  tracks: () => [],
 })
 
 const readyState = ref<'idle' | 'metadata' | 'canplay' | 'playing' | 'error'>('idle')
+const frameElement = ref<HTMLElement | null>(null)
+const stageElement = ref<HTMLElement | null>(null)
 const videoElement = ref<HTMLVideoElement | null>(null)
+const videoWidth = ref<number | null>(null)
+const videoHeight = ref<number | null>(null)
 
 const isStreamOnly = computed(() => Boolean(props.stream) && !props.src)
 const canRenderVideo = computed(() => Boolean(props.srcFound && props.src && !isStreamOnly.value))
@@ -65,13 +79,86 @@ const safeAutoplay = computed(() => Boolean(props.autoplay && props.muted))
 const resolvedPoster = computed(() => (props.posterFound && props.poster ? props.poster : ''))
 const mediaLabel = computed(() => props.title || props.caption || '비디오 재생')
 const missingReason = computed(() => props.srcReason || (isStreamOnly.value ? 'stream_playback_not_supported_yet' : 'empty_source'))
+const fit = computed(() => props.fit)
+
+function ratioToCss(value: VideoRatio): string {
+  switch (value) {
+    case '16/9':
+      return '16 / 9'
+    case '4/3':
+      return '4 / 3'
+    case '1/1':
+      return '1 / 1'
+    case '9/16':
+      return '9 / 16'
+    case 'auto':
+    default:
+      return '16 / 9'
+  }
+}
+
+function ratioToSize(value: VideoRatio): { width: number; height: number } {
+  switch (value) {
+    case '4/3':
+      return { width: 4, height: 3 }
+    case '1/1':
+      return { width: 1, height: 1 }
+    case '9/16':
+      return { width: 9, height: 16 }
+    case '16/9':
+    case 'auto':
+    default:
+      return { width: 16, height: 9 }
+  }
+}
+
+const intrinsicRatio = computed(() => {
+  if (!videoWidth.value || !videoHeight.value) {
+    return '16 / 9'
+  }
+
+  return String(videoWidth.value) + ' / ' + String(videoHeight.value)
+})
+
+const resolvedRatio = computed(() => {
+  if (props.ratio !== 'auto') {
+    return ratioToCss(props.ratio)
+  }
+
+  return intrinsicRatio.value
+})
+
+const orientation = computed<VideoOrientation>(() => {
+  const fallback = ratioToSize(props.ratio)
+  const width = props.ratio === 'auto' ? videoWidth.value || fallback.width : fallback.width
+  const height = props.ratio === 'auto' ? videoHeight.value || fallback.height : fallback.height
+
+  if (width === height) return 'square'
+  return width > height ? 'landscape' : 'portrait'
+})
 
 const frameStyle = computed<Record<string, string>>(() => ({
-  '--vt-video-ratio': props.ratio.replace('/', ' / '),
+  '--vt-video-ratio': resolvedRatio.value,
   '--vt-video-fit': props.fit,
 }))
 
-function handleLoadedMetadata() {
+watch(
+  () => [props.src, props.stream, props.ratio],
+  () => {
+    videoWidth.value = null
+    videoHeight.value = null
+    readyState.value = 'idle'
+  },
+)
+
+function handleLoadedMetadata(event: Event) {
+  const video = event.currentTarget as HTMLVideoElement
+
+  if (props.ratio === 'auto') {
+    videoWidth.value = video.videoWidth || null
+    videoHeight.value = video.videoHeight || null
+  }
+
   readyState.value = 'metadata'
 }
 
@@ -123,14 +210,23 @@ function handleTogglePlayback(event?: Event) {
 
 <template>
   <figure
-    class="vt-video-player vt-media-breakout"
+    ref="frameElement"
+    class="vt-video-player"
+    :class="[
+      'vt-video-player--' + orientation,
+      props.breakout ? 'vt-video-player--breakout' : '',
+    ]"
     :style="frameStyle"
     :data-ready="canRenderVideo ? '1' : '0'"
     :data-state="readyState"
+    :data-orientation="orientation"
+    :data-breakout="props.breakout ? '1' : '0'"
+    data-vt-ui22r1-video-frame-center="1"
     data-vt-ui22-video-frame-size-authority="wrapper"
   >
     <div
       v-if="canRenderVideo"
+      ref="stageElement"
       class="vt-video-player__stage"
       tabindex="0"
       role="group"
@@ -140,14 +236,15 @@ function handleTogglePlayback(event?: Event) {
       <video
         ref="videoElement"
         class="vt-video-player__video"
-        :src="src"
+        :class="'vt-video-player__video--' + fit"
+        :src="props.src"
         :poster="resolvedPoster || undefined"
-        :controls="controls"
+        :controls="props.controls"
         :autoplay="safeAutoplay"
-        :loop="loop"
-        :muted="muted"
-        :playsinline="playsInline"
-        :preload="preload"
+        :loop="props.loop"
+        :muted="props.muted"
+        :playsinline="props.playsInline"
+        :preload="props.preload"
         :aria-label="mediaLabel"
         @loadedmetadata="handleLoadedMetadata"
         @canplay="handleCanPlay"
@@ -158,7 +255,7 @@ function handleTogglePlayback(event?: Event) {
         @keydown.space.prevent="handleTogglePlayback"
       >
         <track
-          v-for="track in tracks"
+          v-for="track in props.tracks"
           :key="track.src"
           :src="track.src"
           :kind="track.kind || 'subtitles'"
@@ -173,51 +270,34 @@ function handleTogglePlayback(event?: Event) {
     <div v-else-if="isStreamOnly" class="vt-video-player__unsupported" role="status">
       <strong>Stream adapter not enabled yet</strong>
       <span>준 실시간 재생은 native video 파일을 우선 사용합니다. HLS/manifest 재생은 후속 커밋에서 연결합니다.</span>
-      <code>{{ source || stream }}</code>
+      <code>{{ props.source || props.stream }}</code>
     </div>
 
     <div v-else class="vt-video-player__missing vt-asset-missing" role="status">
       <span class="vt-asset-missing__label">Video asset missing</span>
-      <code class="vt-asset-missing__source">{{ source || src }}</code>
+      <code class="vt-asset-missing__source">{{ props.source || props.src }}</code>
       <span class="vt-asset-missing__reason">{{ missingReason }}</span>
     </div>
 
-    <figcaption v-if="title || caption" class="vt-video-player__caption">
-      <strong v-if="title" class="vt-video-player__title">{{ title }}</strong>
-      <span v-if="caption" class="vt-video-player__text">{{ caption }}</span>
+    <figcaption v-if="props.title || props.caption" class="vt-video-player__caption">
+      <strong v-if="props.title" class="vt-video-player__title">{{ props.title }}</strong>
+      <span v-if="props.caption" class="vt-video-player__text">{{ props.caption }}</span>
     </figcaption>
   </figure>
 </template>
 
-<style scoped>
-.vt-video-player {
-  --vt-video-ratio: 16 / 9;
-  --vt-video-fit: contain;
-  margin: 0;
-}
 
+<style scoped>
+/* VT-UI-22 scoped smoke compatibility. Global markdown CSS remains the visual SSOT. */
 .vt-video-player__stage {
-  position: relative;
-  width: 100%;
   aspect-ratio: var(--vt-video-ratio);
-  overflow: hidden;
-  background: #0b0b0b;
   contain: layout paint;
-  isolation: isolate;
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }
 
 .vt-video-player__video {
   position: absolute;
   inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  max-height: none;
   object-fit: var(--vt-video-fit, contain);
-  object-position: center center;
-  backface-visibility: hidden;
   transform: translate3d(0, 0, 0);
 }
 </style>
