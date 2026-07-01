@@ -285,7 +285,8 @@
     "smoke:vt-ui-22r2-portrait-video-visual-surface": "node scripts/smoke-vt-ui-22r2-portrait-video-visual-surface.mjs",
     "smoke:vt-ui-22r3-video-inner-inset-manifest": "node scripts/smoke-vt-ui-22r3-video-inner-inset-manifest.mjs",
     "smoke:vt-ui-22r4-mobile-portrait-desktop-parity": "node scripts/smoke-vt-ui-22r4-mobile-portrait-desktop-parity.mjs",
-    "smoke:vt-ui-22r5-mobile-native-controls-suppression": "node scripts/smoke-vt-ui-22r5-mobile-native-controls-suppression.mjs"
+    "smoke:vt-ui-22r5-mobile-native-controls-suppression": "node scripts/smoke-vt-ui-22r5-mobile-native-controls-suppression.mjs",
+    "smoke:vt-ui-22r6-custom-minimal-video-controls": "node scripts/smoke-vt-ui-22r6-custom-minimal-video-controls.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

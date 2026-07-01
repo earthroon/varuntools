@@ -51,6 +51,10 @@ type MountedApp = {
   app: App
 }
 
+function strictTrueAttr(value: string | undefined): boolean {
+  return value === 'true'
+}
+
 function boolAttr(value: string | undefined, fallback = false): boolean {
   if (value === undefined) return fallback
   return value === 'true'
@@ -472,7 +476,7 @@ export function mountMarkdownComponents(
       loop: boolAttr(el.dataset.loop, false),
       muted: boolAttr(el.dataset.muted, false),
       playsInline: boolAttr(el.dataset.playsInline || el.dataset.playsinline, true),
-      controls: boolAttr(el.dataset.controls, false),
+      controls: strictTrueAttr(el.dataset.controls),
       preload: normalizeVideoPreload(el.dataset.preload),
       tracks: parseJsonAttr(el.dataset.tracks, []),
       ratio: normalizeVideoRatio(el.dataset.ratio),
