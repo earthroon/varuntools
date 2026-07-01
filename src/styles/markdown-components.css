@@ -2096,3 +2096,19 @@ inquiry-form {
 }
 /* /VT-UI-22R4 mobile portrait desktop parity override */
 
+
+/* VT-UI-22R5 mobile native controls suppression */
+.vt-video-player__clip[data-vt-ui22r5-surface-toggle='1'] {
+  cursor: pointer;
+}
+
+.vt-video-player__clip[data-vt-ui22r5-surface-toggle='1'][data-vt-ui22r5-native-controls='enabled'] {
+  cursor: default;
+}
+
+.vt-video-player__clip[data-vt-ui22r5-surface-toggle='1']:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--vt-accent, #111) 35%, transparent);
+  outline-offset: 3px;
+}
+/* /VT-UI-22R5 mobile native controls suppression */
+

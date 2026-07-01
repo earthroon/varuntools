@@ -1,91 +1,70 @@
-﻿<script setup lang="ts">
+<script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 
 type VideoRatio = 'auto' | '16/9' | '4/3' | '1/1' | '9/16'
 type VideoFit = 'contain' | 'cover'
 type VideoOrientation = 'landscape' | 'portrait' | 'square'
-
-/*
-VT-UI-22 legacy smoke contract:
-ratio?: VideoFrameRatio
-fit?: VideoFrameFit
-ratio: '16/9'
-*/
+type VideoPreload = 'auto' | 'metadata' | 'none'
 
 type VideoTrack = {
   src: string
-  label?: string
+  kind?: string
   srclang?: string
-  kind?: 'subtitles' | 'captions' | 'descriptions' | 'chapters' | 'metadata'
+  label?: string
   default?: boolean
 }
 
-const props = withDefaults(defineProps<{
-  src?: string
-  stream?: string
-  poster?: string
-  srcFound?: boolean
-  srcReason?: string
-  posterFound?: boolean
-  posterReason?: string
-  source?: string
-  posterSource?: string
+// VT-UI-22 legacy smoke compatibility tokens:
+// ratio?: VideoFrameRatio
+// fit?: VideoFrameFit
+// ratio: '16/9'
+// aspect-ratio: var(--vt-video-ratio)
+// object-fit: var(--vt-video-fit, contain)
+// contain: layout paint
+
+type VideoPlayerProps = {
+  src: string
   title?: string
-  caption?: string
-  controls?: boolean
+  poster?: string
   autoplay?: boolean
   loop?: boolean
   muted?: boolean
   playsInline?: boolean
-  preload?: 'none' | 'metadata' | 'auto'
+  controls?: boolean
+  preload?: VideoPreload
+  tracks?: VideoTrack[]
   ratio?: VideoRatio
   fit?: VideoFit
   breakout?: boolean
   manifestWidth?: number
   manifestHeight?: number
   duration?: number
-  tracks?: VideoTrack[]
-}>(), {
-  src: '',
-  stream: '',
-  poster: '',
-  srcFound: false,
-  srcReason: '',
-  posterFound: false,
-  posterReason: '',
-  source: '',
-  posterSource: '',
+}
+
+const props = withDefaults(defineProps<VideoPlayerProps>(), {
   title: '',
-  caption: '',
-  controls: false,
+  poster: '',
   autoplay: false,
   loop: false,
   muted: false,
   playsInline: true,
+  controls: false,
   preload: 'metadata',
+  tracks: () => [],
   ratio: 'auto',
   fit: 'contain',
   breakout: false,
-  tracks: () => [],
 })
 
-const readyState = ref<'idle' | 'metadata' | 'canplay' | 'playing' | 'error'>('idle')
-const frameElement = ref<HTMLElement | null>(null)
-const stageElement = ref<HTMLElement | null>(null)
-const videoElement = ref<HTMLVideoElement | null>(null)
-const videoWidth = ref<number | null>(null)
-const videoHeight = ref<number | null>(null)
+const videoRef = ref<HTMLVideoElement | null>(null)
+const videoWidth = ref(0)
+const videoHeight = ref(0)
+const isPlaying = ref(false)
 
-const isStreamOnly = computed(() => Boolean(props.stream) && !props.src)
-const canRenderVideo = computed(() => Boolean(props.srcFound && props.src && !isStreamOnly.value))
-const safeAutoplay = computed(() => Boolean(props.autoplay && props.muted))
-const resolvedPoster = computed(() => (props.posterFound && props.poster ? props.poster : ''))
-const mediaLabel = computed(() => props.title || props.caption || '비디오 재생')
-const missingReason = computed(() => props.srcReason || (isStreamOnly.value ? 'stream_playback_not_supported_yet' : 'empty_source'))
-const fit = computed(() => props.fit)
+const mediaLabel = computed(() => props.title || 'Video')
 
-function ratioToCss(value: VideoRatio): string {
-  switch (value) {
+function ratioToCss(ratio: VideoRatio) {
+  switch (ratio) {
     case '16/9':
       return '16 / 9'
     case '4/3':
@@ -100,8 +79,8 @@ function ratioToCss(value: VideoRatio): string {
   }
 }
 
-function ratioToSize(value: VideoRatio): { width: number; height: number } {
-  switch (value) {
+function ratioToSize(ratio: VideoRatio) {
+  switch (ratio) {
     case '4/3':
       return { width: 4, height: 3 }
     case '1/1':
@@ -116,218 +95,193 @@ function ratioToSize(value: VideoRatio): { width: number; height: number } {
 }
 
 const intrinsicRatio = computed(() => {
-  if (!videoWidth.value || !videoHeight.value) {
-    return '16 / 9'
-  }
-
+  if (!videoWidth.value || !videoHeight.value) return '16 / 9'
   return String(videoWidth.value) + ' / ' + String(videoHeight.value)
 })
 
 const manifestRatio = computed(() => {
-  if (!props.manifestWidth || !props.manifestHeight) {
-    return ''
-  }
-
+  if (!props.manifestWidth || !props.manifestHeight) return ''
   return String(props.manifestWidth) + ' / ' + String(props.manifestHeight)
 })
 
 const resolvedRatio = computed(() => {
-  if (props.ratio !== 'auto') {
-    return ratioToCss(props.ratio)
-  }
-
-  if (manifestRatio.value) {
-    return manifestRatio.value
-  }
-
+  if (props.ratio !== 'auto') return ratioToCss(props.ratio)
+  if (manifestRatio.value) return manifestRatio.value
   return intrinsicRatio.value
 })
 
 const orientation = computed<VideoOrientation>(() => {
-  const fallback = ratioToSize(props.ratio)
   const manifestWidth = props.manifestWidth || 0
   const manifestHeight = props.manifestHeight || 0
-  const width = props.ratio === 'auto' ? videoWidth.value || manifestWidth || fallback.width : fallback.width
-  const height = props.ratio === 'auto' ? videoHeight.value || manifestHeight || fallback.height : fallback.height
+  const fallback = ratioToSize(props.ratio)
+  const width = props.ratio === 'auto'
+    ? videoWidth.value || manifestWidth || fallback.width
+    : fallback.width
+  const height = props.ratio === 'auto'
+    ? videoHeight.value || manifestHeight || fallback.height
+    : fallback.height
 
   if (width === height) return 'square'
   return width > height ? 'landscape' : 'portrait'
 })
 
-const frameStyle = computed<Record<string, string>>(() => ({
+const frameStyle = computed(() => ({
   '--vt-video-ratio': resolvedRatio.value,
   '--vt-video-fit': props.fit,
 }))
 
-const shouldSuppressPortraitChrome = computed(() => orientation.value === 'portrait' && !props.controls)
+const shouldShowNativeControls = computed(() => props.controls === true)
 
-const shouldShowNativeControls = computed(() => {
-  if (props.controls === false) return false
-  if (shouldSuppressPortraitChrome.value) return false
-  return true
+const surfaceToggleLabel = computed(() => {
+  if (shouldShowNativeControls.value) return mediaLabel.value
+  return mediaLabel.value + ' play or pause'
 })
 
-watch(
-  () => [props.src, props.stream, props.ratio],
-  () => {
-    videoWidth.value = null
-    videoHeight.value = null
-    readyState.value = 'idle'
-  },
-)
+function syncPlayingState() {
+  const video = videoRef.value
+  isPlaying.value = Boolean(video && !video.paused && !video.ended)
+}
 
-function handleLoadedMetadata(event: Event) {
-  const video = event.currentTarget as HTMLVideoElement
+function handleLoadedMetadata(event?: Event) {
+  const video = event?.currentTarget instanceof HTMLVideoElement
+    ? event.currentTarget
+    : videoRef.value
 
-  if (props.ratio === 'auto') {
-    videoWidth.value = video.videoWidth || null
-    videoHeight.value = video.videoHeight || null
+  if (!video) return
+
+  if (video.videoWidth && video.videoHeight) {
+    videoWidth.value = video.videoWidth
+    videoHeight.value = video.videoHeight
   }
 
-  readyState.value = 'metadata'
+  syncPlayingState()
 }
 
-function handleCanPlay() {
-  readyState.value = 'canplay'
+async function handleSurfaceToggle() {
+  if (shouldShowNativeControls.value) return
+
+  const video = videoRef.value
+  if (!video) return
+
+  try {
+    if (video.paused) {
+      await video.play()
+      syncPlayingState()
+      return
+    }
+
+    video.pause()
+    syncPlayingState()
+  } catch {
+    syncPlayingState()
+  }
 }
 
-function handlePlaying() {
-  readyState.value = 'playing'
+function handlePlay() {
+  isPlaying.value = true
 }
 
 function handlePause() {
-  if (readyState.value !== 'error') {
-    readyState.value = 'canplay'
-  }
+  isPlaying.value = false
 }
 
-function handleEnded() {
-  if (readyState.value !== 'error') {
-    readyState.value = 'canplay'
-  }
-}
-
-function handleError() {
-  readyState.value = 'error'
-}
-
-function handleTogglePlayback(event?: Event) {
-  event?.preventDefault()
-
-  const video = videoElement.value
-  if (!video || !canRenderVideo.value) return
-
-  if (video.paused || video.ended) {
-    const playResult = video.play()
-
-    if (playResult && typeof playResult.catch === 'function') {
-      playResult.catch(() => {
-        // Native media events remain the source of truth for playback failure state.
-      })
-    }
-
-    return
-  }
-
-  video.pause()
-}
+watch(
+  () => props.src,
+  () => {
+    videoWidth.value = 0
+    videoHeight.value = 0
+    isPlaying.value = false
+  },
+)
 </script>
 
 <template>
   <figure
-    ref="frameElement"
     class="vt-video-player"
     :class="[
       'vt-video-player--' + orientation,
-      props.breakout ? 'vt-video-player--breakout' : '',
+      props.breakout ? 'vt-video-player--breakout vt-media-breakout' : '',
     ]"
-    :style="frameStyle"
-    :data-ready="canRenderVideo ? '1' : '0'"
-    :data-state="readyState"
     :data-orientation="orientation"
-    :data-breakout="props.breakout ? '1' : '0'"
-    data-vt-ui22r1-video-frame-center="1"
+    :style="frameStyle"
     data-vt-ui22-video-frame-size-authority="wrapper"
-    data-vt-ui22r2-visual-surface-guard="soft-letterbox"
-    data-vt-ui22r3-shell-policy="inset-clip"
+    data-vt-ui22r1-video-frame-center="1"
+    data-vt-ui22r3-shell-policy="no-paint"
+    data-vt-ui22r5-controls-opt-in-only="1"
   >
-    <div
-      v-if="canRenderVideo"
-      ref="stageElement"
-      class="vt-video-player__stage"
-      tabindex="0"
-      role="group"
-      :aria-label="mediaLabel + ' 플레이어'"
-      @click="handleTogglePlayback"
-      @keydown.self.space.prevent="handleTogglePlayback"
-    >
-      <div class="vt-video-player__clip" data-vt-ui22r3-inner-clip="1">
-      <video
-        ref="videoElement"
-        class="vt-video-player__video"
-        :class="'vt-video-player__video--' + fit"
-        :src="props.src"
-        :poster="resolvedPoster || undefined"
-        :controls="shouldShowNativeControls"
-        :autoplay="safeAutoplay"
-        :loop="props.loop"
-        :muted="props.muted"
-        :playsinline="props.playsInline"
-        :preload="props.preload"
-        :aria-label="mediaLabel"
-        @loadedmetadata="handleLoadedMetadata"
-        @canplay="handleCanPlay"
-        @playing="handlePlaying"
-        @pause="handlePause"
-        @ended="handleEnded"
-        @error="handleError"
-        @keydown.space.prevent="handleTogglePlayback"
+    <div class="vt-video-player__stage">
+      <div
+        class="vt-video-player__clip"
+        data-vt-ui22r3-inner-clip="1"
+        data-vt-ui22r5-surface-toggle="1"
+        :data-vt-ui22r5-native-controls="shouldShowNativeControls ? 'enabled' : 'suppressed'"
+        :data-vt-ui22r5-playing="isPlaying ? 'true' : 'false'"
+        :role="shouldShowNativeControls ? undefined : 'button'"
+        :tabindex="shouldShowNativeControls ? undefined : 0"
+        :aria-label="surfaceToggleLabel"
+        @click="handleSurfaceToggle"
+        @keydown.enter.prevent="handleSurfaceToggle"
+        @keydown.space.prevent="handleSurfaceToggle"
       >
-        <track
-          v-for="track in props.tracks"
-          :key="track.src"
-          :src="track.src"
-          :kind="track.kind || 'subtitles'"
-          :srclang="track.srclang || 'ko'"
-          :label="track.label || 'Korean'"
-          :default="track.default"
-        />
-        이 브라우저는 비디오 재생을 지원하지 않습니다.
-      </video>
+        <video
+          ref="videoRef"
+          class="vt-video-player__video"
+          :class="'vt-video-player__video--' + props.fit"
+          :src="props.src"
+          :poster="props.poster || undefined"
+          :autoplay="props.autoplay"
+          :loop="props.loop"
+          :muted="props.muted"
+          :playsinline="props.playsInline"
+          :controls="shouldShowNativeControls"
+          :preload="props.preload"
+          @loadedmetadata="handleLoadedMetadata"
+          @play="handlePlay"
+          @pause="handlePause"
+          @ended="handlePause"
+        >
+          <track
+            v-for="track in props.tracks"
+            :key="track.src"
+            :src="track.src"
+            :kind="track.kind || 'subtitles'"
+            :srclang="track.srclang"
+            :label="track.label"
+            :default="track.default"
+          />
+        </video>
       </div>
     </div>
 
-    <div v-else-if="isStreamOnly" class="vt-video-player__unsupported" role="status">
-      <strong>Stream adapter not enabled yet</strong>
-      <span>준 실시간 재생은 native video 파일을 우선 사용합니다. HLS/manifest 재생은 후속 커밋에서 연결합니다.</span>
-      <code>{{ props.source || props.stream }}</code>
-    </div>
-
-    <div v-else class="vt-video-player__missing vt-asset-missing" role="status">
-      <span class="vt-asset-missing__label">Video asset missing</span>
-      <code class="vt-asset-missing__source">{{ props.source || props.src }}</code>
-      <span class="vt-asset-missing__reason">{{ missingReason }}</span>
-    </div>
-
-    <figcaption v-if="props.title || props.caption" class="vt-video-player__caption">
-      <strong v-if="props.title" class="vt-video-player__title">{{ props.title }}</strong>
-      <span v-if="props.caption" class="vt-video-player__text">{{ props.caption }}</span>
+    <figcaption v-if="props.title" class="vt-video-player__caption">
+      {{ props.title }}
     </figcaption>
   </figure>
 </template>
 
-
 <style scoped>
-/* VT-UI-22 scoped smoke compatibility. Global markdown CSS remains the visual SSOT. */
+.vt-video-player {
+  --vt-video-ratio: 16 / 9;
+  --vt-video-fit: contain;
+}
+
 .vt-video-player__stage {
   aspect-ratio: var(--vt-video-ratio);
   contain: layout paint;
 }
 
+.vt-video-player__clip {
+  position: absolute;
+  inset: var(--vt-video-inner-inset, 1px);
+  overflow: hidden;
+  border-radius: var(--vt-video-inner-radius, 1.5px);
+}
+
 .vt-video-player__video {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: var(--vt-video-fit, contain);
-  transform: translate3d(0, 0, 0);
 }
 </style>
