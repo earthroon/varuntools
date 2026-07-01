@@ -288,7 +288,8 @@
     "smoke:vt-ui-22r5-mobile-native-controls-suppression": "node scripts/smoke-vt-ui-22r5-mobile-native-controls-suppression.mjs",
     "smoke:vt-ui-22r6-custom-minimal-video-controls": "node scripts/smoke-vt-ui-22r6-custom-minimal-video-controls.mjs",
     "smoke:vt-ui-22r7-compact-video-viewer-scale": "node scripts/smoke-vt-ui-22r7-compact-video-viewer-scale.mjs",
-    "smoke:vt-ui-23-work-adjacent-navigation": "node scripts/smoke-vt-ui-23-work-adjacent-navigation.mjs"
+    "smoke:vt-ui-23-work-adjacent-navigation": "node scripts/smoke-vt-ui-23-work-adjacent-navigation.mjs",
+    "smoke:vt-ui-23r1-visible-work-adjacent-footer": "node scripts/smoke-vt-ui-23r1-visible-work-adjacent-footer.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

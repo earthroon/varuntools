@@ -40,10 +40,11 @@ const nextTo = computed(() => normalizeWorkRoute(props.next))
 </script>
 
 <template>
-  <nav v-if="previous || next" class="vt-work-pager" aria-label="이전/다음 작업">
+  <nav v-if="previous || next" class="vt-work-pager" data-vt-ui23r1-visible-adjacent-nav="1" aria-label="이전/다음 작업">
     <RouterLink
       v-if="previous"
       class="vt-work-pager__link is-previous"
+      data-vt-ui23r1-adjacent-link="previous"
       :to="previousTo"
     >
       <span>이전 작업</span>
@@ -53,6 +54,7 @@ const nextTo = computed(() => normalizeWorkRoute(props.next))
     <RouterLink
       v-if="next"
       class="vt-work-pager__link is-next"
+      data-vt-ui23r1-adjacent-link="next"
       :to="nextTo"
     >
       <span>다음 작업</span>

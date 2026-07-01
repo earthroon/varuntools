@@ -10,7 +10,7 @@ defineProps<{
 </script>
 
 <template>
-  <footer v-if="context" class="vt-work-detail-footer">
+  <footer v-if="context" class="vt-work-detail-footer" data-vt-ui23r1-visible-footer="1">
     <div class="vt-work-detail-footer__meta">
       <WorkMetaChips
         :kind="context.current.kind"
@@ -22,6 +22,7 @@ defineProps<{
 
     <RelatedWorks :entries="context.related" title="관련 작업" />
 
-    <WorkPager :previous="context.previous" :next="context.next" />
+    <WorkPager
+      data-vt-ui23r1-visible-pager-mount="1" :previous="context.previous" :next="context.next" />
   </footer>
 </template>

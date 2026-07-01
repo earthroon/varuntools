@@ -522,7 +522,22 @@ export function getAdjacentWorkEntries(
   previous: WorkCardEntry | null
   next: WorkCardEntry | null
 } {
-  return getAdjacentWorks(entries, current.slug)
+  const sorted = [...entries].sort(
+    (a, b) =>
+      a.order - b.order ||
+      Number(b.year ?? 0) - Number(a.year ?? 0) ||
+      a.title.localeCompare(b.title),
+  )
+  const index = sorted.findIndex((entry) => entry.slug === current.slug)
+
+  if (index < 0) {
+    return { previous: null, next: null }
+  }
+
+  return {
+    previous: sorted[index - 1] || null,
+    next: sorted[index + 1] || null,
+  }
 }
 
 export function getWorkDetailContext(
@@ -530,7 +545,16 @@ export function getWorkDetailContext(
   slug: string,
 ): WorkDetailContext | null {
   const entries = getVisibleWorkEntries(pages)
-  const current = entries.find((entry) => entry.slug === slug)
+  const normalizedSlug = normalizeRelatedWorkSlug(slug)
+  const bySlug = getWorkEntryBySlug(entries)
+
+  const current =
+    entries.find((entry) => entry.slug === slug) ||
+    entries.find((entry) => normalizeRelatedWorkSlug(entry.slug) === normalizedSlug) ||
+    bySlug.get(normalizedSlug) ||
+    bySlug.get(`works/${normalizedSlug}`) ||
+    (normalizedSlug.startsWith('works/') ? bySlug.get(normalizedSlug.slice('works/'.length)) : null) ||
+    null
 
   if (!current) return null
 
