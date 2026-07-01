@@ -1,18 +1,17 @@
 import fs from 'node:fs'
 
-const checks = []
-
 function read(file) {
   return fs.readFileSync(file, 'utf8')
 }
 
+const checks = []
 function pass(name, condition) {
   checks.push([name, Boolean(condition)])
 }
 
 const video = read('src/components/markdown/VideoPlayer.vue')
-const mount = read('src/markdown/mountMarkdownComponents.ts')
 const css = read('src/styles/markdown-components.css')
+const mount = read('src/markdown/mountMarkdownComponents.ts')
 const pkg = JSON.parse(read('package.json'))
 
 pass('VideoPlayer default figure does not use vt-media-breakout', !video.includes('class="vt-video-player vt-media-breakout"'))
@@ -41,7 +40,7 @@ pass('CSS video absolute fill', css.includes('position: absolute;') && css.inclu
 pass('CSS fit uses CSS var', css.includes('object-fit: var(--vt-video-fit);'))
 pass('CSS cover fit exists', css.includes('.vt-video-player__video--cover'))
 pass('CSS contain fit exists', css.includes('.vt-video-player__video--contain'))
-pass('CSS portrait guard exists', css.includes('.vt-video-player--portrait') && css.includes('40svh'))
+pass('CSS portrait guard exists', css.includes('.vt-video-player--portrait') && css.includes('46svh'))
 pass('CSS square guard exists', css.includes('.vt-video-player--square') && css.includes('72svh'))
 pass('CSS landscape guard exists', css.includes('.vt-video-player--landscape'))
 pass('CSS optional breakout exists', css.includes('.vt-video-player--breakout') && css.includes('translateX(-50%)'))
@@ -54,12 +53,9 @@ pass('Mount passes breakout', mount.includes('breakout: boolAttr(el.dataset.brea
 pass('Package has smoke script', pkg.scripts?.['smoke:vt-ui-22r1-video-frame-centering-dynamic-ratio'] === 'node scripts/smoke-vt-ui-22r1-video-frame-centering-dynamic-ratio.mjs')
 
 const failed = checks.filter(([, ok]) => !ok)
-
 if (failed.length > 0) {
   console.error('FAIL_VT_UI_22R1_VIDEO_FRAME_CENTERING_DYNAMIC_RATIO')
-  for (const [name] of failed) {
-    console.error('- ' + name)
-  }
+  for (const [name] of failed) console.error('- ' + name)
   process.exit(1)
 }
 

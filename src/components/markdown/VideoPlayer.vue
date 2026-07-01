@@ -54,7 +54,7 @@ const props = withDefaults(defineProps<{
   posterSource: '',
   title: '',
   caption: '',
-  controls: true,
+  controls: false,
   autoplay: false,
   loop: false,
   muted: false,
@@ -142,6 +142,14 @@ const frameStyle = computed<Record<string, string>>(() => ({
   '--vt-video-fit': props.fit,
 }))
 
+const shouldSuppressPortraitChrome = computed(() => orientation.value === 'portrait' && !props.controls)
+
+const shouldShowNativeControls = computed(() => {
+  if (props.controls === false) return false
+  if (shouldSuppressPortraitChrome.value) return false
+  return true
+})
+
 watch(
   () => [props.src, props.stream, props.ratio],
   () => {
@@ -223,6 +231,7 @@ function handleTogglePlayback(event?: Event) {
     :data-breakout="props.breakout ? '1' : '0'"
     data-vt-ui22r1-video-frame-center="1"
     data-vt-ui22-video-frame-size-authority="wrapper"
+    data-vt-ui22r2-visual-surface-guard="soft-letterbox"
   >
     <div
       v-if="canRenderVideo"
@@ -231,6 +240,7 @@ function handleTogglePlayback(event?: Event) {
       tabindex="0"
       role="group"
       :aria-label="mediaLabel + ' 플레이어'"
+      @click="handleTogglePlayback"
       @keydown.self.space.prevent="handleTogglePlayback"
     >
       <video
@@ -239,7 +249,7 @@ function handleTogglePlayback(event?: Event) {
         :class="'vt-video-player__video--' + fit"
         :src="props.src"
         :poster="resolvedPoster || undefined"
-        :controls="props.controls"
+        :controls="shouldShowNativeControls"
         :autoplay="safeAutoplay"
         :loop="props.loop"
         :muted="props.muted"

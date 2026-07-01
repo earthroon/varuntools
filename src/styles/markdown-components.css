@@ -625,6 +625,9 @@ video-player {
 .vt-video-player {
   --vt-video-ratio: 16 / 9;
   --vt-video-fit: contain;
+  --vt-video-frame-bg:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.46));
+  --vt-video-frame-border: rgba(24, 28, 24, 0.12);
   box-sizing: border-box;
   width: min(100%, var(--vt-video-frame-max-width, 720px));
   max-width: 100%;
@@ -633,7 +636,7 @@ video-player {
 
 .vt-video-player[data-orientation='portrait'],
 .vt-video-player--portrait {
-  width: min(72vw, 360px, 40svh);
+  width: min(82%, 390px, 46svh);
   max-width: 100%;
 }
 
@@ -662,14 +665,15 @@ video-player {
   aspect-ratio: var(--vt-video-ratio);
   overflow: hidden;
   border-radius: var(--vt-radius-md);
-  border: 1px solid var(--vt-hair);
-  background: #050505;
+  border: 1px solid var(--vt-video-frame-border);
+  background: var(--vt-video-frame-bg);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.72),
-    var(--vt-shadow-1);
+    0 18px 48px rgba(24, 28, 24, 0.10);
   contain: layout paint;
   transform: translateZ(0);
   backface-visibility: hidden;
+  cursor: pointer;
 }
 
 .vt-video-player__stage:focus-visible {
@@ -686,7 +690,7 @@ video-player {
   max-height: none;
   object-fit: var(--vt-video-fit);
   object-position: center center;
-  background: #050505;
+  background: transparent;
   backface-visibility: hidden;
   transform: translate3d(0, 0, 0);
 }
@@ -754,7 +758,7 @@ video-player {
 
   .vt-video-player[data-orientation='portrait'],
   .vt-video-player--portrait {
-    width: min(68vw, 320px, 40svh);
+    width: min(76%, 340px, 46svh);
   }
 
   .vt-video-player[data-orientation='square'],
