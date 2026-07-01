@@ -136,6 +136,28 @@ function sortEntries(entries: PublicContentCardEntry[], sort: string): PublicCon
   return copy.sort((a, b) => Number(b.featured) - Number(a.featured) || a.order - b.order || a.title.localeCompare(b.title))
 }
 
+export function getPublicContentEntries(
+  pages: LoadedMarkdownPage[],
+  options: { scope: 'index' | 'works' } = { scope: 'index' },
+): PublicContentCardEntry[] {
+  const allowedCategories = options.scope === 'works'
+    ? typedTaxonomy.workRouteCategories
+    : typedTaxonomy.publicIndexCategories
+  const allowed = new Set(allowedCategories)
+  const indexSlugs = new Set((typedTaxonomy.collectionIndexSlugs || []).map(normalizeSlug))
+
+  return sortEntries(
+    pages
+      .map(pageToEntry)
+      .filter((entry) => !indexSlugs.has(normalizeSlug(entry.slug)))
+      .filter((entry) => allowed.has(entry.category))
+      .filter((entry) => entry.visibility === 'public')
+      .filter((entry) => entry.status !== 'draft' && entry.status !== 'archived' && entry.status !== 'trashed')
+      .filter((entry) => entry.href !== '/'),
+    'featured',
+  )
+}
+
 export function usePublicContentCollection(
   pages: LoadedMarkdownPage[],
   options: { scope: 'index' | 'works' } = { scope: 'index' },
@@ -165,19 +187,7 @@ export function usePublicContentCollection(
 
   const indexSlugs = computed(() => new Set((typedTaxonomy.collectionIndexSlugs || []).map(normalizeSlug)))
 
-  const allEntries = computed(() => {
-    const allowed = new Set(allowedCategories.value)
-    return sortEntries(
-      pages
-        .map(pageToEntry)
-        .filter((entry) => !indexSlugs.value.has(normalizeSlug(entry.slug)))
-        .filter((entry) => allowed.has(entry.category))
-        .filter((entry) => entry.visibility === 'public')
-        .filter((entry) => entry.status !== 'draft' && entry.status !== 'archived' && entry.status !== 'trashed')
-        .filter((entry) => entry.href !== '/'),
-      'featured',
-    )
-  })
+  const allEntries = computed(() => getPublicContentEntries(pages, options))
 
   const categoryOptions = computed(() => visibleCategoryOptions.value.map((value) => ({
     value,

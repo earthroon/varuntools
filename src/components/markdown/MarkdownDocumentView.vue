@@ -3,6 +3,7 @@ import { computed, ref, onBeforeUnmount } from 'vue'
 import MarkdownLightbox from '@/components/markdown/MarkdownLightbox.vue'
 import MarkdownToc from '@/components/markdown/MarkdownToc.vue'
 import WorkDetailFooter from '@/components/works/WorkDetailFooter.vue'
+import WorkPager from '@/components/works/WorkPager.vue'
 import { useActiveHeading } from '@/composables/useActiveHeading'
 import { useObservedHeadings } from '@/composables/useObservedHeadings'
 import { useSectionLightbox } from '@/composables/useSectionLightbox'
@@ -13,6 +14,8 @@ import { useMarkdownComponentMount } from '@/markdown/useMarkdownComponentMount'
 import { createPageMeta } from '@/metadata/pageMeta'
 import { getWorkDetailContext } from '@/markdown/pageRegistry'
 import { resolvePublicExposure } from '@/content/exposureTaxonomy'
+import { getPublicContentEntries } from '@/composables/usePublicContentCollection'
+import { getAdjacentPublicContentEntries } from '@/utils/getAdjacentPublicContentEntries'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 
 const props = withDefaults(
@@ -106,6 +109,22 @@ const workDetailContext = computed(() => {
   return getWorkDetailContext(pagesRef.value, props.page.slug)
 })
 
+const publicContentAdjacent = computed(() => {
+  if (!props.showRelatedFooter || !props.page || !pagesRef.value.length) {
+    return { previous: null, next: null }
+  }
+
+  const entries = getPublicContentEntries(pagesRef.value, { scope: 'index' })
+  return getAdjacentPublicContentEntries(entries, props.page.slug)
+})
+
+const shouldShowPublicContentAdjacentPager = computed(() => Boolean(
+  props.showRelatedFooter &&
+  props.page &&
+  (publicContentAdjacent.value.previous || publicContentAdjacent.value.next) &&
+  !(workDetailContext.value?.previous || workDetailContext.value?.next),
+))
+
 onBeforeUnmount(() => {
   cleanupImageMagnifier?.()
   cleanupImageMagnifier = null
@@ -144,6 +163,18 @@ const articleClass = computed(() => [
       v-if="page && workDetailContext"
       :context="workDetailContext"
     />
+
+    <footer
+      v-if="page && shouldShowPublicContentAdjacentPager"
+      class="vt-work-detail-footer vt-work-detail-footer--public-adjacent"
+      data-vt-ui23r3-public-content-adjacent-footer="1"
+    >
+      <WorkPager
+        data-vt-ui23r3-public-content-adjacent-pager="1"
+        :previous="publicContentAdjacent.previous"
+        :next="publicContentAdjacent.next"
+      />
+    </footer>
 
     <MarkdownLightbox
       :open="lightboxOpen"

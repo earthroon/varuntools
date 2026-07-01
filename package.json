@@ -290,7 +290,8 @@
     "smoke:vt-ui-22r7-compact-video-viewer-scale": "node scripts/smoke-vt-ui-22r7-compact-video-viewer-scale.mjs",
     "smoke:vt-ui-23-work-adjacent-navigation": "node scripts/smoke-vt-ui-23-work-adjacent-navigation.mjs",
     "smoke:vt-ui-23r1-visible-work-adjacent-footer": "node scripts/smoke-vt-ui-23r1-visible-work-adjacent-footer.mjs",
-    "smoke:vt-ui-23r2-markdown-route-work-footer-enable": "node scripts/smoke-vt-ui-23r2-markdown-route-work-footer-enable.mjs"
+    "smoke:vt-ui-23r2-markdown-route-work-footer-enable": "node scripts/smoke-vt-ui-23r2-markdown-route-work-footer-enable.mjs",
+    "smoke:vt-ui-23r3-public-content-adjacent-detail-pager": "node scripts/smoke-vt-ui-23r3-public-content-adjacent-detail-pager.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

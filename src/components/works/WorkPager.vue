@@ -2,11 +2,15 @@
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
 
-import type { WorkCardEntry } from '@/markdown/pageRegistry'
+export type WorkPagerEntry = {
+  href: string
+  title: string
+}
+
 
 const props = defineProps<{
-  previous?: WorkCardEntry | null
-  next?: WorkCardEntry | null
+  previous?: WorkPagerEntry | null
+  next?: WorkPagerEntry | null
 }>()
 
 const routerBase = import.meta.env.BASE_URL || '/'
@@ -21,7 +25,7 @@ function stripRouterBase(path: string): string {
   return path
 }
 
-function normalizeWorkRoute(entry?: WorkCardEntry | null): string {
+function normalizeWorkRoute(entry?: WorkPagerEntry | null): string {
   const rawHref = String(entry?.href || '').trim()
 
   if (!rawHref || rawHref === '#') return '/'
