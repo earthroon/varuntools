@@ -2169,3 +2169,70 @@ inquiry-form {
 }
 /* /VT-UI-22R6 custom minimal video controls */
 
+/* VT-UI-22R7 compact video viewer scale */
+.vt-video-player[data-orientation='portrait'],
+.vt-video-player--portrait {
+  width: min(100%, clamp(160px, 42vw, 190px));
+  max-width: 100%;
+}
+
+.vt-video-player[data-orientation='landscape'],
+.vt-video-player--landscape {
+  width: min(100%, 360px);
+  max-width: 100%;
+}
+
+.vt-video-player[data-orientation='square'],
+.vt-video-player--square {
+  width: min(100%, 260px);
+  max-width: 100%;
+}
+
+.vt-video-player__custom-controls {
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  gap: 6px;
+  padding: 5px 7px;
+  min-height: 30px;
+}
+
+.vt-video-player__control-button {
+  width: 24px;
+  height: 24px;
+  font-size: 0.72rem;
+}
+
+.vt-video-player__time {
+  font-size: 0.68rem;
+}
+
+.vt-video-player__progress {
+  min-width: 52px;
+}
+
+@media (max-width: 720px) {
+  .vt-video-player[data-orientation='portrait'],
+  .vt-video-player--portrait {
+    width: min(100%, clamp(160px, 46vw, 190px));
+  }
+
+  .vt-video-player[data-orientation='landscape'],
+  .vt-video-player--landscape {
+    width: min(100%, 340px);
+  }
+
+  .vt-video-player[data-orientation='square'],
+  .vt-video-player--square {
+    width: min(100%, 240px);
+  }
+
+  .vt-video-player__custom-controls {
+    grid-template-columns: auto 1fr;
+  }
+
+  .vt-video-player__time {
+    display: none;
+  }
+}
+/* /VT-UI-22R7 compact video viewer scale */
