@@ -140,6 +140,32 @@ export async function loadMarkdownPageBySlug(rawSlug: string): Promise<LoadedMar
   return pendingLoad
 }
 
+
+function uniqueLoadedMarkdownPages(pages: LoadedMarkdownPage[]): LoadedMarkdownPage[] {
+  const bySlug = new Map<string, LoadedMarkdownPage>()
+
+  for (const page of pages) {
+    const slug = normalizeSlugString(page.slug || page.contentDir)
+    if (!slug || bySlug.has(slug)) continue
+    bySlug.set(slug, page)
+  }
+
+  return Array.from(bySlug.values())
+}
+
+export function readCachedMarkdownPages(): LoadedMarkdownPage[] {
+  return uniqueLoadedMarkdownPages(Array.from(pageCache.values()))
+}
+
+export async function loadAllMarkdownPages(): Promise<LoadedMarkdownPage[]> {
+  const loadedPages = await Promise.all(
+    markdownRouteIndexEntries.map((entry) => loadMarkdownPageBySlug(entry.slug)),
+  )
+
+  return uniqueLoadedMarkdownPages(
+    loadedPages.filter((page): page is LoadedMarkdownPage => Boolean(page)),
+  )
+}
 export function readCachedMarkdownPageBySlug(rawSlug: string): LoadedMarkdownPage | null {
   const slug = normalizeSlugString(rawSlug)
   if (!slug) return null

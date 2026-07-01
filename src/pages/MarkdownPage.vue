@@ -2,7 +2,12 @@
 import { computed, ref, shallowRef, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import MarkdownDocumentView from '@/components/markdown/MarkdownDocumentView.vue'
-import { loadMarkdownPageBySlug, readCachedMarkdownPageBySlug } from '@/markdown/lazyMarkdownPageLoader'
+import {
+  loadAllMarkdownPages,
+  loadMarkdownPageBySlug,
+  readCachedMarkdownPageBySlug,
+  readCachedMarkdownPages,
+} from '@/markdown/lazyMarkdownPageLoader'
 import { normalizePageSlug } from '@/markdown/pageLookup'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 
@@ -11,8 +16,12 @@ type MarkdownRouteLoadState = 'idle' | 'loading' | 'ready' | 'not_found' | 'erro
 const route = useRoute()
 const slug = computed(() => normalizePageSlug(route.params.slug, 'home'))
 const initialCachedPage = readCachedMarkdownPageBySlug(slug.value)
+const initialCachedPages = readCachedMarkdownPages()
 
 const page = shallowRef<LoadedMarkdownPage | null>(initialCachedPage)
+const pages = shallowRef<LoadedMarkdownPage[]>(
+  initialCachedPages.length ? initialCachedPages : initialCachedPage ? [initialCachedPage] : [],
+)
 const loadState = ref<MarkdownRouteLoadState>(initialCachedPage ? 'ready' : 'idle')
 const loadError = ref('')
 let requestId = 0
@@ -21,6 +30,15 @@ watch(
   slug,
   async (nextSlug) => {
     const currentRequestId = ++requestId
+    const allPagesPromise = loadAllMarkdownPages()
+
+    allPagesPromise
+      .then((loadedPages) => {
+        if (currentRequestId === requestId) {
+          pages.value = loadedPages
+        }
+      })
+      .catch(() => {})
     const cachedPage = readCachedMarkdownPageBySlug(nextSlug)
     if (cachedPage) {
       page.value = cachedPage
@@ -100,8 +118,8 @@ const notFoundMessage = computed(() => {
 <template>
   <MarkdownDocumentView
     :page="page"
-    :pages="[]"
-    :show-related-footer="false"
+    :pages="pages"
+    :show-related-footer="true"
     :not-found-title="notFoundTitle"
     :not-found-message="notFoundMessage"
   />
