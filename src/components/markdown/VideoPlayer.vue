@@ -41,6 +41,9 @@ const props = withDefaults(defineProps<{
   ratio?: VideoRatio
   fit?: VideoFit
   breakout?: boolean
+  manifestWidth?: number
+  manifestHeight?: number
+  duration?: number
   tracks?: VideoTrack[]
 }>(), {
   src: '',
@@ -120,9 +123,21 @@ const intrinsicRatio = computed(() => {
   return String(videoWidth.value) + ' / ' + String(videoHeight.value)
 })
 
+const manifestRatio = computed(() => {
+  if (!props.manifestWidth || !props.manifestHeight) {
+    return ''
+  }
+
+  return String(props.manifestWidth) + ' / ' + String(props.manifestHeight)
+})
+
 const resolvedRatio = computed(() => {
   if (props.ratio !== 'auto') {
     return ratioToCss(props.ratio)
+  }
+
+  if (manifestRatio.value) {
+    return manifestRatio.value
   }
 
   return intrinsicRatio.value
@@ -130,8 +145,10 @@ const resolvedRatio = computed(() => {
 
 const orientation = computed<VideoOrientation>(() => {
   const fallback = ratioToSize(props.ratio)
-  const width = props.ratio === 'auto' ? videoWidth.value || fallback.width : fallback.width
-  const height = props.ratio === 'auto' ? videoHeight.value || fallback.height : fallback.height
+  const manifestWidth = props.manifestWidth || 0
+  const manifestHeight = props.manifestHeight || 0
+  const width = props.ratio === 'auto' ? videoWidth.value || manifestWidth || fallback.width : fallback.width
+  const height = props.ratio === 'auto' ? videoHeight.value || manifestHeight || fallback.height : fallback.height
 
   if (width === height) return 'square'
   return width > height ? 'landscape' : 'portrait'
@@ -232,6 +249,7 @@ function handleTogglePlayback(event?: Event) {
     data-vt-ui22r1-video-frame-center="1"
     data-vt-ui22-video-frame-size-authority="wrapper"
     data-vt-ui22r2-visual-surface-guard="soft-letterbox"
+    data-vt-ui22r3-shell-policy="inset-clip"
   >
     <div
       v-if="canRenderVideo"
@@ -243,6 +261,7 @@ function handleTogglePlayback(event?: Event) {
       @click="handleTogglePlayback"
       @keydown.self.space.prevent="handleTogglePlayback"
     >
+      <div class="vt-video-player__clip" data-vt-ui22r3-inner-clip="1">
       <video
         ref="videoElement"
         class="vt-video-player__video"
@@ -275,6 +294,7 @@ function handleTogglePlayback(event?: Event) {
         />
         이 브라우저는 비디오 재생을 지원하지 않습니다.
       </video>
+      </div>
     </div>
 
     <div v-else-if="isStreamOnly" class="vt-video-player__unsupported" role="status">

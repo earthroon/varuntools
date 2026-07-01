@@ -472,12 +472,15 @@ export function mountMarkdownComponents(
       loop: boolAttr(el.dataset.loop, false),
       muted: boolAttr(el.dataset.muted, false),
       playsInline: boolAttr(el.dataset.playsInline || el.dataset.playsinline, true),
-      controls: boolAttr(el.dataset.controls, true),
+      controls: boolAttr(el.dataset.controls, false),
       preload: normalizeVideoPreload(el.dataset.preload),
       tracks: parseJsonAttr(el.dataset.tracks, []),
       ratio: normalizeVideoRatio(el.dataset.ratio),
       fit: normalizeVideoFit(el.dataset.fit),
       breakout: boolAttr(el.dataset.breakout, false),
+      manifestWidth: numberAttr(el.dataset.width, 0) || undefined,
+      manifestHeight: numberAttr(el.dataset.height, 0) || undefined,
+      duration: numberAttr(el.dataset.duration, 0) || undefined,
     }
 
     const mountedApp = mountOne(element, VideoPlayer, props)

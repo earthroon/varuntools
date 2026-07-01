@@ -625,9 +625,10 @@ video-player {
 .vt-video-player {
   --vt-video-ratio: 16 / 9;
   --vt-video-fit: contain;
-  --vt-video-frame-bg:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.46));
-  --vt-video-frame-border: rgba(24, 28, 24, 0.12);
+  --vt-video-frame-bg: transparent;
+  --vt-video-frame-border: transparent;
+  --vt-video-inner-inset: 1px;
+  --vt-video-inner-radius: 1.5px;
   box-sizing: border-box;
   width: min(100%, var(--vt-video-frame-max-width, 720px));
   max-width: 100%;
@@ -636,7 +637,7 @@ video-player {
 
 .vt-video-player[data-orientation='portrait'],
 .vt-video-player--portrait {
-  width: min(82%, 390px, 46svh);
+  width: min(74vw, 340px, 46svh);
   max-width: 100%;
 }
 
@@ -647,7 +648,7 @@ video-player {
 
 .vt-video-player[data-orientation='square'],
 .vt-video-player--square {
-  width: min(84vw, 520px, 72svh);
+  width: min(82vw, 500px, 72svh);
   max-width: 100%;
 }
 
@@ -663,22 +664,28 @@ video-player {
   position: relative;
   width: 100%;
   aspect-ratio: var(--vt-video-ratio);
-  overflow: hidden;
-  border-radius: var(--vt-radius-md);
-  border: 1px solid var(--vt-video-frame-border);
-  background: var(--vt-video-frame-bg);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.72),
-    0 18px 48px rgba(24, 28, 24, 0.10);
+  overflow: visible;
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
   contain: layout paint;
   transform: translateZ(0);
   backface-visibility: hidden;
-  cursor: pointer;
 }
 
 .vt-video-player__stage:focus-visible {
   outline: 2px solid rgba(10, 132, 255, 0.58);
   outline-offset: 4px;
+}
+
+.vt-video-player__clip {
+  position: absolute;
+  inset: var(--vt-video-inner-inset);
+  overflow: hidden;
+  border-radius: var(--vt-video-inner-radius);
+  background: transparent;
+  isolation: isolate;
 }
 
 .vt-video-player__video {
@@ -748,7 +755,7 @@ video-player {
   }
 
   .vt-video-player__stage {
-    border-radius: 22px;
+    border-radius: 0;
   }
 
   .vt-video-player[data-orientation='landscape'],
@@ -758,12 +765,12 @@ video-player {
 
   .vt-video-player[data-orientation='portrait'],
   .vt-video-player--portrait {
-    width: min(76%, 340px, 46svh);
+    width: min(72vw, 320px, 46svh);
   }
 
   .vt-video-player[data-orientation='square'],
   .vt-video-player--square {
-    width: min(84vw, 520px, 72svh);
+    width: min(82vw, 480px, 72svh);
   }
 
   .vt-video-player__caption {
