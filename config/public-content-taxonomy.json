@@ -67,8 +67,10 @@
   "collectionIndexSlugs": [
     "home",
     "index",
+    "works",
     "products",
     "products/categories",
+    "products/categories/templates",
     "post",
     "lab",
     "tools"
