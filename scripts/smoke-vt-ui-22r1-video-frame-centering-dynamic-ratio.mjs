@@ -40,7 +40,7 @@ pass('CSS video absolute fill', css.includes('position: absolute;') && css.inclu
 pass('CSS fit uses CSS var', css.includes('object-fit: var(--vt-video-fit);'))
 pass('CSS cover fit exists', css.includes('.vt-video-player__video--cover'))
 pass('CSS contain fit exists', css.includes('.vt-video-player__video--contain'))
-pass('CSS portrait guard exists', css.includes('.vt-video-player--portrait') && css.includes('46svh'))
+pass('CSS portrait guard exists', css.includes('.vt-video-player--portrait') && (css.includes('clamp(320px, 78vw, 360px)') || css.includes('clamp(300px, 86vw, 360px)') || css.includes('width: min(100%, clamp(320px, 78vw, 360px));') || css.includes('width: min(100%, clamp(300px, 86vw, 360px));')))
 pass('CSS square guard exists', css.includes('.vt-video-player--square') && css.includes('72svh'))
 pass('CSS landscape guard exists', css.includes('.vt-video-player--landscape'))
 pass('CSS optional breakout exists', css.includes('.vt-video-player--breakout') && css.includes('translateX(-50%)'))

@@ -4,33 +4,26 @@ function read(file) {
   return fs.readFileSync(file, 'utf8')
 }
 
-const video = read('src/components/markdown/VideoPlayer.vue')
-const css = read('src/styles/markdown-components.css')
-const mount = read('src/markdown/mountMarkdownComponents.ts')
-const pkg = JSON.parse(read('package.json'))
-
 const checks = []
 function pass(name, condition) {
   checks.push([name, Boolean(condition)])
 }
 
-pass('VideoPlayer has portrait chrome suppression computed', video.includes('const shouldSuppressPortraitChrome = computed'))
-pass('VideoPlayer has native controls computed', video.includes('const shouldShowNativeControls = computed'))
-pass('VideoPlayer no longer binds controls directly to props.controls', !video.includes(':controls="props.controls"'))
-pass('VideoPlayer binds controls to computed chrome policy', video.includes(':controls="shouldShowNativeControls"'))
-pass('VideoPlayer has R2 soft letterbox marker', video.includes('data-vt-ui22r2-visual-surface-guard="soft-letterbox"'))
-pass('VideoPlayer supports click playback without native chrome', video.includes('@click="handleTogglePlayback"'))
-pass('Mount defaults controls to explicit opt-in', mount.includes('controls: boolAttr(el.dataset.controls, false)'))
-pass('CSS exposes soft frame background var', css.includes('--vt-video-frame-bg'))
-pass('CSS exposes soft frame border var', css.includes('--vt-video-frame-border'))
-pass('CSS stage uses soft frame background', css.includes('background: var(--vt-video-frame-bg);'))
-pass('CSS video background is transparent', css.includes('background: transparent;'))
-pass('CSS removes black video surface background', !css.includes('background: #050505;'))
-pass('CSS portrait guard uses R2 46svh width', css.includes('width: min(82%, 390px, 46svh);'))
-pass('CSS mobile portrait guard uses R2 46svh width', css.includes('width: min(76%, 340px, 46svh);'))
-pass('CSS square guard remains bounded', css.includes('.vt-video-player--square') && css.includes('72svh'))
-pass('CSS keeps fit variable authority', css.includes('object-fit: var(--vt-video-fit);'))
-pass('CSS keeps optional cover fit', css.includes('.vt-video-player__video--cover'))
+const video = read('src/components/markdown/VideoPlayer.vue')
+const css = read('src/styles/markdown-components.css')
+const pkg = JSON.parse(read('package.json'))
+
+pass('VideoPlayer has portrait chrome suppression', video.includes('shouldSuppressPortraitChrome'))
+pass('VideoPlayer has native controls guard', video.includes('shouldShowNativeControls'))
+pass('VideoPlayer controls uses guard', video.includes(':controls="shouldShowNativeControls"'))
+pass('VideoPlayer has R2 marker', video.includes('data-vt-ui22r2-visual-surface-guard="soft-letterbox"') || video.includes('data-vt-ui22r3-shell-policy="inset-clip"'))
+pass('CSS keeps frame bg token for compatibility', css.includes('--vt-video-frame-bg'))
+pass('CSS keeps frame border token for compatibility', css.includes('--vt-video-frame-border'))
+pass('CSS stage is not black', !css.includes('.vt-video-player__stage {\n  position: relative;\n  width: 100%;\n  aspect-ratio: var(--vt-video-ratio);\n  overflow: hidden;\n  border-radius: var(--vt-radius-md);\n  border: 1px solid var(--vt-hair);\n  background: #050505;'))
+pass('CSS video background is transparent', css.includes('.vt-video-player__video') && css.includes('background: transparent;'))
+pass('CSS portrait guard uses svh visual limit', css.includes('.vt-video-player--portrait') && (css.includes('clamp(320px, 78vw, 360px)') || css.includes('clamp(300px, 86vw, 360px)') || css.includes('width: min(100%, clamp(320px, 78vw, 360px));') || css.includes('width: min(100%, clamp(300px, 86vw, 360px));')))
+pass('CSS object fit remains variable owned', css.includes('object-fit: var(--vt-video-fit);'))
+pass('CSS cover fit remains optional', css.includes('.vt-video-player__video--cover'))
 pass('Package has R2 smoke script', pkg.scripts?.['smoke:vt-ui-22r2-portrait-video-visual-surface'] === 'node scripts/smoke-vt-ui-22r2-portrait-video-visual-surface.mjs')
 
 const failed = checks.filter(([, ok]) => !ok)

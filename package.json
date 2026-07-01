@@ -283,7 +283,8 @@
     "smoke:vt-ui-22-mobile-video-frame-stability": "node scripts/smoke-vt-ui-22-mobile-video-frame-stability.mjs",
     "smoke:vt-ui-22r1-video-frame-centering-dynamic-ratio": "node scripts/smoke-vt-ui-22r1-video-frame-centering-dynamic-ratio.mjs",
     "smoke:vt-ui-22r2-portrait-video-visual-surface": "node scripts/smoke-vt-ui-22r2-portrait-video-visual-surface.mjs",
-    "smoke:vt-ui-22r3-video-inner-inset-manifest": "node scripts/smoke-vt-ui-22r3-video-inner-inset-manifest.mjs"
+    "smoke:vt-ui-22r3-video-inner-inset-manifest": "node scripts/smoke-vt-ui-22r3-video-inner-inset-manifest.mjs",
+    "smoke:vt-ui-22r4-mobile-portrait-desktop-parity": "node scripts/smoke-vt-ui-22r4-mobile-portrait-desktop-parity.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",
