@@ -1,5 +1,6 @@
 import type { LoadedMarkdownPage } from './types'
 import { getCollectionKey, resolveContentKind, resolvePublicExposure } from '@/content/exposureTaxonomy'
+import { getAdjacentWorks } from '@/utils/getAdjacentWorks'
 
 export type WorkType =
   | 'case-study'
@@ -521,17 +522,7 @@ export function getAdjacentWorkEntries(
   previous: WorkCardEntry | null
   next: WorkCardEntry | null
 } {
-  const sorted = sortWorkEntries(entries, 'featured')
-  const index = sorted.findIndex((entry) => entry.slug === current.slug)
-
-  if (index < 0) {
-    return { previous: null, next: null }
-  }
-
-  return {
-    previous: sorted[index - 1] || null,
-    next: sorted[index + 1] || null,
-  }
+  return getAdjacentWorks(entries, current.slug)
 }
 
 export function getWorkDetailContext(

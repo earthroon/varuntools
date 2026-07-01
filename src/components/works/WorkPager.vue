@@ -60,3 +60,52 @@ const nextTo = computed(() => normalizeWorkRoute(props.next))
     </RouterLink>
   </nav>
 </template>
+
+
+<style scoped>
+/* VT-UI-23 work adjacent navigation context */
+.vt-work-pager {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-block-start: 80px;
+}
+
+.vt-work-pager__link {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 112px;
+  padding: 20px;
+  border: 1px solid currentColor;
+  border-radius: 18px;
+  text-decoration: none;
+}
+
+.vt-work-pager__link.is-next {
+  text-align: right;
+}
+
+.vt-work-pager__link span {
+  font-size: 12px;
+  opacity: 0.64;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.vt-work-pager__link strong {
+  font-size: clamp(1rem, 1.6vw, 1.18rem);
+  line-height: 1.3;
+}
+
+@media (max-width: 720px) {
+  .vt-work-pager {
+    grid-template-columns: 1fr;
+    margin-block-start: 56px;
+  }
+
+  .vt-work-pager__link.is-next {
+    text-align: left;
+  }
+}
+</style>
