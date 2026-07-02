@@ -27,7 +27,7 @@ ogImage: "/og/default-og.svg"
 type: ssot
 title: 바룬툴즈 안내
 ::
-디자인작업, 자동화 도구 등을 한 곳에 묶은 개인 작업실형 홈페이지입니다.
+이미지를 꾸미기보다, 이미지가 완성되는 방식을 설계하는 곳입니다.
 ::
 
 ::home-section
