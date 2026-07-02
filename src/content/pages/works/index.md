@@ -7,6 +7,7 @@ description: "작업 목록 설명 문서"
 summary: "감정, 구조, 기술을 하나의 흐름으로 읽는 VARUNTOOLS 대표 작업 인덱스"
 kind: "page"
 status: "active"
+visibility: "hidden"
 featured: false
 order: 2
 ---

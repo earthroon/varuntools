@@ -7,7 +7,7 @@ description: "바룬툴즈 템플릿 상품 카테고리입니다."
 summary: "Notion, 문서, 워크플로우 템플릿 계열 상품을 모아봅니다."
 kind: "page"
 status: "active"
-visibility: "public"
+visibility: "hidden"
 featured: false
 order: 22
 tags:
