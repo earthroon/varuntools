@@ -30,7 +30,7 @@ slug: "post/moving1"
 source: "vacms"
 vacmsSlug: "moving1"
 vacmsPageId: "page_6b7a2b2b721c5e6f37fa59b5"
-vacmsRevisionId: "rev_7e15afac1a3cb301ef977f16"
+vacmsRevisionId: "rev_28a024353eaae1aa7c464dda"
 vacmsProjectionSchema: "vacms-public-projection@1"
 ---
 
@@ -41,8 +41,8 @@ layout: compact
 
 ::video
 sourceMode: asset
-videoAssetId: asset_c4ef66addedeaf2b9782899e
-src: /assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_c4ef66addedeaf2b9782899e/mp4
+videoAssetId: asset_bd4ca9978eac2966c85da56a
+src: /assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_bd4ca9978eac2966c85da56a/mp4
 poster: /media/example-poster.jpg
 title: 구글이 움직인다
 controls: true

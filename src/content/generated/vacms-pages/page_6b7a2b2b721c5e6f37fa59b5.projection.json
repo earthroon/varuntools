@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
-    "revisionId": "rev_7e15afac1a3cb301ef977f16",
+    "revisionId": "rev_28a024353eaae1aa7c464dda",
     "slug": "post/moving1",
     "routePath": "/post/moving1",
     "title": "구글이 움직인다",
@@ -13,10 +13,10 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:0277a819159167fe4a012969444c10b04944892128c5b9411755cb66307c54c6",
+    "contentHash": "sha256:1309631d301ee7fbe53ae09f811a790b0bfb8e9fa0431445c097617c8a7173b5",
     "timing": {
-      "revisionCreatedAt": "2026-08-28T21:40:25.488Z",
-      "publishJobCreatedAt": "2026-08-28T21:40:32.484Z",
+      "revisionCreatedAt": "2026-08-28T21:43:01.270Z",
+      "publishJobCreatedAt": "2026-08-28T21:43:08.226Z",
       "explicitPublishedAt": "2026-08-29"
     }
   },
@@ -536,6 +536,56 @@
         "fieldSources": {
           "width": "materialized_hint",
           "height": "materialized_hint"
+        }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_bd4ca9978eac2966c85da56a",
+      "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
+      "role": "video",
+      "filename": "mp4",
+      "mime": "video/mp4",
+      "publicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_bd4ca9978eac2966c85da56a/mp4",
+      "sizeBytes": 132710145,
+      "hash": null,
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "media": {
+        "state": "legacy_ready",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 1080,
+        "height": 1920,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": "56123",
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height",
+          "durationMs"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "legacy_video",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "legacy_video",
+          "height": "legacy_video",
+          "durationMs": "legacy_video"
         }
       }
     },
