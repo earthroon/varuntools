@@ -256,6 +256,12 @@ jobs:
           }
 
           const data = payload.data
+          if (data.schemaVersion !== 'vacms-publish-export-payload@r4') {
+            throw new Error(`CMS-207M-R1 export schema mismatch: ${String(data.schemaVersion || '')}`)
+          }
+          if (!data.publicProjection || data.publicProjection.schemaVersion !== 'vacms-public-projection@1') {
+            throw new Error('CMS-207M-R1 publicProjection is missing or invalid')
+          }
           const generatedPath = String(data.snapshot?.generatedPath || '')
           if (!generatedPath) throw new Error('generatedPath is missing')
           if (!/^(src\/content\/pages\/|src\/content\/generated\/|public\/content\/)/.test(generatedPath)) {
@@ -314,6 +320,7 @@ jobs:
             vacmsSlug,
             vacmsPageId: page.id || data.job?.pageId || '',
             vacmsRevisionId: revision.id || data.job?.revisionId || '',
+            vacmsProjectionSchema: 'vacms-public-projection@1',
           }
 
           const bodySource = typeof revision.compiledMarkdown === 'string' && revision.compiledMarkdown.trim()
@@ -364,12 +371,22 @@ jobs:
           fs.mkdirSync(require('node:path').dirname(generatedPath), { recursive: true })
           fs.writeFileSync(generatedPath, content, 'utf8')
 
+          const safePageId = String(page.id || data.job?.pageId || '')
+            .trim()
+            .replace(/[^A-Za-z0-9._-]/g, '_')
+          if (!safePageId) throw new Error('CMS-207M-R1 page id is missing for projection sidecar')
+          const projectionSidecarPath = `src/content/generated/vacms-pages/${safePageId}.projection.json`
+          fs.mkdirSync(require('node:path').dirname(projectionSidecarPath), { recursive: true })
+          fs.writeFileSync(projectionSidecarPath, JSON.stringify(data.publicProjection, null, 2) + '\n', 'utf8')
+
           const contentHash = crypto.createHash('sha256').update(content).digest('hex')
           const receipt = {
             jobId: data.job?.id || process.env.JOB_ID,
             pageId: page.id || null,
             revisionId: revision.id || null,
             generatedPath,
+            projectionSidecarPath,
+            projectionSchemaVersion: data.publicProjection.schemaVersion,
             routePath: data.snapshot?.routePath || null,
             materializedSlug,
             vacmsSlug,
@@ -382,6 +399,16 @@ jobs:
           fs.writeFileSync('vacms-generated-path.txt', generatedPath)
           NODE
           echo "materialize" > vacms-last-success-stage.txt
+
+      - name: Build CMS-207M-R1 source projections
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/build-public-content-projection.mjs
+          node scripts/build-public-asset-manifest.mjs
+          node scripts/build-home-collections.mjs
+          echo "cms207m_r1_source_projection" > vacms-last-success-stage.txt
 
       - name: Commit materialized source back to main
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
@@ -426,6 +453,14 @@ jobs:
           set -euo pipefail
           npm run build
           echo "build" > vacms-last-success-stage.txt
+
+      - name: Verify CMS-207M-R1 public projection contract
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm run smoke:cms207m:r1
+          echo "cms207m_r1_public_projection" > vacms-last-success-stage.txt
 
       - name: Materialize static route HTML
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}

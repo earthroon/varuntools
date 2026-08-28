@@ -36,6 +36,7 @@ import PortfolioRelatedWorks from '@/components/portfolio/PortfolioRelatedWorks.
 import DemoFrame from '@/components/demo/DemoFrame.vue'
 import { resolveContentAssetMeta } from './resolveContentAssets'
 import { resolveMediaAsset } from '@/content/assetRegistry'
+import { resolvePublicVideoAssetProjection } from '@/content/usePublicAssetProjection'
 import { parseGalleryStripItems } from './galleryStripItems'
 import { parseImageSequenceTemplateItems } from './imageSequenceItems'
 import type { LoadedMarkdownPage } from './types'
@@ -449,27 +450,51 @@ export function mountMarkdownComponents(
     const el = element as HTMLElement
     const rawSrc = el.dataset.src || el.dataset.fallback || ''
     const rawStream = el.dataset.stream || ''
-    const videoAsset = resolveMediaAsset({
-      source: rawStream || rawSrc,
-      contentDir: options.contentDir,
-      expectedType: rawStream ? 'stream' : 'video',
-    })
-    const posterAsset = resolveMediaAsset({
-      source: el.dataset.poster || '',
-      contentDir: options.contentDir,
-      expectedType: 'image',
-    })
+    const videoAssetId = el.dataset.videoassetid || el.dataset.videoAssetId || ''
+    const projectedVideo = resolvePublicVideoAssetProjection(videoAssetId)
+    const pageProjectionSchema = String((options.page?.frontmatter as Record<string, unknown> | undefined)?.vacmsProjectionSchema ?? '').trim()
+    const projectionRequired = pageProjectionSchema === 'vacms-public-projection@1'
+    const useAssetProjection = Boolean(videoAssetId && (projectedVideo.found || projectionRequired))
+
+    const videoAsset = useAssetProjection
+      ? null
+      : resolveMediaAsset({
+          source: rawStream || rawSrc,
+          contentDir: options.contentDir,
+          expectedType: rawStream ? 'stream' : 'video',
+        })
+    const posterAsset = useAssetProjection
+      ? null
+      : resolveMediaAsset({
+          source: el.dataset.poster || '',
+          contentDir: options.contentDir,
+          expectedType: 'image',
+        })
 
     const props = {
-      src: videoAsset.mediaType === 'video' ? videoAsset.url : '',
-      stream: videoAsset.mediaType === 'stream' ? videoAsset.url : '',
-      poster: posterAsset.found ? posterAsset.url : '',
-      srcFound: videoAsset.found && videoAsset.mediaType === 'video',
-      posterFound: posterAsset.found,
-      srcReason: videoAsset.reason || videoAsset.mediaWarning || '',
-      posterReason: posterAsset.reason || posterAsset.mediaWarning || '',
-      source: rawStream || rawSrc,
-      posterSource: el.dataset.poster || '',
+      src: useAssetProjection
+        ? projectedVideo.src
+        : videoAsset?.mediaType === 'video' ? videoAsset.url : '',
+      stream: useAssetProjection
+        ? ''
+        : videoAsset?.mediaType === 'stream' ? videoAsset.url : '',
+      poster: useAssetProjection
+        ? projectedVideo.poster
+        : posterAsset?.found ? posterAsset.url : '',
+      srcFound: useAssetProjection
+        ? projectedVideo.found
+        : Boolean(videoAsset?.found && videoAsset.mediaType === 'video'),
+      posterFound: useAssetProjection
+        ? Boolean(projectedVideo.poster)
+        : Boolean(posterAsset?.found),
+      srcReason: useAssetProjection
+        ? projectedVideo.reason
+        : videoAsset?.reason || videoAsset?.mediaWarning || '',
+      posterReason: useAssetProjection
+        ? projectedVideo.poster ? '' : 'asset_projection_poster_missing'
+        : posterAsset?.reason || posterAsset?.mediaWarning || '',
+      source: useAssetProjection ? `asset:${videoAssetId}` : rawStream || rawSrc,
+      posterSource: useAssetProjection ? projectedVideo.poster : el.dataset.poster || '',
       title: el.dataset.title || '',
       caption: el.dataset.caption || '',
       autoplay: boolAttr(el.dataset.autoplay, false),
@@ -482,9 +507,9 @@ export function mountMarkdownComponents(
       ratio: normalizeVideoRatio(el.dataset.ratio),
       fit: normalizeVideoFit(el.dataset.fit),
       breakout: boolAttr(el.dataset.breakout, false),
-      manifestWidth: numberAttr(el.dataset.width, 0) || undefined,
-      manifestHeight: numberAttr(el.dataset.height, 0) || undefined,
-      duration: numberAttr(el.dataset.duration, 0) || undefined,
+      manifestWidth: projectedVideo.manifestWidth || numberAttr(el.dataset.width, 0) || undefined,
+      manifestHeight: projectedVideo.manifestHeight || numberAttr(el.dataset.height, 0) || undefined,
+      duration: projectedVideo.duration || numberAttr(el.dataset.duration, 0) || undefined,
     }
 
     const mountedApp = mountOne(element, VideoPlayer, props)

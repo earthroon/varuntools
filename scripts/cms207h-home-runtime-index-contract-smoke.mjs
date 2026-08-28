@@ -1,26 +1,38 @@
 #!/usr/bin/env node
 import fs from 'node:fs'
 
-const HOME_COMPONENT = 'src/components/home/HomeRecentPublicContent.vue'
-const COMPOSABLE = 'src/composables/useRuntimePublicContentIndex.ts'
-const PASS_STATUS = 'PASS_CMS_207H_HOME_RUNTIME_INDEX_CONTRACT_SMOKE'
-
 function fail(message) {
   throw new Error(message)
 }
-
-if (!fs.existsSync(HOME_COMPONENT)) fail('HomeRecentPublicContent.vue is missing')
-if (!fs.existsSync(COMPOSABLE)) fail('useRuntimePublicContentIndex.ts is missing')
-
-const home = fs.readFileSync(HOME_COMPONENT, 'utf8')
-const composable = fs.readFileSync(COMPOSABLE, 'utf8')
-
-for (const marker of ['useRuntimePublicContentIndex', 'runtimeEntries', 'runtimeStatus', 'allEntries.value', 'sourceEntries']) {
-  if (!home.includes(marker)) fail('home runtime index contract missing marker: ' + marker)
+function read(file) {
+  if (!fs.existsSync(file)) fail(`${file} is missing`)
+  return fs.readFileSync(file, 'utf8')
+}
+function requireMarker(source, marker, label) {
+  if (!source.includes(marker)) fail(`${label} missing marker: ${marker}`)
+}
+function forbidMarker(source, marker, label) {
+  if (source.includes(marker)) fail(`${label} forbidden marker: ${marker}`)
 }
 
-for (const marker of ['/public-content-index.json', 'cache:', 'no-store', 'runtimeStatus', 'fallback', 'console.warn']) {
-  if (!composable.includes(marker)) fail('runtime public content index composable missing marker: ' + marker)
-}
+const home = read('src/components/home/HomeRecentPublicContent.vue')
+const runtime = read('src/composables/useRuntimePublicContentIndex.ts')
+const homeBuilder = read('scripts/build-home-collections.mjs')
+const indexBuilder = read('scripts/build-public-content-index.mjs')
 
-console.log(PASS_STATUS)
+for (const marker of ['useHomeCollections', 'recentEntries', 'generated-home-collections']) {
+  requireMarker(home, marker, 'HomeRecentPublicContent.vue')
+}
+for (const marker of ['useRuntimePublicContentIndex', 'runtimeEntries', 'runtimeStatus']) {
+  forbidMarker(home, marker, 'HomeRecentPublicContent.vue')
+}
+for (const marker of ['/public-content-index.json', "cache: 'force-cache'", 'afterFirstPaintAsync', 'saveData', 'runtimeStatus', 'fallback']) {
+  requireMarker(runtime, marker, 'useRuntimePublicContentIndex.ts')
+}
+for (const marker of ["cache: 'no-store'", 'Date.now', '?v=']) {
+  forbidMarker(runtime, marker, 'useRuntimePublicContentIndex.ts')
+}
+requireMarker(homeBuilder, 'publicContentProjection.generated.json', 'build-home-collections.mjs')
+requireMarker(indexBuilder, 'publicContentProjection.generated.json', 'build-public-content-index.mjs')
+
+console.log('PASS_CMS_207H_HOME_RUNTIME_INDEX_CONTRACT_SMOKE')

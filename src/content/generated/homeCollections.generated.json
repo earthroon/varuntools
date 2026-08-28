@@ -1,6 +1,7 @@
 {
   "schemaVersion": "home-collections.v1",
-  "generatedAt": "2026-07-04T07:37:29.221Z",
+  "sourceSchemaVersion": "cms-207m-public-content-projection@1",
+  "projectionRevision": "CMS-207M-R1",
   "entries": [
     {
       "slug": "home",
@@ -39,7 +40,7 @@
       "title": "VARUNTOOLS 쇼룸",
       "description": "홈페이지와 스토어 카탈로그를 함께 운영하기 위한 콘텐츠 쇼룸 구조.",
       "category": "work",
-      "categoryLabel": "work",
+      "categoryLabel": "works",
       "kind": "work",
       "collection": "work",
       "tags": [
@@ -367,7 +368,7 @@
       "title": "Editorial Block Showcase",
       "description": "포트폴리오 편집 블록 미리보기 화면.",
       "category": "work",
-      "categoryLabel": "work",
+      "categoryLabel": "works",
       "kind": "work",
       "collection": "work",
       "tags": [
@@ -675,6 +676,32 @@
       "status": "active",
       "cover": "",
       "thumbnail": "",
+      "work": {
+        "hasWorkMetadata": false,
+        "status": "active",
+        "role": [],
+        "stack": [],
+        "period": "",
+        "type": "page"
+      }
+    },
+    {
+      "slug": "post/sdsdsds",
+      "href": "/post/sdsdsds",
+      "contentDir": "post/sdsdsds",
+      "title": "구글이 움직인다",
+      "description": "구글영상",
+      "category": "post",
+      "categoryLabel": "post",
+      "kind": "page",
+      "collection": "page",
+      "tags": [],
+      "order": 9999,
+      "featured": false,
+      "visibility": "public",
+      "status": "active",
+      "cover": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_c9ca9785b5d4c3c445d30f27/card-cover.webp",
+      "thumbnail": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_46b334e39cb58bfdd0ba53a1/thumbnail.webp",
       "work": {
         "hasWorkMetadata": false,
         "status": "active",

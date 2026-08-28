@@ -8,9 +8,10 @@ function fail(message) {
 
 const script = fs.readFileSync('scripts/commit-vacms-materialized-source.mjs', 'utf8')
 
-if (!script.includes("const PATCH_ID = 'CMS-207A'")) fail('commit script patch id must be CMS-207A')
-if (!script.includes('PASS_CMS_207A_VACMS_PUBLISH_INCREMENTAL_SOURCE_COMMIT_SEAL')) fail('missing CMS-207A pass status')
-if (!script.includes("run('git', ['add', generatedPath])")) fail('source commit must stage generatedPath only')
+if (!script.includes("const PATCH_ID = 'CMS-207A-R1'")) fail('commit script patch id must be CMS-207A-R1')
+if (!script.includes('PASS_CMS_207A_R1_VACMS_PUBLISH_INCREMENTAL_SOURCE_COMMIT_RUNTIME_RECEIPT_DIRTY_ALLOWED_SEAL')) fail('missing CMS-207A-R1 pass status')
+if (!script.includes("run('git', ['add', ...sourceFiles])")) fail('source commit must stage exact sourceFiles only')
+if (!script.includes('projectionSidecarPath')) fail('source commit must preserve CMS-207M-R1 projection sidecar')
 if (/run\('git', \['add', '\.'\]\)/.test(script) || /git add \./.test(script)) fail('git add . is forbidden')
 if (/git add dist/.test(script) || script.includes("run('git', ['add', 'dist'") || script.includes("run('git', ['add', 'dist/")) fail('git add dist is forbidden')
 if (!script.includes("run('git', ['diff', '--cached', '--name-only'])")) fail('commit script must inspect staged files')

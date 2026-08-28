@@ -9,6 +9,7 @@ const PASS_STATUS = 'PASS_CMS_207G_HOMEPAGE_STATIC_RECENT_FEED_PRERENDER'
 const RECEIPT_FILE = 'homepage-static-recent-feed-receipt.json'
 const DIST_HOME = 'dist/index.html'
 const CONTENT_ROOT = 'src/content/pages'
+const CONTENT_PROJECTION_FILE = 'src/content/generated/publicContentProjection.generated.json'
 const TAXONOMY_FILE = 'config/public-content-taxonomy.json'
 const DEFAULT_LIMIT = 6
 const INCLUDE_CATEGORIES = ['post', 'work', 'case-study', 'lab', 'tool', 'doc']
@@ -340,8 +341,15 @@ function main() {
 
   const taxonomy = loadTaxonomy()
   const expected = loadExpectedRoute()
-  const files = listMarkdownIndexFiles(CONTENT_ROOT)
-  const allEntries = files.map((file) => entryFromMarkdown(file, taxonomy))
+  const projection = readJson(CONTENT_PROJECTION_FILE, null)
+  if (!projection || projection.schemaVersion !== 'cms-207m-public-content-projection@1' || !Array.isArray(projection.entries)) {
+    fail('CMS_207M_PUBLIC_CONTENT_PROJECTION_MISSING', 'CMS-207M-R1 public content projection is missing or invalid.')
+  }
+  const allEntries = projection.entries.map((entry) => ({
+    ...entry,
+    sourcePath: entry.sourcePath || '',
+    time: Number.isFinite(Number(entry.time)) ? Number(entry.time) : 0,
+  }))
   const eligibleEntries = allEntries.filter((entry) => isEligible(entry, taxonomy)).sort(compareEntries)
   const feedEntries = eligibleEntries.slice(0, DEFAULT_LIMIT)
 

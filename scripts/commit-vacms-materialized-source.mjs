@@ -73,6 +73,16 @@ function isSafeGeneratedPath(value) {
   return true
 }
 
+function isSafeProjectionSidecarPath(value) {
+  const sidecar = normalizeSlash(value)
+  if (!sidecar) return false
+  if (path.isAbsolute(sidecar)) return false
+  if (sidecar.includes('..') || sidecar.includes('\\')) return false
+  if (!sidecar.startsWith('src/content/generated/vacms-pages/')) return false
+  if (!sidecar.endsWith('.projection.json')) return false
+  return !sidecar.split('/').some((segment) => segment.startsWith('.') || segment === '')
+}
+
 function currentBranch() {
   return run('git', ['rev-parse', '--abbrev-ref', 'HEAD'])
 }
@@ -92,8 +102,8 @@ function ensureGitAuthor() {
   }
 }
 
-function exactGeneratedDiff(generatedPath) {
-  const status = run('git', ['status', '--porcelain', '--', generatedPath])
+function exactSourceDiff(sourceFiles) {
+  const status = run('git', ['status', '--porcelain', '--', ...sourceFiles])
   return Boolean(status.trim())
 }
 
@@ -138,8 +148,8 @@ function isReceiptOrRuntimeEvidence(file) {
   return runtimeReceiptFiles().includes(normalizeSlash(file))
 }
 
-function forbiddenFilesForSourceCommit(files, generatedPath) {
-  const allowed = new Set([normalizeSlash(generatedPath)])
+function forbiddenFilesForSourceCommit(files, sourceFiles) {
+  const allowed = new Set(sourceFiles.map(normalizeSlash))
   return files.filter((file) => {
     const normalized = normalizeSlash(file)
     if (!normalized) return false
@@ -157,9 +167,9 @@ function computeForbiddenFlags(files) {
   }
 }
 
-function blockForbiddenFiles(files, generatedPath) {
+function blockForbiddenFiles(files, sourceFiles) {
   const normalized = files.map(normalizeSlash).filter(Boolean)
-  const forbidden = forbiddenFilesForSourceCommit(normalized, generatedPath)
+  const forbidden = forbiddenFilesForSourceCommit(normalized, sourceFiles)
   const flags = computeForbiddenFlags(normalized)
 
   if (flags.homepageRewritten) {
@@ -190,6 +200,13 @@ function commitMaterializedSource() {
   const materialization = readJson(materializationPath)
   const generatedPath = normalizeSlash(materialization.generatedPath || (fs.existsSync('vacms-generated-path.txt') ? fs.readFileSync('vacms-generated-path.txt', 'utf8').trim() : ''))
   const materializedSlug = normalizeSlug(materialization.materializedSlug || materialization.routePath || generatedPath.replace(/^src\/content\/pages\//, '').replace(/\/index\.md$/, ''))
+  const projectionSidecarPath = normalizeSlash(materialization.projectionSidecarPath || '')
+  const projectionDerivedFiles = projectionSidecarPath ? [
+    'src/content/generated/publicContentProjection.generated.json',
+    'src/content/generated/publicAssetManifest.generated.json',
+    'src/content/generated/homeCollections.generated.json',
+  ] : []
+  const sourceFiles = [...new Set([generatedPath, ...(projectionSidecarPath ? [projectionSidecarPath] : []), ...projectionDerivedFiles])]
   const jobId = String(materialization.jobId || process.env.JOB_ID || '')
 
   const receipt = {
@@ -199,6 +216,7 @@ function commitMaterializedSource() {
     jobId,
     sourceBranch: 'main',
     generatedPath,
+    projectionSidecarPath: projectionSidecarPath || null,
     routePath: materialization.routePath || null,
     materializedSlug,
     contentHash: materialization.contentHash || null,
@@ -224,6 +242,13 @@ function commitMaterializedSource() {
     if (!isSafeGeneratedPath(generatedPath)) fail('CMS_207A_GENERATED_PATH_UNSAFE', 'generatedPath is unsafe or outside src/content/pages/**/index.md: ' + generatedPath)
     if (!fs.existsSync(generatedPath)) fail('CMS_207A_GENERATED_SOURCE_MISSING', 'generated source is missing: ' + generatedPath)
     if (!generatedPath.endsWith('/index.md')) fail('CMS_207A_GENERATED_SOURCE_NOT_MARKDOWN_INDEX', 'generated source is not an index.md file: ' + generatedPath)
+    if (projectionSidecarPath) {
+      if (!isSafeProjectionSidecarPath(projectionSidecarPath)) fail('CMS_207M_R1_PROJECTION_SIDECAR_PATH_UNSAFE', 'projection sidecar path is unsafe: ' + projectionSidecarPath)
+      if (!fs.existsSync(projectionSidecarPath)) fail('CMS_207M_R1_PROJECTION_SIDECAR_MISSING', 'projection sidecar is missing: ' + projectionSidecarPath)
+      for (const derivedFile of projectionDerivedFiles) {
+        if (!fs.existsSync(derivedFile)) fail('CMS_207M_R1_DERIVED_PROJECTION_MISSING', 'derived projection source is missing: ' + derivedFile)
+      }
+    }
 
     const branch = currentBranch()
     if (branch !== 'main') fail('CMS_207A_NOT_ON_MAIN', 'current branch must be main; got ' + branch)
@@ -235,14 +260,14 @@ function commitMaterializedSource() {
     const preStagedFiles = stagedFiles()
     const dirtySourceFiles = statusFiles(sourceDirtyGuardFiles())
     const preflightFiles = [...new Set([...preStagedFiles, ...dirtySourceFiles])]
-    const preflight = blockForbiddenFiles(preflightFiles, generatedPath)
+    const preflight = blockForbiddenFiles(preflightFiles, sourceFiles)
     receipt.workflowArtifactReceiptFiles = dirtyRuntimeReceiptFiles()
     receipt.homepageRewritten = preflight.flags.homepageRewritten
     receipt.distCommittedToMain = preflight.flags.distCommittedToMain
     receipt.registrySourceCommitted = preflight.flags.registrySourceCommitted
     receipt.receiptCommittedToMain = preflight.flags.receiptCommittedToMain
 
-    if (!exactGeneratedDiff(generatedPath)) {
+    if (!exactSourceDiff(sourceFiles)) {
       receipt.ok = true
       receipt.status = PASS_STATUS
       receipt.sourceCommitted = false
@@ -260,11 +285,11 @@ function commitMaterializedSource() {
       return receipt
     }
 
-    run('git', ['add', generatedPath])
+    run('git', ['add', ...sourceFiles])
     const staged = stagedFiles()
-    if (!staged.includes(generatedPath)) fail('CMS_207A_SOURCE_GIT_ADD_FAILED', 'generated source did not stage: ' + generatedPath)
+    if (!staged.some((file) => sourceFiles.includes(file))) fail('CMS_207A_SOURCE_GIT_ADD_FAILED', 'no CMS source/projection file staged')
 
-    const stageGuard = blockForbiddenFiles(staged, generatedPath)
+    const stageGuard = blockForbiddenFiles(staged, sourceFiles)
     receipt.committedFiles = staged
     receipt.forbiddenCommittedFiles = stageGuard.forbidden
     receipt.homepageRewritten = stageGuard.flags.homepageRewritten
