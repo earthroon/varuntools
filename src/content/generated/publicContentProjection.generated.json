@@ -1,7 +1,7 @@
 {
   "schemaVersion": "cms-207m-public-content-projection@1",
   "projectionRevision": "CMS-207M-R1",
-  "legacyVacmsUnprojectedCount": 1,
+  "legacyVacmsUnprojectedCount": 0,
   "entries": [
     {
       "slug": "checkout/fail",
@@ -407,9 +407,9 @@
       }
     },
     {
-      "slug": "post/sdsdsds",
-      "href": "/post/sdsdsds",
-      "contentDir": "post/sdsdsds",
+      "slug": "post/moving",
+      "href": "/post/moving",
+      "contentDir": "post/moving",
       "title": "구글이 움직인다",
       "description": "구글영상",
       "category": "post",
@@ -421,14 +421,15 @@
       "featured": false,
       "visibility": "public",
       "status": "active",
-      "cover": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_c9ca9785b5d4c3c445d30f27/card-cover.webp",
-      "thumbnail": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_46b334e39cb58bfdd0ba53a1/thumbnail.webp",
-      "time": 0,
+      "cover": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_887f93d50d130761bd83ce6c/card-cover.webp",
+      "thumbnail": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_d523debc2380d62c32487225/thumbnail.webp",
+      "year": 2026,
+      "time": 1787961600000,
       "source": "vacms",
-      "sourcePath": "src/content/pages/post/sdsdsds/index.md",
-      "projectionState": "legacy_unprojected",
+      "sourcePath": "src/content/pages/post/moving/index.md",
+      "projectionState": "vacms_projected",
       "vacmsPageId": "page_6b7a2b2b721c5e6f37fa59b5",
-      "vacmsRevisionId": "rev_1c77373b3e54834ff6f43bbf",
+      "vacmsRevisionId": "rev_d6ca5d343dd90848bdaa57e0",
       "work": {
         "hasWorkMetadata": false,
         "status": "active",

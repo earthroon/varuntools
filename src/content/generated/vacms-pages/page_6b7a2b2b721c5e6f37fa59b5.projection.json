@@ -1,8 +1,27 @@
 {
-  "schemaVersion": "cms-207m-public-asset-manifest@1",
+  "schemaVersion": "vacms-public-projection@1",
   "projectionRevision": "CMS-207M-R1",
-  "assets": {
-    "asset_1ab5c0e5adeceaed3d85ea5f": {
+  "page": {
+    "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
+    "revisionId": "rev_d6ca5d343dd90848bdaa57e0",
+    "slug": "post/moving",
+    "routePath": "/post/moving",
+    "title": "구글이 움직인다",
+    "summary": "구글영상",
+    "category": "post",
+    "kind": "page",
+    "visibility": "public",
+    "status": "active",
+    "tags": [],
+    "contentHash": "sha256:7a807ebb08dc71cfe10bd9c470212d487420354f139b66d587c6d03866425e8d",
+    "timing": {
+      "revisionCreatedAt": "2026-08-28T18:07:36.240Z",
+      "publishJobCreatedAt": "2026-08-28T19:02:15.241Z",
+      "explicitPublishedAt": "2026-08-29"
+    }
+  },
+  "assets": [
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_1ab5c0e5adeceaed3d85ea5f",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -50,7 +69,7 @@
         }
       }
     },
-    "asset_3649641c99c8fd20dc61f12d": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_3649641c99c8fd20dc61f12d",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -98,7 +117,7 @@
         }
       }
     },
-    "asset_46b334e39cb58bfdd0ba53a1": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_46b334e39cb58bfdd0ba53a1",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -146,7 +165,7 @@
         }
       }
     },
-    "asset_6ae5d14994a9ede8befc945d": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_6ae5d14994a9ede8befc945d",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -196,7 +215,7 @@
         }
       }
     },
-    "asset_878ac2c6cdf1285c7a54f861": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_878ac2c6cdf1285c7a54f861",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -244,7 +263,7 @@
         }
       }
     },
-    "asset_887f93d50d130761bd83ce6c": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_887f93d50d130761bd83ce6c",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -292,7 +311,7 @@
         }
       }
     },
-    "asset_9383c1ef69f49f92dd4349b3": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_9383c1ef69f49f92dd4349b3",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -340,7 +359,7 @@
         }
       }
     },
-    "asset_9b41d0e888a77f74981481c3": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_9b41d0e888a77f74981481c3",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -382,7 +401,7 @@
         "fieldSources": {}
       }
     },
-    "asset_a4f30790e40262c7c803b090": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_a4f30790e40262c7c803b090",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -424,7 +443,7 @@
         "fieldSources": {}
       }
     },
-    "asset_b121dfac32f32e0b868e9aba": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_b121dfac32f32e0b868e9aba",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -472,7 +491,7 @@
         }
       }
     },
-    "asset_b9d29be03aab7a4efbb0e817": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_b9d29be03aab7a4efbb0e817",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -520,7 +539,7 @@
         }
       }
     },
-    "asset_c365aaa510a8b0a3068e94d6": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_c365aaa510a8b0a3068e94d6",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -568,7 +587,7 @@
         }
       }
     },
-    "asset_c9ca9785b5d4c3c445d30f27": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_c9ca9785b5d4c3c445d30f27",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -616,7 +635,7 @@
         }
       }
     },
-    "asset_d523debc2380d62c32487225": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_d523debc2380d62c32487225",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -664,7 +683,7 @@
         }
       }
     },
-    "asset_d900f1f390bc71fcd28f4ef8": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_d900f1f390bc71fcd28f4ef8",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -714,7 +733,7 @@
         }
       }
     },
-    "asset_ddd262eef659e78c1baf2c3b": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_ddd262eef659e78c1baf2c3b",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -762,7 +781,7 @@
         }
       }
     },
-    "asset_e6911c9cd7b94d68a2dc54ef": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_e6911c9cd7b94d68a2dc54ef",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -812,7 +831,7 @@
         }
       }
     },
-    "asset_f3d51c5a447323ce19a0fd1b": {
+    {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_f3d51c5a447323ce19a0fd1b",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
@@ -854,5 +873,11 @@
         "fieldSources": {}
       }
     }
+  ],
+  "authority": {
+    "semanticSource": "vacms-d1",
+    "assetSource": "vacms-d1",
+    "mediaProjectionPolicy": "cms-207m-r1-field-level-authority",
+    "objectWasmBindingState": "r8_required"
   }
 }
