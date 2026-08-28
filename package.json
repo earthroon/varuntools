@@ -297,7 +297,8 @@
     "smoke:vt-ui-23-work-adjacent-navigation": "node scripts/smoke-vt-ui-23-work-adjacent-navigation.mjs",
     "smoke:vt-ui-23r1-visible-work-adjacent-footer": "node scripts/smoke-vt-ui-23r1-visible-work-adjacent-footer.mjs",
     "smoke:vt-ui-23r2-markdown-route-work-footer-enable": "node scripts/smoke-vt-ui-23r2-markdown-route-work-footer-enable.mjs",
-    "smoke:vt-ui-23r3-public-content-adjacent-detail-pager": "node scripts/smoke-vt-ui-23r3-public-content-adjacent-detail-pager.mjs"
+    "smoke:vt-ui-23r3-public-content-adjacent-detail-pager": "node scripts/smoke-vt-ui-23r3-public-content-adjacent-detail-pager.mjs",
+    "smoke:public-asset-ssot-04": "node scripts/smoke-public-asset-ssot-04-projected-runtime-proxy.mjs && node scripts/smoke-public-asset-ssot-04-semantic-path-preservation.mjs && node scripts/smoke-public-asset-ssot-04-no-same-origin-fallthrough.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-vue": "latest",

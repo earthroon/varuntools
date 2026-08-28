@@ -1,10 +1,14 @@
 import publicAssetManifestFile from '@/content/generated/publicAssetManifest.generated.json'
+import { resolveContentAsset } from '@/content/assetRegistry'
 import type {
   PublicAssetManifest,
   PublicAssetProjection,
 } from '@/content/publicProjectionTypes'
 
 const publicAssetManifest = publicAssetManifestFile as PublicAssetManifest
+const CONTENT_ASSET_SEMANTIC_PATH = /^\/assets\/content\//i
+const DIRECT_R2_URL = /^https?:\/\/[^/]*(?:\.r2\.dev|\.r2\.cloudflarestorage\.com)(?:\/|$)/i
+const VARUNTOOLS_STATIC_CONTENT_URL = /^https?:\/\/(?:www\.)?varun\.tools\/assets\/content\//i
 
 function positiveFinite(value: unknown): number | undefined {
   return typeof value === 'number' && Number.isFinite(value) && value > 0
@@ -25,6 +29,79 @@ function durationSecondsFromDecimalMilliseconds(value: string | null | undefined
 
   if (milliseconds <= 0n || milliseconds > BigInt(Number.MAX_SAFE_INTEGER)) return undefined
   return Number(milliseconds) / 1000
+}
+
+type ProjectedRuntimeAssetResolution = {
+  found: boolean
+  semanticPath: string
+  url: string
+  reason: string
+}
+
+function resolveProjectedRuntimeAssetPath(
+  value: string | null | undefined,
+  emptyReason: string,
+): ProjectedRuntimeAssetResolution {
+  const semanticPath = String(value ?? '').trim()
+  if (!semanticPath) {
+    return {
+      found: false,
+      semanticPath: '',
+      url: '',
+      reason: emptyReason,
+    }
+  }
+
+  if (!CONTENT_ASSET_SEMANTIC_PATH.test(semanticPath)) {
+    return {
+      found: false,
+      semanticPath,
+      url: '',
+      reason: 'asset_projection_public_path_invalid',
+    }
+  }
+
+  const resolved = resolveContentAsset({ source: semanticPath })
+  const url = String(resolved.url ?? '').trim()
+
+  if (
+    !resolved.found ||
+    resolved.kind !== 'content_asset' ||
+    resolved.reason !== 'content_asset_proxy' ||
+    !url
+  ) {
+    return {
+      found: false,
+      semanticPath,
+      url: '',
+      reason: 'asset_projection_proxy_resolution_failed',
+    }
+  }
+
+  if (url === semanticPath || CONTENT_ASSET_SEMANTIC_PATH.test(url) || VARUNTOOLS_STATIC_CONTENT_URL.test(url)) {
+    return {
+      found: false,
+      semanticPath,
+      url: '',
+      reason: 'asset_projection_same_origin_static_fallthrough',
+    }
+  }
+
+  if (DIRECT_R2_URL.test(url)) {
+    return {
+      found: false,
+      semanticPath,
+      url: '',
+      reason: 'asset_projection_direct_r2_url_forbidden',
+    }
+  }
+
+  return {
+    found: true,
+    semanticPath,
+    url,
+    reason: '',
+  }
 }
 
 export function getPublicAssetProjection(assetId: string | null | undefined): PublicAssetProjection | null {
@@ -66,22 +143,33 @@ export function resolvePublicVideoAssetProjection(assetId: string | null | undef
     }
   }
 
-  const src = String(asset.publicPath ?? '').trim()
-  if (!src) {
+  const srcResolution = resolveProjectedRuntimeAssetPath(
+    asset.publicPath,
+    'asset_public_path_missing',
+  )
+  const posterResolution = resolveProjectedRuntimeAssetPath(
+    asset.presentation?.posterPublicPath,
+    'asset_projection_poster_missing',
+  )
+
+  if (!srcResolution.found) {
     return {
       found: false,
       asset,
       src: '',
-      poster: String(asset.presentation?.posterPublicPath ?? '').trim(),
-      reason: 'asset_public_path_missing',
+      poster: posterResolution.found ? posterResolution.url : '',
+      manifestWidth: positiveFinite(asset.media?.width),
+      manifestHeight: positiveFinite(asset.media?.height),
+      duration: durationSecondsFromDecimalMilliseconds(asset.media?.durationMs),
+      reason: srcResolution.reason,
     }
   }
 
   return {
     found: true,
     asset,
-    src,
-    poster: String(asset.presentation?.posterPublicPath ?? '').trim(),
+    src: srcResolution.url,
+    poster: posterResolution.found ? posterResolution.url : '',
     manifestWidth: positiveFinite(asset.media?.width),
     manifestHeight: positiveFinite(asset.media?.height),
     duration: durationSecondsFromDecimalMilliseconds(asset.media?.durationMs),
