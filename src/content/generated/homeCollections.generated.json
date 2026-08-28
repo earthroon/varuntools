@@ -634,9 +634,9 @@
       }
     },
     {
-      "slug": "post/moving",
-      "href": "/post/moving",
-      "contentDir": "post/moving",
+      "slug": "post/moving1",
+      "href": "/post/moving1",
+      "contentDir": "post/moving1",
       "title": "구글이 움직인다",
       "description": "구글영상",
       "category": "post",

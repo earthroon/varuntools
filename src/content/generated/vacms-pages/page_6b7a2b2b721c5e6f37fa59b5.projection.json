@@ -4,8 +4,8 @@
   "page": {
     "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
     "revisionId": "rev_d6ca5d343dd90848bdaa57e0",
-    "slug": "post/moving",
-    "routePath": "/post/moving",
+    "slug": "post/moving1",
+    "routePath": "/post/moving1",
     "title": "구글이 움직인다",
     "summary": "구글영상",
     "category": "post",
@@ -16,7 +16,7 @@
     "contentHash": "sha256:7a807ebb08dc71cfe10bd9c470212d487420354f139b66d587c6d03866425e8d",
     "timing": {
       "revisionCreatedAt": "2026-08-28T18:07:36.240Z",
-      "publishJobCreatedAt": "2026-08-28T20:22:06.710Z",
+      "publishJobCreatedAt": "2026-08-28T20:56:21.496Z",
       "explicitPublishedAt": "2026-08-29"
     }
   },
@@ -584,6 +584,56 @@
         "fieldSources": {
           "width": "materialized_hint",
           "height": "materialized_hint"
+        }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_c4ef66addedeaf2b9782899e",
+      "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
+      "role": "video",
+      "filename": "mp4",
+      "mime": "video/mp4",
+      "publicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_c4ef66addedeaf2b9782899e/mp4",
+      "sizeBytes": 132710145,
+      "hash": null,
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "media": {
+        "state": "legacy_ready",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 1080,
+        "height": 1920,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": "56123",
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height",
+          "durationMs"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "legacy_video",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "legacy_video",
+          "height": "legacy_video",
+          "durationMs": "legacy_video"
         }
       }
     },

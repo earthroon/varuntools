@@ -407,9 +407,9 @@
       }
     },
     {
-      "slug": "post/moving",
-      "href": "/post/moving",
-      "contentDir": "post/moving",
+      "slug": "post/moving1",
+      "href": "/post/moving1",
+      "contentDir": "post/moving1",
       "title": "구글이 움직인다",
       "description": "구글영상",
       "category": "post",
@@ -426,7 +426,7 @@
       "year": 2026,
       "time": 1787961600000,
       "source": "vacms",
-      "sourcePath": "src/content/pages/post/moving/index.md",
+      "sourcePath": "src/content/pages/post/moving1/index.md",
       "projectionState": "vacms_projected",
       "vacmsPageId": "page_6b7a2b2b721c5e6f37fa59b5",
       "vacmsRevisionId": "rev_d6ca5d343dd90848bdaa57e0",
