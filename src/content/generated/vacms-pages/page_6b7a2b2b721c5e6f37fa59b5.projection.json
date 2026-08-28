@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
-    "revisionId": "rev_28a024353eaae1aa7c464dda",
+    "revisionId": "rev_40409a9221030b2bd422d042",
     "slug": "post/moving1",
     "routePath": "/post/moving1",
     "title": "구글이 움직인다",
@@ -13,10 +13,10 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:1309631d301ee7fbe53ae09f811a790b0bfb8e9fa0431445c097617c8a7173b5",
+    "contentHash": "sha256:f0aa3cb713050d6f34c2702db120472b674c5a0e16f81117b83582eca7a8a8a7",
     "timing": {
-      "revisionCreatedAt": "2026-08-28T21:43:01.270Z",
-      "publishJobCreatedAt": "2026-08-28T21:43:08.226Z",
+      "revisionCreatedAt": "2026-08-28T22:23:01.122Z",
+      "publishJobCreatedAt": "2026-08-28T22:23:07.904Z",
       "explicitPublishedAt": "2026-08-29"
     }
   },
@@ -689,6 +689,56 @@
     },
     {
       "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_c8f6a4897fb1cece8944d2ef",
+      "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
+      "role": "video",
+      "filename": "mp4",
+      "mime": "video/mp4",
+      "publicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_c8f6a4897fb1cece8944d2ef/mp4",
+      "sizeBytes": 132710145,
+      "hash": null,
+      "presentation": {
+        "posterAssetId": "asset_dd660c4e2025bb9f879b44ba",
+        "posterPublicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_dd660c4e2025bb9f879b44ba/poster.webp"
+      },
+      "media": {
+        "state": "legacy_ready",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 1080,
+        "height": 1920,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": "56123",
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height",
+          "durationMs"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "legacy_video",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "legacy_video",
+          "height": "legacy_video",
+          "durationMs": "legacy_video"
+        }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_c9ca9785b5d4c3c445d30f27",
       "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
       "role": "cover",
@@ -831,6 +881,48 @@
           "height": "legacy_video",
           "durationMs": "legacy_video"
         }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_dd660c4e2025bb9f879b44ba",
+      "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
+      "role": "video_poster",
+      "filename": "poster.webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_dd660c4e2025bb9f879b44ba/poster.webp",
+      "sizeBytes": 69254,
+      "hash": "sha256:afd8595ae0b40c098420b77c0c3ca2295428c6221430c39928118a47b34f463a",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": null,
+        "height": null,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "none",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": false,
+        "fieldSources": {}
       }
     },
     {
