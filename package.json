@@ -241,6 +241,7 @@
     "check:public-projection": "node scripts/build-public-content-projection.mjs --check",
     "check:public-assets": "node scripts/build-public-asset-manifest.mjs --check",
     "smoke:cms207m:r1": "node scripts/smoke-cms207m-r1-public-projection.mjs",
+    "smoke:cms207m:r1a": "node scripts/smoke-cms207m-r1a-page-identity.mjs && node scripts/smoke-cms207m-r1a-same-page-revision-replacement.mjs && node scripts/smoke-cms207m-r1a-route-move.mjs && node scripts/smoke-cms207m-r1a-predecessor-retirement.mjs && node scripts/smoke-cms207m-r1a-current-snapshot-parity.mjs",
     "smoke:cms207h": "node scripts/cms207h-public-content-index-smoke.mjs && node scripts/cms207h-home-runtime-index-contract-smoke.mjs",
     "smoke:cms207i": "node scripts/cms207i-no-local-push-contract-smoke.mjs",
     "smoke:cms207k": "node scripts/cms207k-no-branch-only-success-contract-smoke.mjs",

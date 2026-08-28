@@ -18,7 +18,7 @@ function run(command, args, options = {}) {
   const result = spawnSync(command, args, {
     encoding: options.encoding ?? 'utf8',
     stdio: options.stdio ?? 'pipe',
-    shell: process.platform === 'win32',
+    shell: false,
     ...options,
   })
   if (result.status !== 0) {
@@ -92,11 +92,11 @@ function headSha() {
 }
 
 function ensureGitAuthor() {
-  const name = spawnSync('git', ['config', 'user.name'], { encoding: 'utf8', shell: process.platform === 'win32' })
+  const name = spawnSync('git', ['config', 'user.name'], { encoding: 'utf8', shell: false })
   if (name.status !== 0 || !String(name.stdout || '').trim()) {
     run('git', ['config', 'user.name', 'github-actions[bot]'])
   }
-  const email = spawnSync('git', ['config', 'user.email'], { encoding: 'utf8', shell: process.platform === 'win32' })
+  const email = spawnSync('git', ['config', 'user.email'], { encoding: 'utf8', shell: false })
   if (email.status !== 0 || !String(email.stdout || '').trim()) {
     run('git', ['config', 'user.email', 'github-actions[bot]@users.noreply.github.com'])
   }
@@ -206,7 +206,15 @@ function commitMaterializedSource() {
     'src/content/generated/publicAssetManifest.generated.json',
     'src/content/generated/homeCollections.generated.json',
   ] : []
-  const sourceFiles = [...new Set([generatedPath, ...(projectionSidecarPath ? [projectionSidecarPath] : []), ...projectionDerivedFiles])]
+  const retiredPredecessorPaths = Array.isArray(materialization.retiredPaths)
+    ? [...new Set(materialization.retiredPaths.map(normalizeSlash).filter(Boolean))]
+    : []
+  const sourceFiles = [...new Set([
+    generatedPath,
+    ...(projectionSidecarPath ? [projectionSidecarPath] : []),
+    ...projectionDerivedFiles,
+    ...retiredPredecessorPaths,
+  ])]
   const jobId = String(materialization.jobId || process.env.JOB_ID || '')
 
   const receipt = {
@@ -220,6 +228,11 @@ function commitMaterializedSource() {
     routePath: materialization.routePath || null,
     materializedSlug,
     contentHash: materialization.contentHash || null,
+    samePageRevisionPatchId: materialization.samePageRevisionPatchId || null,
+    pageTransition: materialization.transition || null,
+    previousRevisionId: materialization.previousRevisionId || null,
+    incomingRevisionId: materialization.incomingRevisionId || materialization.revisionId || null,
+    retiredPredecessorPaths,
     sourceCommitted: false,
     sourceCommitSha: null,
     sourcePushSucceeded: false,
@@ -247,6 +260,14 @@ function commitMaterializedSource() {
       if (!fs.existsSync(projectionSidecarPath)) fail('CMS_207M_R1_PROJECTION_SIDECAR_MISSING', 'projection sidecar is missing: ' + projectionSidecarPath)
       for (const derivedFile of projectionDerivedFiles) {
         if (!fs.existsSync(derivedFile)) fail('CMS_207M_R1_DERIVED_PROJECTION_MISSING', 'derived projection source is missing: ' + derivedFile)
+      }
+    }
+    for (const retiredPath of retiredPredecessorPaths) {
+      if (!isSafeGeneratedPath(retiredPath) || retiredPath === generatedPath) {
+        fail('CMS_207M_R1A_PREDECESSOR_PATH_UNSAFE', 'retired predecessor path is unsafe: ' + retiredPath)
+      }
+      if (fs.existsSync(retiredPath)) {
+        fail('CMS_207M_R1A_STALE_PATH_STILL_VISIBLE', 'retired predecessor path is still visible before source commit: ' + retiredPath)
       }
     }
 
@@ -285,9 +306,22 @@ function commitMaterializedSource() {
       return receipt
     }
 
-    run('git', ['add', ...sourceFiles])
+    run('git', ['add', '-A', '--', ...sourceFiles])
     const staged = stagedFiles()
     if (!staged.some((file) => sourceFiles.includes(file))) fail('CMS_207A_SOURCE_GIT_ADD_FAILED', 'no CMS source/projection file staged')
+    if (retiredPredecessorPaths.length) {
+      const stagedNameStatus = run('git', ['diff', '--cached', '--no-renames', '--name-status', '--', ...sourceFiles])
+      const stagedDeletions = new Set(stagedNameStatus
+        .split(/\r?\n/)
+        .map((line) => line.split(/\t+/))
+        .filter(([status, file]) => status === 'D' && file)
+        .map(([, file]) => normalizeSlash(file)))
+      for (const retiredPath of retiredPredecessorPaths) {
+        if (!stagedDeletions.has(retiredPath)) {
+          fail('CMS_207M_R1A_PREDECESSOR_DELETION_NOT_STAGED', 'retired predecessor deletion was not staged: ' + retiredPath)
+        }
+      }
+    }
 
     const stageGuard = blockForbiddenFiles(staged, sourceFiles)
     receipt.committedFiles = staged

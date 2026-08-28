@@ -183,6 +183,18 @@ const entries = listIndexMarkdown(CONTENT_ROOT).map((file) => {
 }).filter((entry) => entry.slug)
   .sort((a, b) => a.slug.localeCompare(b.slug))
 
+const vacmsPageIdentityPaths = new Map()
+for (const entry of entries) {
+  if (entry.source !== 'vacms' || !entry.vacmsPageId) continue
+  const previousPath = vacmsPageIdentityPaths.get(entry.vacmsPageId)
+  if (previousPath) {
+    throw new Error(
+      `E_CMS207M_R1A_DUPLICATE_PAGE_IDENTITY_PATHS:${entry.vacmsPageId}:${previousPath}:${entry.sourcePath}`,
+    )
+  }
+  vacmsPageIdentityPaths.set(entry.vacmsPageId, entry.sourcePath)
+}
+
 const payload = {
   schemaVersion: CMS207M_R1_CONTENT_PROJECTION_SCHEMA,
   projectionRevision: 'CMS-207M-R1',

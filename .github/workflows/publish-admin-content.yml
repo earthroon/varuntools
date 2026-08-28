@@ -400,6 +400,14 @@ jobs:
           NODE
           echo "materialize" > vacms-last-success-stage.txt
 
+      - name: Reconcile CMS-207M-R1A same-page revision identity
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/cms207m-r1a-reconcile-page-identity.mjs --workflow
+          echo "cms207m_r1a_page_identity" > vacms-last-success-stage.txt
+
       - name: Build CMS-207M-R1 source projections
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -460,7 +468,8 @@ jobs:
         run: |
           set -euo pipefail
           npm run smoke:cms207m:r1
-          echo "cms207m_r1_public_projection" > vacms-last-success-stage.txt
+          npm run smoke:cms207m:r1a
+          echo "cms207m_r1a_public_projection" > vacms-last-success-stage.txt
 
       - name: Materialize static route HTML
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
