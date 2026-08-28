@@ -1,0 +1,15 @@
+{
+  "patchId": "CMS-207N-R1",
+  "status": "PASS_CMS_207N_R1_WORKS_TOC_CURRENT_UI_AUTHORITY_REALIGNMENT",
+  "checks": {
+    "markdownTocPreserved": true,
+    "observedHeadingsPreserved": true,
+    "activeHeadingPreserved": true,
+    "worksRootPreserved": true,
+    "resultsHeadingPreserved": true,
+    "desktopStitchRailAdopted": true,
+    "inlineFilterHeadingRetired": true,
+    "crossAuthorityConflict": false,
+    "runtimeUiModified": false
+  }
+}

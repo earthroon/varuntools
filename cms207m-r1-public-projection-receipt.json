@@ -1,0 +1,14 @@
+{
+  "patchId": "CMS-207M-R1",
+  "status": "PASS",
+  "invariants": {
+    "versionedPublishProjectionConsumer": true,
+    "contentAssetProjection": true,
+    "fieldLevelAuthoritySurface": true,
+    "publicAssetManifest": true,
+    "homeAndIndexSingleProjection": true,
+    "noDirectD1Coupling": true,
+    "noPublicWasmCoupling": true,
+    "projectionBeforeVite": true
+  }
+}

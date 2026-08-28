@@ -1,0 +1,28 @@
+{
+  "patchId": "CMS-207M-R1",
+  "status": "APPLIED_STATIC_SMOKE_PASS",
+  "files": [
+    "package.json",
+    ".github/workflows/publish-admin-content.yml",
+    "scripts/commit-vacms-materialized-source.mjs",
+    "scripts/cms207a-incremental-source-commit-smoke.mjs",
+    "scripts/cms-204as-live-materialized-source-commit-back-guard.mjs",
+    "scripts/build-home-collections.mjs",
+    "scripts/build-public-content-index.mjs",
+    "scripts/prerender-homepage-recent-feed.mjs",
+    "scripts/cms207h-home-runtime-index-contract-smoke.mjs",
+    "scripts/cms207f-homepage-recent-public-content-smoke.mjs",
+    "scripts/cms207f-homepage-no-featured-works-only-smoke.mjs",
+    "src/markdown/directives/videoPlayerDirective.ts",
+    "src/markdown/mountMarkdownComponents.ts",
+    "src/content/generated/homeCollections.generated.json",
+    "scripts/lib/cms207m-public-projection.mjs",
+    "scripts/build-public-content-projection.mjs",
+    "scripts/build-public-asset-manifest.mjs",
+    "scripts/smoke-cms207m-r1-public-projection.mjs",
+    "src/content/publicProjectionTypes.ts",
+    "src/content/usePublicAssetProjection.ts",
+    "src/content/generated/publicContentProjection.generated.json",
+    "src/content/generated/publicAssetManifest.generated.json"
+  ]
+}
