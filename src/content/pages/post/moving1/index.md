@@ -30,9 +30,14 @@ slug: "post/moving1"
 source: "vacms"
 vacmsSlug: "moving1"
 vacmsPageId: "page_6b7a2b2b721c5e6f37fa59b5"
-vacmsRevisionId: "rev_d6ca5d343dd90848bdaa57e0"
+vacmsRevisionId: "rev_f468f9c6705d8d5dd196f2dc"
 vacmsProjectionSchema: "vacms-public-projection@1"
 ---
+
+::home-section
+title: 구글이 움직인다
+layout: compact
+::
 
 ::video
 sourceMode: asset
@@ -47,4 +52,3 @@ loop: true
 playsInline: true
 preload: metadata
 ::
-
