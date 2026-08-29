@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
-    "revisionId": "rev_73b54f5b4ec50e54d944437b",
+    "revisionId": "rev_ea3b048f967b38cdb8078528",
     "slug": "post/moving1",
     "routePath": "/post/moving1",
     "title": "구글이 움직인다",
@@ -13,10 +13,10 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:88fc095c8b87432b627fbcbe452d137aaaa68524563ca0206d2624c26e6ccc62",
+    "contentHash": "sha256:1917e2fa26322143f45f96b6ab1755f4ea8350ed7cdbb9147a35895a3b31996d",
     "timing": {
-      "revisionCreatedAt": "2026-08-29T04:25:35.178Z",
-      "publishJobCreatedAt": "2026-08-29T04:25:42.223Z",
+      "revisionCreatedAt": "2026-08-29T04:29:41.973Z",
+      "publishJobCreatedAt": "2026-08-29T04:29:48.478Z",
       "explicitPublishedAt": "2026-08-29"
     }
   },
@@ -210,6 +210,72 @@
         "fieldSources": {
           "width": "materialized_hint",
           "height": "materialized_hint"
+        }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_48e2ca1941727a00337b1683",
+      "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
+      "role": "video",
+      "filename": "mp4",
+      "mime": "video/mp4",
+      "publicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_48e2ca1941727a00337b1683/mp4",
+      "sizeBytes": 132710145,
+      "hash": null,
+      "presentation": {
+        "posterAssetId": "asset_e27622e9ca97964fe4ad2220",
+        "posterPublicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_e27622e9ca97964fe4ad2220/poster.webp"
+      },
+      "playback": {
+        "state": "missing",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "media": {
+        "state": "legacy_ready",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 1080,
+        "height": 1920,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": "56123",
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height",
+          "durationMs"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "legacy_video",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "legacy_video",
+          "height": "legacy_video",
+          "durationMs": "legacy_video"
         }
       }
     },
@@ -1291,6 +1357,64 @@
           "width": "materialized_hint",
           "height": "materialized_hint"
         }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_e27622e9ca97964fe4ad2220",
+      "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
+      "role": "video_poster",
+      "filename": "poster.webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_e27622e9ca97964fe4ad2220/poster.webp",
+      "sizeBytes": 69254,
+      "hash": "sha256:afd8595ae0b40c098420b77c0c3ca2295428c6221430c39928118a47b34f463a",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": null,
+        "height": null,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "none",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": false,
+        "fieldSources": {}
       }
     },
     {
