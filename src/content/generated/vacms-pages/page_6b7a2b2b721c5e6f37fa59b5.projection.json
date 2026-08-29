@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
-    "revisionId": "rev_d1c59558b0e7d988379210fd",
+    "revisionId": "rev_73b54f5b4ec50e54d944437b",
     "slug": "post/moving1",
     "routePath": "/post/moving1",
     "title": "구글이 움직인다",
@@ -13,10 +13,10 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:46cee339e2d80bdb9b55e1d816a00681898e3d746795cd3bde1e4be6f7362336",
+    "contentHash": "sha256:88fc095c8b87432b627fbcbe452d137aaaa68524563ca0206d2624c26e6ccc62",
     "timing": {
-      "revisionCreatedAt": "2026-08-29T02:05:45.920Z",
-      "publishJobCreatedAt": "2026-08-29T04:23:18.201Z",
+      "revisionCreatedAt": "2026-08-29T04:25:35.178Z",
+      "publishJobCreatedAt": "2026-08-29T04:25:42.223Z",
       "explicitPublishedAt": "2026-08-29"
     }
   },
