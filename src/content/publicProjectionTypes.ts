@@ -58,6 +58,23 @@ export type PublicAssetAuthority = {
   fieldSources: Partial<Record<PublicMediaField, PublicMediaFieldSource>>
 }
 
+export type PublicPlaybackProjection = {
+  state: 'ready' | 'missing' | 'stale' | 'unsupported'
+  variantId: string | null
+  publicPath: string | null
+  sourceIdentityDigest: string | null
+  sourceHash: string | null
+  playbackHash: string | null
+  container: string | null
+  videoCodec: string | null
+  audioCodec: string | null
+  width: number | null
+  height: number | null
+  durationMs: string | null
+  sizeBytes: number | null
+  policyRevision: string | null
+}
+
 export type PublicAssetProjection = {
   schemaVersion: 'vacms-public-asset@1'
   assetId: string
@@ -72,6 +89,7 @@ export type PublicAssetProjection = {
     posterAssetId: string | null
     posterPublicPath: string | null
   }
+  playback?: PublicPlaybackProjection
   media: PublicMediaProjection
   authority: PublicAssetAuthority
 }
@@ -107,8 +125,44 @@ export type VacmsPublicProjectionV1 = {
   }
 }
 
+export type PublicRuntimeDelivery = {
+  class: 'direct_asset' | 'playback_rendition' | 'none'
+  state: 'ready' | 'unavailable'
+  publicPath: string | null
+  renditionId: string | null
+  sizeBytes: number | null
+  hash: string | null
+  container: string | null
+  videoCodec: string | null
+  audioCodec: string | null
+  width: number | null
+  height: number | null
+  durationMs: string | null
+  policyRevision: string | null
+  sourceIdentityDigest: string | null
+  producerPlaybackState: 'ready' | 'missing' | 'stale' | 'unsupported'
+  reason: string | null
+}
+
+export type PublicRuntimeAssetProjection = {
+  schemaVersion: 'varuntools-public-runtime-asset@2'
+  assetId: string
+  pageId: string | null
+  role: string
+  filename: string
+  mime: string
+  presentation: {
+    posterAssetId: string | null
+    posterPublicPath: string | null
+  }
+  media: PublicMediaProjection | null
+  authority: PublicAssetAuthority | null
+  delivery: PublicRuntimeDelivery
+}
+
 export type PublicAssetManifest = {
-  schemaVersion: 'cms-207m-public-asset-manifest@1'
+  schemaVersion: 'cms-207m-public-asset-manifest@2'
   projectionRevision: 'CMS-207M-R1'
-  assets: Record<string, PublicAssetProjection>
+  runtimeRevision: 'VARUNTOOLS-PUBLIC-R2B'
+  assets: Record<string, PublicRuntimeAssetProjection>
 }

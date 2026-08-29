@@ -26,9 +26,10 @@ const required = [
   'const resolved = resolveContentAsset({ source: semanticPath })',
   "resolved.kind !== 'content_asset'",
   "resolved.reason !== 'content_asset_proxy'",
-  'asset.publicPath',
+  'delivery.publicPath',
   'asset.presentation?.posterPublicPath',
   'src: srcResolution.url',
+  "sourceAuthority: 'playback_rendition'",
   "reason: 'asset_projection_public_path_invalid'",
   "reason: 'asset_projection_proxy_resolution_failed'",
   "reason: 'asset_projection_same_origin_static_fallthrough'",
@@ -37,6 +38,7 @@ const required = [
 for (const token of required) {
   if (!source.includes(token)) fail('E_PUBLIC_ASSET_SSOT_04_PROJECTED_RESOLVER_MARKER_MISSING', token)
 }
+if (source.includes('asset.publicPath')) fail('E_PUBLIC_ASSET_SSOT_04_ORIGINAL_VIDEO_AUTHORITY_REINTRODUCED', 'asset.publicPath')
 
 const forbiddenInProjectionConsumer = [
   "'https://varuntools-admin-api.ragoon703.workers.dev'",

@@ -1,11 +1,12 @@
 {
-  "patchId": "CMS-207M-R1",
+  "patchId": "CMS-207M-R1+VARUNTOOLS-PUBLIC-R2B",
   "status": "PASS",
   "invariants": {
     "versionedPublishProjectionConsumer": true,
     "contentAssetProjection": true,
     "fieldLevelAuthoritySurface": true,
-    "publicAssetManifest": true,
+    "sanitizedRuntimeAssetManifestV2": true,
+    "noOriginalVideoRuntimeAuthority": true,
     "homeAndIndexSingleProjection": true,
     "noDirectD1Coupling": true,
     "noPublicWasmCoupling": true,

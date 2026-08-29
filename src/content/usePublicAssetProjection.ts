@@ -2,7 +2,7 @@ import publicAssetManifestFile from '@/content/generated/publicAssetManifest.gen
 import { resolveContentAsset } from '@/content/assetRegistry'
 import type {
   PublicAssetManifest,
-  PublicAssetProjection,
+  PublicRuntimeAssetProjection,
 } from '@/content/publicProjectionTypes'
 
 const publicAssetManifest = publicAssetManifestFile as PublicAssetManifest
@@ -104,21 +104,24 @@ function resolveProjectedRuntimeAssetPath(
   }
 }
 
-export function getPublicAssetProjection(assetId: string | null | undefined): PublicAssetProjection | null {
+export function getPublicAssetProjection(assetId: string | null | undefined): PublicRuntimeAssetProjection | null {
   const id = String(assetId ?? '').trim()
   if (!id) return null
-  if (publicAssetManifest.schemaVersion !== 'cms-207m-public-asset-manifest@1') return null
+  if (publicAssetManifest.schemaVersion !== 'cms-207m-public-asset-manifest@2') return null
+  if (publicAssetManifest.runtimeRevision !== 'VARUNTOOLS-PUBLIC-R2B') return null
   return publicAssetManifest.assets?.[id] ?? null
 }
 
 export function resolvePublicVideoAssetProjection(assetId: string | null | undefined): {
   found: boolean
-  asset: PublicAssetProjection | null
+  asset: PublicRuntimeAssetProjection | null
   src: string
   poster: string
   manifestWidth?: number
   manifestHeight?: number
   duration?: number
+  sourceAuthority: 'playback_rendition' | 'none'
+  playbackState: string
   reason: string
 } {
   const id = String(assetId ?? '').trim()
@@ -128,6 +131,8 @@ export function resolvePublicVideoAssetProjection(assetId: string | null | undef
       asset: null,
       src: '',
       poster: '',
+      sourceAuthority: 'none',
+      playbackState: 'missing',
       reason: 'asset_id_missing',
     }
   }
@@ -139,29 +144,54 @@ export function resolvePublicVideoAssetProjection(assetId: string | null | undef
       asset: null,
       src: '',
       poster: '',
+      sourceAuthority: 'none',
+      playbackState: 'missing',
       reason: 'asset_projection_missing',
     }
   }
 
-  const srcResolution = resolveProjectedRuntimeAssetPath(
-    asset.publicPath,
-    'asset_public_path_missing',
-  )
   const posterResolution = resolveProjectedRuntimeAssetPath(
     asset.presentation?.posterPublicPath,
     'asset_projection_poster_missing',
   )
+  const delivery = asset.delivery
+  const readyPlayback = delivery?.class === 'playback_rendition'
+    && delivery?.state === 'ready'
+    && delivery?.producerPlaybackState === 'ready'
 
+  const metadata = {
+    manifestWidth: positiveFinite(readyPlayback ? delivery?.width : asset.media?.width),
+    manifestHeight: positiveFinite(readyPlayback ? delivery?.height : asset.media?.height),
+    duration: durationSecondsFromDecimalMilliseconds(readyPlayback ? delivery?.durationMs : asset.media?.durationMs),
+  }
+
+  if (!readyPlayback) {
+    return {
+      found: false,
+      asset,
+      src: '',
+      poster: posterResolution.found ? posterResolution.url : '',
+      ...metadata,
+      sourceAuthority: 'none',
+      playbackState: delivery?.producerPlaybackState || 'missing',
+      reason: delivery?.reason || 'playback_rendition_unavailable',
+    }
+  }
+
+  const srcResolution = resolveProjectedRuntimeAssetPath(
+    delivery.publicPath,
+    'asset_playback_public_path_missing',
+  )
   if (!srcResolution.found) {
     return {
       found: false,
       asset,
       src: '',
       poster: posterResolution.found ? posterResolution.url : '',
-      manifestWidth: positiveFinite(asset.media?.width),
-      manifestHeight: positiveFinite(asset.media?.height),
-      duration: durationSecondsFromDecimalMilliseconds(asset.media?.durationMs),
-      reason: srcResolution.reason,
+      ...metadata,
+      sourceAuthority: 'none',
+      playbackState: delivery.producerPlaybackState,
+      reason: `playback_required:${srcResolution.reason}`,
     }
   }
 
@@ -170,9 +200,9 @@ export function resolvePublicVideoAssetProjection(assetId: string | null | undef
     asset,
     src: srcResolution.url,
     poster: posterResolution.found ? posterResolution.url : '',
-    manifestWidth: positiveFinite(asset.media?.width),
-    manifestHeight: positiveFinite(asset.media?.height),
-    duration: durationSecondsFromDecimalMilliseconds(asset.media?.durationMs),
-    reason: '',
+    ...metadata,
+    sourceAuthority: 'playback_rendition',
+    playbackState: delivery.producerPlaybackState,
+    reason: 'playback_derivative',
   }
 }

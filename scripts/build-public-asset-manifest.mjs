@@ -2,10 +2,14 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import {
-  CMS207M_R1_ASSET_MANIFEST_SCHEMA,
   loadVacmsProjectionSidecars,
   stableJson,
 } from './lib/cms207m-public-projection.mjs'
+import {
+  VARUNTOOLS_PUBLIC_R2B_RUNTIME_MANIFEST_SCHEMA,
+  VARUNTOOLS_PUBLIC_R2B_RUNTIME_REVISION,
+  projectPublicRuntimeAsset,
+} from './lib/varuntools-public-r2b-runtime-manifest.mjs'
 
 const ROOT = process.cwd()
 const SIDECAR_ROOT = path.join(ROOT, 'src', 'content', 'generated', 'vacms-pages')
@@ -23,6 +27,14 @@ const FORBIDDEN_PUBLIC_KEYS = new Set([
   'upload_id',
   'wasmSha256',
   'wasm_sha256',
+  'sourceR2Key',
+  'source_r2_key',
+  'sourceObjectKey',
+  'source_object_key',
+  'originalR2Key',
+  'original_r2_key',
+  'originalObjectKey',
+  'original_object_key',
 ])
 
 function assertNoForbiddenKeys(value, trail = 'asset') {
@@ -38,24 +50,32 @@ function assertNoForbiddenKeys(value, trail = 'asset') {
 }
 
 const sidecars = loadVacmsProjectionSidecars(SIDECAR_ROOT)
-const assets = new Map()
+const sourceAssets = new Map()
 for (const { payload } of sidecars.values()) {
   for (const asset of Array.isArray(payload.assets) ? payload.assets : []) {
     const assetId = String(asset?.assetId || '').trim()
     if (!assetId) throw new Error('E_CMS207M_PUBLIC_ASSET_ID_MISSING')
     assertNoForbiddenKeys(asset, `assets.${assetId}`)
-    const existing = assets.get(assetId)
+    const existing = sourceAssets.get(assetId)
     if (existing && stableJson(existing) !== stableJson(asset)) {
       throw new Error(`E_CMS207M_PUBLIC_ASSET_CONFLICT:${assetId}`)
     }
-    assets.set(assetId, asset)
+    sourceAssets.set(assetId, asset)
   }
 }
 
-const sortedAssets = Object.fromEntries([...assets.entries()].sort(([a], [b]) => a.localeCompare(b)))
+const runtimeAssets = new Map()
+for (const [assetId, sourceAsset] of sourceAssets.entries()) {
+  const runtimeAsset = projectPublicRuntimeAsset(sourceAsset)
+  assertNoForbiddenKeys(runtimeAsset, `runtimeAssets.${assetId}`)
+  runtimeAssets.set(assetId, runtimeAsset)
+}
+
+const sortedAssets = Object.fromEntries([...runtimeAssets.entries()].sort(([a], [b]) => a.localeCompare(b)))
 const payload = {
-  schemaVersion: CMS207M_R1_ASSET_MANIFEST_SCHEMA,
+  schemaVersion: VARUNTOOLS_PUBLIC_R2B_RUNTIME_MANIFEST_SCHEMA,
   projectionRevision: 'CMS-207M-R1',
+  runtimeRevision: VARUNTOOLS_PUBLIC_R2B_RUNTIME_REVISION,
   assets: sortedAssets,
 }
 const next = stableJson(payload)
@@ -63,13 +83,18 @@ const next = stableJson(payload)
 if (CHECK) {
   const current = fs.existsSync(OUT_FILE) ? fs.readFileSync(OUT_FILE, 'utf8') : ''
   if (current !== next) {
-    console.error('E_CMS207M_PUBLIC_ASSET_MANIFEST_STALE')
+    console.error('E_VARUNTOOLS_R2B_PUBLIC_ASSET_MANIFEST_STALE')
     process.exit(1)
   }
-  console.log('PASS_CMS_207M_R1_PUBLIC_ASSET_MANIFEST_CHECK')
+  console.log('PASS_VARUNTOOLS_PUBLIC_R2B_ASSET_MANIFEST_CHECK')
 } else {
   fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true })
   fs.writeFileSync(OUT_FILE, next, 'utf8')
-  console.log('PASS_CMS_207M_R1_PUBLIC_ASSET_MANIFEST_BUILD')
-  console.log(`assetCount=${assets.size}`)
+  const videoAssets = [...runtimeAssets.values()].filter((asset) => asset.delivery.class === 'playback_rendition' || asset.delivery.producerPlaybackState !== 'unsupported')
+  const playbackReady = videoAssets.filter((asset) => asset.delivery.class === 'playback_rendition' && asset.delivery.state === 'ready')
+  console.log('PASS_VARUNTOOLS_PUBLIC_R2B_ASSET_MANIFEST_BUILD')
+  console.log(`assetCount=${runtimeAssets.size}`)
+  console.log(`projectedVideoCount=${videoAssets.length}`)
+  console.log(`playbackReadyCount=${playbackReady.length}`)
+  console.log(`playbackUnavailableCount=${videoAssets.length - playbackReady.length}`)
 }

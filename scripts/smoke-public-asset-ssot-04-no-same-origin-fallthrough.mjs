@@ -20,6 +20,10 @@ for (const file of [projectionPath, mountPath]) {
 const projection = fs.readFileSync(projectionPath, 'utf8')
 const mount = fs.readFileSync(mountPath, 'utf8')
 
+if (projection.includes('asset.publicPath')) {
+  fail('E_PUBLIC_ASSET_SSOT_04_ORIGINAL_VIDEO_AUTHORITY_REINTRODUCED', 'Projection consumer must not select source asset.publicPath for video playback.')
+}
+
 if (/const\s+src\s*=\s*String\(asset\.publicPath/.test(projection)) {
   fail('E_PUBLIC_ASSET_SSOT_04_RAW_PROJECTED_PATH_RETURN', 'Raw asset.publicPath is still promoted directly to runtime src.')
 }
