@@ -30,14 +30,15 @@ slug: "post/moving1"
 source: "vacms"
 vacmsSlug: "moving1"
 vacmsPageId: "page_6b7a2b2b721c5e6f37fa59b5"
-vacmsRevisionId: "rev_40409a9221030b2bd422d042"
+vacmsRevisionId: "rev_d1c59558b0e7d988379210fd"
 vacmsProjectionSchema: "vacms-public-projection@1"
 ---
 
 ::home-section
 title: 구글이 움직인다
+eyebrow: works
 description: 구글이 움직인다
-layout: split
+layout: stacked
 ::
 
 ::video
