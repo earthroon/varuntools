@@ -16,7 +16,7 @@
     "contentHash": "sha256:46cee339e2d80bdb9b55e1d816a00681898e3d746795cd3bde1e4be6f7362336",
     "timing": {
       "revisionCreatedAt": "2026-08-29T02:05:45.920Z",
-      "publishJobCreatedAt": "2026-08-29T02:05:53.120Z",
+      "publishJobCreatedAt": "2026-08-29T04:23:18.201Z",
       "explicitPublishedAt": "2026-08-29"
     }
   },
@@ -34,6 +34,22 @@
       "presentation": {
         "posterAssetId": null,
         "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
       },
       "media": {
         "state": "unobserved",
@@ -83,6 +99,22 @@
         "posterAssetId": null,
         "posterPublicPath": null
       },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -131,6 +163,22 @@
         "posterAssetId": null,
         "posterPublicPath": null
       },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -178,6 +226,22 @@
       "presentation": {
         "posterAssetId": null,
         "posterPublicPath": null
+      },
+      "playback": {
+        "state": "missing",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
       },
       "media": {
         "state": "legacy_ready",
@@ -229,6 +293,22 @@
         "posterAssetId": null,
         "posterPublicPath": null
       },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -276,6 +356,22 @@
       "presentation": {
         "posterAssetId": null,
         "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
       },
       "media": {
         "state": "unobserved",
@@ -325,6 +421,22 @@
         "posterAssetId": null,
         "posterPublicPath": null
       },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -373,6 +485,22 @@
         "posterAssetId": null,
         "posterPublicPath": null
       },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -415,6 +543,22 @@
         "posterAssetId": null,
         "posterPublicPath": null
       },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -456,6 +600,22 @@
       "presentation": {
         "posterAssetId": null,
         "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
       },
       "media": {
         "state": "unobserved",
@@ -505,6 +665,22 @@
         "posterAssetId": null,
         "posterPublicPath": null
       },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -552,6 +728,22 @@
       "presentation": {
         "posterAssetId": null,
         "posterPublicPath": null
+      },
+      "playback": {
+        "state": "missing",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
       },
       "media": {
         "state": "legacy_ready",
@@ -603,6 +795,22 @@
         "posterAssetId": null,
         "posterPublicPath": null
       },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -650,6 +858,22 @@
       "presentation": {
         "posterAssetId": null,
         "posterPublicPath": null
+      },
+      "playback": {
+        "state": "missing",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
       },
       "media": {
         "state": "legacy_ready",
@@ -701,6 +925,22 @@
         "posterAssetId": "asset_dd660c4e2025bb9f879b44ba",
         "posterPublicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_dd660c4e2025bb9f879b44ba/poster.webp"
       },
+      "playback": {
+        "state": "missing",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
       "media": {
         "state": "legacy_ready",
         "mediaKind": null,
@@ -751,6 +991,22 @@
         "posterAssetId": null,
         "posterPublicPath": null
       },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -799,6 +1055,22 @@
         "posterAssetId": null,
         "posterPublicPath": null
       },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -846,6 +1118,22 @@
       "presentation": {
         "posterAssetId": "asset_9b41d0e888a77f74981481c3",
         "posterPublicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_9b41d0e888a77f74981481c3/03.poster.webp"
+      },
+      "playback": {
+        "state": "missing",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
       },
       "media": {
         "state": "legacy_ready",
@@ -897,6 +1185,22 @@
         "posterAssetId": null,
         "posterPublicPath": null
       },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -938,6 +1242,22 @@
       "presentation": {
         "posterAssetId": null,
         "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
       },
       "media": {
         "state": "unobserved",
@@ -986,6 +1306,22 @@
       "presentation": {
         "posterAssetId": "asset_f3d51c5a447323ce19a0fd1b",
         "posterPublicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_f3d51c5a447323ce19a0fd1b/out.poster.webp"
+      },
+      "playback": {
+        "state": "missing",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
       },
       "media": {
         "state": "legacy_ready",
@@ -1036,6 +1372,22 @@
       "presentation": {
         "posterAssetId": null,
         "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
       },
       "media": {
         "state": "unobserved",
