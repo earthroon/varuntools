@@ -80,6 +80,8 @@ const duration = ref(0)
 const rootRef = ref<HTMLElement | null>(null)
 const session = shallowRef<SegmentedPlaybackSession | null>(null)
 const segmentedStarted = ref(false)
+const segmentedPlayIntentActive = ref(false)
+let segmentedUiIntentOrdinal = 0
 const playbackError = ref('')
 
 const controlsVisible = ref(false)
@@ -322,7 +324,15 @@ function handleTimeUpdate() {
   }
 
   if (usesSegmentedPlayback.value) {
-    void session.value?.pump()
+    const activeSession = session.value
+    if (activeSession) {
+      void activeSession.pump().catch((cause) => {
+        playbackError.value =
+          cause instanceof Error
+            ? cause.message
+            : String(cause)
+      })
+    }
   }
 }
 
@@ -342,6 +352,10 @@ function handlePause() {
 
 function handleEnded() {
   isPlaying.value = false
+  if (usesSegmentedPlayback.value) {
+    segmentedUiIntentOrdinal += 1
+    segmentedPlayIntentActive.value = false
+  }
   const video = videoRef.value
   if (video) {
     currentTime.value = Number.isFinite(video.currentTime) ? video.currentTime : 0
@@ -426,16 +440,30 @@ async function handleSurfaceToggle() {
   playbackError.value = ''
 
   if (usesSegmentedPlayback.value) {
-    try {
-      if (!segmentedStarted.value || video.paused) {
-        await ensureSegmentedSession().explicitPlay()
-        segmentedStarted.value = true
-        return
-      }
+    const activeSession = ensureSegmentedSession()
 
-      ensureSegmentedSession().pause()
+    if (segmentedPlayIntentActive.value) {
+      segmentedUiIntentOrdinal += 1
+      segmentedPlayIntentActive.value = false
+      activeSession.pause()
+      return
+    }
+
+    const uiIntentOrdinal = ++segmentedUiIntentOrdinal
+    segmentedStarted.value = true
+    segmentedPlayIntentActive.value = true
+
+    try {
+      await activeSession.explicitPlay()
+
+      if (segmentedUiIntentOrdinal === uiIntentOrdinal) {
+        segmentedPlayIntentActive.value = !video.paused
+      }
       return
     } catch (cause) {
+      if (segmentedUiIntentOrdinal === uiIntentOrdinal) {
+        segmentedPlayIntentActive.value = false
+      }
       playbackError.value =
         cause instanceof Error
           ? cause.message
@@ -544,6 +572,8 @@ onMounted(() => {
           return
         }
 
+        segmentedUiIntentOrdinal += 1
+        segmentedPlayIntentActive.value = false
         session.value?.outOfView()
         isPlaying.value = false
       }, 250)
@@ -576,6 +606,8 @@ watch(
     session.value?.destroy()
     session.value = null
     segmentedStarted.value = false
+    segmentedUiIntentOrdinal += 1
+    segmentedPlayIntentActive.value = false
     isPlaying.value = false
     currentTime.value = 0
     playbackError.value = ''
