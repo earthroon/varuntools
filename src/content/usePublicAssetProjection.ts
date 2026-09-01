@@ -203,8 +203,8 @@ export function resolvePublicVideoAssetProjection(assetId: string | null | undef
     streamManifestUrl: srcResolution.url,
     poster: posterResolution.found ? posterResolution.url : '',
     ...metadata,
-    sourceAuthority: 'playback_rendition',
+    sourceAuthority: 'playback_segment_stream',
     playbackState: delivery.producerPlaybackState,
-    reason: 'playback_derivative',
+    reason: 'playback_segment_stream_ready',
   }
 }

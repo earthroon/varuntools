@@ -472,6 +472,9 @@ export function mountMarkdownComponents(
         })
 
     const props = {
+      streamManifestUrl: useAssetProjection
+        ? projectedVideo.streamManifestUrl || ''
+        : '',
       src: useAssetProjection
         ? projectedVideo.src
         : videoAsset?.mediaType === 'video' ? videoAsset.url : '',
