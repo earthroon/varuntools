@@ -117,10 +117,11 @@ export function resolvePublicVideoAssetProjection(assetId: string | null | undef
   asset: PublicRuntimeAssetProjection | null
   src: string
   poster: string
+  streamManifestUrl?: string
   manifestWidth?: number
   manifestHeight?: number
   duration?: number
-  sourceAuthority: 'playback_rendition' | 'none'
+  sourceAuthority: 'playback_segment_stream' | 'playback_rendition' | 'none'
   playbackState: string
   reason: string
 } {
@@ -155,7 +156,7 @@ export function resolvePublicVideoAssetProjection(assetId: string | null | undef
     'asset_projection_poster_missing',
   )
   const delivery = asset.delivery
-  const readyPlayback = delivery?.class === 'playback_rendition'
+  const readyPlayback = delivery?.class === 'playback_segment_stream'
     && delivery?.state === 'ready'
     && delivery?.producerPlaybackState === 'ready'
 
@@ -179,7 +180,7 @@ export function resolvePublicVideoAssetProjection(assetId: string | null | undef
   }
 
   const srcResolution = resolveProjectedRuntimeAssetPath(
-    delivery.publicPath,
+    delivery.manifestPublicPath,
     'asset_playback_public_path_missing',
   )
   if (!srcResolution.found) {
@@ -198,7 +199,8 @@ export function resolvePublicVideoAssetProjection(assetId: string | null | undef
   return {
     found: true,
     asset,
-    src: srcResolution.url,
+    src: '',
+    streamManifestUrl: srcResolution.url,
     poster: posterResolution.found ? posterResolution.url : '',
     ...metadata,
     sourceAuthority: 'playback_rendition',

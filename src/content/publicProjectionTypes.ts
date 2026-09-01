@@ -58,6 +58,8 @@ export type PublicAssetAuthority = {
   fieldSources: Partial<Record<PublicMediaField, PublicMediaFieldSource>>
 }
 
+export type PublicPlaybackStreamProjection = { state:'ready'|'missing'|'stale'|'unsupported'; streamId:string|null; manifestPublicPath:string|null; manifestHash:string|null; profile:string|null; segmentCount:number|null; totalMediaBytes:number|null; videoCodec:string|null; audioCodec:string|null; width:number|null; height:number|null; durationMs:string|null }
+
 export type PublicPlaybackProjection = {
   state: 'ready' | 'missing' | 'stale' | 'unsupported'
   variantId: string | null
@@ -90,6 +92,7 @@ export type PublicAssetProjection = {
     posterPublicPath: string | null
   }
   playback?: PublicPlaybackProjection
+  playbackStream?: PublicPlaybackStreamProjection
   media: PublicMediaProjection
   authority: PublicAssetAuthority
 }
@@ -126,10 +129,16 @@ export type VacmsPublicProjectionV1 = {
 }
 
 export type PublicRuntimeDelivery = {
-  class: 'direct_asset' | 'playback_rendition' | 'none'
+  class: 'direct_asset' | 'playback_segment_stream' | 'none'
   state: 'ready' | 'unavailable'
   publicPath: string | null
   renditionId: string | null
+  streamId: string | null
+  manifestPublicPath: string | null
+  manifestHash: string | null
+  profile: string | null
+  segmentCount: number | null
+  totalMediaBytes: number | null
   sizeBytes: number | null
   hash: string | null
   container: string | null

@@ -502,7 +502,7 @@ export function mountMarkdownComponents(
       muted: boolAttr(el.dataset.muted, false),
       playsInline: boolAttr(el.dataset.playsInline || el.dataset.playsinline, true),
       controls: strictTrueAttr(el.dataset.controls),
-      preload: normalizeVideoPreload(el.dataset.preload),
+      preload: 'none',
       tracks: parseJsonAttr(el.dataset.tracks, []),
       ratio: normalizeVideoRatio(el.dataset.ratio),
       fit: normalizeVideoFit(el.dataset.fit),

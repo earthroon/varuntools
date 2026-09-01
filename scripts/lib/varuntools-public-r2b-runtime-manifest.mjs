@@ -62,6 +62,12 @@ function unavailableVideoDelivery(playbackState, reason) {
     state: 'unavailable',
     publicPath: null,
     renditionId: null,
+    streamId: null,
+    manifestPublicPath: null,
+    manifestHash: null,
+    profile: null,
+    segmentCount: null,
+    totalMediaBytes: null,
     sizeBytes: null,
     hash: null,
     container: null,
@@ -79,19 +85,19 @@ function unavailableVideoDelivery(playbackState, reason) {
 
 function projectVideoDelivery(asset) {
   const assetId = text(asset?.assetId)
-  const playback = asset?.playback
+  const playback = asset?.playbackStream
   const state = text(playback?.state).toLowerCase()
 
   if (!playback || !state || state === 'missing') {
-    return unavailableVideoDelivery(state || 'missing', 'playback_rendition_missing')
+    return unavailableVideoDelivery(state || 'missing', 'playback_segment_stream_missing')
   }
-  if (state === 'stale') return unavailableVideoDelivery('stale', 'playback_rendition_stale')
-  if (state === 'unsupported') return unavailableVideoDelivery('unsupported', 'playback_rendition_unsupported')
+  if (state === 'stale') return unavailableVideoDelivery('stale', 'playback_segment_stream_stale')
+  if (state === 'unsupported') return unavailableVideoDelivery('unsupported', 'playback_segment_stream_unsupported')
   if (state !== 'ready') throw new Error(`E_VARUNTOOLS_R2B_PLAYBACK_STATE_INVALID:${assetId}:${state}`)
 
   const sourcePath = text(asset?.publicPath)
   const playbackPath = assertSemanticContentAssetPath(
-    playback?.publicPath,
+    playback?.manifestPublicPath,
     'E_VARUNTOOLS_R2B_PLAYBACK_PATH_INVALID',
     assetId,
   )
@@ -99,21 +105,22 @@ function projectVideoDelivery(asset) {
     throw new Error(`E_VARUNTOOLS_R2B_PLAYBACK_EQUALS_SOURCE:${assetId}`)
   }
 
-  const renditionId = text(playback?.variantId)
-  if (!renditionId) throw new Error(`E_VARUNTOOLS_R2B_PLAYBACK_RENDITION_ID_MISSING:${assetId}`)
-  if (renditionId === assetId) throw new Error(`E_VARUNTOOLS_R2B_PLAYBACK_SOURCE_IDENTITY_COLLISION:${assetId}`)
-
-  const sizeBytes = positiveFiniteOrNull(playback?.sizeBytes)
-  if (sizeBytes == null) throw new Error(`E_VARUNTOOLS_R2B_PLAYBACK_SIZE_INVALID:${assetId}`)
-
+  const streamId = text(playback?.streamId)
+  if (!streamId) throw new Error(`E_VARUNTOOLS_R2B_PLAYBACK_STREAM_ID_MISSING:${assetId}`)
   return {
-    class: 'playback_rendition',
+    class: 'playback_segment_stream',
     state: 'ready',
-    publicPath: playbackPath,
-    renditionId,
-    sizeBytes,
-    hash: nullableText(playback?.playbackHash),
-    container: nullableText(playback?.container),
+    publicPath: null,
+    renditionId: null,
+    streamId,
+    manifestPublicPath: playbackPath,
+    manifestHash: nullableText(playback?.manifestHash),
+    profile: nullableText(playback?.profile),
+    segmentCount: positiveFiniteOrNull(playback?.segmentCount),
+    totalMediaBytes: positiveFiniteOrNull(playback?.totalMediaBytes),
+    sizeBytes: positiveFiniteOrNull(playback?.totalMediaBytes),
+    hash: nullableText(playback?.manifestHash),
+    container: 'cmaf-fmp4',
     videoCodec: nullableText(playback?.videoCodec),
     audioCodec: nullableText(playback?.audioCodec),
     width: positiveFiniteOrNull(playback?.width),
@@ -138,6 +145,12 @@ function projectDirectDelivery(asset) {
     state: 'ready',
     publicPath,
     renditionId: null,
+    streamId: null,
+    manifestPublicPath: null,
+    manifestHash: null,
+    profile: null,
+    segmentCount: null,
+    totalMediaBytes: null,
     sizeBytes: positiveFiniteOrNull(asset?.sizeBytes),
     hash: nullableText(asset?.hash),
     container: null,
