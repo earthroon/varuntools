@@ -30,7 +30,7 @@ slug: "post/moving1"
 source: "vacms"
 vacmsSlug: "moving1"
 vacmsPageId: "page_6b7a2b2b721c5e6f37fa59b5"
-vacmsRevisionId: "rev_fd545e3a1366bdc21ba1f127"
+vacmsRevisionId: "rev_95f1fae4b7c4e938f34295ca"
 vacmsProjectionSchema: "vacms-public-projection@1"
 ---
 
@@ -51,6 +51,6 @@ controls: true
 autoplay: true
 muted: false
 loop: true
-playsInline: true
-preload: metadata
+playsInline: false
+preload: none
 ::
