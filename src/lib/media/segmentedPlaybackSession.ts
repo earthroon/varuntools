@@ -58,6 +58,41 @@ export type MobileMseLifecycleReceipt = {
   unhandledAsyncRejectionCount: number
 }
 
+export type MobileForwardBufferReceipt = {
+  revision: 'MOBILE_FORWARD_BUFFER_STARVATION_R11'
+  startupPrimeCount: number
+  bufferedAheadSampleCount: number
+  minPlayingBufferedAheadUs: number
+  maxBufferedAheadUs: number
+  forwardBufferDemandCount: number
+  forwardBufferSatisfiedCount: number
+  hardMaxAdmissionBlockedCount: number
+  intervalAdmissionCount: number
+  maxConcurrentIntervals: number
+  trackFetchCount: number
+  maxConcurrentTrackFetches: number
+  pairedTrackFetchCount: number
+  pairFetchFailureCount: number
+  pumpInvocationCount: number
+  pumpCoalescedCount: number
+  pumpIntervalAdmissionCount: number
+  waitingEventCount: number
+  stalledEventCount: number
+  networkRebufferCount: number
+  networkRebufferRecoveredCount: number
+  networkRebufferTotalMs: number
+  requestsStartedWhilePaused: number
+  requestsStartedWhileOutOfView: number
+  progressiveMp4RequestCount: 0
+  forwardBudgetPass: boolean
+}
+
+const FORWARD_BUFFER_TARGET_US = 3_750_000
+const FORWARD_BUFFER_MAX_US = 4_500_000
+const BUFFER_RANGE_EPSILON_US = 100_000
+const MAX_PUMP_INTERVAL_ADMISSIONS = 2
+const MAX_TRACK_FETCH_CONCURRENCY = 2
+
 type PlaybackIntent = 'playing' | 'paused' | 'destroyed'
 type FetchReason = 'play' | 'seek' | 'pump'
 
@@ -125,6 +160,10 @@ export class SegmentedPlaybackSession {
   private desiredPlayback: PlaybackIntent = 'paused'
   private outsideViewport = false
   private activeIntervalRequests = 0
+  private activeTrackFetches = 0
+  private rebufferStartedAtMs: number | null = null
+  private hasPlayingBufferSample = false
+  private startupPriming = false
 
   readonly receipt: SchedulerReceipt = {
     revision: 'SEGMENT_SCHEDULER_DATA_BUDGET_V1',
@@ -169,10 +208,86 @@ export class SegmentedPlaybackSession {
     unhandledAsyncRejectionCount: 0,
   }
 
+  readonly forwardBufferReceipt: MobileForwardBufferReceipt = {
+    revision: 'MOBILE_FORWARD_BUFFER_STARVATION_R11',
+    startupPrimeCount: 0,
+    bufferedAheadSampleCount: 0,
+    minPlayingBufferedAheadUs: 0,
+    maxBufferedAheadUs: 0,
+    forwardBufferDemandCount: 0,
+    forwardBufferSatisfiedCount: 0,
+    hardMaxAdmissionBlockedCount: 0,
+    intervalAdmissionCount: 0,
+    maxConcurrentIntervals: 0,
+    trackFetchCount: 0,
+    maxConcurrentTrackFetches: 0,
+    pairedTrackFetchCount: 0,
+    pairFetchFailureCount: 0,
+    pumpInvocationCount: 0,
+    pumpCoalescedCount: 0,
+    pumpIntervalAdmissionCount: 0,
+    waitingEventCount: 0,
+    stalledEventCount: 0,
+    networkRebufferCount: 0,
+    networkRebufferRecoveredCount: 0,
+    networkRebufferTotalMs: 0,
+    requestsStartedWhilePaused: 0,
+    requestsStartedWhileOutOfView: 0,
+    progressiveMp4RequestCount: 0,
+    forwardBudgetPass: true,
+  }
+
+  private beginNetworkRebuffer() {
+    if (
+      this.rebufferStartedAtMs !== null ||
+      !this.started ||
+      this.destroyed ||
+      this.desiredPlayback !== 'playing' ||
+      this.video.seeking ||
+      this.startupPriming ||
+      this.loaded.size === 0
+    ) {
+      return
+    }
+
+    this.rebufferStartedAtMs = Date.now()
+    this.forwardBufferReceipt.networkRebufferCount += 1
+  }
+
+  private closeNetworkRebuffer(recovered: boolean) {
+    if (this.rebufferStartedAtMs === null) return
+    this.forwardBufferReceipt.networkRebufferTotalMs += Math.max(
+      0,
+      Date.now() - this.rebufferStartedAtMs,
+    )
+    if (recovered) {
+      this.forwardBufferReceipt.networkRebufferRecoveredCount += 1
+    }
+    this.rebufferStartedAtMs = null
+  }
+
+  private handleWaitingEvent = () => {
+    this.forwardBufferReceipt.waitingEventCount += 1
+    this.beginNetworkRebuffer()
+  }
+
+  private handleStalledEvent = () => {
+    this.forwardBufferReceipt.stalledEventCount += 1
+    this.beginNetworkRebuffer()
+  }
+
+  private handlePlayingEvent = () => {
+    this.closeNetworkRebuffer(true)
+  }
+
   constructor(
     private video: HTMLVideoElement,
     private manifestUrl: string,
-  ) {}
+  ) {
+    this.video.addEventListener('waiting', this.handleWaitingEvent)
+    this.video.addEventListener('stalled', this.handleStalledEvent)
+    this.video.addEventListener('playing', this.handlePlayingEvent)
+  }
 
   private abortCurrentOperation() {
     if (this.aborter && !this.aborter.signal.aborted) {
@@ -247,9 +362,109 @@ export class SegmentedPlaybackSession {
   private recordRequestStart(reason: FetchReason) {
     if (reason !== 'seek' && this.desiredPlayback !== 'playing') {
       this.receipt.requestsStartedWhilePaused += 1
+      this.forwardBufferReceipt.requestsStartedWhilePaused += 1
+      this.forwardBufferReceipt.forwardBudgetPass = false
     }
     if (reason !== 'seek' && this.outsideViewport) {
       this.receipt.requestsStartedWhileOutOfView += 1
+      this.forwardBufferReceipt.requestsStartedWhileOutOfView += 1
+      this.forwardBufferReceipt.forwardBudgetPass = false
+    }
+  }
+
+  private samplePlayableBufferedAheadUs(): number {
+    const currentUs = Math.max(0, this.video.currentTime * 1e6)
+    const ranges = this.video.buffered
+    let aheadUs = 0
+
+    for (let index = 0; index < ranges.length; index += 1) {
+      const startUs = ranges.start(index) * 1e6
+      const endUs = ranges.end(index) * 1e6
+      if (
+        currentUs + BUFFER_RANGE_EPSILON_US >= startUs &&
+        currentUs <= endUs + BUFFER_RANGE_EPSILON_US
+      ) {
+        aheadUs = Math.max(0, endUs - currentUs)
+        break
+      }
+    }
+
+    this.forwardBufferReceipt.bufferedAheadSampleCount += 1
+    this.forwardBufferReceipt.maxBufferedAheadUs = Math.max(
+      this.forwardBufferReceipt.maxBufferedAheadUs,
+      aheadUs,
+    )
+    this.receipt.peakForwardBufferUs = Math.max(
+      this.receipt.peakForwardBufferUs,
+      aheadUs,
+    )
+
+    if (this.desiredPlayback === 'playing') {
+      if (!this.hasPlayingBufferSample) {
+        this.forwardBufferReceipt.minPlayingBufferedAheadUs = aheadUs
+        this.hasPlayingBufferSample = true
+      } else {
+        this.forwardBufferReceipt.minPlayingBufferedAheadUs = Math.min(
+          this.forwardBufferReceipt.minPlayingBufferedAheadUs,
+          aheadUs,
+        )
+      }
+    }
+
+    if (aheadUs > FORWARD_BUFFER_MAX_US + BUFFER_RANGE_EPSILON_US) {
+      this.forwardBufferReceipt.forwardBudgetPass = false
+    }
+
+    return aheadUs
+  }
+
+  private nextMissingForwardIndex(
+    startIndex: number,
+    manifest: SegmentStreamManifest,
+  ): number | null {
+    for (
+      let index = Math.max(0, startIndex);
+      index < manifest.segments.length;
+      index += 1
+    ) {
+      if (!this.loaded.has(index)) return index
+    }
+    return null
+  }
+
+  private canAdmitForwardInterval(
+    index: number,
+    bufferedAheadUs: number,
+    manifest: SegmentStreamManifest,
+  ): boolean {
+    const segment = manifest.segments[index]
+    if (!segment) return false
+    return bufferedAheadUs + segment.durationUs <= FORWARD_BUFFER_MAX_US
+  }
+
+  private async fetchTrackBytes(
+    url: string,
+    signal: AbortSignal,
+    epoch: number,
+    reason: FetchReason,
+  ): Promise<Uint8Array<ArrayBuffer>> {
+    this.activeTrackFetches += 1
+    this.forwardBufferReceipt.trackFetchCount += 1
+    this.forwardBufferReceipt.maxConcurrentTrackFetches = Math.max(
+      this.forwardBufferReceipt.maxConcurrentTrackFetches,
+      this.activeTrackFetches,
+    )
+
+    if (this.activeTrackFetches > MAX_TRACK_FETCH_CONCURRENCY) {
+      this.activeTrackFetches -= 1
+      this.forwardBufferReceipt.forwardBudgetPass = false
+      throw publicError('E_PUBLIC_TRACK_FETCH_BUDGET')
+    }
+
+    try {
+      return await this.fetchBytes(url, signal, epoch, reason)
+    } finally {
+      this.activeTrackFetches -= 1
     }
   }
 
@@ -745,36 +960,71 @@ export class SegmentedPlaybackSession {
 
     const segment = manifest.segments[index]
     this.receipt.segmentIntervalRequests += 1
+    this.forwardBufferReceipt.intervalAdmissionCount += 1
     this.activeIntervalRequests += 1
     this.receipt.maxConcurrentIntervalRequests = Math.max(
       this.receipt.maxConcurrentIntervalRequests,
       this.activeIntervalRequests,
     )
+    this.forwardBufferReceipt.maxConcurrentIntervals = Math.max(
+      this.forwardBufferReceipt.maxConcurrentIntervals,
+      this.activeIntervalRequests,
+    )
 
     if (this.activeIntervalRequests > 1) {
       this.receipt.dataBudgetPass = false
+      this.forwardBufferReceipt.forwardBudgetPass = false
       this.activeIntervalRequests -= 1
       throw publicError('E_PUBLIC_SEGMENT_INFLIGHT_BUDGET')
     }
 
     try {
-      const videoBytes = await this.fetchBytes(
-        absolute(this.manifestUrl, segment.video.path),
-        signal,
-        epoch,
-        reason,
-      )
-      this.receipt.videoSegmentBytes += videoBytes.byteLength
-      this.receipt.totalMediaBytesReceived += videoBytes.byteLength
+      const pairAborter = new AbortController()
+      const abortPair = () => pairAborter.abort()
+      signal.addEventListener('abort', abortPair, { once: true })
 
-      let audioBytes: Uint8Array<ArrayBuffer> | null = null
-      if (segment.audio) {
-        audioBytes = await this.fetchBytes(
-          absolute(this.manifestUrl, segment.audio.path),
-          signal,
+      let videoBytes: Uint8Array<ArrayBuffer>
+      let audioBytes: Uint8Array<ArrayBuffer> | null
+
+      try {
+        const videoPromise = this.fetchTrackBytes(
+          absolute(this.manifestUrl, segment.video.path),
+          pairAborter.signal,
           epoch,
           reason,
         )
+        const audioPromise: Promise<Uint8Array<ArrayBuffer> | null> =
+          segment.audio
+            ? this.fetchTrackBytes(
+                absolute(this.manifestUrl, segment.audio.path),
+                pairAborter.signal,
+                epoch,
+                reason,
+              )
+            : Promise.resolve(null)
+
+        ;[videoBytes, audioBytes] = await Promise.all([
+          videoPromise,
+          audioPromise,
+        ])
+
+        if (segment.audio) {
+          this.forwardBufferReceipt.pairedTrackFetchCount += 1
+        }
+      } catch (cause) {
+        pairAborter.abort()
+        if (!this.isExpectedLifecycleFailure(cause) && segment.audio) {
+          this.forwardBufferReceipt.pairFetchFailureCount += 1
+        }
+        throw cause
+      } finally {
+        signal.removeEventListener('abort', abortPair)
+      }
+
+      this.assertCurrent(epoch, signal)
+      this.receipt.videoSegmentBytes += videoBytes.byteLength
+      this.receipt.totalMediaBytesReceived += videoBytes.byteLength
+      if (audioBytes) {
         this.receipt.audioSegmentBytes += audioBytes.byteLength
         this.receipt.totalMediaBytesReceived += audioBytes.byteLength
       }
@@ -864,6 +1114,7 @@ export class SegmentedPlaybackSession {
     this.desiredPlayback = 'playing'
     this.outsideViewport = false
     this.playIntentOrdinal += 1
+    this.startupPriming = true
 
     const intentOrdinal = this.playIntentOrdinal
     const { epoch, signal } = this.advanceEpoch(true)
@@ -898,15 +1149,43 @@ export class SegmentedPlaybackSession {
       this.assertCurrent(epoch, signal)
 
       const index = this.indexFor(this.video.currentTime, manifest)
+      this.forwardBufferReceipt.startupPrimeCount += 1
       await this.appendInterval(index, epoch, signal, 'play')
       this.assertCurrent(epoch, signal)
 
+      let bufferedAheadUs = this.samplePlayableBufferedAheadUs()
+      const nextIndex = index + 1
+      if (
+        bufferedAheadUs < FORWARD_BUFFER_TARGET_US &&
+        nextIndex < manifest.segments.length &&
+        !this.loaded.has(nextIndex)
+      ) {
+        this.forwardBufferReceipt.forwardBufferDemandCount += 1
+        if (
+          this.canAdmitForwardInterval(
+            nextIndex,
+            bufferedAheadUs,
+            manifest,
+          )
+        ) {
+          await this.appendInterval(nextIndex, epoch, signal, 'play')
+          this.assertCurrent(epoch, signal)
+          bufferedAheadUs = this.samplePlayableBufferedAheadUs()
+        } else {
+          this.forwardBufferReceipt.hardMaxAdmissionBlockedCount += 1
+        }
+      }
+
+      if (bufferedAheadUs >= FORWARD_BUFFER_TARGET_US) {
+        this.forwardBufferReceipt.forwardBufferSatisfiedCount += 1
+      }
+
       const playFailure = await playSettlement
       this.assertCurrent(epoch, signal)
+      this.startupPriming = false
       if (playFailure) throw playFailure
-
-      await this.appendInterval(index + 1, epoch, signal, 'play')
     } catch (cause) {
+      this.startupPriming = false
       if (this.suppressExpectedLifecycleFailure(cause)) return
       throw cause
     }
@@ -921,6 +1200,8 @@ export class SegmentedPlaybackSession {
     this.outsideViewport = false
     this.playIntentOrdinal += 1
     this.advanceEpoch(false)
+    this.startupPriming = false
+    this.closeNetworkRebuffer(false)
     this.video.pause()
   }
 
@@ -934,6 +1215,8 @@ export class SegmentedPlaybackSession {
     this.outsideViewport = true
     this.playIntentOrdinal += 1
     this.advanceEpoch(false)
+    this.startupPriming = false
+    this.closeNetworkRebuffer(false)
     this.video.pause()
   }
 
@@ -969,7 +1252,25 @@ export class SegmentedPlaybackSession {
       const index = this.indexFor(time, manifest)
       await this.appendInterval(index, epoch, signal, reason)
       this.assertCurrent(epoch, signal)
-      await this.appendInterval(index + 1, epoch, signal, reason)
+
+      const bufferedAheadUs = this.samplePlayableBufferedAheadUs()
+      const nextIndex = index + 1
+      if (
+        nextIndex < manifest.segments.length &&
+        !this.loaded.has(nextIndex)
+      ) {
+        if (
+          this.canAdmitForwardInterval(
+            nextIndex,
+            bufferedAheadUs,
+            manifest,
+          )
+        ) {
+          await this.appendInterval(nextIndex, epoch, signal, reason)
+        } else {
+          this.forwardBufferReceipt.hardMaxAdmissionBlockedCount += 1
+        }
+      }
     } catch (cause) {
       if (this.suppressExpectedLifecycleFailure(cause)) return
       throw cause
@@ -989,7 +1290,10 @@ export class SegmentedPlaybackSession {
       return
     }
 
+    this.forwardBufferReceipt.pumpInvocationCount += 1
+
     if (this.pumpTask) {
+      this.forwardBufferReceipt.pumpCoalescedCount += 1
       try {
         await this.pumpTask
       } catch (cause) {
@@ -1007,21 +1311,52 @@ export class SegmentedPlaybackSession {
       const manifest = this.manifest
       if (!manifest) return
 
-      const index = this.indexFor(this.video.currentTime, manifest)
-      const nextIndex = Math.min(
-        manifest.segments.length - 1,
-        index + 1,
-      )
-      const next = manifest.segments[nextIndex]
-      if (next) {
-        const end = next.startUs + next.durationUs
-        this.receipt.peakForwardBufferUs = Math.max(
-          this.receipt.peakForwardBufferUs,
-          Math.max(0, end - this.video.currentTime * 1e6),
+      let admissions = 0
+
+      while (admissions < MAX_PUMP_INTERVAL_ADMISSIONS) {
+        this.assertCurrent(epoch, signal)
+        const bufferedAheadUs = this.samplePlayableBufferedAheadUs()
+
+        if (bufferedAheadUs >= FORWARD_BUFFER_TARGET_US) {
+          this.forwardBufferReceipt.forwardBufferSatisfiedCount += 1
+          return
+        }
+
+        this.forwardBufferReceipt.forwardBufferDemandCount += 1
+        const currentIndex = this.indexFor(this.video.currentTime, manifest)
+        const candidateIndex = this.nextMissingForwardIndex(
+          currentIndex,
+          manifest,
         )
+
+        if (candidateIndex === null) return
+
+        if (
+          !this.canAdmitForwardInterval(
+            candidateIndex,
+            bufferedAheadUs,
+            manifest,
+          )
+        ) {
+          this.forwardBufferReceipt.hardMaxAdmissionBlockedCount += 1
+          return
+        }
+
+        await this.appendInterval(
+          candidateIndex,
+          epoch,
+          signal,
+          'pump',
+        )
+        admissions += 1
+        this.forwardBufferReceipt.pumpIntervalAdmissionCount += 1
+        this.assertCurrent(epoch, signal)
       }
 
-      await this.appendInterval(index + 1, epoch, signal, 'pump')
+      const finalBufferedAheadUs = this.samplePlayableBufferedAheadUs()
+      if (finalBufferedAheadUs >= FORWARD_BUFFER_TARGET_US) {
+        this.forwardBufferReceipt.forwardBufferSatisfiedCount += 1
+      }
     })()
 
     this.pumpTask = task
@@ -1061,6 +1396,11 @@ export class SegmentedPlaybackSession {
 
     this.handle = null
     this.started = false
+    this.startupPriming = false
+    this.closeNetworkRebuffer(false)
+    this.video.removeEventListener('waiting', this.handleWaitingEvent)
+    this.video.removeEventListener('stalled', this.handleStalledEvent)
+    this.video.removeEventListener('playing', this.handlePlayingEvent)
     this.video.pause()
     this.video.removeAttribute('src')
     this.video.load()
