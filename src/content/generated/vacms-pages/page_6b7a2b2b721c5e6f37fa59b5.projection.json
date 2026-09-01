@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
-    "revisionId": "rev_ea3b048f967b38cdb8078528",
+    "revisionId": "rev_8cc1fa71fcb16798fc172dde",
     "slug": "post/moving1",
     "routePath": "/post/moving1",
     "title": "구글이 움직인다",
@@ -13,10 +13,10 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:1917e2fa26322143f45f96b6ab1755f4ea8350ed7cdbb9147a35895a3b31996d",
+    "contentHash": "sha256:a34ca60720c9a6bcdea885ce71dac37c6529ee524f8684141ddbb03586cd265f",
     "timing": {
-      "revisionCreatedAt": "2026-08-29T04:29:41.973Z",
-      "publishJobCreatedAt": "2026-08-29T04:29:48.478Z",
+      "revisionCreatedAt": "2026-09-01T09:23:44.882Z",
+      "publishJobCreatedAt": "2026-09-01T09:23:52.273Z",
       "explicitPublishedAt": "2026-08-29"
     }
   },
@@ -228,20 +228,20 @@
         "posterPublicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_e27622e9ca97964fe4ad2220/poster.webp"
       },
       "playback": {
-        "state": "missing",
-        "variantId": null,
-        "publicPath": null,
-        "sourceIdentityDigest": null,
-        "sourceHash": null,
-        "playbackHash": null,
-        "container": null,
-        "videoCodec": null,
-        "audioCodec": null,
-        "width": null,
-        "height": null,
-        "durationMs": null,
-        "sizeBytes": null,
-        "policyRevision": null
+        "state": "ready",
+        "variantId": "variant_5146933c91d7415143c5b6d5",
+        "publicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_48e2ca1941727a00337b1683/variants/variant_5146933c91d7415143c5b6d5",
+        "sourceIdentityDigest": "sha256:cb461903aa1c9d76831bc82805432b81731b30750e7c85e07f0d9b4ebb3ffbd6",
+        "sourceHash": "cb461903aa1c9d76831bc82805432b81731b30750e7c85e07f0d9b4ebb3ffbd6",
+        "playbackHash": "5a28ae1b0205c5284721815528af68ede13f44f1d05bc85c152b448c056d7a61",
+        "container": "mp4",
+        "videoCodec": "avc1.640028",
+        "audioCodec": "mp4a.40.2",
+        "width": 1080,
+        "height": 1920,
+        "durationMs": "56149",
+        "sizeBytes": 36211944,
+        "policyRevision": "VACMS-PLAYBACK-POLICY-02B-R1"
       },
       "media": {
         "state": "legacy_ready",

@@ -239,22 +239,22 @@
         }
       },
       "delivery": {
-        "class": "none",
-        "state": "unavailable",
-        "publicPath": null,
-        "renditionId": null,
-        "sizeBytes": null,
-        "hash": null,
-        "container": null,
-        "videoCodec": null,
-        "audioCodec": null,
-        "width": null,
-        "height": null,
-        "durationMs": null,
-        "policyRevision": null,
-        "sourceIdentityDigest": null,
-        "producerPlaybackState": "missing",
-        "reason": "playback_rendition_missing"
+        "class": "playback_rendition",
+        "state": "ready",
+        "publicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_48e2ca1941727a00337b1683/variants/variant_5146933c91d7415143c5b6d5",
+        "renditionId": "variant_5146933c91d7415143c5b6d5",
+        "sizeBytes": 36211944,
+        "hash": "5a28ae1b0205c5284721815528af68ede13f44f1d05bc85c152b448c056d7a61",
+        "container": "mp4",
+        "videoCodec": "avc1.640028",
+        "audioCodec": "mp4a.40.2",
+        "width": 1080,
+        "height": 1920,
+        "durationMs": "56149",
+        "policyRevision": "VACMS-PLAYBACK-POLICY-02B-R1",
+        "sourceIdentityDigest": "sha256:cb461903aa1c9d76831bc82805432b81731b30750e7c85e07f0d9b4ebb3ffbd6",
+        "producerPlaybackState": "ready",
+        "reason": null
       }
     },
     "asset_6ae5d14994a9ede8befc945d": {
