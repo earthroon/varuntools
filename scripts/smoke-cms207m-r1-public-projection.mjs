@@ -60,7 +60,9 @@ if (!directive.includes('videoAssetId') || !directive.includes('missing_src_stre
 if (!mount.includes('resolvePublicVideoAssetProjection') || !mount.includes('videoassetid')) fail('video runtime asset projection binding missing')
 if (!mount.includes('projectionRequired') || !mount.includes("vacms-public-projection@1")) fail('projected-page asset authority gate missing')
 if (!resolver.includes('cms-207m-public-asset-manifest@2')) fail('public runtime asset resolver schema guard missing')
-if (!resolver.includes("sourceAuthority: 'playback_rendition'")) fail('playback rendition runtime witness missing')
+if (!resolver.includes("sourceAuthority: 'playback_segment_stream'")) fail('playback segment stream runtime witness missing')
+if (!resolver.includes('delivery.manifestPublicPath')) fail('playback segment stream manifest authority missing')
+if (!resolver.includes('streamManifestUrl: srcResolution.url')) fail('playback segment stream URL binding missing')
 if (resolver.includes('asset.publicPath')) fail('original asset publicPath remains a video resolver authority')
 if (!assetBuilder.includes('projectPublicRuntimeAsset')) fail('runtime asset sanitization projection missing')
 

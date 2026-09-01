@@ -90,8 +90,8 @@ if (CHECK) {
 } else {
   fs.mkdirSync(path.dirname(OUT_FILE), { recursive: true })
   fs.writeFileSync(OUT_FILE, next, 'utf8')
-  const videoAssets = [...runtimeAssets.values()].filter((asset) => asset.delivery.class === 'playback_rendition' || asset.delivery.producerPlaybackState !== 'unsupported')
-  const playbackReady = videoAssets.filter((asset) => asset.delivery.class === 'playback_rendition' && asset.delivery.state === 'ready')
+  const videoAssets = [...runtimeAssets.values()].filter((asset) => asset.delivery.class === 'playback_segment_stream' || asset.delivery.producerPlaybackState !== 'unsupported')
+  const playbackReady = videoAssets.filter((asset) => asset.delivery.class === 'playback_segment_stream' && asset.delivery.state === 'ready')
   console.log('PASS_VARUNTOOLS_PUBLIC_R2B_ASSET_MANIFEST_BUILD')
   console.log(`assetCount=${runtimeAssets.size}`)
   console.log(`projectedVideoCount=${videoAssets.length}`)
