@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
-    "revisionId": "rev_7577412cdd77726360173e24",
+    "revisionId": "rev_9dc76ec9159c74d766ecea97",
     "slug": "post/moving1",
     "routePath": "/post/moving1",
     "title": "구글이 움직인다",
@@ -13,10 +13,10 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:1917e2fa26322143f45f96b6ab1755f4ea8350ed7cdbb9147a35895a3b31996d",
+    "contentHash": "sha256:7a666f5a0221afdcb854060d5bcfd2b033f8bb14f3f8113f37c3922a52edd86f",
     "timing": {
-      "revisionCreatedAt": "2026-09-01T10:43:52.757Z",
-      "publishJobCreatedAt": "2026-09-01T10:44:02.398Z",
+      "revisionCreatedAt": "2026-09-01T19:02:12.756Z",
+      "publishJobCreatedAt": "2026-09-01T19:06:02.886Z",
       "explicitPublishedAt": "2026-08-29"
     }
   },
@@ -50,6 +50,20 @@
         "durationMs": null,
         "sizeBytes": null,
         "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
       },
       "media": {
         "state": "unobserved",
@@ -115,6 +129,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -179,6 +207,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -242,6 +284,20 @@
         "durationMs": "56149",
         "sizeBytes": 36211944,
         "policyRevision": "VACMS-PLAYBACK-POLICY-02B-R1"
+      },
+      "playbackStream": {
+        "state": "ready",
+        "streamId": "stream_648260a30c23fcb24c9283ca",
+        "manifestPublicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_48e2ca1941727a00337b1683/streams/stream_648260a30c23fcb24c9283ca/manifest.json",
+        "manifestHash": "dcb0528f66c395501fd4b6db87759885bae20ef04b3a9752e174ce935d380243",
+        "profile": "VACMS-MOBILE-ECONOMY-V1",
+        "segmentCount": 29,
+        "totalMediaBytes": 7779299,
+        "videoCodec": "avc1.640028",
+        "audioCodec": "mp4a.40.2",
+        "width": 480,
+        "height": 852,
+        "durationMs": "56149"
       },
       "media": {
         "state": "legacy_ready",
@@ -309,6 +365,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "missing",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "legacy_ready",
         "mediaKind": null,
@@ -375,6 +445,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -438,6 +522,20 @@
         "durationMs": null,
         "sizeBytes": null,
         "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
       },
       "media": {
         "state": "unobserved",
@@ -503,6 +601,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -567,6 +679,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -625,6 +751,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -682,6 +822,20 @@
         "durationMs": null,
         "sizeBytes": null,
         "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
       },
       "media": {
         "state": "unobserved",
@@ -747,6 +901,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -810,6 +978,20 @@
         "durationMs": null,
         "sizeBytes": null,
         "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "missing",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
       },
       "media": {
         "state": "legacy_ready",
@@ -877,6 +1059,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -940,6 +1136,20 @@
         "durationMs": null,
         "sizeBytes": null,
         "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "missing",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
       },
       "media": {
         "state": "legacy_ready",
@@ -1007,6 +1217,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "missing",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "legacy_ready",
         "mediaKind": null,
@@ -1073,6 +1297,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -1137,6 +1375,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -1200,6 +1452,20 @@
         "durationMs": null,
         "sizeBytes": null,
         "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "missing",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
       },
       "media": {
         "state": "legacy_ready",
@@ -1267,6 +1533,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -1324,6 +1604,20 @@
         "durationMs": null,
         "sizeBytes": null,
         "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
       },
       "media": {
         "state": "unobserved",
@@ -1389,6 +1683,20 @@
         "sizeBytes": null,
         "policyRevision": null
       },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
       "media": {
         "state": "unobserved",
         "mediaKind": null,
@@ -1446,6 +1754,20 @@
         "durationMs": null,
         "sizeBytes": null,
         "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "missing",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
       },
       "media": {
         "state": "legacy_ready",
@@ -1512,6 +1834,20 @@
         "durationMs": null,
         "sizeBytes": null,
         "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
       },
       "media": {
         "state": "unobserved",
