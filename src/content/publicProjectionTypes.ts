@@ -129,7 +129,7 @@ export type VacmsPublicProjectionV1 = {
 }
 
 export type PublicRuntimeDelivery = {
-  class: 'direct_asset' | 'playback_segment_stream' | 'none'
+  class: 'direct_asset' | 'playback_segment_stream' | 'playback_rendition' | 'none'
   state: 'ready' | 'unavailable'
   publicPath: string | null
   renditionId: string | null

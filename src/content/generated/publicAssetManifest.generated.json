@@ -257,7 +257,7 @@
         }
       },
       "delivery": {
-        "class": "playback_segment_stream",
+        "class": "playback_rendition",
         "state": "ready",
         "publicPath": null,
         "renditionId": null,

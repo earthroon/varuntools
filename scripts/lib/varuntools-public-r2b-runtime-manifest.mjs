@@ -108,7 +108,7 @@ function projectVideoDelivery(asset) {
   const streamId = text(playback?.streamId)
   if (!streamId) throw new Error(`E_VARUNTOOLS_R2B_PLAYBACK_STREAM_ID_MISSING:${assetId}`)
   return {
-    class: 'playback_segment_stream',
+    class: 'playback_rendition',
     state: 'ready',
     publicPath: null,
     renditionId: null,

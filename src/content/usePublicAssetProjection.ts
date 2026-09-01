@@ -156,7 +156,7 @@ export function resolvePublicVideoAssetProjection(assetId: string | null | undef
     'asset_projection_poster_missing',
   )
   const delivery = asset.delivery
-  const readyPlayback = delivery?.class === 'playback_segment_stream'
+  const readyPlayback = (delivery?.class === 'playback_segment_stream' || delivery?.class === 'playback_rendition')
     && delivery?.state === 'ready'
     && delivery?.producerPlaybackState === 'ready'
 
@@ -193,6 +193,19 @@ export function resolvePublicVideoAssetProjection(assetId: string | null | undef
       sourceAuthority: 'none',
       playbackState: delivery.producerPlaybackState,
       reason: `playback_required:${srcResolution.reason}`,
+    }
+  }
+
+  if (delivery.class === 'playback_rendition') {
+    return {
+      found: true,
+      asset,
+      src: srcResolution.url,
+      poster: posterResolution.found ? posterResolution.url : '',
+      ...metadata,
+      sourceAuthority: 'playback_rendition',
+      playbackState: delivery.producerPlaybackState,
+      reason: 'playback_rendition_ready',
     }
   }
 
