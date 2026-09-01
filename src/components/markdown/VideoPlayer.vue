@@ -364,12 +364,81 @@ function handleEnded() {
 
 type WebkitFullscreenVideo = HTMLVideoElement & {
   webkitEnterFullscreen?: () => void
+  webkitExitFullscreen?: () => void
+  webkitDisplayingFullscreen?: boolean
+}
+
+type FullscreenAuthority =
+  | 'webkit-video'
+  | 'standard-video'
+  | 'standard-root'
+  | 'none'
+
+function prefersMobileFullscreenTarget(): boolean {
+  const coarsePointer =
+    typeof window !== 'undefined' &&
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(pointer: coarse)').matches
+
+  const hasTouch =
+    typeof navigator !== 'undefined' &&
+    navigator.maxTouchPoints > 0
+
+  return coarsePointer || hasTouch
+}
+
+function resolveFullscreenAuthority(
+  root: HTMLElement,
+  video: HTMLVideoElement,
+): FullscreenAuthority {
+  const webkitVideo = video as WebkitFullscreenVideo
+
+  if (prefersMobileFullscreenTarget()) {
+    if (typeof webkitVideo.webkitEnterFullscreen === 'function') {
+      return 'webkit-video'
+    }
+    if (typeof video.requestFullscreen === 'function') {
+      return 'standard-video'
+    }
+    if (typeof root.requestFullscreen === 'function') {
+      return 'standard-root'
+    }
+    return 'none'
+  }
+
+  if (typeof root.requestFullscreen === 'function') {
+    return 'standard-root'
+  }
+  if (typeof video.requestFullscreen === 'function') {
+    return 'standard-video'
+  }
+  return 'none'
+}
+
+function syncFullscreenState() {
+  const root = rootRef.value
+  const video = videoRef.value
+  const webkitVideo = video as WebkitFullscreenVideo | null
+
+  isFullscreen.value = Boolean(
+    (root && document.fullscreenElement === root) ||
+    (video && document.fullscreenElement === video) ||
+    webkitVideo?.webkitDisplayingFullscreen === true,
+  )
 }
 
 function handleFullscreenChange() {
-  isFullscreen.value =
-    document.fullscreenElement === rootRef.value
+  syncFullscreenState()
+  revealControls()
+}
 
+function handleWebkitBeginFullscreen() {
+  isFullscreen.value = true
+  revealControls()
+}
+
+function handleWebkitEndFullscreen() {
+  isFullscreen.value = false
   revealControls()
 }
 
@@ -381,34 +450,44 @@ async function toggleFullscreen() {
 
   if (!root || !video) return
 
+  const webkitVideo = video as WebkitFullscreenVideo
+
   try {
+    if (
+      webkitVideo.webkitDisplayingFullscreen === true &&
+      typeof webkitVideo.webkitExitFullscreen === 'function'
+    ) {
+      webkitVideo.webkitExitFullscreen()
+      return
+    }
+
     if (document.fullscreenElement) {
       await document.exitFullscreen()
       return
     }
 
-    if (typeof root.requestFullscreen === 'function') {
+    const authority = resolveFullscreenAuthority(root, video)
+
+    if (authority === 'webkit-video') {
+      webkitVideo.webkitEnterFullscreen?.()
+      return
+    }
+
+    if (authority === 'standard-video') {
+      await video.requestFullscreen()
+      return
+    }
+
+    if (authority === 'standard-root') {
       await root.requestFullscreen()
       return
     }
 
-    const webkitVideo =
-      video as WebkitFullscreenVideo
-
-    if (
-      typeof webkitVideo.webkitEnterFullscreen ===
-      'function'
-    ) {
-      webkitVideo.webkitEnterFullscreen()
-      return
-    }
-
     throw new Error('E_PUBLIC_FULLSCREEN_UNAVAILABLE')
-  } catch (cause) {
-    playbackError.value =
-      cause instanceof Error
-        ? cause.message
-        : String(cause)
+  } catch {
+    playbackError.value = isFullscreen.value
+      ? 'E_PUBLIC_FULLSCREEN_EXIT_FAILED'
+      : 'E_PUBLIC_FULLSCREEN_REQUEST_REJECTED'
   }
 }
 
@@ -534,6 +613,16 @@ onMounted(() => {
     handleFullscreenChange,
   )
 
+  const fullscreenVideo = videoRef.value
+  fullscreenVideo?.addEventListener(
+    'webkitbeginfullscreen',
+    handleWebkitBeginFullscreen,
+  )
+  fullscreenVideo?.addEventListener(
+    'webkitendfullscreen',
+    handleWebkitEndFullscreen,
+  )
+
   if (
     !rootRef.value ||
     typeof IntersectionObserver === 'undefined'
@@ -593,6 +682,16 @@ onBeforeUnmount(() => {
     handleFullscreenChange,
   )
 
+  const fullscreenVideo = videoRef.value
+  fullscreenVideo?.removeEventListener(
+    'webkitbeginfullscreen',
+    handleWebkitBeginFullscreen,
+  )
+  fullscreenVideo?.removeEventListener(
+    'webkitendfullscreen',
+    handleWebkitEndFullscreen,
+  )
+
   observer?.disconnect()
   observer = null
 
@@ -632,6 +731,7 @@ watch(
     data-vt-ui22r5-controls-opt-in-only="1"
     data-vt-segmented-playback-shell="restored"
     data-vt-r11-mobile-chrome="bounded-portrait-3-column"
+    data-vt-r12-fullscreen-authority="video-mobile-root-desktop"
     :data-controls-visible="controlsVisible ? '1' : '0'"
     :data-fullscreen="isFullscreen ? '1' : '0'"
     @pointerenter="handlePointerEnter"
@@ -756,6 +856,7 @@ watch(
             type="button"
             class="vt-video-player__control-button vt-video-player__fullscreen-button"
             :aria-label="isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'"
+            @pointerdown.stop
             @click.stop="toggleFullscreen"
           >
             <svg
@@ -933,9 +1034,9 @@ watch(
     bottom: 5px;
     box-sizing: border-box;
     width: min(calc(100% - 10px), 146px);
-    grid-template-columns: 24px minmax(48px, 76px) 24px;
+    grid-template-columns: 34px minmax(52px, 58px) 34px;
     justify-content: space-between;
-    gap: 6px;
+    gap: 5px;
     padding: 4px 5px;
     transform: translateX(-50%);
   }
@@ -945,8 +1046,8 @@ watch(
   }
 
   .vt-video-player[data-orientation='portrait'] .vt-video-player__control-button {
-    width: 24px;
-    height: 24px;
+    width: 34px;
+    height: 34px;
   }
 
   .vt-video-player[data-orientation='portrait'] .vt-video-player__control-icon {
@@ -956,8 +1057,8 @@ watch(
 
   .vt-video-player[data-orientation='portrait'] .vt-video-player__progress {
     width: 100%;
-    min-width: 0;
-    max-width: 76px;
+    min-width: 52px;
+    max-width: 58px;
   }
 
   .vt-video-player[data-orientation='portrait'] .vt-video-player__fullscreen-button {
@@ -987,6 +1088,15 @@ watch(
 
 .vt-video-player:fullscreen .vt-video-player__video {
   object-fit: contain;
+}
+
+.vt-video-player__video:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  background: #000;
 }
 
 .vt-video-player__caption {
