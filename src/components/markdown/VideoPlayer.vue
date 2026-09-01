@@ -82,6 +82,82 @@ const session = shallowRef<SegmentedPlaybackSession | null>(null)
 const segmentedStarted = ref(false)
 const playbackError = ref('')
 
+const controlsVisible = ref(false)
+const pointerInside = ref(false)
+const focusInside = ref(false)
+const isFullscreen = ref(false)
+
+let controlsHideTimer: ReturnType<typeof setTimeout> | null = null
+
+function clearControlsHideTimer() {
+  if (controlsHideTimer !== null) {
+    clearTimeout(controlsHideTimer)
+    controlsHideTimer = null
+  }
+}
+
+function scheduleControlsHide() {
+  clearControlsHideTimer()
+
+  if (!isPlaying.value || focusInside.value) return
+
+  controlsHideTimer = setTimeout(() => {
+    controlsHideTimer = null
+
+    if (!focusInside.value) {
+      controlsVisible.value = false
+    }
+  }, 1600)
+}
+
+function revealControls() {
+  controlsVisible.value = true
+  scheduleControlsHide()
+}
+
+function handlePointerEnter() {
+  pointerInside.value = true
+  revealControls()
+}
+
+function handlePointerMove() {
+  pointerInside.value = true
+  revealControls()
+}
+
+function handlePointerLeave() {
+  pointerInside.value = false
+
+  if (!focusInside.value) {
+    clearControlsHideTimer()
+    controlsVisible.value = false
+  }
+}
+
+function handleFocusIn() {
+  focusInside.value = true
+  clearControlsHideTimer()
+  controlsVisible.value = true
+}
+
+function handleFocusOut() {
+  queueMicrotask(() => {
+    const root = rootRef.value
+    const active = document.activeElement
+
+    focusInside.value = Boolean(
+      root &&
+      active &&
+      root.contains(active),
+    )
+
+    if (!focusInside.value && !pointerInside.value) {
+      clearControlsHideTimer()
+      controlsVisible.value = false
+    }
+  })
+}
+
 const usesSegmentedPlayback = computed(
   () => Boolean(props.streamManifestUrl),
 )
@@ -252,10 +328,16 @@ function handleTimeUpdate() {
 
 function handlePlay() {
   isPlaying.value = true
+  revealControls()
 }
 
 function handlePause() {
   isPlaying.value = false
+  clearControlsHideTimer()
+
+  controlsVisible.value =
+    pointerInside.value ||
+    focusInside.value
 }
 
 function handleEnded() {
@@ -263,6 +345,56 @@ function handleEnded() {
   const video = videoRef.value
   if (video) {
     currentTime.value = Number.isFinite(video.currentTime) ? video.currentTime : 0
+  }
+}
+
+type WebkitFullscreenVideo = HTMLVideoElement & {
+  webkitEnterFullscreen?: () => void
+}
+
+function handleFullscreenChange() {
+  isFullscreen.value =
+    document.fullscreenElement === rootRef.value
+
+  revealControls()
+}
+
+async function toggleFullscreen() {
+  playbackError.value = ''
+
+  const root = rootRef.value
+  const video = videoRef.value
+
+  if (!root || !video) return
+
+  try {
+    if (document.fullscreenElement) {
+      await document.exitFullscreen()
+      return
+    }
+
+    if (typeof root.requestFullscreen === 'function') {
+      await root.requestFullscreen()
+      return
+    }
+
+    const webkitVideo =
+      video as WebkitFullscreenVideo
+
+    if (
+      typeof webkitVideo.webkitEnterFullscreen ===
+      'function'
+    ) {
+      webkitVideo.webkitEnterFullscreen()
+      return
+    }
+
+    throw new Error('E_PUBLIC_FULLSCREEN_UNAVAILABLE')
+  } catch (cause) {
+    playbackError.value =
+      cause instanceof Error
+        ? cause.message
+        : String(cause)
   }
 }
 
@@ -369,6 +501,11 @@ function clearOutOfViewTimer() {
 }
 
 onMounted(() => {
+  document.addEventListener(
+    'fullscreenchange',
+    handleFullscreenChange,
+  )
+
   if (
     !rootRef.value ||
     typeof IntersectionObserver === 'undefined'
@@ -419,6 +556,13 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   clearOutOfViewTimer()
+  clearControlsHideTimer()
+
+  document.removeEventListener(
+    'fullscreenchange',
+    handleFullscreenChange,
+  )
+
   observer?.disconnect()
   observer = null
 
@@ -455,6 +599,13 @@ watch(
     data-vt-ui22r6-custom-controls="1"
     data-vt-ui22r5-controls-opt-in-only="1"
     data-vt-segmented-playback-shell="restored"
+    :data-controls-visible="controlsVisible ? '1' : '0'"
+    :data-fullscreen="isFullscreen ? '1' : '0'"
+    @pointerenter="handlePointerEnter"
+    @pointermove="handlePointerMove"
+    @pointerleave="handlePointerLeave"
+    @focusin="handleFocusIn"
+    @focusout="handleFocusOut"
   >
     <div v-if="hasPlayableSource" class="vt-video-player__stage">
       <div
@@ -501,6 +652,7 @@ watch(
 
         <div
           v-if="showCustomControls"
+          v-show="controlsVisible"
           class="vt-video-player__custom-controls"
           data-vt-ui22r6-custom-controls-bar="1"
           @click.stop
@@ -512,7 +664,41 @@ watch(
             :aria-label="isPlaying ? 'Pause video' : 'Play video'"
             @click.stop="handleSurfaceToggle"
           >
-            <span aria-hidden="true">{{ isPlaying ? 'Ⅱ' : '▶' }}</span>
+            <svg
+              v-if="isPlaying"
+              class="vt-video-player__control-icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <rect
+                x="6.5"
+                y="5"
+                width="4"
+                height="14"
+                rx="1.5"
+                fill="currentColor"
+              />
+              <rect
+                x="13.5"
+                y="5"
+                width="4"
+                height="14"
+                rx="1.5"
+                fill="currentColor"
+              />
+            </svg>
+
+            <svg
+              v-else
+              class="vt-video-player__control-icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                d="M8 5.75v12.5L18 12 8 5.75Z"
+                fill="currentColor"
+              />
+            </svg>
           </button>
 
           <span class="vt-video-player__time">
@@ -532,6 +718,45 @@ watch(
             @click.stop
             @keydown.stop
           >
+
+          <button
+            type="button"
+            class="vt-video-player__control-button vt-video-player__fullscreen-button"
+            :aria-label="isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'"
+            @click.stop="toggleFullscreen"
+          >
+            <svg
+              v-if="!isFullscreen"
+              class="vt-video-player__control-icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                d="M5 9V5h4M15 5h4v4M19 15v4h-4M9 19H5v-4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+            <svg
+              v-else
+              class="vt-video-player__control-icon"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                d="M9 5v4H5M19 9h-4V5M15 19v-4h4M5 15h4v4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
         </div>
       </div>
     </div>
@@ -620,7 +845,7 @@ watch(
   bottom: 10px;
   z-index: 2;
   display: grid;
-  grid-template-columns: auto auto minmax(0, 1fr);
+  grid-template-columns: auto auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 8px;
   padding: 7px 9px;
@@ -645,6 +870,16 @@ watch(
   line-height: 1;
 }
 
+.vt-video-player__control-icon {
+  display: block;
+  width: 14px;
+  height: 14px;
+}
+
+.vt-video-player__fullscreen-button {
+  flex: 0 0 auto;
+}
+
 .vt-video-player__time {
   color: #fff;
   font-size: 0.76rem;
@@ -656,6 +891,29 @@ watch(
   width: 100%;
   min-width: 0;
   accent-color: #fff;
+}
+
+.vt-video-player:fullscreen {
+  width: 100vw;
+  height: 100vh;
+  max-width: none;
+  margin: 0;
+  background: #000;
+}
+
+.vt-video-player:fullscreen .vt-video-player__stage {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+.vt-video-player:fullscreen .vt-video-player__clip {
+  inset: 0;
+  border-radius: 0;
+}
+
+.vt-video-player:fullscreen .vt-video-player__video {
+  object-fit: contain;
 }
 
 .vt-video-player__caption {
