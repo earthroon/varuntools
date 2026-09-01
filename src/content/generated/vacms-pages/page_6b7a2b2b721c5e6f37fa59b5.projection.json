@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_6b7a2b2b721c5e6f37fa59b5",
-    "revisionId": "rev_8cc1fa71fcb16798fc172dde",
+    "revisionId": "rev_7577412cdd77726360173e24",
     "slug": "post/moving1",
     "routePath": "/post/moving1",
     "title": "구글이 움직인다",
@@ -13,10 +13,10 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:a34ca60720c9a6bcdea885ce71dac37c6529ee524f8684141ddbb03586cd265f",
+    "contentHash": "sha256:1917e2fa26322143f45f96b6ab1755f4ea8350ed7cdbb9147a35895a3b31996d",
     "timing": {
-      "revisionCreatedAt": "2026-09-01T09:23:44.882Z",
-      "publishJobCreatedAt": "2026-09-01T09:23:52.273Z",
+      "revisionCreatedAt": "2026-09-01T10:43:52.757Z",
+      "publishJobCreatedAt": "2026-09-01T10:44:02.398Z",
       "explicitPublishedAt": "2026-08-29"
     }
   },
@@ -229,8 +229,8 @@
       },
       "playback": {
         "state": "ready",
-        "variantId": "variant_5146933c91d7415143c5b6d5",
-        "publicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_48e2ca1941727a00337b1683/variants/variant_5146933c91d7415143c5b6d5",
+        "variantId": "variant_52eaeefb9ab482bc8fa617fe",
+        "publicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_48e2ca1941727a00337b1683/variants/variant_52eaeefb9ab482bc8fa617fe",
         "sourceIdentityDigest": "sha256:cb461903aa1c9d76831bc82805432b81731b30750e7c85e07f0d9b4ebb3ffbd6",
         "sourceHash": "cb461903aa1c9d76831bc82805432b81731b30750e7c85e07f0d9b4ebb3ffbd6",
         "playbackHash": "5a28ae1b0205c5284721815528af68ede13f44f1d05bc85c152b448c056d7a61",

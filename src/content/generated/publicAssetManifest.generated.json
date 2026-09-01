@@ -241,8 +241,8 @@
       "delivery": {
         "class": "playback_rendition",
         "state": "ready",
-        "publicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_48e2ca1941727a00337b1683/variants/variant_5146933c91d7415143c5b6d5",
-        "renditionId": "variant_5146933c91d7415143c5b6d5",
+        "publicPath": "/assets/content/page_6b7a2b2b721c5e6f37fa59b5/asset_48e2ca1941727a00337b1683/variants/variant_52eaeefb9ab482bc8fa617fe",
+        "renditionId": "variant_52eaeefb9ab482bc8fa617fe",
         "sizeBytes": 36211944,
         "hash": "5a28ae1b0205c5284721815528af68ede13f44f1d05bc85c152b448c056d7a61",
         "container": "mp4",
