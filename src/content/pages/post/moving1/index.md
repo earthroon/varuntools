@@ -30,7 +30,7 @@ slug: "post/moving1"
 source: "vacms"
 vacmsSlug: "moving1"
 vacmsPageId: "page_6b7a2b2b721c5e6f37fa59b5"
-vacmsRevisionId: "rev_d71faf45364263d1b26b6855"
+vacmsRevisionId: "rev_775d99693029903740600b4b"
 vacmsProjectionSchema: "vacms-public-projection@1"
 ---
 
@@ -42,7 +42,7 @@ title: 구글이 움직이다
 subtitle: 구글의 추이를 요약한 쇼츠입니다
 ::
 
-::section-gap
+
 
 ::video
 sourceMode: asset
