@@ -366,53 +366,154 @@ type WebkitFullscreenVideo = HTMLVideoElement & {
   webkitEnterFullscreen?: () => void
   webkitExitFullscreen?: () => void
   webkitDisplayingFullscreen?: boolean
+  webkitSupportsFullscreen?: boolean
 }
 
 type FullscreenAuthority =
-  | 'webkit-video'
-  | 'standard-video'
   | 'standard-root'
+  | 'standard-video'
+  | 'webkit-video'
   | 'none'
 
-function prefersMobileFullscreenTarget(): boolean {
-  const coarsePointer =
-    typeof window !== 'undefined' &&
-    typeof window.matchMedia === 'function' &&
-    window.matchMedia('(pointer: coarse)').matches
+type FullscreenAuthorityHealth = {
+  standardRootRejected: boolean
+  standardVideoRejected: boolean
+}
 
-  const hasTouch =
-    typeof navigator !== 'undefined' &&
-    navigator.maxTouchPoints > 0
+type FullscreenCapabilityReceipt = {
+  revision: 'FULLSCREEN_CAPABILITY_AUTHORITY_R13'
+  fullscreenIntentCount: number
+  standardCapabilityObservedCount: number
+  standardRootSelectedCount: number
+  standardVideoSelectedCount: number
+  webkitVideoSelectedCount: number
+  standardRootRequestCount: number
+  standardVideoRequestCount: number
+  webkitVideoRequestCount: number
+  standardRootRejectCount: number
+  standardVideoRejectCount: number
+  webkitVideoErrorCount: number
+  fullscreenChangeCount: number
+  fullscreenErrorCount: number
+  webkitBeginFullscreenCount: number
+  webkitEndFullscreenCount: number
+  webkitFullscreenErrorCount: number
+  fullscreenEnterCount: number
+  fullscreenExitCount: number
+  maxRequestsPerGesture: number
+  playIntentDeltaFromFullscreen: number
+  pauseIntentDeltaFromFullscreen: number
+  seekIntentDeltaFromFullscreen: number
+  mediaSourceMutationCount: number
+  sessionRecreationCount: number
+  progressiveMp4RequestCount: 0
+}
 
-  return coarsePointer || hasTouch
+const fullscreenAuthorityHealth: FullscreenAuthorityHealth = {
+  standardRootRejected: false,
+  standardVideoRejected: false,
+}
+
+const fullscreenReceipt: FullscreenCapabilityReceipt = {
+  revision: 'FULLSCREEN_CAPABILITY_AUTHORITY_R13',
+  fullscreenIntentCount: 0,
+  standardCapabilityObservedCount: 0,
+  standardRootSelectedCount: 0,
+  standardVideoSelectedCount: 0,
+  webkitVideoSelectedCount: 0,
+  standardRootRequestCount: 0,
+  standardVideoRequestCount: 0,
+  webkitVideoRequestCount: 0,
+  standardRootRejectCount: 0,
+  standardVideoRejectCount: 0,
+  webkitVideoErrorCount: 0,
+  fullscreenChangeCount: 0,
+  fullscreenErrorCount: 0,
+  webkitBeginFullscreenCount: 0,
+  webkitEndFullscreenCount: 0,
+  webkitFullscreenErrorCount: 0,
+  fullscreenEnterCount: 0,
+  fullscreenExitCount: 0,
+  maxRequestsPerGesture: 0,
+  playIntentDeltaFromFullscreen: 0,
+  pauseIntentDeltaFromFullscreen: 0,
+  seekIntentDeltaFromFullscreen: 0,
+  mediaSourceMutationCount: 0,
+  sessionRecreationCount: 0,
+  progressiveMp4RequestCount: 0,
+}
+
+defineExpose({ fullscreenReceipt })
+
+let fullscreenRequestsInGesture = 0
+let lastFullscreenAuthority: FullscreenAuthority = 'none'
+let lastWebkitFullscreenErrorEvent: Event | null = null
+
+function beginFullscreenGesture() {
+  fullscreenReceipt.fullscreenIntentCount += 1
+  fullscreenRequestsInGesture = 0
+}
+
+function recordGestureRequest() {
+  fullscreenRequestsInGesture += 1
+  fullscreenReceipt.maxRequestsPerGesture = Math.max(
+    fullscreenReceipt.maxRequestsPerGesture,
+    fullscreenRequestsInGesture,
+  )
 }
 
 function resolveFullscreenAuthority(
   root: HTMLElement,
   video: HTMLVideoElement,
 ): FullscreenAuthority {
-  const webkitVideo = video as WebkitFullscreenVideo
+  const standardEnabled = document.fullscreenEnabled === true
 
-  if (prefersMobileFullscreenTarget()) {
-    if (typeof webkitVideo.webkitEnterFullscreen === 'function') {
-      return 'webkit-video'
-    }
-    if (typeof video.requestFullscreen === 'function') {
-      return 'standard-video'
-    }
-    if (typeof root.requestFullscreen === 'function') {
+  if (standardEnabled) {
+    if (
+      !fullscreenAuthorityHealth.standardRootRejected &&
+      typeof root.requestFullscreen === 'function'
+    ) {
       return 'standard-root'
     }
+
+    if (
+      !fullscreenAuthorityHealth.standardVideoRejected &&
+      typeof video.requestFullscreen === 'function'
+    ) {
+      return 'standard-video'
+    }
+
     return 'none'
   }
 
-  if (typeof root.requestFullscreen === 'function') {
-    return 'standard-root'
+  const webkitVideo = video as WebkitFullscreenVideo
+  if (
+    webkitVideo.webkitSupportsFullscreen === true &&
+    typeof webkitVideo.webkitEnterFullscreen === 'function'
+  ) {
+    return 'webkit-video'
   }
-  if (typeof video.requestFullscreen === 'function') {
-    return 'standard-video'
-  }
+
   return 'none'
+}
+
+function markStandardRequestRejected(authority: FullscreenAuthority) {
+  if (authority === 'standard-root') {
+    if (!fullscreenAuthorityHealth.standardRootRejected) {
+      fullscreenReceipt.standardRootRejectCount += 1
+    }
+    fullscreenAuthorityHealth.standardRootRejected = true
+    playbackError.value = 'E_PUBLIC_FULLSCREEN_ROOT_REJECTED'
+    return
+  }
+
+  if (authority === 'standard-video') {
+    if (!fullscreenAuthorityHealth.standardVideoRejected) {
+      fullscreenReceipt.standardVideoRejectCount += 1
+    }
+    fullscreenAuthorityHealth.standardVideoRejected = true
+    playbackError.value = 'E_PUBLIC_FULLSCREEN_VIDEO_REJECTED'
+  }
 }
 
 function syncFullscreenState() {
@@ -428,21 +529,66 @@ function syncFullscreenState() {
 }
 
 function handleFullscreenChange() {
+  const wasFullscreen = isFullscreen.value
+  fullscreenReceipt.fullscreenChangeCount += 1
   syncFullscreenState()
+
+  if (!wasFullscreen && isFullscreen.value) {
+    fullscreenReceipt.fullscreenEnterCount += 1
+
+    if (document.fullscreenElement === rootRef.value) {
+      fullscreenAuthorityHealth.standardRootRejected = false
+    }
+    if (document.fullscreenElement === videoRef.value) {
+      fullscreenAuthorityHealth.standardVideoRejected = false
+    }
+  } else if (wasFullscreen && !isFullscreen.value) {
+    fullscreenReceipt.fullscreenExitCount += 1
+  }
+
+  revealControls()
+}
+
+function handleFullscreenError() {
+  fullscreenReceipt.fullscreenErrorCount += 1
+  syncFullscreenState()
+
+  if (!isFullscreen.value) {
+    markStandardRequestRejected(lastFullscreenAuthority)
+  }
+
   revealControls()
 }
 
 function handleWebkitBeginFullscreen() {
+  fullscreenReceipt.webkitBeginFullscreenCount += 1
+  if (!isFullscreen.value) {
+    fullscreenReceipt.fullscreenEnterCount += 1
+  }
   isFullscreen.value = true
   revealControls()
 }
 
 function handleWebkitEndFullscreen() {
+  fullscreenReceipt.webkitEndFullscreenCount += 1
+  if (isFullscreen.value) {
+    fullscreenReceipt.fullscreenExitCount += 1
+  }
   isFullscreen.value = false
   revealControls()
 }
 
-async function toggleFullscreen() {
+function handleWebkitFullscreenError(event: Event) {
+  if (lastWebkitFullscreenErrorEvent === event) return
+  lastWebkitFullscreenErrorEvent = event
+  fullscreenReceipt.webkitFullscreenErrorCount += 1
+  fullscreenReceipt.webkitVideoErrorCount += 1
+  playbackError.value = 'E_PUBLIC_FULLSCREEN_WEBKIT_REJECTED'
+  syncFullscreenState()
+  revealControls()
+}
+
+function toggleFullscreen() {
   playbackError.value = ''
 
   const root = rootRef.value
@@ -450,45 +596,105 @@ async function toggleFullscreen() {
 
   if (!root || !video) return
 
+  beginFullscreenGesture()
+
   const webkitVideo = video as WebkitFullscreenVideo
 
-  try {
-    if (
-      webkitVideo.webkitDisplayingFullscreen === true &&
-      typeof webkitVideo.webkitExitFullscreen === 'function'
-    ) {
+  if (webkitVideo.webkitDisplayingFullscreen === true) {
+    if (typeof webkitVideo.webkitExitFullscreen !== 'function') {
+      playbackError.value = 'E_PUBLIC_FULLSCREEN_EXIT_FAILED'
+      return
+    }
+
+    recordGestureRequest()
+    try {
       webkitVideo.webkitExitFullscreen()
-      return
+    } catch {
+      playbackError.value = 'E_PUBLIC_FULLSCREEN_EXIT_FAILED'
     }
-
-    if (document.fullscreenElement) {
-      await document.exitFullscreen()
-      return
-    }
-
-    const authority = resolveFullscreenAuthority(root, video)
-
-    if (authority === 'webkit-video') {
-      webkitVideo.webkitEnterFullscreen?.()
-      return
-    }
-
-    if (authority === 'standard-video') {
-      await video.requestFullscreen()
-      return
-    }
-
-    if (authority === 'standard-root') {
-      await root.requestFullscreen()
-      return
-    }
-
-    throw new Error('E_PUBLIC_FULLSCREEN_UNAVAILABLE')
-  } catch {
-    playbackError.value = isFullscreen.value
-      ? 'E_PUBLIC_FULLSCREEN_EXIT_FAILED'
-      : 'E_PUBLIC_FULLSCREEN_REQUEST_REJECTED'
+    return
   }
+
+  if (document.fullscreenElement) {
+    recordGestureRequest()
+    try {
+      const exitPromise = document.exitFullscreen()
+      void exitPromise.then(
+        () => undefined,
+        () => {
+          playbackError.value = 'E_PUBLIC_FULLSCREEN_EXIT_FAILED'
+        },
+      )
+    } catch {
+      playbackError.value = 'E_PUBLIC_FULLSCREEN_EXIT_FAILED'
+    }
+    return
+  }
+
+  if (document.fullscreenEnabled === true) {
+    fullscreenReceipt.standardCapabilityObservedCount += 1
+  }
+
+  const authority = resolveFullscreenAuthority(root, video)
+  lastFullscreenAuthority = authority
+
+  if (authority === 'standard-root') {
+    fullscreenReceipt.standardRootSelectedCount += 1
+    fullscreenReceipt.standardRootRequestCount += 1
+    recordGestureRequest()
+
+    try {
+      const request = root.requestFullscreen()
+      void request.then(
+        () => {
+          fullscreenAuthorityHealth.standardRootRejected = false
+        },
+        () => {
+          markStandardRequestRejected('standard-root')
+        },
+      )
+    } catch {
+      markStandardRequestRejected('standard-root')
+    }
+    return
+  }
+
+  if (authority === 'standard-video') {
+    fullscreenReceipt.standardVideoSelectedCount += 1
+    fullscreenReceipt.standardVideoRequestCount += 1
+    recordGestureRequest()
+
+    try {
+      const request = video.requestFullscreen()
+      void request.then(
+        () => {
+          fullscreenAuthorityHealth.standardVideoRejected = false
+        },
+        () => {
+          markStandardRequestRejected('standard-video')
+        },
+      )
+    } catch {
+      markStandardRequestRejected('standard-video')
+    }
+    return
+  }
+
+  if (authority === 'webkit-video') {
+    fullscreenReceipt.webkitVideoSelectedCount += 1
+    fullscreenReceipt.webkitVideoRequestCount += 1
+    recordGestureRequest()
+
+    try {
+      webkitVideo.webkitEnterFullscreen?.()
+    } catch {
+      fullscreenReceipt.webkitVideoErrorCount += 1
+      playbackError.value = 'E_PUBLIC_FULLSCREEN_WEBKIT_REJECTED'
+    }
+    return
+  }
+
+  playbackError.value = 'E_PUBLIC_FULLSCREEN_UNAVAILABLE'
 }
 
 function ensureSegmentedSession(): SegmentedPlaybackSession {
@@ -612,6 +818,14 @@ onMounted(() => {
     'fullscreenchange',
     handleFullscreenChange,
   )
+  document.addEventListener(
+    'fullscreenerror',
+    handleFullscreenError,
+  )
+  document.addEventListener(
+    'webkitfullscreenerror',
+    handleWebkitFullscreenError,
+  )
 
   const fullscreenVideo = videoRef.value
   fullscreenVideo?.addEventListener(
@@ -621,6 +835,10 @@ onMounted(() => {
   fullscreenVideo?.addEventListener(
     'webkitendfullscreen',
     handleWebkitEndFullscreen,
+  )
+  fullscreenVideo?.addEventListener(
+    'webkitfullscreenerror',
+    handleWebkitFullscreenError,
   )
 
   if (
@@ -681,6 +899,14 @@ onBeforeUnmount(() => {
     'fullscreenchange',
     handleFullscreenChange,
   )
+  document.removeEventListener(
+    'fullscreenerror',
+    handleFullscreenError,
+  )
+  document.removeEventListener(
+    'webkitfullscreenerror',
+    handleWebkitFullscreenError,
+  )
 
   const fullscreenVideo = videoRef.value
   fullscreenVideo?.removeEventListener(
@@ -690,6 +916,10 @@ onBeforeUnmount(() => {
   fullscreenVideo?.removeEventListener(
     'webkitendfullscreen',
     handleWebkitEndFullscreen,
+  )
+  fullscreenVideo?.removeEventListener(
+    'webkitfullscreenerror',
+    handleWebkitFullscreenError,
   )
 
   observer?.disconnect()
@@ -731,7 +961,7 @@ watch(
     data-vt-ui22r5-controls-opt-in-only="1"
     data-vt-segmented-playback-shell="restored"
     data-vt-r11-mobile-chrome="bounded-portrait-3-column"
-    data-vt-r12-fullscreen-authority="video-mobile-root-desktop"
+    data-vt-r13-fullscreen-authority="capability-standard-root-video-webkit-last"
     :data-controls-visible="controlsVisible ? '1' : '0'"
     :data-fullscreen="isFullscreen ? '1' : '0'"
     @pointerenter="handlePointerEnter"
