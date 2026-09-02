@@ -88,8 +88,57 @@ const controlsVisible = ref(false)
 const pointerInside = ref(false)
 const focusInside = ref(false)
 const isFullscreen = ref(false)
+const controlsRef = ref<HTMLElement | null>(null)
+const controlsInteractionActive = ref(false)
+
+type ControlHitOwnershipReceipt = {
+  revision: 'CONTROL_HIT_SURFACE_TOUCH_OWNERSHIP_R14'
+  surfaceHitIntentCount: number
+  customPlayIntentCount: number
+  seekIntentCount: number
+  fullscreenIntentCount: number
+  fullscreenSurfaceCollisionCount: number
+  fullscreenSeekCollisionCount: number
+  seekSurfaceCollisionCount: number
+  controlsInteractionBeginCount: number
+  controlsInteractionEndCount: number
+  touchPointerLeaveIgnoredCount: number
+  mousePointerLeaveHideCount: number
+  hideTimerArmCount: number
+  hideTimerBlockedByInteractionCount: number
+  controlsHiddenDuringInteractionCount: number
+  fullscreenPlayPauseMutationCount: number
+  fullscreenSeekMutationCount: number
+  sessionRecreationCount: number
+  mediaSourceMutationCount: number
+  progressiveMp4RequestCount: 0
+}
+
+const controlHitOwnershipReceipt: ControlHitOwnershipReceipt = {
+  revision: 'CONTROL_HIT_SURFACE_TOUCH_OWNERSHIP_R14',
+  surfaceHitIntentCount: 0,
+  customPlayIntentCount: 0,
+  seekIntentCount: 0,
+  fullscreenIntentCount: 0,
+  fullscreenSurfaceCollisionCount: 0,
+  fullscreenSeekCollisionCount: 0,
+  seekSurfaceCollisionCount: 0,
+  controlsInteractionBeginCount: 0,
+  controlsInteractionEndCount: 0,
+  touchPointerLeaveIgnoredCount: 0,
+  mousePointerLeaveHideCount: 0,
+  hideTimerArmCount: 0,
+  hideTimerBlockedByInteractionCount: 0,
+  controlsHiddenDuringInteractionCount: 0,
+  fullscreenPlayPauseMutationCount: 0,
+  fullscreenSeekMutationCount: 0,
+  sessionRecreationCount: 0,
+  mediaSourceMutationCount: 0,
+  progressiveMp4RequestCount: 0,
+}
 
 let controlsHideTimer: ReturnType<typeof setTimeout> | null = null
+let controlsPointerReleaseArmed = false
 
 function clearControlsHideTimer() {
   if (controlsHideTimer !== null) {
@@ -98,15 +147,88 @@ function clearControlsHideTimer() {
   }
 }
 
+function detachControlsPointerReleaseListeners() {
+  if (!controlsPointerReleaseArmed || typeof window === 'undefined') return
+  window.removeEventListener('pointerup', handleGlobalControlsPointerEnd, true)
+  window.removeEventListener('pointercancel', handleGlobalControlsPointerEnd, true)
+  controlsPointerReleaseArmed = false
+}
+
+function handleGlobalControlsPointerEnd() {
+  endControlsInteraction()
+}
+
+function beginControlsInteraction() {
+  if (!controlsInteractionActive.value) {
+    controlHitOwnershipReceipt.controlsInteractionBeginCount += 1
+  }
+
+  controlsInteractionActive.value = true
+  clearControlsHideTimer()
+  controlsVisible.value = true
+
+  if (!controlsPointerReleaseArmed && typeof window !== 'undefined') {
+    window.addEventListener('pointerup', handleGlobalControlsPointerEnd, true)
+    window.addEventListener('pointercancel', handleGlobalControlsPointerEnd, true)
+    controlsPointerReleaseArmed = true
+  }
+}
+
+function endControlsInteraction() {
+  const wasActive = controlsInteractionActive.value
+  controlsInteractionActive.value = false
+  detachControlsPointerReleaseListeners()
+
+  if (wasActive) {
+    controlHitOwnershipReceipt.controlsInteractionEndCount += 1
+  }
+
+  scheduleControlsHide()
+}
+
+function handleControlsFocusIn() {
+  if (!controlsInteractionActive.value) {
+    controlHitOwnershipReceipt.controlsInteractionBeginCount += 1
+  }
+  controlsInteractionActive.value = true
+  clearControlsHideTimer()
+  controlsVisible.value = true
+}
+
+function handleControlsFocusOut() {
+  queueMicrotask(() => {
+    const controls = controlsRef.value
+    const active = document.activeElement
+
+    if (controls && active && controls.contains(active)) return
+    endControlsInteraction()
+  })
+}
+
 function scheduleControlsHide() {
   clearControlsHideTimer()
 
+  if (controlsInteractionActive.value) {
+    controlHitOwnershipReceipt.hideTimerBlockedByInteractionCount += 1
+    return
+  }
+
   if (!isPlaying.value || focusInside.value) return
 
+  controlHitOwnershipReceipt.hideTimerArmCount += 1
   controlsHideTimer = setTimeout(() => {
     controlsHideTimer = null
 
+    if (controlsInteractionActive.value) {
+      controlHitOwnershipReceipt.hideTimerBlockedByInteractionCount += 1
+      return
+    }
+
     if (!focusInside.value) {
+      if (controlsInteractionActive.value) {
+        controlHitOwnershipReceipt.controlsHiddenDuringInteractionCount += 1
+        return
+      }
       controlsVisible.value = false
     }
   }, 1600)
@@ -117,22 +239,30 @@ function revealControls() {
   scheduleControlsHide()
 }
 
-function handlePointerEnter() {
+function handlePointerEnter(event: PointerEvent) {
+  if (event.pointerType !== 'mouse') return
   pointerInside.value = true
   revealControls()
 }
 
-function handlePointerMove() {
+function handlePointerMove(event: PointerEvent) {
+  if (event.pointerType !== 'mouse') return
   pointerInside.value = true
   revealControls()
 }
 
-function handlePointerLeave() {
+function handlePointerLeave(event: PointerEvent) {
+  if (event.pointerType !== 'mouse') {
+    controlHitOwnershipReceipt.touchPointerLeaveIgnoredCount += 1
+    return
+  }
+
   pointerInside.value = false
 
-  if (!focusInside.value) {
+  if (!focusInside.value && !controlsInteractionActive.value) {
     clearControlsHideTimer()
     controlsVisible.value = false
+    controlHitOwnershipReceipt.mousePointerLeaveHideCount += 1
   }
 }
 
@@ -153,13 +283,16 @@ function handleFocusOut() {
       root.contains(active),
     )
 
-    if (!focusInside.value && !pointerInside.value) {
+    if (
+      !focusInside.value &&
+      !pointerInside.value &&
+      !controlsInteractionActive.value
+    ) {
       clearControlsHideTimer()
       controlsVisible.value = false
     }
   })
 }
-
 const usesSegmentedPlayback = computed(
   () => Boolean(props.streamManifestUrl),
 )
@@ -347,7 +480,8 @@ function handlePause() {
 
   controlsVisible.value =
     pointerInside.value ||
-    focusInside.value
+    focusInside.value ||
+    controlsInteractionActive.value
 }
 
 function handleEnded() {
@@ -443,7 +577,7 @@ const fullscreenReceipt: FullscreenCapabilityReceipt = {
   progressiveMp4RequestCount: 0,
 }
 
-defineExpose({ fullscreenReceipt })
+defineExpose({ fullscreenReceipt, controlHitOwnershipReceipt })
 
 let fullscreenRequestsInGesture = 0
 let lastFullscreenAuthority: FullscreenAuthority = 'none'
@@ -596,6 +730,7 @@ function toggleFullscreen() {
 
   if (!root || !video) return
 
+  controlHitOwnershipReceipt.fullscreenIntentCount += 1
   beginFullscreenGesture()
 
   const webkitVideo = video as WebkitFullscreenVideo
@@ -718,6 +853,17 @@ function ensureSegmentedSession(): SegmentedPlaybackSession {
   return session.value
 }
 
+async function handleSurfaceHitClick() {
+  controlHitOwnershipReceipt.surfaceHitIntentCount += 1
+  revealControls()
+  await handleSurfaceToggle()
+}
+
+async function handleCustomPlayClick() {
+  controlHitOwnershipReceipt.customPlayIntentCount += 1
+  await handleSurfaceToggle()
+}
+
 async function handleSurfaceToggle() {
   const video = videoRef.value
   if (!video) return
@@ -780,6 +926,7 @@ async function handleSeekInput(event: Event) {
 
   if (!Number.isFinite(nextTime)) return
 
+  controlHitOwnershipReceipt.seekIntentCount += 1
   currentTime.value = nextTime
   playbackError.value = ''
 
@@ -894,6 +1041,8 @@ onMounted(() => {
 onBeforeUnmount(() => {
   clearOutOfViewTimer()
   clearControlsHideTimer()
+  controlsInteractionActive.value = false
+  detachControlsPointerReleaseListeners()
 
   document.removeEventListener(
     'fullscreenchange',
@@ -962,6 +1111,7 @@ watch(
     data-vt-segmented-playback-shell="restored"
     data-vt-r11-mobile-chrome="bounded-portrait-3-column"
     data-vt-r13-fullscreen-authority="capability-standard-root-video-webkit-last"
+    data-vt-r14-control-hit-ownership="sibling-surface-controls"
     :data-controls-visible="controlsVisible ? '1' : '0'"
     :data-fullscreen="isFullscreen ? '1' : '0'"
     @pointerenter="handlePointerEnter"
@@ -974,15 +1124,7 @@ watch(
       <div
         class="vt-video-player__clip"
         data-vt-ui22r3-inner-clip="1"
-        data-vt-ui22r5-surface-toggle="1"
         :data-vt-ui22r5-native-controls="effectiveNativeControls ? '1' : '0'"
-        data-vt-ui22r6-control-surface="1"
-        role="button"
-        tabindex="0"
-        :aria-label="surfaceToggleLabel"
-        @click="handleSurfaceToggle"
-        @keydown.enter.prevent="handleSurfaceToggle"
-        @keydown.space.prevent="handleSurfaceToggle"
       >
         <video
           ref="videoRef"
@@ -1013,19 +1155,35 @@ watch(
           >
         </video>
 
+        <button
+          v-if="!effectiveNativeControls"
+          type="button"
+          class="vt-video-player__surface-hit"
+          data-vt-r14-surface-hit="1"
+          data-vt-ui22r5-surface-toggle="1"
+          data-vt-ui22r6-control-surface="1"
+          :aria-label="surfaceToggleLabel"
+          @click="handleSurfaceHitClick"
+        ></button>
+
         <div
           v-if="showCustomControls"
           v-show="controlsVisible"
+          ref="controlsRef"
           class="vt-video-player__custom-controls"
           data-vt-ui22r6-custom-controls-bar="1"
           @click.stop
-          @pointerdown.stop
+          @pointerdown.stop="beginControlsInteraction"
+          @pointerup.stop="endControlsInteraction"
+          @pointercancel.stop="endControlsInteraction"
+          @focusin="handleControlsFocusIn"
+          @focusout="handleControlsFocusOut"
         >
           <button
             type="button"
             class="vt-video-player__control-button"
             :aria-label="isPlaying ? 'Pause video' : 'Play video'"
-            @click.stop="handleSurfaceToggle"
+            @click.stop="handleCustomPlayClick"
           >
             <svg
               v-if="isPlaying"
@@ -1086,7 +1244,6 @@ watch(
             type="button"
             class="vt-video-player__control-button vt-video-player__fullscreen-button"
             :aria-label="isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'"
-            @pointerdown.stop
             @click.stop="toggleFullscreen"
           >
             <svg
@@ -1172,15 +1329,29 @@ watch(
   border-radius: var(--vt-video-inner-radius);
   background: transparent;
   isolation: isolate;
-  cursor: pointer;
 }
 
-.vt-video-player__clip:focus-visible {
+.vt-video-player__surface-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.vt-video-player__surface-hit:focus-visible {
   outline: 2px solid color-mix(in srgb, currentColor 35%, transparent);
-  outline-offset: 3px;
+  outline-offset: -3px;
 }
 
 .vt-video-player__video {
+  z-index: 0;
   position: absolute;
   inset: 0;
   display: block;
