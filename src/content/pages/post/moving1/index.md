@@ -30,7 +30,7 @@ slug: "post/moving1"
 source: "vacms"
 vacmsSlug: "moving1"
 vacmsPageId: "page_6b7a2b2b721c5e6f37fa59b5"
-vacmsRevisionId: "rev_53a7417b20f5fab0b362f79a"
+vacmsRevisionId: "rev_d71faf45364263d1b26b6855"
 vacmsProjectionSchema: "vacms-public-projection@1"
 ---
 
@@ -41,6 +41,8 @@ eyebrow: CMS
 title: 구글이 움직이다
 subtitle: 구글의 추이를 요약한 쇼츠입니다
 ::
+
+::section-gap
 
 ::video
 sourceMode: asset
@@ -55,8 +57,3 @@ loop: true
 playsInline: false
 preload: metadata
 ::
-구글의 추이를적은 영상입니다
-::
-
-구글이_움직이다
-
