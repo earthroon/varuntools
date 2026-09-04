@@ -55,11 +55,9 @@ assertIncludes(recent, 'contain-intrinsic-size: 520px', recentPath)
 
 const worksPath = 'src/styles/markdown-works.css'
 const works = read(worksPath)
-assertIncludes(works, 'PUBLIC-ASSET-SSOT-04M-U1-R2 late container reserve:start', worksPath)
-assertIncludes(works, '.vt-home-featured-works', worksPath)
-assertIncludes(works, 'min-height: clamp(260px, 42vh, 520px)', worksPath)
-assertIncludes(works, 'content-visibility: auto', worksPath)
-assertIncludes(works, 'contain-intrinsic-size: 420px', worksPath)
-assertIncludes(works, 'contain-intrinsic-size: 520px', worksPath)
+assertNotIncludes(works, 'PUBLIC-ASSET-SSOT-04M-U1-R2 late container reserve:start', worksPath)
+assertNotIncludes(works, 'min-height: clamp(260px, 42vh, 520px)', worksPath)
+assertNotIncludes(works, 'contain-intrinsic-size: 420px', worksPath)
+assertNotIncludes(works, 'contain-intrinsic-size: 520px', worksPath)
 
 console.log(PASS)

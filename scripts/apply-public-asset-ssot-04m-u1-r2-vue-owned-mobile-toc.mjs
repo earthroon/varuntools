@@ -36,23 +36,9 @@ assertIncludes(toc, "window.addEventListener('scroll', handleScroll, { passive: 
 
 const worksPath = 'src/styles/markdown-works.css'
 let works = read(worksPath)
-works = replaceBlock(
-  works,
-  '/\\* PUBLIC-ASSET-SSOT-04M-U1-R2 late container reserve:start \\*/',
-  '/\\* PUBLIC-ASSET-SSOT-04M-U1-R2 late container reserve:end \\*/',
-  `/* Home sections can enter after critical render. Reserve visual space to reduce CLS. */
-.vt-home-featured-works {
-  min-height: clamp(260px, 42vh, 520px);
-  content-visibility: auto;
-  contain-intrinsic-size: 420px;
-}
-
-@media (max-width: 720px) {
-  .vt-home-featured-works {
-    min-height: clamp(300px, 58vh, 560px);
-    contain-intrinsic-size: 520px;
-  }
-}`,
+works = works.replace(
+  /\/\* PUBLIC-ASSET-SSOT-04M-U1-R2 late container reserve:start \*\/[\s\S]*?\/\* PUBLIC-ASSET-SSOT-04M-U1-R2 late container reserve:end \*\/\n?/m,
+  '',
 )
 write(worksPath, works)
 

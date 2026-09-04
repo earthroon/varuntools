@@ -119,7 +119,6 @@ function patchHomeReservationsCss() {
   const block = `
 :root {
   --vt-home-recent-min-height: clamp(360px, 92vw, 680px);
-  --vt-home-featured-min-height: clamp(420px, 100vw, 760px);
 }
 
 .vt-home-late-container {
@@ -133,19 +132,11 @@ function patchHomeReservationsCss() {
   contain-intrinsic-size: var(--vt-home-recent-min-height);
 }
 
-.vt-home-late-container--featured,
-.vt-home-featured-works {
-  min-height: var(--vt-home-featured-min-height);
-  contain-intrinsic-size: var(--vt-home-featured-min-height);
-}
-
-.vt-home-recent-public-content,
-.vt-home-featured-works {
+.vt-home-recent-public-content {
   content-visibility: auto;
 }
 
 @media (max-width: 720px) {
-  .vt-home-featured-works,
   .vt-home-recent-public-content {
     width: min(calc(100% - (var(--vt-mobile-page-gutter, 24px) * 2)), 1120px);
   }
@@ -154,7 +145,6 @@ function patchHomeReservationsCss() {
 @media (max-width: 420px) {
   :root {
     --vt-home-recent-min-height: 420px;
-    --vt-home-featured-min-height: 520px;
   }
 }
 `
@@ -183,19 +173,17 @@ function patchHomePageWrappers() {
     console.log(`${PATCH_ID}: skip optional ${rel}`)
     return
   }
+
   let text = read(rel)
-  if (!text.includes('vt-home-late-container--recent')) {
-    text = text.replace(
-      /\n\s*<HomeRecentPublicContent\s*\/>(?=\n)/,
-      `\n  <div\n    class="vt-home-late-container vt-home-late-container--recent"\n    data-vacms-late-container="recent"\n  >\n    <HomeRecentPublicContent />\n  </div>`,
-    )
+  text = text.replace(
+    /\n\s*<div\s+class="vt-home-late-container vt-home-late-container--featured"\s+data-vacms-late-container="featured"\s*>\s*<HomeFeaturedWorks\s*\/>\s*<\/div>/m,
+    '\n  <HomeFeaturedWorks />',
+  )
+
+  if (text.includes('vt-home-late-container--featured')) {
+    throw new Error(`${PATCH_ID}: stale featured late-container must not be restored`)
   }
-  if (!text.includes('vt-home-late-container--featured')) {
-    text = text.replace(
-      /\n\s*<HomeFeaturedWorks\s*\/>(?=\n)/,
-      `\n  <div\n    class="vt-home-late-container vt-home-late-container--featured"\n    data-vacms-late-container="featured"\n  >\n    <HomeFeaturedWorks />\n  </div>`,
-    )
-  }
+
   write(rel, text)
 }
 
