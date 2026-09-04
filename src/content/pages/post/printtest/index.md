@@ -3,13 +3,17 @@ showInNav: false
 template: "visual-case"
 layoutIntent: "visual-portfolio"
 scaffold: "{\"presetId\":\"visual-case\",\"generatedBy\":\"cms117-portfolio-demo-scaffold-editor\",\"blockCount\":8}"
-schema: "{\"packId\":\"page\",\"packVersion\":\"cms-schema-pack-v1\"}"
+schema: "{\"packId\":\"post\",\"packVersion\":\"cms-schema-pack-v1\"}"
 kind: "page"
 visibility: "public"
 exposure: "{\"route\":true,\"home\":false,\"collection\":\"page\",\"search\":true,\"sitemap\":true,\"nav\":false,\"featured\":false,\"routeOnly\":false}"
 layout: "default"
 navLabel: ""
 tags: []
+publishedDate: ""
+series: ""
+mood: ""
+relatedLinks: []
 category: "post"
 status: "active"
 noindex: false
@@ -20,10 +24,10 @@ slug: "post/printtest"
 source: "vacms"
 vacmsSlug: "printtest"
 vacmsPageId: "page_328a307b1b71f96f4a4f7bcd"
-vacmsRevisionId: "rev_b0219cff6974ded139a15e78"
+vacmsRevisionId: "rev_0d2d52ddd53f158e0d3362b6"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:cadf50bd9969ffb5c667c8b198a23fce5d0c66622a0e9fc1e81fa46eed2d21a4"
+vacmsPublicSnapshotHash: "sha256:8f58da18ff5fd5c7e49fcff8481a409969f22e9d30916e1fd76c948afa3b2915"
 ---
 
 ::portfolio-hero
@@ -34,10 +38,8 @@ period: 2025
 ::
 
 ::captioned-image
-src: 
-alt: 
-caption: 
-tag: 
+src: /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_7a5d991f5a7af5ee81bd17df/out.gif
+assetId: asset_7a5d991f5a7af5ee81bd17df
 ::
 
 
