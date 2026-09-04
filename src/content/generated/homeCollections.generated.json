@@ -674,6 +674,36 @@
       }
     },
     {
+      "slug": "post/portfolio",
+      "href": "/post/portfolio",
+      "contentDir": "post/portfolio",
+      "title": "빠르게 이해되고 오래 남는 결과를 설계합니다",
+      "description": "Varun은 복잡한 제작 과정을 더 적은 인지비용으로 이해되고, 더 적은 시행착오로 반복 가능한 구조로 바꾸는 사람입니다.",
+      "category": "post",
+      "categoryLabel": "post",
+      "kind": "post",
+      "collection": "post",
+      "tags": [],
+      "order": 9999,
+      "featured": false,
+      "visibility": "public",
+      "editorialVisibility": "listed",
+      "routeOnly": false,
+      "status": "active",
+      "cover": "",
+      "thumbnail": "",
+      "year": 2026,
+      "time": 1788480000000,
+      "work": {
+        "hasWorkMetadata": false,
+        "status": "active",
+        "role": [],
+        "stack": [],
+        "period": "",
+        "type": "post"
+      }
+    },
+    {
       "slug": "post/moving1",
       "href": "/post/moving1",
       "contentDir": "post/moving1",
