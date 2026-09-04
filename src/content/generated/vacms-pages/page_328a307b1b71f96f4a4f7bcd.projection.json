@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_328a307b1b71f96f4a4f7bcd",
-    "revisionId": "rev_0d2d52ddd53f158e0d3362b6",
+    "revisionId": "rev_c3ebaa29c425610979c72c6b",
     "slug": "post/printtest",
     "routePath": "/post/printtest",
     "title": "인쇄사고를 줄이는 제본 시뮬레이터 & 인쇄조건 테스트",
@@ -13,10 +13,10 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:2672ced2d4d45ac17ad21c7e8f592a32813b37b5c13245a235c701b0ebc3f46d",
+    "contentHash": "sha256:1ac78baae8f16ea5e07f602181355893305f87f4736dff40bcfca727909e81ea",
     "timing": {
-      "revisionCreatedAt": "2026-09-04T12:46:55.785Z",
-      "publishJobCreatedAt": "2026-09-04T12:47:16.932Z",
+      "revisionCreatedAt": "2026-09-04T12:48:54.356Z",
+      "publishJobCreatedAt": "2026-09-04T12:51:41.891Z",
       "explicitPublishedAt": null
     }
   },

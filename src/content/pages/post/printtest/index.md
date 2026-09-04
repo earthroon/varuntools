@@ -9,11 +9,11 @@ visibility: "public"
 exposure: "{\"route\":true,\"home\":false,\"collection\":\"page\",\"search\":true,\"sitemap\":true,\"nav\":false,\"featured\":false,\"routeOnly\":false}"
 layout: "default"
 navLabel: ""
-tags: []
 publishedDate: ""
 series: ""
 mood: ""
 relatedLinks: []
+tags: []
 category: "post"
 status: "active"
 noindex: false
@@ -24,10 +24,10 @@ slug: "post/printtest"
 source: "vacms"
 vacmsSlug: "printtest"
 vacmsPageId: "page_328a307b1b71f96f4a4f7bcd"
-vacmsRevisionId: "rev_0d2d52ddd53f158e0d3362b6"
+vacmsRevisionId: "rev_c3ebaa29c425610979c72c6b"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:8f58da18ff5fd5c7e49fcff8481a409969f22e9d30916e1fd76c948afa3b2915"
+vacmsPublicSnapshotHash: "sha256:fbc41a277c22da671b988cb8a039a86262054d2f52428b5f28fb259a684ff3cb"
 ---
 
 ::portfolio-hero
@@ -59,8 +59,7 @@ summary: 제본 시뮬레이터 제작
 ::
 
 ::gallery-strip
-title: Visual Experiments
-caption: 吏곸젒 怨좊Ⅸ ?대?吏 臾띠쓬
+title: 불량본
 layout: strip
 lightbox: true
 ::
