@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://varun.tools</loc>
-    <lastmod>2026-06-13</lastmod>
+    <lastmod>2026-07-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -13,8 +13,8 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://varun.tools/lab-markdown-gallery</loc>
-    <lastmod>2026-06-13</lastmod>
+    <loc>https://varun.tools/post/moving1</loc>
+    <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -31,27 +31,9 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://varun.tools/products/categories/templates</loc>
-    <lastmod>2026-06-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://varun.tools/search</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://varun.tools/wiper</loc>
-    <lastmod>2026-06-13</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://varun.tools/works</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://varun.tools/works/tags/homepage</loc>
@@ -72,11 +54,5 @@
     <loc>https://varun.tools/works/tags/work</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://varun.tools/works/varuntools-showroom</loc>
-    <lastmod>2026-06-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
   </url>
 </urlset>

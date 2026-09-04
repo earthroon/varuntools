@@ -1,7 +1,7 @@
 import { computed, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { LoadedMarkdownPage } from '@/markdown/types'
-import { resolveContentCategory, resolveContentKind, resolvePublicExposure } from '@/content/exposureTaxonomy'
+import { isEditorialListingEligible, resolveContentCategory, resolveContentKind, resolvePublicExposure } from '@/content/exposureTaxonomy'
 import { getPublicContentCategoryLabel } from '@/content/publicContentCategoryLabels'
 import { normalizeSearchText } from '@/utils/portfolioSearch'
 import taxonomy from '../../config/public-content-taxonomy.json'
@@ -148,6 +148,7 @@ export function getPublicContentEntries(
 
   return sortEntries(
     pages
+      .filter(isEditorialListingEligible)
       .map(pageToEntry)
       .filter((entry) => !indexSlugs.has(normalizeSlug(entry.slug)))
       .filter((entry) => allowed.has(entry.category))

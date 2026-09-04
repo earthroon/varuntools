@@ -8,7 +8,17 @@ summary: "이미지 전후를 비교하는 쇼룸형 와이퍼 컴포넌트"
 kind: "tool"
 status: "active"
 visibility: "public"
-featured: true
+robots: "noindex,follow"
+featured: false
+exposure:
+  route: true
+  home: false
+  collection: "none"
+  search: false
+  sitemap: false
+  nav: false
+  featured: false
+  routeOnly: true
 order: 3
 date: "2026-04-26"
 updated: "2026-04-26"
@@ -27,7 +37,7 @@ work:
   type: "tool"
   category: "tool"
   status: "published"
-  featured: true
+  featured: false
   weight: 60
   year: 2026
   role:

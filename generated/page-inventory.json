@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T16:43:40.003Z",
+  "generatedAt": "2026-09-04T05:53:34.244Z",
   "pages": [
     {
       "source": "src/content/pages/checkout/fail/index.md",
@@ -234,36 +234,35 @@
       "category": "lab",
       "kind": "lab",
       "status": "active",
-      "visibility": "public",
-      "featured": true,
+      "visibility": "hidden",
+      "featured": false,
       "order": 4,
       "robots": null,
       "noindex": false,
       "section": "lab",
       "collection": "lab",
       "exposure": {
-        "route": true,
+        "route": false,
         "home": false,
         "collection": "lab",
-        "search": true,
-        "sitemap": true,
+        "search": false,
+        "sitemap": false,
         "nav": false,
         "featured": false,
         "routeOnly": false,
-        "blockedReasons": []
+        "blockedReasons": [
+          "visibility:hidden"
+        ]
       },
       "resolvedSurfaces": [
-        "route",
-        "collection:lab",
-        "search",
-        "sitemap"
+        "collection:lab"
       ],
-      "routeEligible": true,
+      "routeEligible": false,
       "homeEligible": false,
-      "searchEligible": true,
-      "sitemapEligible": true,
+      "searchEligible": false,
+      "sitemapEligible": false,
       "navEligible": false,
-      "indexEligible": true,
+      "indexEligible": false,
       "worksEligible": false,
       "utilityRoute": false,
       "tags": [
@@ -544,16 +543,16 @@
       ]
     },
     {
-      "source": "src/content/pages/post/asdasdsads/index.md",
-      "routePath": "/post/asdasdsads",
-      "slug": "post/asdasdsads",
-      "title": "asdasdsads",
+      "source": "src/content/pages/post/moving1/index.md",
+      "routePath": "/post/moving1",
+      "slug": "post/moving1",
+      "title": "구글이 움직인다",
       "category": "post",
-      "kind": "post",
+      "kind": "page",
       "status": "active",
       "visibility": "public",
       "featured": false,
-      "robots": null,
+      "robots": "index,follow",
       "noindex": false,
       "section": "post",
       "collection": "post",
@@ -582,9 +581,7 @@
       "indexEligible": true,
       "worksEligible": false,
       "utilityRoute": false,
-      "tags": [
-        "fdshjfusjdk"
-      ]
+      "tags": []
     },
     {
       "source": "src/content/pages/products/categories/index.md",
@@ -642,7 +639,7 @@
       "category": "product",
       "kind": "page",
       "status": "active",
-      "visibility": "public",
+      "visibility": "hidden",
       "featured": false,
       "order": 22,
       "robots": null,
@@ -650,28 +647,27 @@
       "section": "products",
       "collection": "products",
       "exposure": {
-        "route": true,
+        "route": false,
         "home": false,
         "collection": "products",
-        "search": true,
-        "sitemap": true,
+        "search": false,
+        "sitemap": false,
         "nav": false,
         "featured": false,
         "routeOnly": false,
-        "blockedReasons": []
+        "blockedReasons": [
+          "visibility:hidden"
+        ]
       },
       "resolvedSurfaces": [
-        "route",
-        "collection:products",
-        "search",
-        "sitemap"
+        "collection:products"
       ],
-      "routeEligible": true,
+      "routeEligible": false,
       "homeEligible": false,
-      "searchEligible": true,
-      "sitemapEligible": true,
+      "searchEligible": false,
+      "sitemapEligible": false,
       "navEligible": false,
-      "indexEligible": true,
+      "indexEligible": false,
       "worksEligible": false,
       "utilityRoute": false,
       "tags": [
@@ -878,35 +874,33 @@
       "kind": "tool",
       "status": "active",
       "visibility": "public",
-      "featured": true,
+      "featured": false,
       "order": 3,
-      "robots": null,
-      "noindex": false,
+      "robots": "noindex,follow",
+      "noindex": true,
       "section": "tools",
-      "collection": "tools",
+      "collection": "none",
       "exposure": {
         "route": true,
         "home": false,
-        "collection": "tools",
-        "search": true,
-        "sitemap": true,
+        "collection": "none",
+        "search": false,
+        "sitemap": false,
         "nav": false,
         "featured": false,
-        "routeOnly": false,
+        "routeOnly": true,
         "blockedReasons": []
       },
       "resolvedSurfaces": [
         "route",
-        "collection:tools",
-        "search",
-        "sitemap"
+        "routeOnly"
       ],
       "routeEligible": true,
       "homeEligible": false,
-      "searchEligible": true,
-      "sitemapEligible": true,
+      "searchEligible": false,
+      "sitemapEligible": false,
       "navEligible": false,
-      "indexEligible": true,
+      "indexEligible": false,
       "worksEligible": false,
       "utilityRoute": false,
       "tags": [
@@ -970,7 +964,7 @@
       "category": "work",
       "kind": "page",
       "status": "active",
-      "visibility": "public",
+      "visibility": "hidden",
       "featured": false,
       "order": 2,
       "robots": null,
@@ -978,29 +972,28 @@
       "section": "works",
       "collection": "works",
       "exposure": {
-        "route": true,
+        "route": false,
         "home": false,
         "collection": "works",
-        "search": true,
-        "sitemap": true,
+        "search": false,
+        "sitemap": false,
         "nav": false,
         "featured": false,
         "routeOnly": false,
-        "blockedReasons": []
+        "blockedReasons": [
+          "visibility:hidden"
+        ]
       },
       "resolvedSurfaces": [
-        "route",
-        "collection:works",
-        "search",
-        "sitemap"
+        "collection:works"
       ],
-      "routeEligible": true,
+      "routeEligible": false,
       "homeEligible": false,
-      "searchEligible": true,
-      "sitemapEligible": true,
+      "searchEligible": false,
+      "sitemapEligible": false,
       "navEligible": false,
-      "indexEligible": true,
-      "worksEligible": true,
+      "indexEligible": false,
+      "worksEligible": false,
       "utilityRoute": false,
       "tags": []
     },
@@ -1013,37 +1006,36 @@
       "category": "work",
       "kind": "work",
       "status": "active",
-      "visibility": "public",
-      "featured": true,
+      "visibility": "hidden",
+      "featured": false,
       "order": 1,
       "robots": null,
       "noindex": false,
       "section": "works",
       "collection": "works",
       "exposure": {
-        "route": true,
+        "route": false,
         "home": false,
         "collection": "works",
-        "search": true,
-        "sitemap": true,
+        "search": false,
+        "sitemap": false,
         "nav": false,
         "featured": false,
         "routeOnly": false,
-        "blockedReasons": []
+        "blockedReasons": [
+          "visibility:hidden"
+        ]
       },
       "resolvedSurfaces": [
-        "route",
-        "collection:works",
-        "search",
-        "sitemap"
+        "collection:works"
       ],
-      "routeEligible": true,
+      "routeEligible": false,
       "homeEligible": false,
-      "searchEligible": true,
-      "sitemapEligible": true,
+      "searchEligible": false,
+      "sitemapEligible": false,
       "navEligible": false,
-      "indexEligible": true,
-      "worksEligible": true,
+      "indexEligible": false,
+      "worksEligible": false,
       "utilityRoute": false,
       "tags": [
         "work",
@@ -1055,12 +1047,12 @@
   ],
   "summary": {
     "total": 23,
-    "public": 13,
-    "hidden": 10,
+    "public": 9,
+    "hidden": 14,
     "private": 0,
     "draft": 0,
-    "noindex": 12,
-    "featured": 3,
+    "noindex": 13,
+    "featured": 0,
     "warnings": 0,
     "errors": 0,
     "sections": {

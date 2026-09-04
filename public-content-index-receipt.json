@@ -4,8 +4,8 @@
   "status": "PASS_CMS_207H_PUBLIC_CONTENT_INDEX_BUILD",
   "sourceSchemaVersion": "cms-207m-public-content-projection@1",
   "indexPath": "dist/public-content-index.json",
-  "indexSha256": "210762d4d381a99f03e9a708aa2ec1b1c280fb0b2fc0db9ebd72fb1143fc21bb",
-  "entryCount": 8,
+  "indexSha256": "b6f28c9571236e98c20db90dc5fb96b60b4c83bb612c98c2700f474e332c97a7",
+  "entryCount": 5,
   "vacmsEntryCount": 1,
-  "generatedAt": "2026-08-29T02:44:45.224Z"
+  "generatedAt": "2026-09-04T05:54:04.201Z"
 }

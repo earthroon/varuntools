@@ -10,6 +10,7 @@ import {
 } from './publicContentTaxonomy'
 
 export type PublicVisibility = 'public' | 'hidden' | 'private' | 'draft'
+export type EditorialDiscoverability = 'listed' | 'unlisted' | 'internal'
 
 export type PublicExposure = {
   route: boolean
@@ -202,6 +203,28 @@ export function isSitemapEligible(page: LoadedMarkdownPage): boolean {
 
 export function isHomepageEligible(page: LoadedMarkdownPage): boolean {
   return resolvePublicExposure(page).home
+}
+
+export function resolveEditorialDiscoverability(
+  page: LoadedMarkdownPage,
+): EditorialDiscoverability {
+  const exposure = resolvePublicExposure(page)
+  if (exposure.visibility !== 'public' || !exposure.route) return 'internal'
+
+  const discoverySurfaces = exposure.resolvedSurfaces.filter(
+    (surface) => surface !== 'route' && surface !== 'routeOnly',
+  )
+  if (
+    exposure.routeOnly
+    || exposure.collection === 'none'
+    || discoverySurfaces.length === 0
+  ) return 'unlisted'
+
+  return 'listed'
+}
+
+export function isEditorialListingEligible(page: LoadedMarkdownPage): boolean {
+  return resolveEditorialDiscoverability(page) === 'listed'
 }
 
 export function getCollectionKey(page: LoadedMarkdownPage): string {

@@ -50,6 +50,8 @@ function isEligible(entry, taxonomy) {
   if (taxonomy.collectionIndexSlugs.has(trimSlashes(entry.slug))) return false
   if (taxonomy.publicIndexCategories.size && !taxonomy.publicIndexCategories.has(entry.category)) return false
   if (BLOCKED_VISIBILITIES.has(entry.visibility)) return false
+  if (entry.editorialVisibility && entry.editorialVisibility !== 'listed') return false
+  if (entry.routeOnly === true || entry.collection === 'none') return false
   if (BLOCKED_STATUSES.has(entry.status)) return false
   return true
 }

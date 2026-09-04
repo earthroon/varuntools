@@ -10,17 +10,25 @@ import {
 } from '@/markdown/lazyMarkdownPageLoader'
 import { normalizePageSlug } from '@/markdown/pageLookup'
 import type { LoadedMarkdownPage } from '@/markdown/types'
+import { isEditorialListingEligible, isPublicRouteEligible } from '@/content/exposureTaxonomy'
 
 type MarkdownRouteLoadState = 'idle' | 'loading' | 'ready' | 'not_found' | 'error'
 
 const route = useRoute()
 const slug = computed(() => normalizePageSlug(route.params.slug, 'home'))
-const initialCachedPage = readCachedMarkdownPageBySlug(slug.value)
-const initialCachedPages = readCachedMarkdownPages()
+const rawInitialCachedPage = readCachedMarkdownPageBySlug(slug.value)
+const initialCachedPage = rawInitialCachedPage && isPublicRouteEligible(rawInitialCachedPage)
+  ? rawInitialCachedPage
+  : null
+const initialCachedPages = readCachedMarkdownPages().filter(isEditorialListingEligible)
 
 const page = shallowRef<LoadedMarkdownPage | null>(initialCachedPage)
 const pages = shallowRef<LoadedMarkdownPage[]>(
-  initialCachedPages.length ? initialCachedPages : initialCachedPage ? [initialCachedPage] : [],
+  initialCachedPages.length
+    ? initialCachedPages
+    : initialCachedPage && isEditorialListingEligible(initialCachedPage)
+      ? [initialCachedPage]
+      : [],
 )
 const loadState = ref<MarkdownRouteLoadState>(initialCachedPage ? 'ready' : 'idle')
 const loadError = ref('')
@@ -35,12 +43,12 @@ watch(
     allPagesPromise
       .then((loadedPages) => {
         if (currentRequestId === requestId) {
-          pages.value = loadedPages
+          pages.value = loadedPages.filter(isEditorialListingEligible)
         }
       })
       .catch(() => {})
     const cachedPage = readCachedMarkdownPageBySlug(nextSlug)
-    if (cachedPage) {
+    if (cachedPage && isPublicRouteEligible(cachedPage)) {
       page.value = cachedPage
       loadState.value = 'ready'
       loadError.value = ''
@@ -51,7 +59,7 @@ watch(
     loadError.value = ''
 
     const cached = readCachedMarkdownPageBySlug(nextSlug)
-    if (cached) {
+    if (cached && isPublicRouteEligible(cached)) {
       page.value = cached
       loadState.value = 'ready'
       return
@@ -62,7 +70,7 @@ watch(
       const loaded = await loadMarkdownPageBySlug(nextSlug)
       if (currentRequestId !== requestId) return
 
-      if (loaded) {
+      if (loaded && isPublicRouteEligible(loaded)) {
 
 
         page.value = loaded

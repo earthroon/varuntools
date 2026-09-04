@@ -7,8 +7,8 @@ description: "바룬툴즈 홈페이지와 스토어 카탈로그 구조를 정�
 summary: "홈, 작업, 도구, 실험, 상품 카탈로그를 하나의 콘텐츠 구조로 묶은 VARUNTOOLS 쇼룸 시스템."
 kind: "work"
 status: "active"
-visibility: "public"
-featured: true
+visibility: "hidden"
+featured: false
 order: 1
 cover: "./images/cover.svg"
 thumbnail: "./images/cover.svg"
@@ -24,7 +24,7 @@ work:
   type: "system"
   category: "system"
   status: "published"
-  featured: true
+  featured: false
   weight: 90
   year: 2026
   role:

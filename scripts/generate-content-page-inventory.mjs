@@ -287,8 +287,8 @@ function itemFor(file) {
     searchEligible: exposure.search,
     sitemapEligible: exposure.sitemap,
     navEligible: exposure.nav,
-    indexEligible: visibility === 'public' && exposure.route && PUBLIC_INDEX_CATEGORY.has(category),
-    worksEligible: visibility === 'public' && exposure.route && WORK_ROUTE_CATEGORY.has(category),
+    indexEligible: visibility === 'public' && exposure.route && !exposure.routeOnly && exposure.collection !== 'none' && PUBLIC_INDEX_CATEGORY.has(category),
+    worksEligible: visibility === 'public' && exposure.route && !exposure.routeOnly && exposure.collection !== 'none' && WORK_ROUTE_CATEGORY.has(category),
     utilityRoute: UTILITY_ROUTE_CATEGORY.has(category),
     tags: Array.isArray(data.tags) ? data.tags : [],
   }

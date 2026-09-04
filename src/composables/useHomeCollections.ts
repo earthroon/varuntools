@@ -25,6 +25,8 @@ export type HomeCollectionEntry = {
   order: number
   featured: boolean
   visibility: string
+  editorialVisibility: string
+  routeOnly: boolean
   status: string
   cover: string
   thumbnail: string
@@ -96,6 +98,10 @@ export function normalizeHomeCollectionEntry(raw: unknown): HomeCollectionEntry 
   const collection = readString(source.collection) || kind
   const cover = readString(source.cover)
   const workStatus = readString(work.status) || readString(source.workStatus) || readString(source.status) || 'active'
+  const visibility = readString(source.visibility) || 'public'
+  const routeOnly = readBoolean(source.routeOnly)
+  const editorialVisibility = readString(source.editorialVisibility)
+    || (visibility !== 'public' ? 'internal' : routeOnly || collection === 'none' ? 'unlisted' : 'listed')
 
   return {
     slug,
@@ -110,7 +116,9 @@ export function normalizeHomeCollectionEntry(raw: unknown): HomeCollectionEntry 
     tags: readTags(source.tags),
     order: readNumber(source.order, 9999),
     featured: readBoolean(source.featured),
-    visibility: readString(source.visibility) || 'public',
+    visibility,
+    editorialVisibility,
+    routeOnly,
     status: readString(source.status) || 'active',
     cover,
     thumbnail: readString(source.thumbnail) || cover,
@@ -144,6 +152,8 @@ export function normalizeRuntimeHomeCollectionEntry(raw: RuntimePublicContentInd
 
 function isPublicEntry(entry: HomeCollectionEntry): boolean {
   if (entry.visibility !== 'public') return false
+  if (entry.editorialVisibility !== 'listed') return false
+  if (entry.routeOnly || entry.collection === 'none') return false
   return !HIDDEN_STATUSES.has(entry.status)
 }
 

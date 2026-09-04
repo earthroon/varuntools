@@ -7,8 +7,8 @@ description: "VARUNTOOLS 마크다운 컴포넌트를 검수하는 시각 QA 보
 summary: "마크다운 화면 구성요소를 검수하는 시각 QA 갤러리입니다."
 kind: "lab"
 status: "active"
-visibility: "public"
-featured: true
+visibility: "hidden"
+featured: false
 order: 4
 date: "2026-04-26"
 updated: "2026-05-04"
@@ -27,7 +27,7 @@ work:
   type: "experiment"
   category: "experiment"
   status: "published"
-  featured: true
+  featured: false
   weight: 40
   year: 2026
   role:

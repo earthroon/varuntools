@@ -140,6 +140,12 @@ const entries = listIndexMarkdown(CONTENT_ROOT).map((file) => {
     || readString(frontmatter.ogImage)
   const status = readString(exposure.status) || readString(frontmatter.status) || 'active'
   const visibility = readString(exposure.visibility) || readString(frontmatter.visibility) || 'public'
+  const routeOnly = readBoolean(exposure.routeOnly)
+  const editorialVisibility = visibility !== 'public'
+    ? 'internal'
+    : routeOnly || collection === 'none'
+      ? 'unlisted'
+      : 'listed'
   const hasWorkMetadata = Object.keys(work).length > 0
     || category === 'work'
     || category === 'case-study'
@@ -161,6 +167,8 @@ const entries = listIndexMarkdown(CONTENT_ROOT).map((file) => {
     order: readNumber(frontmatter.order, 9999),
     featured: readBoolean(frontmatter.featured) || readBoolean(exposure.featured) || readBoolean(work.featured),
     visibility,
+    editorialVisibility,
+    routeOnly,
     status,
     cover,
     thumbnail: readString(frontmatter.thumbnail) || cover,

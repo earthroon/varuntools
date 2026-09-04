@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generatedAt": "2026-06-23T05:47:35.716Z",
+  "generatedAt": "2026-09-04T05:53:35.128Z",
   "site": {
     "origin": "https://varun.tools",
     "defaultTitle": "VARUNTOOLS",
@@ -74,7 +74,7 @@
       "indexable": true,
       "noindexReason": "",
       "sourcePath": "src/content/pages/home/index.md",
-      "lastmod": "2026-06-13",
+      "lastmod": "2026-07-02",
       "warningCodes": []
     },
     {
@@ -105,10 +105,10 @@
       "imageExists": true,
       "type": "lab",
       "status": "active",
-      "indexable": true,
-      "noindexReason": "",
+      "indexable": false,
+      "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/lab-markdown-gallery/index.md",
-      "lastmod": "2026-06-13",
+      "lastmod": "2026-09-04",
       "warningCodes": []
     },
     {
@@ -220,6 +220,24 @@
       ]
     },
     {
+      "slug": "post/moving1",
+      "href": "/post/moving1",
+      "canonicalUrl": "https://varun.tools/post/moving1",
+      "title": "구글이 움직인다",
+      "description": "구글영상",
+      "image": "https://varun.tools/og/default-og.svg",
+      "imageExists": false,
+      "type": "page",
+      "status": "active",
+      "indexable": true,
+      "noindexReason": "",
+      "sourcePath": "src/content/pages/post/moving1/index.md",
+      "lastmod": "2026-09-04",
+      "warningCodes": [
+        "PORTFOLIO_SEO_IMAGE_MISSING_FILE"
+      ]
+    },
+    {
       "slug": "products/categories",
       "href": "/products/categories",
       "canonicalUrl": "https://varun.tools/products/categories",
@@ -247,10 +265,10 @@
       "imageExists": true,
       "type": "page",
       "status": "active",
-      "indexable": true,
-      "noindexReason": "",
+      "indexable": false,
+      "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/products/categories/templates/index.md",
-      "lastmod": "2026-06-13",
+      "lastmod": "2026-07-02",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -302,7 +320,7 @@
       "indexable": false,
       "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/products/spec-playground/index.md",
-      "lastmod": "2026-06-23",
+      "lastmod": "2026-06-24",
       "warningCodes": []
     },
     {
@@ -331,10 +349,10 @@
       "imageExists": true,
       "type": "tool",
       "status": "active",
-      "indexable": true,
-      "noindexReason": "",
+      "indexable": false,
+      "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/wiper/index.md",
-      "lastmod": "2026-06-13",
+      "lastmod": "2026-09-04",
       "warningCodes": []
     },
     {
@@ -365,10 +383,10 @@
       "imageExists": true,
       "type": "page",
       "status": "active",
-      "indexable": true,
-      "noindexReason": "",
+      "indexable": false,
+      "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/works/index.md",
-      "lastmod": "2026-06-19",
+      "lastmod": "2026-07-02",
       "warningCodes": [
         "PORTFOLIO_SEO_MISSING_IMAGE"
       ]
@@ -383,10 +401,10 @@
       "imageExists": true,
       "type": "work",
       "status": "active",
-      "indexable": true,
-      "noindexReason": "",
+      "indexable": false,
+      "noindexReason": "draft/private/hidden/noindex",
       "sourcePath": "src/content/pages/works/varuntools-showroom/index.md",
-      "lastmod": "2026-06-19",
+      "lastmod": "2026-09-04",
       "warningCodes": []
     },
     {
@@ -471,11 +489,11 @@
     }
   ],
   "summary": {
-    "total": 27,
-    "indexable": 14,
-    "noindex": 13,
+    "total": 28,
+    "indexable": 10,
+    "noindex": 18,
     "missingTitle": 0,
     "missingDescription": 0,
-    "missingImage": 15
+    "missingImage": 16
   }
 }

@@ -34,6 +34,8 @@ const entries = source.entries.map((entry) => ({
   order: Number.isFinite(Number(entry.order)) ? Number(entry.order) : 9999,
   featured: entry.featured === true,
   visibility: entry.visibility || 'public',
+  editorialVisibility: entry.editorialVisibility || (entry.visibility === 'public' ? 'listed' : 'internal'),
+  routeOnly: entry.routeOnly === true,
   status: entry.status || 'active',
   cover: entry.cover || '',
   thumbnail: entry.thumbnail || entry.cover || '',
