@@ -19,7 +19,19 @@ const combinedLayoutCss = `${layout}\n${responsive}`
 check(combinedLayoutCss.includes('.vt-media-breakout'), '.vt-media-breakout class must exist in layout CSS')
 check(/\.vt-media-breakout\s*\{[\s\S]*--vt-media-max/.test(combinedLayoutCss), '.vt-media-breakout must reference --vt-media-max')
 check(/\.vt-media-breakout\s*\{[\s\S]*(100vw|100dvw|calc\(100vw)/.test(combinedLayoutCss), '.vt-media-breakout must use viewport-based width')
-check(responsive.includes('--vt-before-after-max: 520px;'), '--vt-before-after-max must seal the desktop comparison rail at half of the 1040px media rail')
+check(
+  responsive.includes('--vt-before-after-max: 260px;'),
+  '--vt-before-after-max must seal the desktop comparison rail at 260px',
+)
+check(
+  responsive.includes('--vt-media-max: 1040px;')
+    && responsive.includes('--vt-before-after-max: 260px;'),
+  'before-after projection rail must remain one-quarter of the 1040px general media rail',
+)
+check(
+  !responsive.includes('--vt-before-after-max: 520px;'),
+  'legacy 520px before-after projection authority must be retired',
+)
 check(/@media \(min-width: 720px\)[\s\S]*\.vt-before-after-figure\.vt-media-breakout\s*\{[\s\S]*--vt-before-after-max/.test(responsive), 'before-after desktop rail must use the compact projection token')
 check(/\.vt-before-after-figure\.vt-media-breakout\s*\{[\s\S]*width:\s*min\(var\(--vt-before-after-max\)/.test(responsive), 'before-after compact rail must own width through --vt-before-after-max')
 check(responsive.includes('--vt-home-max'), '--vt-home-max token must exist')
