@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_328a307b1b71f96f4a4f7bcd",
-    "revisionId": "rev_82d2983a9a10d33cae29b120",
+    "revisionId": "rev_1a1b494b8779eedb752a2293",
     "slug": "post/printtest",
     "routePath": "/post/printtest",
     "title": "제본 시뮬레이터 & 인쇄조건 테스트",
@@ -13,10 +13,10 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:994aae26f099feeab790947fd9beef37bb7bfeef4647172aa0ab6a6de6cbab38",
+    "contentHash": "sha256:a9e209d9dfed67aa7799a1100c637a6fb99ae5afb99405b15414860b18a0684a",
     "timing": {
-      "revisionCreatedAt": "2026-09-04T15:12:05.726Z",
-      "publishJobCreatedAt": "2026-09-04T15:12:20.146Z",
+      "revisionCreatedAt": "2026-09-04T15:16:21.202Z",
+      "publishJobCreatedAt": "2026-09-04T15:16:37.475Z",
       "explicitPublishedAt": null
     }
   },

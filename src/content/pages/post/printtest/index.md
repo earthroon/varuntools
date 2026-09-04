@@ -24,10 +24,10 @@ slug: "post/printtest"
 source: "vacms"
 vacmsSlug: "printtest"
 vacmsPageId: "page_328a307b1b71f96f4a4f7bcd"
-vacmsRevisionId: "rev_82d2983a9a10d33cae29b120"
+vacmsRevisionId: "rev_1a1b494b8779eedb752a2293"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:4b5e1cbcff7e7c6be2c4ed0557882d72598086af7500380dd23659156273eedd"
+vacmsPublicSnapshotHash: "sha256:cdf5110ac77e0ea4d1cc243082e10d63d7e6856fde1a0cc97a3c94997f3dd31e"
 ---
 
 
@@ -76,11 +76,13 @@ caption: 인디자인 PDF 예시
 ratio: 1:1
 ::
 
+::section-gap
+
+
 ::editorial-title
 title: 출력조건 확인
-subtitle: 불량이 반복적으로 발생하여 흑백 인쇄 시, 그레이 채널 단독으로 출력하지 않음을 잡아내서 본품 출력전에 컬러 불량을 막아냄. (K 단색이 아닌 CMYK혼합으로 출력하면 특정 색이 녹아나옵니다.)
+subtitle: 흑백 인쇄 시 그레이 채널 단독으로 출력하지 않음을 잡아 내, 본 제작 전에 컬러 불량을 막아냄.  (K 단색이 아닌 CMYK혼합으로 출력하면 특정 색이 녹아나옵니다.)
 ::
-
 
 ::editorial-columns
 ::
@@ -91,11 +93,12 @@ subtitle: 불량이 반복적으로 발생하여 흑백 인쇄 시, 그레이 �
 혼합회색으로 4도출력해서 특정 색이 녹아나왔습니다.
 ::
 
+
 ::before-after
 before: /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_79f0e0f155bc0da7c7f6296c/2.webp
 beforeAssetId: asset_79f0e0f155bc0da7c7f6296c
 after: /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_6caccfed6398e11d4098cafb/2.webp
 afterAssetId: asset_6caccfed6398e11d4098cafb
-caption: 전/후
+caption: 올바른 출력/ 불량 출력
 initial: 50
 ::
