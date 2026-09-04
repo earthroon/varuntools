@@ -24,10 +24,10 @@ slug: "post/printtest"
 source: "vacms"
 vacmsSlug: "printtest"
 vacmsPageId: "page_328a307b1b71f96f4a4f7bcd"
-vacmsRevisionId: "rev_a300bd5747cb53259ccf263b"
+vacmsRevisionId: "rev_2fd9a1fca06dd53712c642b5"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:6d547d669432e1fa17928db980412fa5a72d36e6e1d83ec70b21748a5b943306"
+vacmsPublicSnapshotHash: "sha256:3e91383f418d91581b42a8fbe0aa1527193d47a5cf42f17af2da76a422e761d4"
 ---
 
 
@@ -79,13 +79,18 @@ ratio: 1:1
 
 
 
-::section-break
+
+
+
+
+
+
+
+::section-gap
 
 ::editorial-title
-title: 출력조건 확인
-subtitle: 흑백 인쇄 시 그레이 채널 단독으로 출력하지 않음을 잡아 내, 본 제작 전에 컬러 불량을 막아냄.  (K 단색이 아닌 CMYK혼합으로 출력하면 특정 색이 녹아나옵니다.)
+title: 출력교정
 ::
-
 
 ::editorial-columns
 ::
