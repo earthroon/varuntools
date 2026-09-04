@@ -18,7 +18,7 @@ slug: "post/portfolio"
 source: "vacms"
 vacmsSlug: "portfolio"
 vacmsPageId: "page_aabb91c85c0f2d1073832090"
-vacmsRevisionId: "rev_3013a11cddf9517a11f435a7"
+vacmsRevisionId: "rev_ddbe877721d0a4f66bb4912d"
 vacmsProjectionSchema: "vacms-public-projection@1"
 ---
 
@@ -29,9 +29,7 @@ title: 빠르게 이해되고 오래 남는 결과를 설계합니다
 subtitle: 복잡한 제작 과정을 더 적은 인지비용으로 이해되고, 더 적은 시행착오로 반복 가능한 구조로 바꿉니다.
 ::
 
-::editorial-title
-title: 작업방식
-::
+
 
 ::editorial-columns
 ::
