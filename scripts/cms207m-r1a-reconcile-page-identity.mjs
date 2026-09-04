@@ -79,6 +79,8 @@ const classified = classifyVacmsPageTransition({
 })
 
 const retiredPaths = classified.retiredPaths
+const previousSnapshot = classified.previousSnapshot || null
+const incomingSnapshot = classified.incomingSnapshot
 for (const retiredPath of retiredPaths) {
   if (!isSafeVacmsPagePath(retiredPath) || retiredPath === incomingPath) {
     failR1a('E_CMS207M_R1A_PREDECESSOR_PATH_UNSAFE', `Predecessor path is unsafe: ${retiredPath}`)
@@ -124,6 +126,16 @@ const nextReceipt = {
   transition: classified.transition,
   previousRevisionId: classified.previousRevisionId,
   incomingRevisionId,
+  previousPublicSnapshotHash: previousSnapshot?.publicSnapshotHash || null,
+  incomingPublicSnapshotHash: incomingSnapshot.publicSnapshotHash,
+  previousPageProjectionHash: previousSnapshot?.pageProjectionHash || null,
+  incomingPageProjectionHash: incomingSnapshot.pageProjectionHash,
+  previousRevisionProjectionHash: previousSnapshot?.revisionProjectionHash || null,
+  incomingRevisionProjectionHash: incomingSnapshot.revisionProjectionHash,
+  pageProjectionChanged: previousSnapshot ? previousSnapshot.pageProjectionHash !== incomingSnapshot.pageProjectionHash : false,
+  revisionProjectionChanged: previousSnapshot ? previousSnapshot.revisionProjectionHash !== incomingSnapshot.revisionProjectionHash : false,
+  snapshotIdentityBootstrapped: classified.transition === 'snapshot_identity_bootstrap',
+  metadataProjectionUpdate: classified.transition === 'metadata_projection_update',
   currentGeneratedPath: incomingPath,
   predecessors: predecessors.map((entry) => ({
     path: entry.path,

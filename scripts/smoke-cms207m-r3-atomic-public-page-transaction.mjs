@@ -6,6 +6,9 @@ const pagesWorkflow = fs.readFileSync('.github/workflows/pages.yml', 'utf8')
 const materializer = fs.readFileSync('scripts/materialize-vacms-public-page.mjs', 'utf8')
 const admitter = fs.readFileSync('scripts/admit-vacms-public-page.mjs', 'utf8')
 const committer = fs.readFileSync('scripts/commit-vacms-public-page-transaction.mjs', 'utf8')
+const reconciler = fs.readFileSync('scripts/cms207m-r1a-reconcile-page-identity.mjs', 'utf8')
+const identityAuthority = fs.readFileSync('scripts/lib/cms207m-r1a-page-identity.mjs', 'utf8')
+const snapshotAuthority = fs.readFileSync('scripts/lib/cms207m-public-snapshot-identity.mjs', 'utf8')
 const failures = []
 function check(name, condition) {
   if (condition) console.log('PASS ' + name)
@@ -34,9 +37,21 @@ check('Pages dispatch is keyed by exact source commit SHA', live.includes('sourc
 check('no-change source transaction skips Pages dispatch', live.includes('source.sourceCommitted === true') && live.includes('dispatched: false') && live.includes('source_not_advanced'))
 check('finalize names Pages workflow dispatch authority', live.includes("deployTarget: 'pages-workflow-dispatch'"))
 check('live transaction finalizes source publication', live.includes("result: source.sourceCommitted === true ? 'published' : 'no_changes'"))
-check('materializer uses only node imports', [...materializer.matchAll(/from\s+['"]([^'"]+)['"]/g)].every((match) => match[1].startsWith('node:')))
-check('admitter uses only node imports', [...admitter.matchAll(/from\s+['"]([^'"]+)['"]/g)].every((match) => match[1].startsWith('node:')))
-check('committer uses only node imports', [...committer.matchAll(/from\s+['"]([^'"]+)['"]/g)].every((match) => match[1].startsWith('node:')))
+const dependencyFreeImports = (source, allowedLocal = []) =>
+  [...source.matchAll(/from\s+['"]([^'"]+)['"]/g)]
+    .every((match) => match[1].startsWith('node:') || allowedLocal.includes(match[1]))
+
+check('materializer remains dependency-free with snapshot identity SSOT', dependencyFreeImports(materializer, ['./lib/cms207m-public-snapshot-identity.mjs']))
+check('admitter remains dependency-free with snapshot identity SSOT', dependencyFreeImports(admitter, ['./lib/cms207m-public-snapshot-identity.mjs']))
+check('committer uses only node imports', dependencyFreeImports(committer))
+check('materializer imports snapshot identity SSOT', materializer.includes("from './lib/cms207m-public-snapshot-identity.mjs'"))
+check('R1A imports snapshot identity SSOT', identityAuthority.includes("from './cms207m-public-snapshot-identity.mjs'"))
+check('admission imports snapshot identity SSOT', admitter.includes("from './lib/cms207m-public-snapshot-identity.mjs'"))
+check('snapshot schema is emitted into materialized Markdown', materializer.includes('vacmsPublicSnapshotSchema') && materializer.includes('vacmsPublicSnapshotHash'))
+check('same-revision revision projection drift remains hard-failed', identityAuthority.includes('E_CMS207M_R3_R3_SAME_REVISION_REVISION_PROJECTION_DRIFT'))
+check('metadata-only public projection transition exists', identityAuthority.includes("transition: 'metadata_projection_update'"))
+check('reconcile records incoming public snapshot authority', reconciler.includes('incomingPublicSnapshotHash') && reconciler.includes('incomingPageProjectionHash') && reconciler.includes('incomingRevisionProjectionHash'))
+check('snapshot authority uses node crypto only', dependencyFreeImports(snapshotAuthority, ['./cms207m-public-projection.mjs']))
 
 const identityNameConfig = "runGit(\n  ['config', '--local', 'user.name', COMMIT_IDENTITY_NAME]"
 const identityEmailConfig = "runGit(\n  ['config', '--local', 'user.email', COMMIT_IDENTITY_EMAIL]"

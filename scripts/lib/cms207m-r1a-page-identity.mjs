@@ -1,6 +1,11 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { normalizeSlash, parseFrontmatter, readString } from './cms207m-public-projection.mjs'
+import {
+  derivePublicSnapshotIdentityFromMarkdown,
+  maskPageProjectionBytes,
+  stripSnapshotIdentityBytes,
+} from './cms207m-public-snapshot-identity.mjs'
 
 export const CMS207M_R1A_PATCH_ID = 'CMS-207M-R1A'
 export const CMS207M_R1A_PASS = 'PASS_CMS_207M_R1A_SAME_PAGE_REVISION_REPLACEMENT'
@@ -29,14 +34,36 @@ export function isSafeVacmsPagePath(value) {
 
 export function readVacmsMarkdownIdentity(markdown, sourcePath = '') {
   const frontmatter = parseFrontmatter(markdown)
+  const source = readString(frontmatter.source) || 'repository'
+  const pageId = readString(frontmatter.vacmsPageId)
+  const revisionId = readString(frontmatter.vacmsRevisionId) || null
+  const projectionSchema = readString(frontmatter.vacmsProjectionSchema) || null
+
+  let snapshotIdentity = null
+  if (source === 'vacms' && pageId && revisionId && projectionSchema) {
+    try {
+      snapshotIdentity = derivePublicSnapshotIdentityFromMarkdown(markdown, sourcePath)
+    } catch (error) {
+      if (error && typeof error === 'object' && typeof error.code === 'string') {
+        failR1a(error.code, error.message || error.code, error.details || {})
+      }
+      throw error
+    }
+  }
+
   return {
     path: normalizeSlash(sourcePath),
-    source: readString(frontmatter.source) || 'repository',
-    pageId: readString(frontmatter.vacmsPageId),
-    revisionId: readString(frontmatter.vacmsRevisionId) || null,
-    projectionSchema: readString(frontmatter.vacmsProjectionSchema) || null,
+    source,
+    pageId,
+    revisionId,
+    projectionSchema,
     slug: readString(frontmatter.slug),
     title: readString(frontmatter.title),
+    publicSnapshotSchema: snapshotIdentity?.publicSnapshotSchema || null,
+    publicSnapshotHash: snapshotIdentity?.publicSnapshotHash || null,
+    pageProjectionHash: snapshotIdentity?.pageProjectionHash || null,
+    revisionProjectionHash: snapshotIdentity?.revisionProjectionHash || null,
+    snapshotIdentityEmbedded: snapshotIdentity?.snapshotIdentityEmbedded === true,
   }
 }
 
@@ -71,6 +98,20 @@ export function classifyVacmsPageTransition({ predecessors, incomingPath, incomi
   if (!isSafeVacmsPagePath(currentPath)) {
     failR1a('E_CMS207M_R1A_CURRENT_PATH_UNSAFE', `Incoming generatedPath is unsafe: ${currentPath}`)
   }
+  if (typeof currentContent !== 'string') {
+    failR1a('E_CMS207M_R3_R3_CURRENT_CONTENT_MISSING', 'Composite public snapshot classification requires current Markdown bytes.')
+  }
+
+  let incomingSnapshot
+  try {
+    incomingSnapshot = derivePublicSnapshotIdentityFromMarkdown(currentContent, currentPath)
+  } catch (error) {
+    if (error && typeof error === 'object' && typeof error.code === 'string') {
+      failR1a(error.code, error.message || error.code, error.details || {})
+    }
+    throw error
+  }
+
   if (predecessors.length > 1) {
     failR1a(
       'E_CMS207M_R1A_DUPLICATE_PAGE_IDENTITY_PATHS',
@@ -78,39 +119,123 @@ export function classifyVacmsPageTransition({ predecessors, incomingPath, incomi
       { predecessorPaths: predecessors.map((entry) => entry.path) },
     )
   }
+
+  const withIdentity = (result, previous = null) => ({
+    ...result,
+    previousSnapshot: previous ? {
+      publicSnapshotHash: previous.publicSnapshotHash || null,
+      pageProjectionHash: previous.pageProjectionHash || null,
+      revisionProjectionHash: previous.revisionProjectionHash || null,
+      snapshotIdentityEmbedded: previous.snapshotIdentityEmbedded === true,
+    } : null,
+    incomingSnapshot: {
+      publicSnapshotHash: incomingSnapshot.publicSnapshotHash,
+      pageProjectionHash: incomingSnapshot.pageProjectionHash,
+      revisionProjectionHash: incomingSnapshot.revisionProjectionHash,
+      snapshotIdentityEmbedded: incomingSnapshot.snapshotIdentityEmbedded === true,
+    },
+  })
+
   if (predecessors.length === 0) {
-    return { transition: 'first_publish', previousRevisionId: null, retiredPaths: [] }
+    return withIdentity({
+      transition: 'first_publish',
+      previousRevisionId: null,
+      retiredPaths: [],
+    })
   }
 
   const previous = predecessors[0]
   if (normalizeSlash(previous.path) !== currentPath) {
-    return {
+    return withIdentity({
       transition: 'route_move',
       previousRevisionId: previous.revisionId || null,
       retiredPaths: [normalizeSlash(previous.path)],
-    }
+    }, previous)
   }
 
-  if ((previous.revisionId || null) === (incomingRevisionId || null)) {
-    if (typeof previous.content === 'string' && typeof currentContent === 'string' && previous.content !== currentContent) {
+  if ((previous.revisionId || null) !== (incomingRevisionId || null)) {
+    return withIdentity({
+      transition: 'in_place_revision_replacement',
+      previousRevisionId: previous.revisionId || null,
+      retiredPaths: [],
+    }, previous)
+  }
+
+  if (!previous.revisionProjectionHash || !previous.pageProjectionHash || !previous.publicSnapshotHash) {
+    failR1a(
+      'E_CMS207M_R3_R3_PREVIOUS_SNAPSHOT_IDENTITY_MISSING',
+      'Current predecessor cannot be classified without derived public snapshot identity.',
+      { path: currentPath, revisionId: incomingRevisionId || null },
+    )
+  }
+
+  if (previous.revisionProjectionHash !== incomingSnapshot.revisionProjectionHash) {
+    failR1a(
+      'E_CMS207M_R3_R3_SAME_REVISION_REVISION_PROJECTION_DRIFT',
+      'The same VACMS revision changed revision-owned public material.',
+      {
+        path: currentPath,
+        revisionId: incomingRevisionId || null,
+        previousRevisionProjectionHash: previous.revisionProjectionHash,
+        incomingRevisionProjectionHash: incomingSnapshot.revisionProjectionHash,
+      },
+    )
+  }
+
+  if (previous.pageProjectionHash !== incomingSnapshot.pageProjectionHash) {
+    if (
+      typeof previous.content !== 'string'
+      || maskPageProjectionBytes(previous.content) !== maskPageProjectionBytes(currentContent)
+    ) {
       failR1a(
-        'E_CMS207M_R1A_SAME_REVISION_CONTENT_DRIFT',
-        'The same VACMS revision produced different public Markdown bytes.',
+        'E_CMS207M_R3_R3_METADATA_UPDATE_ESCAPED_PAGE_PROJECTION',
+        'A same-revision metadata update changed bytes outside the page projection boundary.',
         { path: currentPath, revisionId: incomingRevisionId || null },
       )
     }
-    return {
+    return withIdentity({
+      transition: 'metadata_projection_update',
+      previousRevisionId: previous.revisionId || null,
+      retiredPaths: [],
+    }, previous)
+  }
+
+  if (
+    previous.publicSnapshotHash === incomingSnapshot.publicSnapshotHash
+    && typeof previous.content === 'string'
+    && previous.content === currentContent
+  ) {
+    return withIdentity({
       transition: 'idempotent_noop',
       previousRevisionId: previous.revisionId || null,
       retiredPaths: [],
-    }
+    }, previous)
   }
 
-  return {
-    transition: 'in_place_revision_replacement',
-    previousRevisionId: previous.revisionId || null,
-    retiredPaths: [],
+  if (
+    previous.publicSnapshotHash === incomingSnapshot.publicSnapshotHash
+    && previous.snapshotIdentityEmbedded !== true
+    && incomingSnapshot.snapshotIdentityEmbedded === true
+    && typeof previous.content === 'string'
+    && stripSnapshotIdentityBytes(previous.content) === stripSnapshotIdentityBytes(currentContent)
+  ) {
+    return withIdentity({
+      transition: 'snapshot_identity_bootstrap',
+      previousRevisionId: previous.revisionId || null,
+      retiredPaths: [],
+    }, previous)
   }
+
+  failR1a(
+    'E_CMS207M_R3_R3_SAME_SNAPSHOT_CONTENT_DRIFT',
+    'The same composite public snapshot produced different physical Markdown bytes.',
+    {
+      path: currentPath,
+      revisionId: incomingRevisionId || null,
+      previousPublicSnapshotHash: previous.publicSnapshotHash,
+      incomingPublicSnapshotHash: incomingSnapshot.publicSnapshotHash,
+    },
+  )
 }
 
 export function assertCurrentPageIdentityParity({ records, pageId, incomingPath, incomingRevisionId, sidecar }) {

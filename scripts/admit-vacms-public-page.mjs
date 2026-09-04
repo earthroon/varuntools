@@ -2,6 +2,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
+import { derivePublicSnapshotIdentityFromMarkdown } from './lib/cms207m-public-snapshot-identity.mjs'
 
 const PASS = 'PASS_CMS_207M_R3_DEPENDENCY_FREE_PAGE_ADMISSION'
 const RECEIPT = 'vacms-page-admission-receipt.json'
@@ -126,6 +127,36 @@ for (const retiredPath of retiredPaths) {
 
 const rawPage = fs.readFileSync(generatedPath, 'utf8')
 const frontmatter = parseTopLevelFrontmatter(rawPage)
+
+let snapshotIdentity
+try {
+  snapshotIdentity = derivePublicSnapshotIdentityFromMarkdown(rawPage, generatedPath)
+} catch (error) {
+  fail(
+    error && typeof error === 'object' && typeof error.code === 'string'
+      ? error.code
+      : 'E_CMS207M_R3_R3_ADMISSION_PUBLIC_SNAPSHOT_MISMATCH',
+    error instanceof Error ? error.message : String(error),
+    error && typeof error === 'object' && error.details ? error.details : {},
+  )
+}
+
+if (
+  materialization.publicSnapshotSchema !== snapshotIdentity.publicSnapshotSchema
+  || materialization.publicSnapshotHash !== snapshotIdentity.publicSnapshotHash
+  || materialization.pageProjectionHash !== snapshotIdentity.pageProjectionHash
+  || materialization.revisionProjectionHash !== snapshotIdentity.revisionProjectionHash
+) {
+  fail(
+    'E_CMS207M_R3_R3_ADMISSION_PUBLIC_SNAPSHOT_MISMATCH',
+    'Materialization receipt does not match recomputed public snapshot identity.',
+    {
+      receiptPublicSnapshotHash: materialization.publicSnapshotHash || null,
+      recomputedPublicSnapshotHash: snapshotIdentity.publicSnapshotHash,
+    },
+  )
+}
+
 const publicKinds = new Set(Array.isArray(taxonomy.publicKinds) ? taxonomy.publicKinds : [])
 const publicCategories = new Set(Array.isArray(taxonomy.publicCategories) ? taxonomy.publicCategories : [])
 
@@ -165,6 +196,10 @@ writeReceipt({
   authorizedPaths,
   pageId: materialization.pageId || null,
   revisionId: materialization.revisionId || null,
+  publicSnapshotSchema: snapshotIdentity.publicSnapshotSchema,
+  publicSnapshotHash: snapshotIdentity.publicSnapshotHash,
+  pageProjectionHash: snapshotIdentity.pageProjectionHash,
+  revisionProjectionHash: snapshotIdentity.revisionProjectionHash,
   generatedAt: new Date().toISOString(),
 })
 

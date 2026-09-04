@@ -2,6 +2,10 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
+import {
+  CMS207M_R3_R3_PUBLIC_SNAPSHOT_SCHEMA,
+  derivePublicSnapshotIdentityFromParts,
+} from './lib/cms207m-public-snapshot-identity.mjs'
 
 const payload = JSON.parse(fs.readFileSync('export-payload.json', 'utf8'))
 if (!payload || payload.ok !== true || !payload.data) throw new Error('E_CMS207M_R3_EXPORT_PAYLOAD_NOT_OK')
@@ -70,8 +74,16 @@ const bodySource = typeof revision.compiledMarkdown === 'string' && revision.com
   ? { kind: 'compiledMarkdown', value: revision.compiledMarkdown }
   : { kind: 'sourceBody', value: String(revision.sourceBody || '') }
 
-const yaml = Object.entries(frontmatter).map(yamlEntry).join('\n')
 const body = bodySource.value.replace(/^---[\s\S]*?---\s*/, '')
+const snapshotIdentity = derivePublicSnapshotIdentityFromParts({
+  frontmatter,
+  body,
+  generatedPath,
+})
+frontmatter.vacmsPublicSnapshotSchema = CMS207M_R3_R3_PUBLIC_SNAPSHOT_SCHEMA
+frontmatter.vacmsPublicSnapshotHash = snapshotIdentity.publicSnapshotHash
+
+const yaml = Object.entries(frontmatter).map(yamlEntry).join('\n')
 const content = `---\n${yaml}\n---\n\n${body}`
 
 fs.mkdirSync(path.dirname(generatedPath), { recursive: true })
@@ -96,6 +108,10 @@ const receipt = {
   vacmsSlug,
   generatedPathSlug,
   slugSource,
+  publicSnapshotSchema: snapshotIdentity.publicSnapshotSchema,
+  publicSnapshotHash: snapshotIdentity.publicSnapshotHash,
+  pageProjectionHash: snapshotIdentity.pageProjectionHash,
+  revisionProjectionHash: snapshotIdentity.revisionProjectionHash,
   source: bodySource.kind,
 }
 fs.writeFileSync('vacms-materialization-receipt.json', JSON.stringify(receipt, null, 2) + '\n', 'utf8')
