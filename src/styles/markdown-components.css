@@ -714,23 +714,39 @@ video-player {
   outline-offset: 3px;
 }
 
+/* VT-UI-23 — Video Metadata Card Semantic Presentation */
 .vt-video-player__caption {
   display: grid;
-  gap: 0.25rem;
-  width: min(100%, var(--vt-video-frame-max-width, 720px));
-  margin: 0.75rem auto 0;
+  gap: 0.28rem;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0.65rem 0 0;
+  padding: 0.62rem 0.72rem;
+  border: 1px solid var(--vt-hair);
+  border-radius: 12px;
+  background: var(--vt-surface-strong);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
   color: var(--vt-ink-soft);
-  font-size: 0.9rem;
-  line-height: 1.55;
+  text-align: left;
 }
 
 .vt-video-player__title {
+  display: block;
   color: var(--vt-ink);
+  font-size: 0.92rem;
   font-weight: 780;
+  line-height: 1.35;
+  letter-spacing: -0.018em;
+  overflow-wrap: anywhere;
 }
 
 .vt-video-player__text {
+  display: block;
   color: var(--vt-ink-soft);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .vt-video-player__unsupported {

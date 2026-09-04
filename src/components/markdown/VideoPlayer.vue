@@ -37,6 +37,7 @@ type VideoPlayerProps = {
   src?: string
   streamManifestUrl?: string
   title?: string
+  caption?: string
   poster?: string
   autoplay?: boolean
   loop?: boolean
@@ -57,6 +58,7 @@ const props = withDefaults(defineProps<VideoPlayerProps>(), {
   src: '',
   streamManifestUrl: '',
   title: '',
+  caption: '',
   poster: '',
   autoplay: false,
   loop: false,
@@ -1293,8 +1295,26 @@ watch(
       {{ playbackError }}
     </p>
 
-    <figcaption v-if="props.title" class="vt-video-player__caption">
-      {{ props.title }}
+    <figcaption
+      v-if="props.title || props.caption"
+      class="vt-video-player__caption"
+      data-vt-ui23-video-metadata-card="1"
+    >
+      <strong
+        v-if="props.title"
+        class="vt-video-player__title"
+        data-vt-ui23-video-title="1"
+      >
+        {{ props.title }}
+      </strong>
+
+      <span
+        v-if="props.caption"
+        class="vt-video-player__text"
+        data-vt-ui23-video-caption="1"
+      >
+        {{ props.caption }}
+      </span>
     </figcaption>
   </figure>
 </template>
@@ -1498,12 +1518,6 @@ watch(
   max-height: none;
   object-fit: contain;
   background: #000;
-}
-
-.vt-video-player__caption {
-  margin-top: 0.65rem;
-  color: inherit;
-  font-size: 0.86rem;
 }
 
 .vt-video-player__unsupported {
