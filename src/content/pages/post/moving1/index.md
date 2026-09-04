@@ -30,7 +30,7 @@ slug: "post/moving1"
 source: "vacms"
 vacmsSlug: "moving1"
 vacmsPageId: "page_6b7a2b2b721c5e6f37fa59b5"
-vacmsRevisionId: "rev_775d99693029903740600b4b"
+vacmsRevisionId: "rev_6721ba87d9b97ecd3df69ce2"
 vacmsProjectionSchema: "vacms-public-projection@1"
 ---
 
@@ -57,3 +57,6 @@ loop: true
 playsInline: false
 preload: metadata
 ::
+
+구글의 큰 그림을 보려고 영상을 만들었습니다&#46;
+
