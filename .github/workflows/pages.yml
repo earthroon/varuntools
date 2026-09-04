@@ -5,6 +5,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      source_commit_sha:
+        description: Exact source commit SHA to build when dispatched by VACMS publish
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -20,8 +25,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Resolve exact Pages source commit
+        shell: bash
+        env:
+          DISPATCH_SOURCE_COMMIT_SHA: ${{ inputs.source_commit_sha }}
+        run: |
+          set -euo pipefail
+          SOURCE_SHA="$GITHUB_SHA"
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ] && [ -n "${DISPATCH_SOURCE_COMMIT_SHA:-}" ]; then
+            if [ "${#DISPATCH_SOURCE_COMMIT_SHA}" -ne 40 ] || ! printf "%s" "$DISPATCH_SOURCE_COMMIT_SHA" | grep -Eq "^[0-9a-f]{40}$"; then
+              echo "source_commit_sha must be a lowercase 40-hex commit SHA" >&2
+              exit 1
+            fi
+            SOURCE_SHA="$DISPATCH_SOURCE_COMMIT_SHA"
+          fi
+          echo "PAGES_SOURCE_COMMIT_SHA=$SOURCE_SHA" >> "$GITHUB_ENV"
+
+      - name: Checkout exact Pages source commit
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.PAGES_SOURCE_COMMIT_SHA }}
+          fetch-depth: 1
+
+      - name: Verify exact Pages source commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          if [ "$ACTUAL_SHA" != "$PAGES_SOURCE_COMMIT_SHA" ]; then
+            echo "Pages checkout SHA mismatch: expected=$PAGES_SOURCE_COMMIT_SHA actual=$ACTUAL_SHA" >&2
+            exit 1
+          fi
+          echo "pagesSourceCommitSha=$ACTUAL_SHA" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Setup Node
         uses: actions/setup-node@v4

@@ -19,6 +19,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
   pull-requests: write
   id-token: write
   pages: write
@@ -274,6 +275,49 @@ jobs:
           node scripts/commit-vacms-public-page-transaction.mjs --workflow
           echo "source_commit" > vacms-last-success-stage.txt
 
+      - name: Dispatch exact source commit to Pages workflow
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs = require('node:fs')
+          const source = JSON.parse(fs.readFileSync('vacms-source-commit-receipt.json', 'utf8'))
+          if (!source.ok || !source.sourceCommitSha || source.sourcePushSucceeded !== true || source.remoteMainVerified !== true) throw new Error('E_CMS207M_R3_R2_SOURCE_RECEIPT_NOT_SEALED')
+          if (typeof source.sourceCommitted !== 'boolean') throw new Error('E_CMS207M_R3_R2_SOURCE_COMMITTED_FLAG_INVALID')
+          const sha = String(source.sourceCommitSha || '').trim()
+          if (!/^[0-9a-f]{40}$/.test(sha)) throw new Error('E_CMS207M_R3_R2_SOURCE_COMMIT_SHA_INVALID')
+          const state = { sourceCommitted: source.sourceCommitted, sourceCommitSha: sha }
+          fs.writeFileSync('vacms-pages-dispatch-state.json', JSON.stringify(state, null, 2) + '\n', 'utf8')
+          if (source.sourceCommitted === true) {
+            const request = { ref: 'main', inputs: { source_commit_sha: sha } }
+            fs.writeFileSync('vacms-pages-dispatch-request.json', JSON.stringify(request, null, 2) + '\n', 'utf8')
+          } else {
+            const receipt = { ok: true, dispatched: false, workflow: 'pages.yml', dispatchRef: 'main', sourceCommitSha: sha, reason: 'source_not_advanced' }
+            fs.writeFileSync('vacms-pages-dispatch-receipt.json', JSON.stringify(receipt, null, 2) + '\n', 'utf8')
+          }
+          NODE
+          SOURCE_COMMITTED="$(node -e "const fs=require('node:fs');const s=JSON.parse(fs.readFileSync('vacms-pages-dispatch-state.json','utf8'));process.stdout.write(s.sourceCommitted ? 'true' : 'false')")"
+          if [ "$SOURCE_COMMITTED" = "true" ]; then
+            curl -fsS -o /dev/null -X POST \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/pages.yml/dispatches" \
+              --data @vacms-pages-dispatch-request.json
+            node <<'NODE'
+            const fs = require('node:fs')
+            const state = JSON.parse(fs.readFileSync('vacms-pages-dispatch-state.json', 'utf8'))
+            const receipt = { ok: true, dispatched: true, workflow: 'pages.yml', dispatchRef: 'main', sourceCommitSha: state.sourceCommitSha }
+            fs.writeFileSync('vacms-pages-dispatch-receipt.json', JSON.stringify(receipt, null, 2) + '\n', 'utf8')
+            NODE
+            echo "pages_dispatch" > vacms-last-success-stage.txt
+          else
+            echo "pages_dispatch_skipped" > vacms-last-success-stage.txt
+          fi
+
       - name: Finalize atomic public source transaction
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
@@ -284,7 +328,12 @@ jobs:
           const exported = JSON.parse(fs.readFileSync('export-payload.json', 'utf8'))
           const materialization = JSON.parse(fs.readFileSync('vacms-materialization-receipt.json', 'utf8'))
           const source = JSON.parse(fs.readFileSync('vacms-source-commit-receipt.json', 'utf8'))
+          const dispatch = JSON.parse(fs.readFileSync('vacms-pages-dispatch-receipt.json', 'utf8'))
           if (!source.ok || !source.sourceCommitSha || source.sourcePushSucceeded !== true || source.remoteMainVerified !== true) throw new Error('E_CMS207M_R3_SOURCE_RECEIPT_NOT_SEALED')
+          if (typeof source.sourceCommitted !== 'boolean') throw new Error('E_CMS207M_R3_R2_FINALIZE_SOURCE_COMMITTED_FLAG_INVALID')
+          if (!dispatch.ok || dispatch.sourceCommitSha !== source.sourceCommitSha) throw new Error('E_CMS207M_R3_R2_PAGES_DISPATCH_RECEIPT_NOT_SEALED')
+          if (source.sourceCommitted === true && dispatch.dispatched !== true) throw new Error('E_CMS207M_R3_R2_PAGES_DISPATCH_REQUIRED_BUT_MISSING')
+          if (source.sourceCommitted === false && dispatch.dispatched !== false) throw new Error('E_CMS207M_R3_R2_PAGES_DISPATCH_UNEXPECTED_ON_NO_CHANGE')
           const generatedFiles = [
             { path: materialization.generatedPath, action: 'update', kind: 'page_markdown', reason: 'cms-live-branch-apply atomic page source transaction' },
             { path: materialization.projectionSidecarPath, action: 'update', kind: 'public_projection', reason: 'VACMS per-page projection sidecar' },
@@ -292,14 +341,16 @@ jobs:
           ]
           const finalize = {
             result: source.sourceCommitted === true ? 'published' : 'no_changes',
-            message: 'VACMS public page source committed atomically to main. Build and deploy are delegated to the main-push Pages workflow.',
+            message: source.sourceCommitted === true
+              ? 'VACMS public page source committed atomically to main and exact source SHA dispatched to the Pages workflow.'
+              : 'VACMS public page source unchanged; no Pages dispatch was required.',
             githubRunUrl: process.env.GITHUB_SERVER_URL + '/' + process.env.GITHUB_REPOSITORY + '/actions/runs/' + process.env.GITHUB_RUN_ID,
             commitSha: source.sourceCommitSha,
             snapshotWriterVersion: exported.data?.snapshot?.snapshotWriterVersion || 'cms-snapshot-writer-v1',
             generatedPath: materialization.generatedPath,
             generatedFiles,
             publishMode: 'cms-live-branch-apply',
-            deployTarget: 'pages-main-push',
+            deployTarget: 'pages-workflow-dispatch',
           }
           fs.writeFileSync('vacms-source-finalize.json', JSON.stringify(finalize, null, 2) + '\n', 'utf8')
           NODE
