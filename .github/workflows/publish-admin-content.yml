@@ -294,9 +294,6 @@ jobs:
           if (source.sourceCommitted === true) {
             const request = { ref: 'main', inputs: { source_commit_sha: sha } }
             fs.writeFileSync('vacms-pages-dispatch-request.json', JSON.stringify(request, null, 2) + '\n', 'utf8')
-          } else {
-            const receipt = { ok: true, dispatched: false, workflow: 'pages.yml', dispatchRef: 'main', sourceCommitSha: sha, reason: 'source_not_advanced' }
-            fs.writeFileSync('vacms-pages-dispatch-receipt.json', JSON.stringify(receipt, null, 2) + '\n', 'utf8')
           }
           NODE
           SOURCE_COMMITTED="$(node -e "const fs=require('node:fs');const s=JSON.parse(fs.readFileSync('vacms-pages-dispatch-state.json','utf8'));process.stdout.write(s.sourceCommitted ? 'true' : 'false')")"
@@ -307,9 +304,10 @@ jobs:
               -H "X-GitHub-Api-Version: 2022-11-28" \
               "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/actions/workflows/pages.yml/dispatches" \
               --data @vacms-pages-dispatch-request.json
-            node -e 'const fs=require("node:fs");const state=JSON.parse(fs.readFileSync("vacms-pages-dispatch-state.json","utf8"));const receipt={ok:true,dispatched:true,workflow:"pages.yml",dispatchRef:"main",sourceCommitSha:state.sourceCommitSha};fs.writeFileSync("vacms-pages-dispatch-receipt.json",JSON.stringify(receipt,null,2)+"\\n","utf8")'
+            node scripts/write-vacms-pages-dispatch-receipt.mjs dispatched
             echo "pages_dispatch" > vacms-last-success-stage.txt
           else
+            node scripts/write-vacms-pages-dispatch-receipt.mjs source-not-advanced
             echo "pages_dispatch_skipped" > vacms-last-success-stage.txt
           fi
 
