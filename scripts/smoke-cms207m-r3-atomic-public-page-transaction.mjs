@@ -73,7 +73,44 @@ check('live transaction calls atomic commit authority', live.includes('node scri
 check('publish workflow grants actions write for explicit Pages dispatch', permissionsBlock.includes('  actions: write'))
 check('live transaction explicitly dispatches pages.yml', live.includes('/actions/workflows/pages.yml/dispatches'))
 check('Pages dispatch is keyed by exact source commit SHA', live.includes('source_commit_sha: sha') && live.includes('dispatch.sourceCommitSha !== source.sourceCommitSha'))
-check('no-change source transaction skips Pages dispatch', live.includes('source.sourceCommitted === true') && live.includes('dispatched: false') && live.includes('source_not_advanced'))
+const sourceCommittedBranch = dispatchStep.indexOf('          if [ "$SOURCE_COMMITTED" = "true" ]; then')
+const dispatchHttp = sourceCommittedBranch >= 0
+  ? dispatchStep.indexOf('/actions/workflows/pages.yml/dispatches', sourceCommittedBranch)
+  : -1
+const noChangeElse = dispatchHttp >= 0
+  ? dispatchStep.indexOf('\n          else\n', dispatchHttp)
+  : -1
+const noChangeWriter = noChangeElse >= 0
+  ? dispatchStep.indexOf(
+      'node scripts/write-vacms-pages-dispatch-receipt.mjs source-not-advanced',
+      noChangeElse,
+    )
+  : -1
+const noChangeBranch = noChangeElse >= 0
+  ? dispatchStep.slice(noChangeElse)
+  : ''
+
+check('Pages dispatch true branch owns HTTP dispatch', sourceCommittedBranch >= 0 && dispatchHttp > sourceCommittedBranch)
+check('Pages dispatch false branch follows HTTP dispatch branch', noChangeElse > dispatchHttp)
+check('no-change branch contains no Pages HTTP dispatch', Boolean(noChangeBranch) && !noChangeBranch.includes('/actions/workflows/pages.yml/dispatches') && !noChangeBranch.includes('curl -fsS -o /dev/null -X POST'))
+check('no-change receipt authority emits dispatched false', dispatchReceiptWriter.includes('dispatched: false'))
+check('no-change receipt authority emits canonical reason', dispatchReceiptWriter.includes("reason: 'source_not_advanced'"))
+check('no-change receipt authority binds source-not-advanced outcome', dispatchReceiptWriter.includes("outcome === 'source-not-advanced'"))
+check('no-change writer owns state-outcome mismatch guard', dispatchReceiptWriter.includes('E_CMS207M_R3_R2_R2_R1_DISPATCH_OUTCOME_STATE_MISMATCH'))
+check('dispatch receipt physical smoke asserts no-change semantic receipt', dispatchReceiptPhysicalSmoke.includes('dispatched: false') && dispatchReceiptPhysicalSmoke.includes("reason: 'source_not_advanced'"))
+check('workflow does not own no-change receipt semantics', !dispatchStep.includes('dispatched: false') && !dispatchStep.includes("reason: 'source_not_advanced'"))
+check(
+  'no-change source transaction skips Pages dispatch',
+  sourceCommittedBranch >= 0
+    && dispatchHttp > sourceCommittedBranch
+    && noChangeElse > dispatchHttp
+    && noChangeWriter > noChangeElse
+    && Boolean(noChangeBranch)
+    && !noChangeBranch.includes('/actions/workflows/pages.yml/dispatches')
+    && !noChangeBranch.includes('curl -fsS -o /dev/null -X POST')
+    && dispatchReceiptWriter.includes('dispatched: false')
+    && dispatchReceiptWriter.includes("reason: 'source_not_advanced'"),
+)
 check('finalize names Pages workflow dispatch authority', live.includes("deployTarget: 'pages-workflow-dispatch'"))
 check('live transaction finalizes source publication', live.includes("result: source.sourceCommitted === true ? 'published' : 'no_changes'"))
 const dependencyFreeImports = (source, allowedLocal = []) =>
