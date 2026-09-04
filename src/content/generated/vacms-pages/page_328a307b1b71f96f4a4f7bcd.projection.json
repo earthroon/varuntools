@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_328a307b1b71f96f4a4f7bcd",
-    "revisionId": "rev_1187894b34461b411c1ea730",
+    "revisionId": "rev_116bbde2fd4396795c092f40",
     "slug": "post/printtest",
     "routePath": "/post/printtest",
     "title": "제본 시뮬레이터 & 인쇄조건 테스트",
@@ -13,10 +13,10 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:c4bd7a4dac33b7996804a1f6d1205ecdca6de6243090829f17ea15ec051ca217",
+    "contentHash": "sha256:02ae84213b78d6c172bd87930dd65ee75748237a9d3dea6fb18b0974a8f3505c",
     "timing": {
-      "revisionCreatedAt": "2026-09-04T14:51:16.628Z",
-      "publishJobCreatedAt": "2026-09-04T14:51:42.903Z",
+      "revisionCreatedAt": "2026-09-04T15:04:20.229Z",
+      "publishJobCreatedAt": "2026-09-04T15:04:42.395Z",
       "explicitPublishedAt": null
     }
   },
@@ -367,6 +367,84 @@
         "codecId": null,
         "width": 2048,
         "height": 2861,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "materialized_hint",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "materialized_hint",
+          "height": "materialized_hint"
+        }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_d9ef96c274ed92ba80b35289",
+      "pageId": "page_328a307b1b71f96f4a4f7bcd",
+      "role": "inline",
+      "filename": "webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_328a307b1b71f96f4a4f7bcd/asset_d9ef96c274ed92ba80b35289/webp",
+      "sizeBytes": 92786,
+      "hash": "sha256:b25f420e90d79d2f655df9404757aa90d9c3205bbc2e6b2aa5b38c0ff414d31b",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 690,
+        "height": 1006,
         "codedWidth": null,
         "codedHeight": null,
         "durationMs": null,
