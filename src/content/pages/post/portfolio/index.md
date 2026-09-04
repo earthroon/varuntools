@@ -18,7 +18,7 @@ slug: "post/portfolio"
 source: "vacms"
 vacmsSlug: "portfolio"
 vacmsPageId: "page_aabb91c85c0f2d1073832090"
-vacmsRevisionId: "rev_c306f752557296df3addfa80"
+vacmsRevisionId: "rev_3013a11cddf9517a11f435a7"
 vacmsProjectionSchema: "vacms-public-projection@1"
 ---
 
@@ -36,27 +36,13 @@ title: 작업방식
 ::editorial-columns
 ::
 ### 메시지 구조 설계
-훅 → 전제 → 갈등/해결 흐름으로 복잡한 내용을 짧고 선명하게 정리
+복잡한 내용을 짧고 분명하게 정리.
+훅 → 전제 → 갈등/해결 방식.
 
-### 인지비용 절감
-카드뉴스, 배너, 쇼츠처럼 짧은 노출 환경에서도 이해가 끊기지 않도록 정보 밀도와 시선 흐름 정돈
+### 재작업 방지 설계
+수작업 반복을 규칙으로 바꿔 오류와 소통비용 감소
 ::
 
-::note
-title: 인지비용 절감
-카드뉴스, 배너, 쇼츠 등 짧은 내용에서도 
-이해가 끊이지 않도록 정리
-::
 
-::note
-title: Note
-::
 
-::note
-title: 재작업 방지 설계
-반복되는 일을 규칙으로 바꿔, 오류와 소통 비용 감소
-::
 
-::note
-title: Note
-::
