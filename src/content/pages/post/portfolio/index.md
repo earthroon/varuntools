@@ -18,12 +18,9 @@ slug: "post/portfolio"
 source: "vacms"
 vacmsSlug: "portfolio"
 vacmsPageId: "page_aabb91c85c0f2d1073832090"
-vacmsRevisionId: "rev_e6fc2d8cb05a9cb3c094e241"
+vacmsRevisionId: "rev_7a2d1370b25679ac82ce05df"
 vacmsProjectionSchema: "vacms-public-projection@1"
 ---
-
-
-
 
 
 
@@ -32,7 +29,7 @@ title: 빠르게 이해되고 오래 남는 결과를 설계합니다
 subtitle: 복잡한 제작 과정을 더 적은 인지비용으로 이해되고, 더 적은 시행착오로 반복 가능한 구조로 바꿉니다.
 ::
 
-# 작업방식
+## 작업방식
 
 ::editorial-columns
 ::
@@ -41,7 +38,4 @@ subtitle: 복잡한 제작 과정을 더 적은 인지비용으로 이해되고,
 
 ### 인지비용 절감
 카드뉴스, 배너, 쇼츠처럼 짧은 노출 환경에서도 이해가 끊기지 않도록 정보 밀도와 시선 흐름 정돈
-
-### 재작업 방지형 공정 설계
-수작업으로 반복되던 흐름을 툴과 규칙으로 바꿔 오류와 커뮤니케이션 비용 감소
 ::
