@@ -24,10 +24,10 @@ slug: "post/printtest"
 source: "vacms"
 vacmsSlug: "printtest"
 vacmsPageId: "page_328a307b1b71f96f4a4f7bcd"
-vacmsRevisionId: "rev_1a1b494b8779eedb752a2293"
+vacmsRevisionId: "rev_1158500d19ade0aef6e80d26"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:cdf5110ac77e0ea4d1cc243082e10d63d7e6856fde1a0cc97a3c94997f3dd31e"
+vacmsPublicSnapshotHash: "sha256:e6fc7a41a86bbc009103bce958df79c09703b8b599705669de1cded8ecab9a95"
 ---
 
 
@@ -48,7 +48,7 @@ vacmsPublicSnapshotHash: "sha256:cdf5110ac77e0ea4d1cc243082e10d63d7e6856fde1a0cc
 
 ::editorial-title
 title: 제본 시뮬레이터 & 인쇄조건 테스트
-subtitle: 일반적인 뷰어로는 책의 물성(두께, 굴곡, 제본 안쪽 말림)을예측할 수 없어, 인쇄 후 레이아웃 사고가 빈번히 발생했습니다. 인디자인의 PDF 파일을 WebGPU 기반 3D 공간으로 옮겨. 디자이너가 인쇄소에 파일을 넘기기 전,  즉시 최종 형태를 검수할 수 있는 환경을 구축했습니다.
+subtitle: 인디자인 PDF 파일을 3D 뷰어 공간으로 옮겨. 디자이너가 인쇄소에 파일을 넘기기 전,  바로 최종 형태를 검수할 수 있는 환경을 구축했습니다.
 ::
 
 
