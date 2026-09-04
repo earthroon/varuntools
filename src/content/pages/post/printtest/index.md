@@ -24,10 +24,10 @@ slug: "post/printtest"
 source: "vacms"
 vacmsSlug: "printtest"
 vacmsPageId: "page_328a307b1b71f96f4a4f7bcd"
-vacmsRevisionId: "rev_116bbde2fd4396795c092f40"
+vacmsRevisionId: "rev_82d2983a9a10d33cae29b120"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:4fab5559ccc58d5df8418f532c7821648eaf71a4a5e31b4677a5b1dc901347b9"
+vacmsPublicSnapshotHash: "sha256:4b5e1cbcff7e7c6be2c4ed0557882d72598086af7500380dd23659156273eedd"
 ---
 
 
@@ -60,6 +60,7 @@ id: image-card-1
 src: /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_7a5d991f5a7af5ee81bd17df/out.gif
 assetId: asset_7a5d991f5a7af5ee81bd17df
 alt: Manual image alt text
+caption: 제본 시뮬레이터 예시
 ratio: 16:9
 ::
 
@@ -72,8 +73,14 @@ src: /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_d9ef96c274ed92ba80b3528
 assetId: asset_d9ef96c274ed92ba80b35289
 alt: 인디자인 PDF 예시
 caption: 인디자인 PDF 예시
-ratio: auto
+ratio: 1:1
 ::
+
+::editorial-title
+title: 출력조건 확인
+subtitle: 불량이 반복적으로 발생하여 흑백 인쇄 시, 그레이 채널 단독으로 출력하지 않음을 잡아내서 본품 출력전에 컬러 불량을 막아냄. (K 단색이 아닌 CMYK혼합으로 출력하면 특정 색이 녹아나옵니다.)
+::
+
 
 ::editorial-columns
 ::
@@ -83,7 +90,6 @@ ratio: auto
 ### 4도출력
 혼합회색으로 4도출력해서 특정 색이 녹아나왔습니다.
 ::
-
 
 ::before-after
 before: /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_79f0e0f155bc0da7c7f6296c/2.webp
