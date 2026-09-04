@@ -43,6 +43,7 @@ type HomeCollectionsFile = {
 
 const RECENT_CATEGORIES = new Set(['post', 'work', 'case-study', 'lab', 'tool', 'doc'])
 const HIDDEN_STATUSES = new Set(['draft', 'archived', 'trashed', 'private'])
+const HOME_FEATURED_ACTIVE_STATUSES = new Set(['active', 'published'])
 
 const typedHomeCollectionsFile = homeCollectionsFile as HomeCollectionsFile
 
@@ -157,6 +158,25 @@ function isPublicEntry(entry: HomeCollectionEntry): boolean {
   return !HIDDEN_STATUSES.has(entry.status)
 }
 
+function isHomeFeaturedWorkLike(entry: HomeCollectionEntry): boolean {
+  return (
+    entry.work.hasWorkMetadata
+    || entry.category === 'work'
+    || entry.category === 'case-study'
+    || entry.kind === 'work'
+    || entry.kind === 'case-study'
+  )
+}
+
+function isHomeFeaturedAdmissionEntry(entry: HomeCollectionEntry): boolean {
+  if (!isPublicEntry(entry)) return false
+  if (!entry.featured) return false
+  if (!isHomeFeaturedWorkLike(entry)) return false
+  if (!HOME_FEATURED_ACTIVE_STATUSES.has(entry.status)) return false
+  if (!HOME_FEATURED_ACTIVE_STATUSES.has(entry.work.status)) return false
+  return true
+}
+
 function readComparableTime(entry: HomeCollectionEntry): number {
   if (typeof entry.time === 'number' && Number.isFinite(entry.time) && entry.time > 0) return entry.time
   if (typeof entry.year === 'number' && Number.isFinite(entry.year)) {
@@ -195,10 +215,7 @@ export function useHomeCollections() {
     .sort(compareRecent))
 
   const featuredWorks = computed(() => entries.value
-    .filter(isPublicEntry)
-    .filter((entry) => entry.featured)
-    .filter((entry) => entry.work.hasWorkMetadata || entry.category === 'work' || entry.category === 'case-study' || entry.kind === 'work' || entry.kind === 'case-study')
-    .filter((entry) => entry.work.status !== 'private' && entry.work.status !== 'draft')
+    .filter(isHomeFeaturedAdmissionEntry)
     .sort(compareFeatured))
 
   return {

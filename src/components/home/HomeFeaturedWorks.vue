@@ -15,7 +15,7 @@ const props = withDefaults(
   {
     limit: 4,
     title: '대표 작업',
-    description: 'frontmatter.work 기준으로 고른 대표 작업입니다.',
+    description: '선별한 주요 작업입니다.',
     showViewAll: true,
   },
 )
