@@ -13,7 +13,7 @@ export type EditorialHeadingBlockProps = {
   align?: EditorialHeadingAlign
 }
 
-export type EditorialColumnCount = 2 | 3
+export type EditorialColumnCount = 2 | 3 | 4
 
 export type EditorialColumnGap = 'sm' | 'md' | 'lg'
 

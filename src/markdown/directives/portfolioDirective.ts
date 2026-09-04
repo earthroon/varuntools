@@ -1,5 +1,6 @@
 import MarkdownIt from 'markdown-it'
 import type { ParsedDirective } from '../directiveTypes'
+import type { EditorialColumnCount } from '../../types/editorialBlocks'
 import { attrsToHtml, escapeHtml, renderInvalidDirective } from '../directiveHtml'
 import { parseGalleryStripItems } from '../galleryStripItems'
 
@@ -34,8 +35,28 @@ function normalizeHeadingAlign(value: string): 'left' | 'center' {
   return value === 'center' ? 'center' : 'left'
 }
 
-function normalizeColumnCount(value: string): 2 | 3 {
-  return value === '3' ? 3 : 2
+function parseEditorialColumnCount(value: string): EditorialColumnCount | null {
+  if (value === '2') return 2
+  if (value === '3') return 3
+  if (value === '4') return 4
+  return null
+}
+
+function resolveEditorialColumnCount(
+  rawValue: string,
+  chunks: string[],
+): { ok: true; cols: EditorialColumnCount } | { ok: false; reason: string } {
+  if (chunks.length < 2) return { ok: false, reason: 'missing_columns' }
+  if (chunks.length > 4) return { ok: false, reason: 'too_many_columns' }
+
+  const normalized = rawValue.trim()
+  const explicit = normalized ? parseEditorialColumnCount(normalized) : null
+  if (normalized && explicit === null) return { ok: false, reason: 'invalid_column_count' }
+
+  const inferred = chunks.length as EditorialColumnCount
+  if (explicit !== null && explicit !== inferred) return { ok: false, reason: 'column_count_mismatch' }
+
+  return { ok: true, cols: explicit ?? inferred }
 }
 
 function normalizeColumnGap(value: string): 'sm' | 'md' | 'lg' {
@@ -90,10 +111,13 @@ export function renderEditorialTitleDirective(directive: ParsedDirective): strin
 }
 
 export function renderEditorialColumnsDirective(directive: ParsedDirective): string {
-  const cols = normalizeColumnCount(stringField(directive.attrs.cols || directive.attrs.columns))
   const chunks = splitEditorialColumns(directive.body)
-  if (chunks.length < 2) return renderInvalidDirective('editorial-columns', 'missing_columns')
-  if (chunks.length > cols) return renderInvalidDirective('editorial-columns', 'too_many_columns')
+  const resolved = resolveEditorialColumnCount(
+    stringField(directive.attrs.cols || directive.attrs.columns),
+    chunks,
+  )
+  if (!resolved.ok) return renderInvalidDirective('editorial-columns', resolved.reason)
+  const cols = resolved.cols
 
   const attrs = {
     ...directive.attrs,

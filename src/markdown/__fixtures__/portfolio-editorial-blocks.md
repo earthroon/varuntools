@@ -55,3 +55,44 @@ collapse: tablet
 
 구조를 실제로 작동시키는 구현.
 ::
+
+::editorial-columns
+cols: 4
+gap: sm
+collapse: tablet
+::
+### One
+
+첫 번째 칼럼.
+
+---
+### Two
+
+두 번째 칼럼.
+
+---
+### Three
+
+세 번째 칼럼.
+
+---
+### Four
+
+네 번째 칼럼.
+::
+
+::editorial-columns
+::
+### Legacy A
+
+cols가 없던 기존 3단 원고.
+
+### Legacy B
+
+본문 heading으로 열 수를 추론한다.
+
+### Legacy C
+
+재발행 전에도 3단으로 렌더되어야 한다.
+::
+

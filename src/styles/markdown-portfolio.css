@@ -582,6 +582,10 @@ editorial-columns {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.vt-editorial-columns[data-cols='4'] {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .vt-editorial-columns[data-gap='sm'] {
   --vt-editorial-column-gap: 0.9rem;
 }
