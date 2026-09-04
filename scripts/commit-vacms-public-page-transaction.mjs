@@ -5,6 +5,8 @@ import { spawnSync } from 'node:child_process'
 
 const PASS = 'PASS_CMS_207M_R3_ATOMIC_PUBLIC_PAGE_TRANSACTION'
 const RECEIPT = 'vacms-source-commit-receipt.json'
+const COMMIT_IDENTITY_NAME = 'vacms-publish-bot'
+const COMMIT_IDENTITY_EMAIL = 'actions@users.noreply.github.com'
 
 function writeReceipt(value) { fs.writeFileSync(RECEIPT, JSON.stringify(value, null, 2) + '\n', 'utf8') }
 function fail(code, message, extra = {}) {
@@ -59,6 +61,34 @@ if (branch !== 'main') fail('E_CMS207M_R3_NOT_ON_MAIN', `current branch must be 
 
 const preStaged = listStaged()
 if (preStaged.length) fail('E_CMS207M_R3_PRESTAGED_FILES_FORBIDDEN', 'atomic transaction requires an empty Git index', { preStaged })
+
+runGit(
+  ['config', '--local', 'user.name', COMMIT_IDENTITY_NAME],
+  'E_CMS207M_R3_R1_GIT_IDENTITY_NAME_CONFIG_FAILED',
+)
+runGit(
+  ['config', '--local', 'user.email', COMMIT_IDENTITY_EMAIL],
+  'E_CMS207M_R3_R1_GIT_IDENTITY_EMAIL_CONFIG_FAILED',
+)
+
+const effectiveCommitIdentityName = runGit(
+  ['config', '--local', '--get', 'user.name'],
+  'E_CMS207M_R3_R1_GIT_IDENTITY_NAME_READBACK_FAILED',
+)
+const effectiveCommitIdentityEmail = runGit(
+  ['config', '--local', '--get', 'user.email'],
+  'E_CMS207M_R3_R1_GIT_IDENTITY_EMAIL_READBACK_FAILED',
+)
+
+if (
+  effectiveCommitIdentityName !== COMMIT_IDENTITY_NAME
+  || effectiveCommitIdentityEmail !== COMMIT_IDENTITY_EMAIL
+) {
+  fail(
+    'E_CMS207M_R3_R1_GIT_IDENTITY_READBACK_MISMATCH',
+    `expected=${COMMIT_IDENTITY_NAME}<${COMMIT_IDENTITY_EMAIL}> actual=${effectiveCommitIdentityName}<${effectiveCommitIdentityEmail}>`,
+  )
+}
 
 const beforeSha = currentHead()
 runGit(['add', '--', ...authorizedPaths], 'E_CMS207M_R3_EXACT_GIT_ADD_FAILED')

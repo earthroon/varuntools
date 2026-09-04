@@ -28,6 +28,23 @@ check('live transaction finalizes source publication', live.includes("result: so
 check('materializer uses only node imports', [...materializer.matchAll(/from\s+['"]([^'"]+)['"]/g)].every((match) => match[1].startsWith('node:')))
 check('admitter uses only node imports', [...admitter.matchAll(/from\s+['"]([^'"]+)['"]/g)].every((match) => match[1].startsWith('node:')))
 check('committer uses only node imports', [...committer.matchAll(/from\s+['"]([^'"]+)['"]/g)].every((match) => match[1].startsWith('node:')))
+
+const identityNameConfig = "runGit(\n  ['config', '--local', 'user.name', COMMIT_IDENTITY_NAME]"
+const identityEmailConfig = "runGit(\n  ['config', '--local', 'user.email', COMMIT_IDENTITY_EMAIL]"
+const identityNameReadback = "['config', '--local', '--get', 'user.name']"
+const identityEmailReadback = "['config', '--local', '--get', 'user.email']"
+const exactGitAdd = "runGit(['add', '--', ...authorizedPaths]"
+
+const identityNameConfigIndex = committer.indexOf(identityNameConfig)
+const identityEmailConfigIndex = committer.indexOf(identityEmailConfig)
+const exactGitAddIndex = committer.indexOf(exactGitAdd)
+
+check('atomic commit owns repo-local bot identity constants', committer.includes("const COMMIT_IDENTITY_NAME = 'vacms-publish-bot'") && committer.includes("const COMMIT_IDENTITY_EMAIL = 'actions@users.noreply.github.com'"))
+check('atomic commit configures repo-local git identity', identityNameConfigIndex >= 0 && identityEmailConfigIndex > identityNameConfigIndex)
+check('atomic commit reads back repo-local git identity', committer.includes(identityNameReadback) && committer.includes(identityEmailReadback) && committer.includes('E_CMS207M_R3_R1_GIT_IDENTITY_READBACK_MISMATCH'))
+check('atomic commit seals identity before exact staging', exactGitAddIndex > identityEmailConfigIndex)
+check('atomic commit does not use global git identity', !committer.includes("['config', '--global'"))
+
 check('atomic commit excludes global projection files', !committer.includes('publicContentProjection.generated.json') && !committer.includes('publicAssetManifest.generated.json') && !committer.includes('homeCollections.generated.json'))
 check('atomic commit forbids git add dot', !committer.includes("['add', '.']") && !committer.includes("['add', '-A']"))
 check('admission validates 2/3/4 editorial columns', admitter.includes("normalized === '4'") && admitter.includes('E_CMS51_R1_EDITORIAL_COLUMNS_COUNT_MISMATCH'))
