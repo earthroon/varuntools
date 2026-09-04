@@ -2,10 +2,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import {
-  CMS207M_R3_R3_PUBLIC_SNAPSHOT_SCHEMA,
-  derivePublicSnapshotIdentityFromParts,
-} from './lib/cms207m-public-snapshot-identity.mjs'
+import { derivePublicSnapshotIdentityFromMarkdown } from './lib/cms207m-public-snapshot-identity.mjs'
 
 const payload = JSON.parse(fs.readFileSync('export-payload.json', 'utf8'))
 if (!payload || payload.ok !== true || !payload.data) throw new Error('E_CMS207M_R3_EXPORT_PAYLOAD_NOT_OK')
@@ -75,19 +72,51 @@ const bodySource = typeof revision.compiledMarkdown === 'string' && revision.com
   : { kind: 'sourceBody', value: String(revision.sourceBody || '') }
 
 const body = bodySource.value.replace(/^---[\s\S]*?---\s*/, '')
-const snapshotIdentity = derivePublicSnapshotIdentityFromParts({
-  frontmatter,
-  body,
-  generatedPath,
-})
-frontmatter.vacmsPublicSnapshotSchema = CMS207M_R3_R3_PUBLIC_SNAPSHOT_SCHEMA
-frontmatter.vacmsPublicSnapshotHash = snapshotIdentity.publicSnapshotHash
+const baseYaml = Object.entries(frontmatter).map(yamlEntry).join('\n')
+const baseContent = `---\n${baseYaml}\n---\n\n${body}`
 
-const yaml = Object.entries(frontmatter).map(yamlEntry).join('\n')
-const content = `---\n${yaml}\n---\n\n${body}`
+let snapshotIdentity
+try {
+  snapshotIdentity = derivePublicSnapshotIdentityFromMarkdown(baseContent, generatedPath, { validateEmbedded: false })
+} catch (error) {
+  throw new Error('E_CMS207M_R3_R3_R1_BASE_MATERIALIZATION_IDENTITY_FAILED:' + (error instanceof Error ? error.message : String(error)))
+}
+
+const sealedYaml = [
+  baseYaml,
+  yamlEntry(['vacmsPublicSnapshotSchema', snapshotIdentity.publicSnapshotSchema]),
+  yamlEntry(['vacmsPublicSnapshotHash', snapshotIdentity.publicSnapshotHash]),
+].join('\n')
+const content = `---\n${sealedYaml}\n---\n\n${body}`
+
+let sealedIdentity
+try {
+  sealedIdentity = derivePublicSnapshotIdentityFromMarkdown(content, generatedPath)
+} catch (error) {
+  throw new Error('E_CMS207M_R3_R3_R1_SEALED_REPRESENTATION_IDENTITY_MISMATCH:' + (error instanceof Error ? error.message : String(error)))
+}
+if (
+  sealedIdentity.publicSnapshotHash !== snapshotIdentity.publicSnapshotHash
+  || sealedIdentity.pageProjectionHash !== snapshotIdentity.pageProjectionHash
+  || sealedIdentity.revisionProjectionHash !== snapshotIdentity.revisionProjectionHash
+) throw new Error('E_CMS207M_R3_R3_R1_SEALED_REPRESENTATION_IDENTITY_MISMATCH')
 
 fs.mkdirSync(path.dirname(generatedPath), { recursive: true })
 fs.writeFileSync(generatedPath, content, 'utf8')
+
+const physicalContent = fs.readFileSync(generatedPath, 'utf8')
+let physicalIdentity
+try {
+  physicalIdentity = derivePublicSnapshotIdentityFromMarkdown(physicalContent, generatedPath)
+} catch (error) {
+  throw new Error('E_CMS207M_R3_R3_R1_PHYSICAL_READBACK_IDENTITY_MISMATCH:' + (error instanceof Error ? error.message : String(error)))
+}
+if (
+  physicalContent !== content
+  || physicalIdentity.publicSnapshotHash !== sealedIdentity.publicSnapshotHash
+  || physicalIdentity.pageProjectionHash !== sealedIdentity.pageProjectionHash
+  || physicalIdentity.revisionProjectionHash !== sealedIdentity.revisionProjectionHash
+) throw new Error('E_CMS207M_R3_R3_R1_PHYSICAL_READBACK_IDENTITY_MISMATCH')
 
 const safePageId = String(page.id || data.job?.pageId || '').trim().replace(/[^A-Za-z0-9._-]/g, '_')
 if (!safePageId) throw new Error('E_CMS207M_R3_PAGE_ID_MISSING_FOR_SIDECAR')
@@ -108,10 +137,13 @@ const receipt = {
   vacmsSlug,
   generatedPathSlug,
   slugSource,
-  publicSnapshotSchema: snapshotIdentity.publicSnapshotSchema,
-  publicSnapshotHash: snapshotIdentity.publicSnapshotHash,
-  pageProjectionHash: snapshotIdentity.pageProjectionHash,
-  revisionProjectionHash: snapshotIdentity.revisionProjectionHash,
+  publicSnapshotSchema: physicalIdentity.publicSnapshotSchema,
+  publicSnapshotHash: physicalIdentity.publicSnapshotHash,
+  pageProjectionHash: physicalIdentity.pageProjectionHash,
+  revisionProjectionHash: physicalIdentity.revisionProjectionHash,
+  snapshotAuthority: 'materialized-markdown',
+  snapshotSealPhase: 'post-serialize-disk-readback',
+  snapshotPhysicalReadbackVerified: true,
   source: bodySource.kind,
 }
 fs.writeFileSync('vacms-materialization-receipt.json', JSON.stringify(receipt, null, 2) + '\n', 'utf8')

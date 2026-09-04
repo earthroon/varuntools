@@ -99,7 +99,7 @@ function pickRevisionProjection(frontmatter, body) {
   }
 }
 
-export function derivePublicSnapshotIdentityFromParts({
+function deriveParsedMaterializedIdentity({
   frontmatter,
   body,
   generatedPath,
@@ -155,7 +155,7 @@ export function derivePublicSnapshotIdentityFromMarkdown(markdown, generatedPath
   validateEmbedded = true,
 } = {}) {
   const document = splitMarkdownDocument(markdown)
-  const derived = derivePublicSnapshotIdentityFromParts({
+  const derived = deriveParsedMaterializedIdentity({
     frontmatter: document.frontmatter,
     body: document.body,
     generatedPath,

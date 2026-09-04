@@ -9,6 +9,7 @@ const committer = fs.readFileSync('scripts/commit-vacms-public-page-transaction.
 const reconciler = fs.readFileSync('scripts/cms207m-r1a-reconcile-page-identity.mjs', 'utf8')
 const identityAuthority = fs.readFileSync('scripts/lib/cms207m-r1a-page-identity.mjs', 'utf8')
 const snapshotAuthority = fs.readFileSync('scripts/lib/cms207m-public-snapshot-identity.mjs', 'utf8')
+const focusedSnapshotSmoke = fs.readFileSync('scripts/smoke-cms207m-r3-r3-public-snapshot-identity.mjs', 'utf8')
 const failures = []
 function check(name, condition) {
   if (condition) console.log('PASS ' + name)
@@ -52,6 +53,13 @@ check('same-revision revision projection drift remains hard-failed', identityAut
 check('metadata-only public projection transition exists', identityAuthority.includes("transition: 'metadata_projection_update'"))
 check('reconcile records incoming public snapshot authority', reconciler.includes('incomingPublicSnapshotHash') && reconciler.includes('incomingPageProjectionHash') && reconciler.includes('incomingRevisionProjectionHash'))
 check('snapshot authority uses node crypto only', dependencyFreeImports(snapshotAuthority, ['./cms207m-public-projection.mjs']))
+check('materializer rejects pre-serialization snapshot authority', !materializer.includes('derivePublicSnapshotIdentityFromParts'))
+check('snapshot authority does not export pre-serialization entrypoint', !snapshotAuthority.includes('export function derivePublicSnapshotIdentityFromParts'))
+check('focused snapshot smoke rejects pre-serialization authority', !focusedSnapshotSmoke.includes('derivePublicSnapshotIdentityFromParts'))
+check('materializer uses materialized Markdown snapshot authority', materializer.includes('derivePublicSnapshotIdentityFromMarkdown'))
+check('R1A uses materialized Markdown snapshot authority', identityAuthority.includes('derivePublicSnapshotIdentityFromMarkdown'))
+check('admission uses materialized Markdown snapshot authority', admitter.includes('derivePublicSnapshotIdentityFromMarkdown'))
+check('materializer seals physical disk readback authority', materializer.includes("snapshotAuthority: 'materialized-markdown'") && materializer.includes("snapshotSealPhase: 'post-serialize-disk-readback'") && materializer.includes('snapshotPhysicalReadbackVerified: true'))
 
 const identityNameConfig = "runGit(\n  ['config', '--local', 'user.name', COMMIT_IDENTITY_NAME]"
 const identityEmailConfig = "runGit(\n  ['config', '--local', 'user.email', COMMIT_IDENTITY_EMAIL]"
