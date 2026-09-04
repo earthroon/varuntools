@@ -7,10 +7,12 @@ import { resolveFilesystemAsset, getMediaAssetType } from './lib/asset-registry.
 const projectRoot = process.cwd()
 const contentRoot = path.join(projectRoot, 'src', 'content', 'pages')
 const publicRoot = path.join(projectRoot, 'public')
+const publicTaxonomyPath = path.join(projectRoot, 'config', 'public-content-taxonomy.json')
+const publicTaxonomy = JSON.parse(readFileSync(publicTaxonomyPath, 'utf8'))
 
 const VALID_LAYOUTS = new Set(['default', 'wide', 'tool'])
 const VALID_THEMES = new Set(['default', 'showroom'])
-const VALID_KINDS = new Set(['page', 'work', 'tool', 'lab', 'doc', 'product'])
+const VALID_KINDS = new Set(publicTaxonomy.publicKinds)
 const VALID_STATUSES = new Set(['draft', 'active', 'archived'])
 const VALID_VISIBILITIES = new Set(['public', 'hidden'])
 const VALID_ROBOTS = new Set(['index,follow', 'noindex,nofollow', 'noindex,follow'])

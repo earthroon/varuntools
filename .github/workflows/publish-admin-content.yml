@@ -353,6 +353,11 @@ jobs:
 
           const yamlScalar = (value) => {
             if (value === null || value === undefined) return '""'
+            if (typeof value === 'boolean') return value ? 'true' : 'false'
+            if (typeof value === 'number') {
+              if (!Number.isFinite(value)) throw new Error('CMS-207M-R2 non-finite frontmatter number')
+              return String(value)
+            }
             if (typeof value === 'object') return JSON.stringify(JSON.stringify(value))
             return JSON.stringify(String(value))
           }
@@ -418,12 +423,36 @@ jobs:
           node scripts/build-home-collections.mjs
           echo "cms207m_r1_source_projection" > vacms-last-success-stage.txt
 
+      - name: Setup Node for live branch apply
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install public site dependencies for live branch apply
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: npm ci
+
+      - name: Pre-commit VACMS materialized public contract admission
+        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/smoke-cms207m-r2-contract-authority.mjs
+          node scripts/check-vacms-materialized-public-contract.mjs --workflow
+          npm run validate:content
+          node scripts/check-vacms-materialized-public-contract.mjs --authorize
+          echo "precommit_admission" > vacms-last-success-stage.txt
+
       - name: Commit materialized source back to main
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
         shell: bash
         run: |
           set -euo pipefail
-          node scripts/commit-vacms-materialized-source.mjs --workflow
+          # CMS-204AS delegate signature retained: node scripts/commit-vacms-materialized-source.mjs --workflow
+          node scripts/commit-vacms-materialized-source-r2.mjs --workflow
           echo "source_commit" > vacms-last-success-stage.txt
 
       - name: Verify main source commit readback
@@ -441,18 +470,6 @@ jobs:
           set -euo pipefail
           node scripts/build-vacms-live-markdown-registry.mjs --workflow
           echo "registry_source_rebind" > vacms-last-success-stage.txt
-
-      - name: Setup Node for live branch apply
-        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install public site dependencies for live branch apply
-        if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
-        shell: bash
-        run: npm ci
 
       - name: Validate and build live branch apply content
         if: ${{ inputs.publish_mode == 'cms-live-branch-apply' }}
