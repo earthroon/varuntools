@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_328a307b1b71f96f4a4f7bcd",
-    "revisionId": "rev_61e47b2bde7b338111abae66",
+    "revisionId": "rev_1187894b34461b411c1ea730",
     "slug": "post/printtest",
     "routePath": "/post/printtest",
     "title": "제본 시뮬레이터 & 인쇄조건 테스트",
@@ -13,10 +13,10 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:bbd4377f5b4985460a564fbbb7ceb2011965c87366679d055c9b948dd098ecd0",
+    "contentHash": "sha256:c4bd7a4dac33b7996804a1f6d1205ecdca6de6243090829f17ea15ec051ca217",
     "timing": {
-      "revisionCreatedAt": "2026-09-04T14:38:22.968Z",
-      "publishJobCreatedAt": "2026-09-04T14:38:56.222Z",
+      "revisionCreatedAt": "2026-09-04T14:51:16.628Z",
+      "publishJobCreatedAt": "2026-09-04T14:51:42.903Z",
       "explicitPublishedAt": null
     }
   },
@@ -31,6 +31,78 @@
       "publicPath": "/assets/content/page_328a307b1b71f96f4a4f7bcd/asset_538cbb9d6d20756729cb69b2/webp",
       "sizeBytes": 609434,
       "hash": "sha256:7150e442d9da3c5bad118dfa09c7218cad850b2b1c7d33381396779a2b07a76a",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": null,
+        "height": null,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "none",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": false,
+        "fieldSources": {}
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_6caccfed6398e11d4098cafb",
+      "pageId": "page_328a307b1b71f96f4a4f7bcd",
+      "role": "inline",
+      "filename": "2.webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_328a307b1b71f96f4a4f7bcd/asset_6caccfed6398e11d4098cafb/2.webp",
+      "sizeBytes": 500132,
+      "hash": "sha256:0ad0dc1b726628c9acd7e02b8cc90bfa38da26e1d960f43e9775cb3f4c5045b6",
       "presentation": {
         "posterAssetId": null,
         "posterPublicPath": null
