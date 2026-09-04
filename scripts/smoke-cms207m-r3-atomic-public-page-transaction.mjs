@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs'
+import { spawnSync } from 'node:child_process'
 
 const workflow = fs.readFileSync('.github/workflows/publish-admin-content.yml', 'utf8')
 const pagesWorkflow = fs.readFileSync('.github/workflows/pages.yml', 'utf8')
@@ -23,7 +24,30 @@ const permissionsStart = workflow.indexOf('permissions:')
 const jobsStart = workflow.indexOf('\njobs:', permissionsStart)
 const permissionsBlock = permissionsStart >= 0 && jobsStart > permissionsStart ? workflow.slice(permissionsStart, jobsStart) : ''
 
+const dispatchStart = workflow.indexOf('      - name: Dispatch exact source commit to Pages workflow')
+const dispatchEnd = workflow.indexOf('      - name: Finalize atomic public source transaction', dispatchStart)
+const dispatchStep = dispatchStart >= 0 && dispatchEnd > dispatchStart
+  ? workflow.slice(dispatchStart, dispatchEnd)
+  : ''
+const dispatchRunMarker = '        run: |\n'
+const dispatchRunStart = dispatchStep.indexOf(dispatchRunMarker)
+const dispatchRunRaw = dispatchRunStart >= 0
+  ? dispatchStep.slice(dispatchRunStart + dispatchRunMarker.length)
+  : ''
+const dispatchShell = dispatchRunRaw
+  .split('\n')
+  .map((line) => line.startsWith('          ') ? line.slice(10) : line)
+  .join('\n')
+const dispatchShellSyntax = dispatchShell
+  ? spawnSync('bash', ['-n'], { input: dispatchShell, encoding: 'utf8', shell: false })
+  : { status: 1, stderr: 'dispatch shell not found' }
+
 check('live transaction range found', Boolean(live))
+check('Pages dispatch step found', Boolean(dispatchStep))
+check('Pages dispatch shell parses with bash -n', dispatchShellSyntax.status === 0)
+check('Pages dispatch has only one top-level heredoc', (dispatchStep.match(/node <<'NODE'/g) || []).length === 1)
+check('Pages dispatch success receipt avoids nested heredoc', dispatchStep.includes("node -e 'const fs=require(\"node:fs\")") && !dispatchStep.includes("            node <<'NODE'\n            const fs = require('node:fs')"))
+check('Pages dispatch receipt binds exact source SHA', dispatchStep.includes('sourceCommitSha:state.sourceCommitSha'))
 check('live transaction has no npm ci', !live.includes('npm ci'))
 check('live transaction has no npm install', !live.includes('npm install'))
 check('live transaction has no full build', !live.includes('npm run build'))
