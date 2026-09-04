@@ -24,10 +24,10 @@ slug: "post/printtest"
 source: "vacms"
 vacmsSlug: "printtest"
 vacmsPageId: "page_328a307b1b71f96f4a4f7bcd"
-vacmsRevisionId: "rev_f5a2c53b217105fd5fa331f0"
+vacmsRevisionId: "rev_0391de9709b67e4aa1882647"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:fb71c504726360fc7bb8018a8ca02988465c597a958325f4c5bca5f1bb3d5cc3"
+vacmsPublicSnapshotHash: "sha256:eebfeb99159b7327ba3040f41427a4f0b5db2d2d250264ffb6d90f088a748694"
 ---
 
 
@@ -52,17 +52,14 @@ subtitle: 직접 만든 제본 시뮬레이터로 내지편집을 확인하고 �
 ::
 
 
-::captioned-image
-src: /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_7a5d991f5a7af5ee81bd17df/out.gif
-assetId: asset_7a5d991f5a7af5ee81bd17df
-::
 
-::gallery-strip
-title: Visual Experiments
-caption: 1
-layout: compact
-lightbox: true
-::
-- /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_8930314b2376d69eedbc2c0d/1.webp | Manual image alt text |  | id=image-1; assetId=asset_8930314b2376d69eedbc2c0d; caption=Manual image
-- /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_79f0e0f155bc0da7c7f6296c/2.webp | (1)불량본-색상이염. |  | id=image-2; assetId=asset_79f0e0f155bc0da7c7f6296c
+
+
+::before-after
+before: /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_8930314b2376d69eedbc2c0d/1.webp
+beforeAssetId: asset_8930314b2376d69eedbc2c0d
+after: /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_538cbb9d6d20756729cb69b2/webp
+afterAssetId: asset_538cbb9d6d20756729cb69b2
+caption: 전/후
+initial: 50
 ::

@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_328a307b1b71f96f4a4f7bcd",
-    "revisionId": "rev_f5a2c53b217105fd5fa331f0",
+    "revisionId": "rev_0391de9709b67e4aa1882647",
     "slug": "post/printtest",
     "routePath": "/post/printtest",
     "title": "제본 시뮬레이터 & 인쇄조건 테스트",
@@ -13,14 +13,86 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:70a1472b58e487c388b1644591f425f8d9002bcb17ef2ce84e20030ca511e4a7",
+    "contentHash": "sha256:62a3e755a9e0a2c139bd3510071444f6cce72ff539bdf8f96aabbb0ed21d1fe3",
     "timing": {
-      "revisionCreatedAt": "2026-09-04T13:13:59.512Z",
-      "publishJobCreatedAt": "2026-09-04T13:28:42.850Z",
+      "revisionCreatedAt": "2026-09-04T13:33:05.836Z",
+      "publishJobCreatedAt": "2026-09-04T13:33:24.807Z",
       "explicitPublishedAt": null
     }
   },
   "assets": [
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_538cbb9d6d20756729cb69b2",
+      "pageId": "page_328a307b1b71f96f4a4f7bcd",
+      "role": "inline",
+      "filename": "webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_328a307b1b71f96f4a4f7bcd/asset_538cbb9d6d20756729cb69b2/webp",
+      "sizeBytes": 609434,
+      "hash": "sha256:7150e442d9da3c5bad118dfa09c7218cad850b2b1c7d33381396779a2b07a76a",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": null,
+        "height": null,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "none",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": false,
+        "fieldSources": {}
+      }
+    },
     {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_79f0e0f155bc0da7c7f6296c",
