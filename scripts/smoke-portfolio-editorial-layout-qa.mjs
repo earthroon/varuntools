@@ -10,6 +10,7 @@ function check(name, condition) { checks.push(name); if (!condition) failures.pu
 function includes(file, token) { return exists(file) && read(file).includes(token) }
 const files = [
   'src/styles/markdown-portfolio.css',
+  'src/styles/responsive.css',
   'src/markdown/__fixtures__/portfolio-editorial-layout-qa.md',
   'src/markdown/__fixtures__/portfolio-editorial-applied.md',
   'src/content/pages/works/index.md',
@@ -20,6 +21,7 @@ const files = [
 ]
 for (const file of files) check(`${file} exists`, exists(file))
 const css = read('src/styles/markdown-portfolio.css')
+const responsive = read('src/styles/responsive.css')
 const fixture = read('src/markdown/__fixtures__/portfolio-editorial-layout-qa.md')
 const applied = ['src/content/pages/works/index.md','src/content/pages/works/varuntools-showroom/index.md'].map(read).join('\n')
 const docs = read('docs/authoring/portfolio-editorial-layout-qa.md')
@@ -45,6 +47,15 @@ check('CSS contains max-width guard', css.includes('max-width: 100%'))
 check('CSS contains overflow-x clip guard', css.includes('overflow-x: clip'))
 check('CSS keeps tablet collapse', css.includes("[data-collapse='tablet']") && css.includes('max-width: 960px'))
 check('CSS keeps mobile collapse', css.includes(".vt-editorial-columns:not([data-collapse='never'])") && css.includes('max-width: 720px'))
+check('CSS keeps 2-column contract', css.includes(".vt-editorial-columns[data-cols='2']"))
+check('CSS keeps 3-column contract', css.includes(".vt-editorial-columns[data-cols='3']"))
+check('CSS keeps 4-column contract', css.includes(".vt-editorial-columns[data-cols='4']"))
+check('CSS defines column title local type token', css.includes('--vt-editorial-column-title-size: clamp(0.9rem, 1.05vw, 1rem)'))
+check('CSS defines column body local type token', css.includes('--vt-editorial-column-body-size: clamp(0.78rem, calc(0.48vw + 0.66rem), 0.82rem)'))
+check('column h3 consumes local title token', css.includes('.vt-markdown .vt-editorial-column > h3 {') && css.includes('font-size: var(--vt-editorial-column-title-size);'))
+check('column p and li consume local body token', css.includes('.vt-markdown .vt-editorial-column :where(p, li) {') && css.includes('font-size: var(--vt-editorial-column-body-size);'))
+check('global markdown h3 type authority unchanged', responsive.includes('.vt-markdown h3 {') && responsive.includes('font-size: clamp(1.12rem, 1.45vw, 1.42rem);'))
+check('global markdown body type authority unchanged', responsive.includes('.vt-markdown p,\n.vt-markdown li {') && responsive.includes('font-size: clamp(0.96rem, 0.6vw + 0.82rem, 1.02rem);'))
 check('real portfolio pages still use editorial-title', applied.includes('::editorial-title'))
 check('real portfolio pages still use editorial-columns', applied.includes('::editorial-columns'))
 check('real portfolio pages still preserve markdown headings', applied.includes('# Works') && applied.includes('# VARUNTOOLS Showroom System'))

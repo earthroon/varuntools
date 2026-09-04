@@ -599,6 +599,9 @@ editorial-columns {
 }
 
 .vt-editorial-column {
+  --vt-editorial-column-title-size: clamp(0.9rem, 1.05vw, 1rem);
+  --vt-editorial-column-body-size: clamp(0.78rem, calc(0.48vw + 0.66rem), 0.82rem);
+
   min-width: 0;
   padding: 1rem;
   border: 1px solid rgba(50, 38, 28, 0.12);
@@ -612,6 +615,14 @@ editorial-columns {
 
 .vt-editorial-column > :last-child {
   margin-bottom: 0;
+}
+
+.vt-markdown .vt-editorial-column > h3 {
+  font-size: var(--vt-editorial-column-title-size);
+}
+
+.vt-markdown .vt-editorial-column :where(p, li) {
+  font-size: var(--vt-editorial-column-body-size);
 }
 
 @media (max-width: 960px) {
