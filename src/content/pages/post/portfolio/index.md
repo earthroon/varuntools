@@ -12,21 +12,21 @@ category: "post"
 status: "active"
 noindex: false
 robots: "index,follow"
-title: "빠르게 이해되고 오래 남는 결과를 설계합니다"
-summary: "Varun은 복잡한 제작 과정을 더 적은 인지비용으로 이해되고, 더 적은 시행착오로 반복 가능한 구조로 바꾸는 사람입니다."
+title: "빠르게 이해되며 오래 남는 결과를 만듭니다"
+summary: "복잡한 과정을 더 쉽게 이해되고, 반복 가능한 구조로 바꿉니다."
 slug: "post/portfolio"
 source: "vacms"
 vacmsSlug: "portfolio"
 vacmsPageId: "page_aabb91c85c0f2d1073832090"
-vacmsRevisionId: "rev_ddbe877721d0a4f66bb4912d"
+vacmsRevisionId: "rev_60940d93592581cc3a2d1d19"
 vacmsProjectionSchema: "vacms-public-projection@1"
 ---
 
 
 
 ::editorial-title
-title: 빠르게 이해되고 오래 남는 결과를 설계합니다
-subtitle: 복잡한 제작 과정을 더 적은 인지비용으로 이해되고, 더 적은 시행착오로 반복 가능한 구조로 바꿉니다.
+title: 빠르게 이해되며 오래 남는 결과를 만듭니다
+subtitle: 복잡한 과정을 더 쉽게 이해되고, 반복 가능한 구조로 바꿉니다.
 ::
 
 
