@@ -19,15 +19,15 @@ status: "active"
 noindex: false
 robots: "index,follow"
 title: "제본 시뮬레이터 & 인쇄조건 테스트"
-summary: "직접 만든 제본 시뮬레이터로 내지편집을 확인하고 인쇄조건을 여러방식으로 테스트해서 사고를 막았습니다."
+summary: "제본 시뮬레이터로 내지구성을 확인하고 \n인쇄조건을 여러방법으로 테스트해서 사고를 막았습니다."
 slug: "post/printtest"
 source: "vacms"
 vacmsSlug: "printtest"
 vacmsPageId: "page_328a307b1b71f96f4a4f7bcd"
-vacmsRevisionId: "rev_0391de9709b67e4aa1882647"
+vacmsRevisionId: "rev_a0aa86ea364d9306966110ea"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:eebfeb99159b7327ba3040f41427a4f0b5db2d2d250264ffb6d90f088a748694"
+vacmsPublicSnapshotHash: "sha256:2208979f2287fb9e55bcb2c4d0b11b3f7e16a66ed394b54ee9b3641d3083ed47"
 ---
 
 
@@ -54,6 +54,14 @@ subtitle: 직접 만든 제본 시뮬레이터로 내지편집을 확인하고 �
 
 
 
+
+::image-card
+id: image-card-1
+src: /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_7a5d991f5a7af5ee81bd17df/out.gif
+assetId: asset_7a5d991f5a7af5ee81bd17df
+alt: Manual image alt text
+ratio: auto
+::
 
 ::before-after
 before: /assets/content/page_328a307b1b71f96f4a4f7bcd/asset_8930314b2376d69eedbc2c0d/1.webp

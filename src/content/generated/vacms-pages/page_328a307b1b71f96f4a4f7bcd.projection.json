@@ -3,20 +3,20 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_328a307b1b71f96f4a4f7bcd",
-    "revisionId": "rev_0391de9709b67e4aa1882647",
+    "revisionId": "rev_a0aa86ea364d9306966110ea",
     "slug": "post/printtest",
     "routePath": "/post/printtest",
     "title": "제본 시뮬레이터 & 인쇄조건 테스트",
-    "summary": "직접 만든 제본 시뮬레이터로 내지편집을 확인하고 인쇄조건을 여러방식으로 테스트해서 사고를 막았습니다.",
+    "summary": "제본 시뮬레이터로 내지구성을 확인하고 \n인쇄조건을 여러방법으로 테스트해서 사고를 막았습니다.",
     "category": "post",
     "kind": "page",
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:62a3e755a9e0a2c139bd3510071444f6cce72ff539bdf8f96aabbb0ed21d1fe3",
+    "contentHash": "sha256:a1c39dd5c9a110c1e610cea999853c98c0911f3e9dd9f9a28f5e3e4220f6f6bc",
     "timing": {
-      "revisionCreatedAt": "2026-09-04T13:33:05.836Z",
-      "publishJobCreatedAt": "2026-09-04T13:33:24.807Z",
+      "revisionCreatedAt": "2026-09-04T14:16:57.090Z",
+      "publishJobCreatedAt": "2026-09-04T14:18:16.739Z",
       "explicitPublishedAt": null
     }
   },
