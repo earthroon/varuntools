@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 import { getFeaturedWorkEntries, toWorkCardEntry } from '@/markdown/pageRegistry'
+import { loadAllMarkdownPages, loadMarkdownPageBySlug } from '@/markdown/lazyMarkdownPageLoader'
 import WorkCard from './WorkCard.vue'
 import { resolveNavigationTarget } from '@/navigation/navigationTarget'
 
@@ -10,6 +11,20 @@ type ManualFeaturedWorkItem = {
   title: string
   href: string
   label: string
+}
+
+type FeaturedWorkResolution = 'loading' | 'resolved' | 'missing' | 'external'
+
+type FeaturedWorkEntry = {
+  slug: string
+  title: string
+  description: string
+  cover: string
+  href: string
+  kind: string
+  contentDir: string
+  resolution: FeaturedWorkResolution
+  sourceHref: string
 }
 
 const props = withDefaults(
@@ -67,9 +82,14 @@ function normalizeIdentity(value: string): string {
   return String(value || '').trim().replace(/\s+/g, ' ').toLowerCase()
 }
 
+function normalizeMigrationTitleIdentity(value: string): string {
+  return normalizeIdentity(value).replace(/\s+/g, '')
+}
+
 function resolveManualRegistryEntry(
   item: ManualFeaturedWorkItem,
   registryEntries: ReturnType<typeof toWorkCardEntry>[],
+  allowTitleMigration = true,
 ) {
   const normalizedId = trimSlash(item.id)
   const itemTarget = resolveNavigationTarget(item.href)
@@ -83,10 +103,13 @@ function resolveManualRegistryEntry(
     )
   })
   if (direct) return direct
+  if (!allowTitleMigration) return undefined
 
-  const titleIdentity = normalizeIdentity(item.title || item.id)
+  const titleIdentity = normalizeMigrationTitleIdentity(item.title || item.id)
   if (!titleIdentity) return undefined
-  const titleMatches = registryEntries.filter((entry) => normalizeIdentity(entry.title) === titleIdentity)
+  const titleMatches = registryEntries.filter(
+    (entry) => normalizeMigrationTitleIdentity(entry.title) === titleIdentity,
+  )
   return titleMatches.length === 1 ? titleMatches[0] : undefined
 }
 
@@ -99,45 +122,129 @@ function canonicalManualHref(
   return item.href || registryEntry?.href || '#'
 }
 
-const entries = computed(() => {
-  const featuredEntries = getFeaturedWorkEntries(props.pages)
-  const registryEntries = props.pages.map(toWorkCardEntry)
+function materializeManualEntry(
+  item: ManualFeaturedWorkItem,
+  registryEntry: ReturnType<typeof toWorkCardEntry> | undefined,
+  resolution: FeaturedWorkResolution,
+): FeaturedWorkEntry {
+  const normalizedId = trimSlash(item.id)
+  const normalizedHref = trimSlash(item.href)
+  return {
+    slug: registryEntry?.slug || normalizedId || normalizedHref,
+    title: item.title || registryEntry?.title || normalizedId || 'Untitled',
+    description: registryEntry?.description || '',
+    cover: registryEntry?.cover || '',
+    href: canonicalManualHref(item, registryEntry),
+    kind: item.label || registryEntry?.kind || props.kind || '',
+    contentDir: registryEntry?.contentDir || '',
+    resolution,
+    sourceHref: item.href,
+  }
+}
 
-  const manualItems = props.items
+const manualItems = computed(() =>
+  props.items
     .map(parseManualItem)
-    .filter((item): item is ManualFeaturedWorkItem => Boolean(item))
+    .filter((item): item is ManualFeaturedWorkItem => Boolean(item)),
+)
+const manualEntries = ref<FeaturedWorkEntry[]>([])
+let resolutionEpoch = 0
+let disposed = false
 
-  if (manualItems.length) {
-    return manualItems
-      .map((item) => {
-        const normalizedId = trimSlash(item.id)
-        const normalizedHref = trimSlash(item.href)
-        const registryEntry = resolveManualRegistryEntry(item, registryEntries)
+async function resolveManualItem(
+  item: ManualFeaturedWorkItem,
+  parentRegistryEntries: ReturnType<typeof toWorkCardEntry>[],
+): Promise<FeaturedWorkEntry> {
+  const target = resolveNavigationTarget(item.href)
+  const fromParent = resolveManualRegistryEntry(item, parentRegistryEntries)
 
-        return {
-          slug: registryEntry?.slug || normalizedId || normalizedHref,
-          title: item.title || registryEntry?.title || normalizedId || 'Untitled',
-          description: registryEntry?.description || '',
-          cover: registryEntry?.cover || '',
-          href: canonicalManualHref(item, registryEntry),
-          kind: item.label || registryEntry?.kind || props.kind || '',
-          contentDir: registryEntry?.contentDir || '',
-        }
-      })
-      .slice(0, Math.max(1, props.limit))
+  if (target.kind !== 'internal') {
+    return materializeManualEntry(item, fromParent, 'external')
+  }
+  if (fromParent) {
+    return materializeManualEntry(item, fromParent, 'resolved')
   }
 
+  const targetSlug = trimSlash(target.routePath || item.href)
+  try {
+    const exactPage = targetSlug ? await loadMarkdownPageBySlug(targetSlug) : null
+    if (exactPage) {
+      return materializeManualEntry(item, toWorkCardEntry(exactPage), 'resolved')
+    }
+
+    // Migration-only fallback for stale stored hrefs. Canonical source still must be republished.
+    const allPages = await loadAllMarkdownPages()
+    const migrated = resolveManualRegistryEntry(item, allPages.map(toWorkCardEntry), true)
+    if (migrated) {
+      return materializeManualEntry(item, migrated, 'resolved')
+    }
+  } catch (error) {
+    console.error('[CMS-118-R1A-R2] featured target resolution failed', {
+      href: item.href,
+      error,
+    })
+  }
+
+  return materializeManualEntry(item, undefined, 'missing')
+}
+
+async function refreshManualEntries(): Promise<void> {
+  const epoch = ++resolutionEpoch
+  const items = manualItems.value
+  const parentRegistryEntries = props.pages.map(toWorkCardEntry)
+
+  manualEntries.value = items.map((item) => {
+    const target = resolveNavigationTarget(item.href)
+    const initial = resolveManualRegistryEntry(item, parentRegistryEntries)
+    const resolution: FeaturedWorkResolution = target.kind === 'internal'
+      ? initial ? 'resolved' : 'loading'
+      : 'external'
+    return materializeManualEntry(item, initial, resolution)
+  })
+
+  const resolved = await Promise.all(items.map((item) => resolveManualItem(item, parentRegistryEntries)))
+  if (disposed || epoch !== resolutionEpoch) return
+  manualEntries.value = resolved
+}
+
+watch(
+  () => props.items.join('\u001f'),
+  () => {
+    void refreshManualEntries()
+  },
+  { immediate: true },
+)
+
+onBeforeUnmount(() => {
+  disposed = true
+  resolutionEpoch += 1
+})
+
+const entries = computed(() => {
+  if (manualItems.value.length) {
+    return manualEntries.value.slice(0, Math.max(1, props.limit))
+  }
+
+  const featuredEntries = getFeaturedWorkEntries(props.pages)
   const filtered = props.kind
     ? featuredEntries.filter((entry) => entry.kind === props.kind)
     : featuredEntries
 
-  return filtered.slice(0, Math.max(1, props.limit))
+  return filtered
+    .map((entry) => ({
+      ...entry,
+      resolution: 'resolved' as const,
+      sourceHref: entry.href,
+    }))
+    .slice(0, Math.max(1, props.limit))
 })
+
+const shouldRenderSection = computed(() => manualItems.value.length > 0 || entries.value.length > 0)
 </script>
 
 <template>
   <section
-    v-if="entries.length"
+    v-if="shouldRenderSection"
     class="vt-featured-works"
     :data-layout="layout"
   >
@@ -155,6 +262,8 @@ const entries = computed(() => {
         :tag="entry.kind"
         :show-tag="false"
         :content-dir="entry.contentDir"
+        :data-featured-resolution="entry.resolution"
+        :data-featured-target="entry.sourceHref"
       />
     </div>
   </section>

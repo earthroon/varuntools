@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { RouterLink } from 'vue-router'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 import { toWorkCardEntry } from '@/markdown/pageRegistry'
 import { resolveContentAssetMeta } from '@/markdown/resolveContentAssets'
@@ -46,7 +45,6 @@ const props = withDefaults(
   },
 )
 
-
 const registryEntry = computed(() => {
   if (!props.slug) return null
   const page = props.pages.find((item) => item.slug === props.slug)
@@ -84,9 +82,7 @@ const coverAsset = computed(() => {
 const navigationTarget = computed(() => resolveNavigationTarget(card.value.href || '#'))
 const safeHref = computed(() => navigationTarget.value.href)
 const opensNewTab = computed(() => navigationTarget.value.openInNewTab)
-const isInternal = computed(() => navigationTarget.value.kind === 'internal')
-const routeTo = computed(() => navigationTarget.value.routePath || safeHref.value)
-const browserHandled = computed(() => !isInternal.value)
+const browserHandled = computed(() => navigationTarget.value.kind !== 'internal')
 const roleChips = computed(() => firstItems(card.value.role, 3))
 const stackChips = computed(() => firstItems(card.value.stack, 4))
 const tagChips = computed(() => firstItems(card.value.tags, 4))
@@ -99,13 +95,11 @@ function warmCardTarget() {
 </script>
 
 <template>
-  <component
-    :is="isInternal ? RouterLink : 'a'"
+  <a
     class="vt-work-card"
-    :to="isInternal ? routeTo : undefined"
-    :href="isInternal ? undefined : safeHref"
-    :target="!isInternal && opensNewTab ? '_blank' : undefined"
-    :rel="!isInternal && opensNewTab ? 'noopener noreferrer' : undefined"
+    :href="safeHref"
+    :target="opensNewTab ? '_blank' : undefined"
+    :rel="opensNewTab ? 'noopener noreferrer' : undefined"
     @pointerenter="warmCardTarget"
     @focus="warmCardTarget"
     @pointerdown="warmCardTarget"
@@ -155,5 +149,5 @@ function warmCardTarget() {
         </span>
       </div>
     </div>
-  </component>
+  </a>
 </template>

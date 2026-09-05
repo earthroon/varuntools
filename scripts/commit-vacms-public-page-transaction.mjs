@@ -7,6 +7,7 @@ const PASS = 'PASS_CMS_207M_R3_ATOMIC_PUBLIC_PAGE_TRANSACTION'
 const RECEIPT = 'vacms-source-commit-receipt.json'
 const COMMIT_IDENTITY_NAME = 'vacms-publish-bot'
 const COMMIT_IDENTITY_EMAIL = 'actions@users.noreply.github.com'
+const ROUTE_INDEX_PATH = 'src/markdown/markdownRouteIndex.generated.ts'
 
 function writeReceipt(value) { fs.writeFileSync(RECEIPT, JSON.stringify(value, null, 2) + '\n', 'utf8') }
 function fail(code, message, extra = {}) {
@@ -50,10 +51,11 @@ for (const retiredPath of retiredPaths) {
   if (!safePagePath(retiredPath) || retiredPath === generatedPath) fail('E_CMS207M_R3_RETIRED_PATH_UNSAFE', retiredPath)
 }
 
-const authorizedPaths = [generatedPath, sidecarPath, ...retiredPaths]
+const materializationPaths = [generatedPath, sidecarPath, ...retiredPaths]
+const authorizedPaths = [...materializationPaths, ROUTE_INDEX_PATH]
 const admissionPaths = Array.isArray(admission.authorizedPaths) ? admission.authorizedPaths.map(normalize) : []
-if (admissionPaths.length !== authorizedPaths.length || authorizedPaths.some((item) => !admissionPaths.includes(item))) {
-  fail('E_CMS207M_R3_ADMISSION_PATH_SET_MISMATCH', 'admission path set differs from materialization path set', { authorizedPaths, admissionPaths })
+if (admissionPaths.length !== materializationPaths.length || materializationPaths.some((item) => !admissionPaths.includes(item))) {
+  fail('E_CMS207M_R3_ADMISSION_PATH_SET_MISMATCH', 'admission path set differs from materialization path set', { materializationPaths, admissionPaths })
 }
 
 const branch = runGit(['rev-parse', '--abbrev-ref', 'HEAD'], 'E_CMS207M_R3_BRANCH_READ_FAILED')
@@ -88,6 +90,15 @@ if (
     'E_CMS207M_R3_R1_GIT_IDENTITY_READBACK_MISMATCH',
     `expected=${COMMIT_IDENTITY_NAME}<${COMMIT_IDENTITY_EMAIL}> actual=${effectiveCommitIdentityName}<${effectiveCommitIdentityEmail}>`,
   )
+}
+
+const routeIndexBuild = spawnSync(process.execPath, ['scripts/build-markdown-route-index.mjs'], { cwd: process.cwd(), encoding: 'utf8', stdio: 'pipe', shell: false })
+if (routeIndexBuild.status !== 0) {
+  fail('E_CMS118_R1A_R2_ROUTE_INDEX_BUILD_FAILED', 'route index regeneration failed', { detail: [routeIndexBuild.stdout, routeIndexBuild.stderr].filter(Boolean).join('\n').trim() })
+}
+const routeIndexCheck = spawnSync(process.execPath, ['scripts/build-markdown-route-index.mjs', '--check'], { cwd: process.cwd(), encoding: 'utf8', stdio: 'pipe', shell: false })
+if (routeIndexCheck.status !== 0) {
+  fail('E_CMS118_R1A_R2_ROUTE_INDEX_STALE_AFTER_BUILD', 'route index freshness check failed', { detail: [routeIndexCheck.stdout, routeIndexCheck.stderr].filter(Boolean).join('\n').trim() })
 }
 
 const beforeSha = currentHead()

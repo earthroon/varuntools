@@ -2,7 +2,7 @@ import { onBeforeUnmount, watch, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const FILE_ASSET_RE = /\.(?:avif|bmp|csv|gif|jpe?g|json|md|mov|mp3|mp4|pdf|png|svg|tar|txt|webm|webp|zip)(?:$|[?#])/i
-const EXTERNAL_PROTOCOL_RE = /^(?:https?:|mailto:|tel:|sms:|blob:|data:|file:|javascript:)/i
+const EXTERNAL_PROTOCOL_RE = /^(?:https?:|mailto:|tel:|sms:|blob:|data:|file|javascript:)/i
 
 function normalizedBasePath(): string {
   const base = import.meta.env.BASE_URL || '/'
@@ -72,8 +72,15 @@ export function useMarkdownInternalLinks(root: Ref<HTMLElement | null>): void {
         const routeHref = normalizeRouteHref(anchor.getAttribute('href') || '')
         if (!routeHref) return
 
+        const nativeHref = anchor.href
         event.preventDefault()
-        router.push(routeHref)
+        void router.push(routeHref).catch((error) => {
+          console.error('[CMS-118-R1A-R3] markdown internal navigation failed; using native location', {
+            routeHref,
+            error,
+          })
+          window.location.assign(nativeHref)
+        })
       }
 
       element.addEventListener('click', onClick)
