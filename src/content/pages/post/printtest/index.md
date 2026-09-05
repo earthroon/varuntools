@@ -19,15 +19,15 @@ status: "active"
 noindex: false
 robots: "index,follow"
 title: "제본 시뮬레이터 & 인쇄조건 테스트"
-summary: "제본 시뮬레이터로 내지구성을 확인하고 \n인쇄조건을 여러방법으로 테스트해서 사고를 막았습니다."
+summary: "제본 시뮬레이터로 내지구성을 확인하고\n조건을 여러방법으로 테스트해  출력사고를 막았습니다."
 slug: "post/printtest"
 source: "vacms"
 vacmsSlug: "printtest"
 vacmsPageId: "page_328a307b1b71f96f4a4f7bcd"
-vacmsRevisionId: "rev_2fd9a1fca06dd53712c642b5"
+vacmsRevisionId: "rev_4e41a1de00db64e6db14913a"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:3e91383f418d91581b42a8fbe0aa1527193d47a5cf42f17af2da76a422e761d4"
+vacmsPublicSnapshotHash: "sha256:b1045ea014ffe60020a25637b2cba86991f19c71c4aa299e004f78ce0b6919f3"
 ---
 
 
@@ -86,11 +86,11 @@ ratio: 1:1
 
 
 
-::section-gap
-
 ::editorial-title
 title: 출력교정
 ::
+
+::section-gap
 
 ::editorial-columns
 ::
