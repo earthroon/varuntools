@@ -24,10 +24,10 @@ slug: "post/printtest"
 source: "vacms"
 vacmsSlug: "printtest"
 vacmsPageId: "page_328a307b1b71f96f4a4f7bcd"
-vacmsRevisionId: "rev_4e41a1de00db64e6db14913a"
+vacmsRevisionId: "rev_81ba342cfb3c96694d11a9f0"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:b1045ea014ffe60020a25637b2cba86991f19c71c4aa299e004f78ce0b6919f3"
+vacmsPublicSnapshotHash: "sha256:ee3bb1cfac384825f241aa1a886bb5463b2610913d670691e85dc86854e466f0"
 ---
 
 
@@ -86,11 +86,11 @@ ratio: 1:1
 
 
 
+::section-gap
+
 ::editorial-title
 title: 출력교정
 ::
-
-::section-gap
 
 ::editorial-columns
 ::
