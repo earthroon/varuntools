@@ -18,10 +18,10 @@ slug: "post/portfolio"
 source: "vacms"
 vacmsSlug: "portfolio"
 vacmsPageId: "page_aabb91c85c0f2d1073832090"
-vacmsRevisionId: "rev_9de9f01e140c5f1940fc5030"
+vacmsRevisionId: "rev_58d5487c0b15accfc0df3bb3"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:8f6b402c11b0a2a6681543a8ccd7204ecbf8e47ba4e3cad50056593dfe80ac66"
+vacmsPublicSnapshotHash: "sha256:161dd61570006290aff38c314802f2da3eaa83d3e3d27599661987ce7249e653"
 ---
 
 
@@ -37,7 +37,7 @@ subtitle: 복잡한 과정을 더 쉽게 이해되고, 반복 가능한 구조�
 ::
 ### 메시지 구조 설계
 복잡한 내용을 짧고 분명하게 정리합니다.
-훅 → 전제 → 갈등/해결 방식.
+훅 → 전제 → 갈등/해결 방식
 
 ### 제작 공정 설계
 반복되는 작업을 규칙으로 바꿔 작업 과정과 오류를 줄입니다.
