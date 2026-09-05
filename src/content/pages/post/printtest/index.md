@@ -19,7 +19,7 @@ status: "active"
 noindex: false
 robots: "index,follow"
 title: "제본 시뮬레이터 & 인쇄조건 테스트"
-summary: "제본 시뮬레이터로 내지구성을 확인하고\n조건을 여러방법으로 테스트해  출력사고를 막았습니다."
+summary: "제본 시뮬레이터로 내지구성을 확인하고 조건을 여러방법으로 테스트해  출력사고를 막았습니다."
 slug: "post/printtest"
 source: "vacms"
 vacmsSlug: "printtest"
@@ -27,7 +27,7 @@ vacmsPageId: "page_328a307b1b71f96f4a4f7bcd"
 vacmsRevisionId: "rev_0d1d5cc41c5658148845b52c"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:c31690e1f62b02e3ba712aba2afbb2d25faa2eb05663c2c7aa5df3e791dbc91a"
+vacmsPublicSnapshotHash: "sha256:690ef06423495513fb851c7b6085c71928d2e6235a7d653a90dd13114df4105d"
 ---
 
 

@@ -7,7 +7,7 @@
     "slug": "post/printtest",
     "routePath": "/post/printtest",
     "title": "제본 시뮬레이터 & 인쇄조건 테스트",
-    "summary": "제본 시뮬레이터로 내지구성을 확인하고\n조건을 여러방법으로 테스트해  출력사고를 막았습니다.",
+    "summary": "제본 시뮬레이터로 내지구성을 확인하고 조건을 여러방법으로 테스트해  출력사고를 막았습니다.",
     "category": "post",
     "kind": "page",
     "visibility": "public",
@@ -16,7 +16,7 @@
     "contentHash": "sha256:910b2c5b3e23f381272b8a11e07f41555b112de66cd6a6f56311cd1434bd4bee",
     "timing": {
       "revisionCreatedAt": "2026-09-05T11:55:19.219Z",
-      "publishJobCreatedAt": "2026-09-05T11:55:30.028Z",
+      "publishJobCreatedAt": "2026-09-05T11:58:26.116Z",
       "explicitPublishedAt": null
     }
   },
