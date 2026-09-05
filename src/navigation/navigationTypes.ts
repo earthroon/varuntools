@@ -19,6 +19,7 @@ export type NavigationItem = {
   id: string
   label: string
   href: string
+  parentHref?: string
   section: NavigationSectionId
   surface: NavigationSurface[]
   order: number
@@ -37,3 +38,5 @@ export type SectionNavigationGroup = {
 export type NavigationActiveMatch =
   | 'exact'
   | 'startsWith'
+
+export type NavigationNode = NavigationItem & { children: NavigationNode[] }

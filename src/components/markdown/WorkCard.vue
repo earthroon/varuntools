@@ -6,6 +6,7 @@ import { toWorkCardEntry } from '@/markdown/pageRegistry'
 import { resolveContentAssetMeta } from '@/markdown/resolveContentAssets'
 import { warmMarkdownNavigationTarget } from '@/markdown/markdownNavigationPrefetch'
 import { prefetchRouteTarget } from '@/router/routePrefetch'
+import { resolveNavigationTarget } from '@/navigation/navigationTarget'
 
 const props = withDefaults(
   defineProps<{
@@ -24,6 +25,7 @@ const props = withDefaults(
     period?: string
     featured?: boolean
     status?: string
+    showTag?: boolean
   }>(),
   {
     pages: () => [],
@@ -41,6 +43,7 @@ const props = withDefaults(
     period: '',
     featured: false,
     status: '',
+    showTag: true,
   },
 )
 
@@ -80,10 +83,10 @@ const coverAsset = computed(() => {
   return resolveContentAssetMeta(card.value.contentDir, card.value.cover)
 })
 
-const safeHref = computed(() => card.value.href || '#')
-const external = computed(() => /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(safeHref.value))
-const opensNewTab = computed(() => /^(?:https?:)?\/\//i.test(safeHref.value))
-const browserHandled = computed(() => external.value || safeHref.value.startsWith('#'))
+const navigationTarget = computed(() => resolveNavigationTarget(card.value.href || '#'))
+const safeHref = computed(() => navigationTarget.value.href)
+const opensNewTab = computed(() => navigationTarget.value.openInNewTab)
+const browserHandled = computed(() => navigationTarget.value.kind !== 'internal')
 const roleChips = computed(() => firstItems(card.value.role, 3))
 const stackChips = computed(() => firstItems(card.value.stack, 4))
 const tagChips = computed(() => firstItems(card.value.tags, 4))
@@ -102,7 +105,7 @@ function navigateCardTarget(event: MouseEvent): void {
   if (event.metaKey || event.altKey || event.ctrlKey || event.shiftKey) return
 
   event.preventDefault()
-  void router.push(safeHref.value)
+  void router.push(navigationTarget.value.routePath || safeHref.value)
 }
 
 </script>
@@ -131,7 +134,7 @@ function navigateCardTarget(event: MouseEvent): void {
 
       <div v-else class="vt-work-card__missing">No cover</div>
 
-      <span v-if="card.tag" class="vt-work-card__tag">{{ card.tag }}</span>
+      <span v-if="props.showTag && card.tag" class="vt-work-card__tag">{{ card.tag }}</span>
       <span v-if="card.featured" class="vt-work-card__featured">Featured</span>
     </div>
 

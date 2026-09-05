@@ -1,4 +1,6 @@
 import { pageIndex } from './pageIndex'
+import { buildContentNavigationEntries } from './contentNavigation'
+import { buildNavigationTree } from './navigationTree'
 import type { NavigationItem, NavigationSectionId, NavigationSurface, SectionNavigationGroup } from './navigationTypes'
 
 function byOrder(a: NavigationItem, b: NavigationItem): number {
@@ -9,22 +11,26 @@ function hasSurface(item: NavigationItem, surface: NavigationSurface): boolean {
   return item.surface.includes(surface)
 }
 
-export const headerNavigation = pageIndex
+export const canonicalNavigation = [...pageIndex, ...buildContentNavigationEntries(pageIndex)]
+const navigationTreeResult = buildNavigationTree(canonicalNavigation)
+export const navigationTree = navigationTreeResult.roots
+export const headerNavigationTree = navigationTree.filter((item) => item.surface.includes('header'))
+export const headerNavigation = canonicalNavigation
   .filter((item) => hasSurface(item, 'header'))
   .slice()
   .sort(byOrder)
 
-export const footerNavigation = pageIndex
+export const footerNavigation = canonicalNavigation
   .filter((item) => hasSurface(item, 'footer'))
   .slice()
   .sort(byOrder)
 
-export const utilityNavigation = pageIndex
+export const utilityNavigation = canonicalNavigation
   .filter((item) => hasSurface(item, 'utility'))
   .slice()
   .sort(byOrder)
 
-export const sectionNavigation = pageIndex.reduce<Record<NavigationSectionId, SectionNavigationGroup>>(
+export const sectionNavigation = canonicalNavigation.reduce<Record<NavigationSectionId, SectionNavigationGroup>>(
   (groups, item) => {
     const group = groups[item.section]
     if (hasSurface(item, 'section')) {

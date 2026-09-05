@@ -122,6 +122,7 @@ const entries = computed(() => {
         :cover="entry.cover"
         :href="entry.href"
         :tag="entry.kind"
+        :show-tag="false"
         :content-dir="entry.contentDir"
       />
     </div>

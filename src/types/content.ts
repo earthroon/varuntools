@@ -148,6 +148,11 @@ export type MarkdownFrontmatter = {
   featured?: boolean
   order?: number
   tags?: string[]
+  showInNav?: boolean | string
+  navLabel?: string
+  navParent?: string
+  navOrder?: number
+  navSurface?: 'header' | 'footer' | 'section' | 'utility'
 
   category?: string
   kind?: PageKind
