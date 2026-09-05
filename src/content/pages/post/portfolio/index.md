@@ -18,8 +18,10 @@ slug: "post/portfolio"
 source: "vacms"
 vacmsSlug: "portfolio"
 vacmsPageId: "page_aabb91c85c0f2d1073832090"
-vacmsRevisionId: "rev_60940d93592581cc3a2d1d19"
+vacmsRevisionId: "rev_c1ad4aa53a4d04b649578e79"
 vacmsProjectionSchema: "vacms-public-projection@1"
+vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
+vacmsPublicSnapshotHash: "sha256:ed6d4123d3237402491b687c7898d72a60392036ae0259d18197a3895460291c"
 ---
 
 
@@ -44,3 +46,9 @@ subtitle: 복잡한 과정을 더 쉽게 이해되고, 반복 가능한 구조�
 
 
 
+
+::featured-works
+title: 주요 프로젝트
+items: 제본 시뮬레이터 & 인쇄조건 테스트|제본 시뮬레이터 & 인쇄조건 테스트|https://www.varun.tools/post/printtest|제본 시뮬레이터 & 인쇄조건 테스트
+layout: grid
+::
