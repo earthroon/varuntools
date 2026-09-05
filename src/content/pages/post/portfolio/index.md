@@ -18,10 +18,10 @@ slug: "post/portfolio"
 source: "vacms"
 vacmsSlug: "portfolio"
 vacmsPageId: "page_aabb91c85c0f2d1073832090"
-vacmsRevisionId: "rev_58d5487c0b15accfc0df3bb3"
+vacmsRevisionId: "rev_16d2c752dedb8ed63edb28d7"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:161dd61570006290aff38c314802f2da3eaa83d3e3d27599661987ce7249e653"
+vacmsPublicSnapshotHash: "sha256:d2624b05d4a23ae8940986004f75afc94a669aa7c22ed573b381a7b32751463c"
 ---
 
 
@@ -47,8 +47,9 @@ subtitle: 복잡한 과정을 더 쉽게 이해되고, 반복 가능한 구조�
 
 
 
+
 ::featured-works
-title: 주요 프로젝트
-items: 제본 시뮬레이터 & 인쇄조건 테스트|제본 시뮬레이터 & 인쇄조건 테스트|/printtest|제본 시뮬레이터 & 인쇄조건 테스트, 칼선 / 다이컷 반 자동화|칼선 / 다이컷 반 자동화|/diecut|칼선 / 다이컷 반 자동화
+title: Featured Works
+items: page_328a307b1b71f96f4a4f7bcd|제본 시뮬레이터 & 인쇄조건 테스트|/post/printtest|제본 시뮬레이터 & 인쇄조건 테스트, page_14b4ad2140736a4f6a914af8|칼선 / 다이컷 반자동화|/post/diecut|칼선 / 다이컷 반자동화
 layout: grid
 ::
