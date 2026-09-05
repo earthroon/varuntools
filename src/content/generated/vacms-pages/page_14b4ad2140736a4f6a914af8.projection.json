@@ -1,0 +1,30 @@
+{
+  "schemaVersion": "vacms-public-projection@1",
+  "projectionRevision": "CMS-207M-R1",
+  "page": {
+    "pageId": "page_14b4ad2140736a4f6a914af8",
+    "revisionId": "rev_3b8613a3d149a2c01808ff67",
+    "slug": "page/diecut",
+    "routePath": "/page/diecut",
+    "title": "칼선 / 다이컷 반자동화",
+    "summary": "디자이너의 제조 판단 → 툴 규칙화",
+    "category": "page",
+    "kind": "page",
+    "visibility": "public",
+    "status": "draft",
+    "tags": [],
+    "contentHash": "sha256:87c0e50a8c68764e2b2c493c47456c65d33254b3e730735d0cacbb0c50518fd8",
+    "timing": {
+      "revisionCreatedAt": "2026-09-05T07:12:48.775Z",
+      "publishJobCreatedAt": "2026-09-05T07:13:02.721Z",
+      "explicitPublishedAt": null
+    }
+  },
+  "assets": [],
+  "authority": {
+    "semanticSource": "vacms-d1",
+    "assetSource": "vacms-d1",
+    "mediaProjectionPolicy": "cms-207m-r1-field-level-authority",
+    "objectWasmBindingState": "r8_required"
+  }
+}
