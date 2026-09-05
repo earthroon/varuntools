@@ -4,11 +4,11 @@
   "page": {
     "pageId": "page_14b4ad2140736a4f6a914af8",
     "revisionId": "rev_e337b0e99ca758bc43cbf9d1",
-    "slug": "page/diecut",
-    "routePath": "/page/diecut",
+    "slug": "post/diecut",
+    "routePath": "/post/diecut",
     "title": "칼선 / 다이컷 반자동화",
     "summary": "디자이너의 제조 판단 → 툴 규칙화",
-    "category": "page",
+    "category": "post",
     "kind": "page",
     "visibility": "public",
     "status": "active",
@@ -16,7 +16,7 @@
     "contentHash": "sha256:7a6a2554580f1bb9469b5ab23761377d42c8d8321b3f5532bc413c4746d2ba70",
     "timing": {
       "revisionCreatedAt": "2026-09-05T07:16:53.980Z",
-      "publishJobCreatedAt": "2026-09-05T07:17:05.569Z",
+      "publishJobCreatedAt": "2026-09-05T09:14:39.455Z",
       "explicitPublishedAt": null
     }
   },

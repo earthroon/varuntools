@@ -7,20 +7,20 @@ visibility: "public"
 exposure: "{\"route\":true,\"home\":false,\"collection\":\"page\",\"search\":true,\"sitemap\":true,\"nav\":false,\"featured\":false,\"routeOnly\":false}"
 navLabel: ""
 tags: []
-category: "page"
+category: "post"
 status: "active"
 noindex: false
 robots: "index,follow"
 title: "칼선 / 다이컷 반자동화"
 summary: "디자이너의 제조 판단 → 툴 규칙화"
-slug: "page/diecut"
+slug: "post/diecut"
 source: "vacms"
 vacmsSlug: "diecut"
 vacmsPageId: "page_14b4ad2140736a4f6a914af8"
 vacmsRevisionId: "rev_e337b0e99ca758bc43cbf9d1"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:61bf3c7ebe8c5da5915f921135e20521d02e4c369e19da2d9e4f00879b5fe0d8"
+vacmsPublicSnapshotHash: "sha256:0f670a522a10ed0757bd34d725187495269b07869592f72486839ca12f811ede"
 ---
 
 ::editorial-title
