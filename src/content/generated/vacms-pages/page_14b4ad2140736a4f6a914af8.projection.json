@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_14b4ad2140736a4f6a914af8",
-    "revisionId": "rev_3b8613a3d149a2c01808ff67",
+    "revisionId": "rev_e337b0e99ca758bc43cbf9d1",
     "slug": "page/diecut",
     "routePath": "/page/diecut",
     "title": "칼선 / 다이컷 반자동화",
@@ -11,16 +11,89 @@
     "category": "page",
     "kind": "page",
     "visibility": "public",
-    "status": "draft",
+    "status": "active",
     "tags": [],
-    "contentHash": "sha256:87c0e50a8c68764e2b2c493c47456c65d33254b3e730735d0cacbb0c50518fd8",
+    "contentHash": "sha256:7a6a2554580f1bb9469b5ab23761377d42c8d8321b3f5532bc413c4746d2ba70",
     "timing": {
-      "revisionCreatedAt": "2026-09-05T07:12:48.775Z",
-      "publishJobCreatedAt": "2026-09-05T07:13:02.721Z",
+      "revisionCreatedAt": "2026-09-05T07:16:53.980Z",
+      "publishJobCreatedAt": "2026-09-05T07:17:05.569Z",
       "explicitPublishedAt": null
     }
   },
-  "assets": [],
+  "assets": [
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_5c0c9342626f4f866dadd380",
+      "pageId": "page_14b4ad2140736a4f6a914af8",
+      "role": "inline",
+      "filename": "webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_14b4ad2140736a4f6a914af8/asset_5c0c9342626f4f866dadd380/webp",
+      "sizeBytes": 31414,
+      "hash": "sha256:8765c4e5f42f6d544164d5db83bc055bfb83cca2c13efe256ebb1ffa26f4ce7d",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": null,
+        "height": null,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "none",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": false,
+        "fieldSources": {}
+      }
+    }
+  ],
   "authority": {
     "semanticSource": "vacms-d1",
     "assetSource": "vacms-d1",
