@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { LoadedMarkdownPage } from '@/markdown/types'
-import { getFeaturedWorkEntries } from '@/markdown/pageRegistry'
+import { getFeaturedWorkEntries, toWorkCardEntry } from '@/markdown/pageRegistry'
 import WorkCard from './WorkCard.vue'
+import { resolveNavigationTarget } from '@/navigation/navigationTarget'
 
 type ManualFeaturedWorkItem = {
   id: string
@@ -62,8 +63,45 @@ function parseManualItem(value: string): ManualFeaturedWorkItem | null {
   }
 }
 
+function normalizeIdentity(value: string): string {
+  return String(value || '').trim().replace(/\s+/g, ' ').toLowerCase()
+}
+
+function resolveManualRegistryEntry(
+  item: ManualFeaturedWorkItem,
+  registryEntries: ReturnType<typeof toWorkCardEntry>[],
+) {
+  const normalizedId = trimSlash(item.id)
+  const itemTarget = resolveNavigationTarget(item.href)
+  const normalizedHref = trimSlash(itemTarget.routePath || item.href)
+  const direct = registryEntries.find((entry) => {
+    return (
+      trimSlash(entry.slug) === normalizedId ||
+      trimSlash(entry.href) === normalizedHref ||
+      trimSlash(entry.slug) === normalizedHref ||
+      trimSlash(entry.href) === normalizedId
+    )
+  })
+  if (direct) return direct
+
+  const titleIdentity = normalizeIdentity(item.title || item.id)
+  if (!titleIdentity) return undefined
+  const titleMatches = registryEntries.filter((entry) => normalizeIdentity(entry.title) === titleIdentity)
+  return titleMatches.length === 1 ? titleMatches[0] : undefined
+}
+
+function canonicalManualHref(
+  item: ManualFeaturedWorkItem,
+  registryEntry: ReturnType<typeof toWorkCardEntry> | undefined,
+): string {
+  const target = resolveNavigationTarget(item.href)
+  if (target.kind === 'internal' && registryEntry) return registryEntry.href
+  return item.href || registryEntry?.href || '#'
+}
+
 const entries = computed(() => {
-  const all = getFeaturedWorkEntries(props.pages)
+  const featuredEntries = getFeaturedWorkEntries(props.pages)
+  const registryEntries = props.pages.map(toWorkCardEntry)
 
   const manualItems = props.items
     .map(parseManualItem)
@@ -74,21 +112,14 @@ const entries = computed(() => {
       .map((item) => {
         const normalizedId = trimSlash(item.id)
         const normalizedHref = trimSlash(item.href)
-        const registryEntry = all.find((entry) => {
-          return (
-            trimSlash(entry.slug) === normalizedId ||
-            trimSlash(entry.href) === normalizedHref ||
-            trimSlash(entry.slug) === normalizedHref ||
-            trimSlash(entry.href) === normalizedId
-          )
-        })
+        const registryEntry = resolveManualRegistryEntry(item, registryEntries)
 
         return {
           slug: registryEntry?.slug || normalizedId || normalizedHref,
           title: item.title || registryEntry?.title || normalizedId || 'Untitled',
           description: registryEntry?.description || '',
           cover: registryEntry?.cover || '',
-          href: item.href || registryEntry?.href || '#',
+          href: canonicalManualHref(item, registryEntry),
           kind: item.label || registryEntry?.kind || props.kind || '',
           contentDir: registryEntry?.contentDir || '',
         }
@@ -97,8 +128,8 @@ const entries = computed(() => {
   }
 
   const filtered = props.kind
-    ? all.filter((entry) => entry.kind === props.kind)
-    : all
+    ? featuredEntries.filter((entry) => entry.kind === props.kind)
+    : featuredEntries
 
   return filtered.slice(0, Math.max(1, props.limit))
 })

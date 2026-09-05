@@ -157,10 +157,22 @@ export function readCachedMarkdownPages(): LoadedMarkdownPage[] {
   return uniqueLoadedMarkdownPages(Array.from(pageCache.values()))
 }
 
+function markdownContentDirsFromModules(): string[] {
+  const prefix = '../content/pages/'
+  const suffix = '/index.md'
+  return Object.keys(markdownModules)
+    .map((modulePath) => {
+      if (!modulePath.startsWith(prefix) || !modulePath.endsWith(suffix)) return ''
+      return modulePath.slice(prefix.length, -suffix.length)
+    })
+    .filter(Boolean)
+}
+
 export async function loadAllMarkdownPages(): Promise<LoadedMarkdownPage[]> {
-  const loadedPages = await Promise.all(
-    markdownRouteIndexEntries.map((entry) => loadMarkdownPageBySlug(entry.slug)),
-  )
+  const routeKeys = markdownRouteIndexEntries.map((entry) => entry.slug)
+  const moduleKeys = markdownContentDirsFromModules()
+  const loadKeys = Array.from(new Set([...routeKeys, ...moduleKeys]))
+  const loadedPages = await Promise.all(loadKeys.map((slug) => loadMarkdownPageBySlug(slug)))
 
   return uniqueLoadedMarkdownPages(
     loadedPages.filter((page): page is LoadedMarkdownPage => Boolean(page)),

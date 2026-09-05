@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { RouterLink } from 'vue-router'
 import type { LoadedMarkdownPage } from '@/markdown/types'
 import { toWorkCardEntry } from '@/markdown/pageRegistry'
 import { resolveContentAssetMeta } from '@/markdown/resolveContentAssets'
 import { warmMarkdownNavigationTarget } from '@/markdown/markdownNavigationPrefetch'
-import { prefetchRouteTarget } from '@/router/routePrefetch'
 import { resolveNavigationTarget } from '@/navigation/navigationTarget'
 
 const props = withDefaults(
@@ -47,7 +46,6 @@ const props = withDefaults(
   },
 )
 
-const router = useRouter()
 
 const registryEntry = computed(() => {
   if (!props.slug) return null
@@ -86,7 +84,9 @@ const coverAsset = computed(() => {
 const navigationTarget = computed(() => resolveNavigationTarget(card.value.href || '#'))
 const safeHref = computed(() => navigationTarget.value.href)
 const opensNewTab = computed(() => navigationTarget.value.openInNewTab)
-const browserHandled = computed(() => navigationTarget.value.kind !== 'internal')
+const isInternal = computed(() => navigationTarget.value.kind === 'internal')
+const routeTo = computed(() => navigationTarget.value.routePath || safeHref.value)
+const browserHandled = computed(() => !isInternal.value)
 const roleChips = computed(() => firstItems(card.value.role, 3))
 const stackChips = computed(() => firstItems(card.value.stack, 4))
 const tagChips = computed(() => firstItems(card.value.tags, 4))
@@ -96,30 +96,18 @@ function warmCardTarget() {
   if (browserHandled.value) return
   warmMarkdownNavigationTarget(safeHref.value)
 }
-function navigateCardTarget(event: MouseEvent): void {
-  warmCardTarget()
-
-  if (browserHandled.value) return
-  if (event.defaultPrevented) return
-  if (event.button !== 0) return
-  if (event.metaKey || event.altKey || event.ctrlKey || event.shiftKey) return
-
-  event.preventDefault()
-  void router.push(navigationTarget.value.routePath || safeHref.value)
-}
-
 </script>
 
 <template>
-  <a
+  <component
+    :is="isInternal ? RouterLink : 'a'"
     class="vt-work-card"
-    :href="safeHref"
-    :target="opensNewTab ? '_blank' : undefined"
-    :rel="opensNewTab ? 'noopener noreferrer' : undefined"
-  
+    :to="isInternal ? routeTo : undefined"
+    :href="isInternal ? undefined : safeHref"
+    :target="!isInternal && opensNewTab ? '_blank' : undefined"
+    :rel="!isInternal && opensNewTab ? 'noopener noreferrer' : undefined"
     @pointerenter="warmCardTarget"
     @focus="warmCardTarget"
-    @click="navigateCardTarget"
     @pointerdown="warmCardTarget"
   >
     <div class="vt-work-card__media">
@@ -167,5 +155,5 @@ function navigateCardTarget(event: MouseEvent): void {
         </span>
       </div>
     </div>
-  </a>
+  </component>
 </template>
