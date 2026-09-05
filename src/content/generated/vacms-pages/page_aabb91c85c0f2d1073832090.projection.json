@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_aabb91c85c0f2d1073832090",
-    "revisionId": "rev_55d34c5ebd35668a35a4c875",
+    "revisionId": "rev_2783e04f9b8ac58676ba1581",
     "slug": "post/portfolio",
     "routePath": "/post/portfolio",
     "title": "빠르게 이해되며 오래 남는 결과를 만듭니다",
@@ -13,10 +13,10 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:c4fe1b3cba232a69e83bee8754350572f1cd08fe346c15cb38758e027cac3473",
+    "contentHash": "sha256:875dd3b70a2b9cf9995aadaaf73274645d86daeb030ca2c746274f45a90ae6b0",
     "timing": {
-      "revisionCreatedAt": "2026-09-05T07:08:47.229Z",
-      "publishJobCreatedAt": "2026-09-05T07:20:23.011Z",
+      "revisionCreatedAt": "2026-09-05T07:23:32.230Z",
+      "publishJobCreatedAt": "2026-09-05T07:23:44.597Z",
       "explicitPublishedAt": "2026-09-04"
     }
   },
