@@ -546,8 +546,9 @@ editorial-columns {
   max-width: 48rem;
   margin: 0.8rem 0 0;
   color: var(--vt-muted, rgba(35, 27, 20, 0.72));
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  line-height: 1.75;
+  font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+  line-height: 1.5;
+  font-stretch: 97%;
 }
 
 .vt-editorial-title[data-align='center'] .vt-editorial-title__subtitle {
