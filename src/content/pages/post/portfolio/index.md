@@ -27,17 +27,17 @@ slug: "post/portfolio"
 source: "vacms"
 vacmsSlug: "portfolio"
 vacmsPageId: "page_aabb91c85c0f2d1073832090"
-vacmsRevisionId: "rev_4e61bd2b46e4c416d217976b"
+vacmsRevisionId: "rev_b53be92c100eb81e1dbb2c0d"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:8b858903f97a8bd393feb28d939b1ae9286cebb56b2bf15fd284357687446fd8"
+vacmsPublicSnapshotHash: "sha256:1578ae57faa062b81a54bfc211914502f963c85e50f03f5e198038594dbc7e31"
 ---
 
 
 
 ::editorial-title
 title: 빠르게 이해되며 오래 남는 결과를 만듭니다
-subtitle: 복잡한 과정을 더 쉽게 이해되고, 반복 가능한 구조로 바꿉니다.
+subtitle: 복잡한 제작 과정을 이해하여 반복되는 판단을 규칙과 도구로 바꿉니다.  작업에서 생기는 문제는  손이 많이 가는 데서 끝나지 않습니다. 투명도, 크기, 재질, 가공처럼 눈에 잘 보이지 않는 조건들이 모여, 결과를 바꾸기도 합니다.  저는 작업을 작업자의 감각에만 남겨두지 않고, 반복할 수 있는 구조와 제작 도구로 옮겨 해결합니다.
 ::
 
 
