@@ -27,17 +27,17 @@ slug: "post/portfolio"
 source: "vacms"
 vacmsSlug: "portfolio"
 vacmsPageId: "page_aabb91c85c0f2d1073832090"
-vacmsRevisionId: "rev_b53be92c100eb81e1dbb2c0d"
+vacmsRevisionId: "rev_620cc80f9287f5bc5f0b78a0"
 vacmsProjectionSchema: "vacms-public-projection@1"
 vacmsPublicSnapshotSchema: "vacms-public-materialization-snapshot@1"
-vacmsPublicSnapshotHash: "sha256:1578ae57faa062b81a54bfc211914502f963c85e50f03f5e198038594dbc7e31"
+vacmsPublicSnapshotHash: "sha256:177cdf8504446a5410c81905336e0820a2d47e6f408285174179a0e9a5e74cd0"
 ---
 
 
 
 ::editorial-title
-title: 빠르게 이해되며 오래 남는 결과를 만듭니다
-subtitle: 복잡한 제작 과정을 이해하여 반복되는 판단을 규칙과 도구로 바꿉니다.  작업에서 생기는 문제는  손이 많이 가는 데서 끝나지 않습니다. 투명도, 크기, 재질, 가공처럼 눈에 잘 보이지 않는 조건들이 모여, 결과를 바꾸기도 합니다.  저는 작업을 작업자의 감각에만 남겨두지 않고, 반복할 수 있는 구조와 제작 도구로 옮겨 해결합니다.
+title: 빠르게 이해되며 오래남는 결과를 만듭니다
+subtitle: 작업을 작업자의 감각에만 의존하지  않고, 반복할 수 있는 구조와 도구로 옮겨 제작 병목을 해결합니다.
 ::
 
 
