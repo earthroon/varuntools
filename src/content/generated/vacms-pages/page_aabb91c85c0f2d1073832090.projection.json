@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_aabb91c85c0f2d1073832090",
-    "revisionId": "rev_16d2c752dedb8ed63edb28d7",
+    "revisionId": "rev_8d3601f0604b0f574b22219f",
     "slug": "post/portfolio",
     "routePath": "/post/portfolio",
     "title": "빠르게 이해되며 오래 남는 결과를 만듭니다",
@@ -13,14 +13,327 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:6d33c2e5973fac4660784b46ed8d42e563687ae73b74687eadaf0ad9e46c5eeb",
+    "contentHash": "sha256:7165722c7b8d8d0c39786e211009739aaf9dee424532aa883d96188c2c7f0b75",
     "timing": {
-      "revisionCreatedAt": "2026-09-05T11:50:21.879Z",
-      "publishJobCreatedAt": "2026-09-05T11:50:49.292Z",
+      "revisionCreatedAt": "2026-09-07T02:31:35.458Z",
+      "publishJobCreatedAt": "2026-09-07T02:31:55.707Z",
       "explicitPublishedAt": "2026-09-04"
     }
   },
-  "assets": [],
+  "assets": [
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_1c889736ab8cc486f98da2a5",
+      "pageId": "page_aabb91c85c0f2d1073832090",
+      "role": "cover",
+      "filename": "card-cover.webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_aabb91c85c0f2d1073832090/asset_1c889736ab8cc486f98da2a5/card-cover.webp",
+      "sizeBytes": 13824,
+      "hash": "sha256:d995d5892d841bb0c07a3ead7d864035ed3c888d83d15fd0bdc72a46e96229f7",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 960,
+        "height": 540,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "materialized_hint",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "materialized_hint",
+          "height": "materialized_hint"
+        }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_5340fe601a8c69073762a923",
+      "pageId": "page_aabb91c85c0f2d1073832090",
+      "role": "cover",
+      "filename": "og.webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_aabb91c85c0f2d1073832090/asset_5340fe601a8c69073762a923/og.webp",
+      "sizeBytes": 19526,
+      "hash": "sha256:25d7330c07bcb0d82b13b5f3cf413cb022b06228101786c8f12eef03e8cde4db",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 1200,
+        "height": 630,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "materialized_hint",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "materialized_hint",
+          "height": "materialized_hint"
+        }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_7e8ccb0f80ba1815b27d4950",
+      "pageId": "page_aabb91c85c0f2d1073832090",
+      "role": "cover",
+      "filename": "cover.webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_aabb91c85c0f2d1073832090/asset_7e8ccb0f80ba1815b27d4950/cover.webp",
+      "sizeBytes": 30210,
+      "hash": "sha256:6799671bbc8c4334a1379b0d8fb059bca67ae0193577c85caad1965146e6fb4f",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 1600,
+        "height": 900,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "materialized_hint",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "materialized_hint",
+          "height": "materialized_hint"
+        }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_f2b08929aac050cac6fff014",
+      "pageId": "page_aabb91c85c0f2d1073832090",
+      "role": "cover",
+      "filename": "thumbnail.webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_aabb91c85c0f2d1073832090/asset_f2b08929aac050cac6fff014/thumbnail.webp",
+      "sizeBytes": 7958,
+      "hash": "sha256:4a1947f8bfd5225229d52852d537e0c4d23164b5eabc29bb9841f47c31e53ed0",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 640,
+        "height": 360,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "materialized_hint",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "materialized_hint",
+          "height": "materialized_hint"
+        }
+      }
+    }
+  ],
   "authority": {
     "semanticSource": "vacms-d1",
     "assetSource": "vacms-d1",
