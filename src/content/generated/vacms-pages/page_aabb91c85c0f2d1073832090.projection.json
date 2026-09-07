@@ -3,7 +3,7 @@
   "projectionRevision": "CMS-207M-R1",
   "page": {
     "pageId": "page_aabb91c85c0f2d1073832090",
-    "revisionId": "rev_8d3601f0604b0f574b22219f",
+    "revisionId": "rev_4e61bd2b46e4c416d217976b",
     "slug": "post/portfolio",
     "routePath": "/post/portfolio",
     "title": "빠르게 이해되며 오래 남는 결과를 만듭니다",
@@ -13,14 +13,92 @@
     "visibility": "public",
     "status": "active",
     "tags": [],
-    "contentHash": "sha256:7165722c7b8d8d0c39786e211009739aaf9dee424532aa883d96188c2c7f0b75",
+    "contentHash": "sha256:8a8389f305495d568f10a1e0d920a848c1270b1521f13d1a13aedb8b8e6f3529",
     "timing": {
-      "revisionCreatedAt": "2026-09-07T02:31:35.458Z",
-      "publishJobCreatedAt": "2026-09-07T02:31:55.707Z",
+      "revisionCreatedAt": "2026-09-07T02:45:15.889Z",
+      "publishJobCreatedAt": "2026-09-07T02:45:27.843Z",
       "explicitPublishedAt": "2026-09-04"
     }
   },
   "assets": [
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_02d012ed96081acea49b68c5",
+      "pageId": "page_aabb91c85c0f2d1073832090",
+      "role": "cover",
+      "filename": "card-cover.webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_aabb91c85c0f2d1073832090/asset_02d012ed96081acea49b68c5/card-cover.webp",
+      "sizeBytes": 14000,
+      "hash": "sha256:32dc3a16c09ee674527a432991286d8d96e61e95bb1350fc03f3a2dacd870671",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 960,
+        "height": 540,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "materialized_hint",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "materialized_hint",
+          "height": "materialized_hint"
+        }
+      }
+    },
     {
       "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_1c889736ab8cc486f98da2a5",
@@ -101,6 +179,84 @@
     },
     {
       "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_42ba2f7da0b4f3112796a2cb",
+      "pageId": "page_aabb91c85c0f2d1073832090",
+      "role": "cover",
+      "filename": "og.webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_aabb91c85c0f2d1073832090/asset_42ba2f7da0b4f3112796a2cb/og.webp",
+      "sizeBytes": 19802,
+      "hash": "sha256:4245c50697d064837c36a427e53982f11324be4b6cc5c2f7904147378653a843",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 1200,
+        "height": 630,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "materialized_hint",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "materialized_hint",
+          "height": "materialized_hint"
+        }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
       "assetId": "asset_5340fe601a8c69073762a923",
       "pageId": "page_aabb91c85c0f2d1073832090",
       "role": "cover",
@@ -151,6 +307,84 @@
         "codecId": null,
         "width": 1200,
         "height": 630,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "materialized_hint",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "materialized_hint",
+          "height": "materialized_hint"
+        }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_675fe172598d862fd9b67f84",
+      "pageId": "page_aabb91c85c0f2d1073832090",
+      "role": "cover",
+      "filename": "thumbnail.webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_aabb91c85c0f2d1073832090/asset_675fe172598d862fd9b67f84/thumbnail.webp",
+      "sizeBytes": 8074,
+      "hash": "sha256:12aeab025bc4bda8deb9484e4af9b1f33adc2b934d4ba0bcf2b5a87be862c54b",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 640,
+        "height": 360,
         "codedWidth": null,
         "codedHeight": null,
         "durationMs": null,
@@ -307,6 +541,84 @@
         "codecId": null,
         "width": 640,
         "height": 360,
+        "codedWidth": null,
+        "codedHeight": null,
+        "durationMs": null,
+        "sampleRateHz": null,
+        "channels": null,
+        "displayRotationDegrees": null,
+        "structuralMode": null,
+        "authoritativeFields": [
+          "width",
+          "height"
+        ],
+        "reasonCode": null
+      },
+      "authority": {
+        "class": "materialized_hint",
+        "parserRevision": null,
+        "parserAbiVersion": null,
+        "evidenceDigest": null,
+        "observationDigest": null,
+        "sourceCurrent": true,
+        "fieldSources": {
+          "width": "materialized_hint",
+          "height": "materialized_hint"
+        }
+      }
+    },
+    {
+      "schemaVersion": "vacms-public-asset@1",
+      "assetId": "asset_fd675a2a18b910debfc29d10",
+      "pageId": "page_aabb91c85c0f2d1073832090",
+      "role": "cover",
+      "filename": "cover.webp",
+      "mime": "image/webp",
+      "publicPath": "/assets/content/page_aabb91c85c0f2d1073832090/asset_fd675a2a18b910debfc29d10/cover.webp",
+      "sizeBytes": 30520,
+      "hash": "sha256:fecd79279c53cb0f57051a8afd23cb2bf3add91d366ad598e20e991a1ee5e177",
+      "presentation": {
+        "posterAssetId": null,
+        "posterPublicPath": null
+      },
+      "playback": {
+        "state": "unsupported",
+        "variantId": null,
+        "publicPath": null,
+        "sourceIdentityDigest": null,
+        "sourceHash": null,
+        "playbackHash": null,
+        "container": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null,
+        "sizeBytes": null,
+        "policyRevision": null
+      },
+      "playbackStream": {
+        "state": "unsupported",
+        "streamId": null,
+        "manifestPublicPath": null,
+        "manifestHash": null,
+        "profile": null,
+        "segmentCount": null,
+        "totalMediaBytes": null,
+        "videoCodec": null,
+        "audioCodec": null,
+        "width": null,
+        "height": null,
+        "durationMs": null
+      },
+      "media": {
+        "state": "unobserved",
+        "mediaKind": null,
+        "container": null,
+        "codec": null,
+        "codecId": null,
+        "width": 1600,
+        "height": 900,
         "codedWidth": null,
         "codedHeight": null,
         "durationMs": null,
